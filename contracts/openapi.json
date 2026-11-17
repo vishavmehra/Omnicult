@@ -1,6 +1,42 @@
 {
   "components": {
     "schemas": {
+      "AdClaim": {
+        "additionalProperties": false,
+        "properties": {
+          "segment_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Segment Id"
+          },
+          "source": {
+            "enum": [
+              "on_screen_text",
+              "transcript"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "text": {
+            "description": "The exact quote, found in the scene's on-screen text or transcript.",
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "source",
+          "segment_id"
+        ],
+        "title": "AdClaim",
+        "type": "object"
+      },
       "AdCodeEntry": {
         "additionalProperties": false,
         "properties": {
@@ -722,7 +758,7 @@
       },
       "Anchor-Input": {
         "additionalProperties": false,
-        "description": "Where in the creative a finding applies. Normalised 0-1 bbox [x, y, w, h].",
+        "description": "Where in a creative something applies: a scene, a time span and/or a normalised [x, y, width, height] box.",
         "properties": {
           "bbox": {
             "anyOf": [
@@ -738,6 +774,7 @@
                 "type": "null"
               }
             ],
+            "description": "Normalised [x, y, width, height]; null when unknown.",
             "title": "Bbox"
           },
           "end_ms": {
@@ -781,6 +818,7 @@
       },
       "Anchor-Output": {
         "additionalProperties": false,
+        "description": "Where in a creative something applies: a scene, a time span and/or a normalised [x, y, width, height] box.",
         "properties": {
           "bbox": {
             "anyOf": [
@@ -788,6 +826,8 @@
                 "items": {
                   "type": "number"
                 },
+                "maxItems": 4,
+                "minItems": 4,
                 "type": "array"
               },
               {
@@ -800,6 +840,7 @@
           "end_ms": {
             "anyOf": [
               {
+                "minimum": 0.0,
                 "type": "integer"
               },
               {
@@ -822,6 +863,7 @@
           "start_ms": {
             "anyOf": [
               {
+                "minimum": 0.0,
                 "type": "integer"
               },
               {
@@ -1672,9 +1714,60 @@
             "title": "Created At",
             "type": "string"
           },
+          "derived_at_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Position of a keyframe in its parent video.",
+            "title": "Derived At Ms"
+          },
+          "derived_role": {
+            "anyOf": [
+              {
+                "enum": [
+                  "keyframe",
+                  "thumbnail",
+                  "audio_track"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Derived Role"
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Video and audio length; null for images.",
+            "title": "Duration Ms"
+          },
           "filename": {
             "title": "Filename",
             "type": "string"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
           },
           "id": {
             "format": "uuid",
@@ -1682,14 +1775,59 @@
             "type": "string"
           },
           "kind": {
-            "const": "image",
+            "enum": [
+              "image",
+              "video",
+              "audio"
+            ],
             "title": "Kind",
+            "type": "string"
+          },
+          "parent_asset_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set on files derived from an upload (keyframes, thumbnails, audio track).",
+            "title": "Parent Asset Id"
+          },
+          "processing_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processing Error"
+          },
+          "processing_status": {
+            "description": "not_required for plain images; ffmpeg work for video and audio.",
+            "enum": [
+              "not_required",
+              "pending",
+              "processing",
+              "ready",
+              "failed"
+            ],
+            "title": "Processing Status",
             "type": "string"
           },
           "project_id": {
             "format": "uuid",
             "title": "Project Id",
             "type": "string"
+          },
+          "rights_confirmed": {
+            "description": "The uploader confirmed they hold the rights to use this file.",
+            "title": "Rights Confirmed",
+            "type": "boolean"
           },
           "sha256": {
             "title": "Sha256",
@@ -1698,6 +1836,25 @@
           "size_bytes": {
             "title": "Size Bytes",
             "type": "integer"
+          },
+          "upload_status": {
+            "enum": [
+              "stored",
+              "failed"
+            ],
+            "title": "Upload Status",
+            "type": "string"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
           }
         },
         "required": [
@@ -1709,7 +1866,17 @@
           "size_bytes",
           "sha256",
           "created_at",
-          "content_url"
+          "content_url",
+          "upload_status",
+          "processing_status",
+          "processing_error",
+          "rights_confirmed",
+          "duration_ms",
+          "width",
+          "height",
+          "parent_asset_id",
+          "derived_role",
+          "derived_at_ms"
         ],
         "title": "Asset",
         "type": "object"
@@ -1744,6 +1911,147 @@
           "total"
         ],
         "title": "AssetPage",
+        "type": "object"
+      },
+      "AssetStatus": {
+        "additionalProperties": false,
+        "description": "Where an asset is in upload and processing, and the files derived from it.",
+        "properties": {
+          "asset_id": {
+            "format": "uuid",
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "derived": {
+            "items": {
+              "$ref": "#/components/schemas/DerivedAsset"
+            },
+            "title": "Derived",
+            "type": "array"
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Ms"
+          },
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "audio"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "metadata_redacted": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "Emails and phone numbers removed from container metadata, by kind.",
+            "title": "Metadata Redacted",
+            "type": "object"
+          },
+          "processing_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processing Error"
+          },
+          "processing_status": {
+            "enum": [
+              "not_required",
+              "pending",
+              "processing",
+              "ready",
+              "failed"
+            ],
+            "title": "Processing Status",
+            "type": "string"
+          },
+          "rights_confirmed": {
+            "title": "Rights Confirmed",
+            "type": "boolean"
+          },
+          "sidecar": {
+            "$ref": "#/components/schemas/SidecarStatus"
+          },
+          "upload_status": {
+            "enum": [
+              "stored",
+              "failed"
+            ],
+            "title": "Upload Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset_id",
+          "kind",
+          "upload_status",
+          "processing_status",
+          "processing_error",
+          "rights_confirmed",
+          "duration_ms",
+          "sidecar",
+          "metadata_redacted",
+          "derived"
+        ],
+        "title": "AssetStatus",
+        "type": "object"
+      },
+      "AssetUrl": {
+        "additionalProperties": false,
+        "description": "How a client reads an asset's bytes: a short-lived signed Cloud Storage URL, or the authenticated stream.",
+        "properties": {
+          "asset_id": {
+            "format": "uuid",
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set for signed URLs; stream URLs need the Authorization header.",
+            "title": "Expires At"
+          },
+          "kind": {
+            "enum": [
+              "signed",
+              "stream"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset_id",
+          "kind",
+          "url",
+          "expires_at"
+        ],
+        "title": "AssetUrl",
         "type": "object"
       },
       "AudienceRunAccepted": {
@@ -2289,9 +2597,32 @@
             "type": "string"
           },
           "kind": {
-            "const": "image",
+            "enum": [
+              "image",
+              "video",
+              "audio"
+            ],
             "title": "Kind",
             "type": "string"
+          },
+          "rights_confirmed": {
+            "default": false,
+            "description": "Required for video and audio: you hold the rights to this file.",
+            "title": "Rights Confirmed",
+            "type": "boolean"
+          },
+          "sidecar": {
+            "anyOf": [
+              {
+                "contentMediaType": "application/octet-stream",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional UTF-8 SRT, WebVTT or plain-text notes for a video or audio upload.",
+            "title": "Sidecar"
           }
         },
         "required": [
@@ -4496,6 +4827,284 @@
         "title": "ContentVersion",
         "type": "object"
       },
+      "Creative": {
+        "additionalProperties": false,
+        "properties": {
+          "analysis": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CreativeAnalysis"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "asset": {
+            "$ref": "#/components/schemas/Asset"
+          },
+          "asset_id": {
+            "format": "uuid",
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "campaign_id": {
+            "format": "uuid",
+            "title": "Campaign Id",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "current_run_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Run Id"
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Ms"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "audio"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "latest_run_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Run Id"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "enum": [
+                  "live",
+                  "demo"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mode"
+          },
+          "project_id": {
+            "format": "uuid",
+            "title": "Project Id",
+            "type": "string"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Code"
+          },
+          "run_metadata": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunMetadata"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scene_count": {
+            "title": "Scene Count",
+            "type": "integer"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "queued",
+                  "running",
+                  "completed",
+                  "partial",
+                  "failed",
+                  "cancelled"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Status of the latest X-Ray run, which this record always mirrors.",
+            "title": "Status"
+          },
+          "thumbnail_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumbnail Url"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "campaign_id",
+          "asset_id",
+          "kind",
+          "label",
+          "region_code",
+          "language",
+          "mode",
+          "status",
+          "latest_run_id",
+          "current_run_id",
+          "scene_count",
+          "duration_ms",
+          "thumbnail_url",
+          "created_at",
+          "updated_at",
+          "asset",
+          "analysis",
+          "limitations",
+          "run_metadata"
+        ],
+        "title": "Creative",
+        "type": "object"
+      },
+      "CreativeAnalysis": {
+        "additionalProperties": false,
+        "description": "What the current run found about the creative as a whole.",
+        "properties": {
+          "dropped": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "Model items removed because code could not verify them, by kind.",
+            "title": "Dropped",
+            "type": "object"
+          },
+          "frames": {
+            "items": {
+              "$ref": "#/components/schemas/FrameRecord"
+            },
+            "title": "Frames",
+            "type": "array"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "probe": {
+            "$ref": "#/components/schemas/MediaProbe"
+          },
+          "sidecar_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The user's own notes, redacted of emails and phone numbers; never a transcript.",
+            "title": "Sidecar Notes"
+          },
+          "transcribe": {
+            "$ref": "#/components/schemas/TranscribeStatus"
+          },
+          "transcript": {
+            "items": {
+              "$ref": "#/components/schemas/TranscriptSegment"
+            },
+            "title": "Transcript",
+            "type": "array"
+          },
+          "vision": {
+            "$ref": "#/components/schemas/VisionStatus"
+          }
+        },
+        "required": [
+          "probe",
+          "transcribe",
+          "vision",
+          "frames",
+          "transcript",
+          "sidecar_notes",
+          "limitations",
+          "dropped"
+        ],
+        "title": "CreativeAnalysis",
+        "type": "object"
+      },
       "CreativeCopy": {
         "additionalProperties": false,
         "properties": {
@@ -5055,6 +5664,214 @@
           "summary"
         ],
         "title": "CreativeSceneIn",
+        "type": "object"
+      },
+      "CreativeSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "asset_id": {
+            "format": "uuid",
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "campaign_id": {
+            "format": "uuid",
+            "title": "Campaign Id",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "current_run_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Run Id"
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Ms"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "audio"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "latest_run_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Run Id"
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "enum": [
+                  "live",
+                  "demo"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mode"
+          },
+          "project_id": {
+            "format": "uuid",
+            "title": "Project Id",
+            "type": "string"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Code"
+          },
+          "scene_count": {
+            "title": "Scene Count",
+            "type": "integer"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "queued",
+                  "running",
+                  "completed",
+                  "partial",
+                  "failed",
+                  "cancelled"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Status of the latest X-Ray run, which this record always mirrors.",
+            "title": "Status"
+          },
+          "thumbnail_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumbnail Url"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "campaign_id",
+          "asset_id",
+          "kind",
+          "label",
+          "region_code",
+          "language",
+          "mode",
+          "status",
+          "latest_run_id",
+          "current_run_id",
+          "scene_count",
+          "duration_ms",
+          "thumbnail_url",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "CreativeSummary",
+        "type": "object"
+      },
+      "CreativeSummaryPage": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CreativeSummary"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "limit",
+          "offset",
+          "total"
+        ],
+        "title": "CreativeSummaryPage",
         "type": "object"
       },
       "CulturalProfile": {
@@ -5750,6 +6567,58 @@
           "note"
         ],
         "title": "DatasetStatus",
+        "type": "object"
+      },
+      "DerivedAsset": {
+        "additionalProperties": false,
+        "properties": {
+          "content_type": {
+            "title": "Content Type",
+            "type": "string"
+          },
+          "content_url": {
+            "title": "Content Url",
+            "type": "string"
+          },
+          "derived_at_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Derived At Ms"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "keyframe",
+              "thumbnail",
+              "audio_track"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "size_bytes": {
+            "title": "Size Bytes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "derived_at_ms",
+          "content_type",
+          "size_bytes",
+          "content_url"
+        ],
+        "title": "DerivedAsset",
         "type": "object"
       },
       "DimensionDefinition": {
@@ -7947,6 +8816,52 @@
         "title": "FollowUpPage",
         "type": "object"
       },
+      "FrameRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "asset_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The derived keyframe asset; null for an image, which is its own frame.",
+            "title": "Asset Id"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "observations": {
+            "items": {
+              "$ref": "#/components/schemas/VisualObservation"
+            },
+            "title": "Observations",
+            "type": "array"
+          },
+          "timestamp_ms": {
+            "title": "Timestamp Ms",
+            "type": "integer"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "timestamp_ms",
+          "asset_id",
+          "url",
+          "observations"
+        ],
+        "title": "FrameRecord",
+        "type": "object"
+      },
       "Freshness": {
         "additionalProperties": false,
         "properties": {
@@ -9699,6 +10614,33 @@
         "title": "LockPage",
         "type": "object"
       },
+      "LockedRegion": {
+        "additionalProperties": false,
+        "properties": {
+          "bbox": {
+            "description": "[x, y, width, height], each from 0 to 1 of the image size.",
+            "items": {
+              "type": "number"
+            },
+            "maxItems": 4,
+            "minItems": 4,
+            "title": "Bbox",
+            "type": "array"
+          },
+          "label": {
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "bbox"
+        ],
+        "title": "LockedRegion",
+        "type": "object"
+      },
       "ManualEdit": {
         "additionalProperties": false,
         "properties": {
@@ -10305,6 +11247,196 @@
         "title": "Me",
         "type": "object"
       },
+      "MediaCapabilities": {
+        "additionalProperties": false,
+        "description": "Detected once at startup. Images and text rendering work without ffmpeg; video and audio need it.",
+        "properties": {
+          "ffmpeg": {
+            "$ref": "#/components/schemas/ToolStatus"
+          },
+          "ffprobe": {
+            "$ref": "#/components/schemas/ToolStatus"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/MediaLimits"
+          },
+          "scripts": {
+            "description": "Scripts with a bundled Noto font.",
+            "items": {
+              "enum": [
+                "Deva",
+                "Taml",
+                "Mlym",
+                "Beng",
+                "Telu",
+                "Knda",
+                "Gujr",
+                "Guru",
+                "Orya",
+                "Latn"
+              ],
+              "type": "string"
+            },
+            "title": "Scripts",
+            "type": "array"
+          },
+          "text_shaping": {
+            "description": "raqm shapes Indic scripts correctly. basic renders Latin only: Indic text is refused, never drawn unshaped.",
+            "enum": [
+              "raqm",
+              "basic"
+            ],
+            "title": "Text Shaping",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ffmpeg",
+          "ffprobe",
+          "text_shaping",
+          "scripts",
+          "limits"
+        ],
+        "title": "MediaCapabilities",
+        "type": "object"
+      },
+      "MediaLimits": {
+        "additionalProperties": false,
+        "properties": {
+          "max_image_bytes": {
+            "title": "Max Image Bytes",
+            "type": "integer"
+          },
+          "max_media_bytes": {
+            "title": "Max Media Bytes",
+            "type": "integer"
+          },
+          "max_media_seconds": {
+            "title": "Max Media Seconds",
+            "type": "number"
+          }
+        },
+        "required": [
+          "max_image_bytes",
+          "max_media_bytes",
+          "max_media_seconds"
+        ],
+        "title": "MediaLimits",
+        "type": "object"
+      },
+      "MediaProbe": {
+        "additionalProperties": false,
+        "properties": {
+          "audio_codec": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audio Codec"
+          },
+          "container": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Container"
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Ms"
+          },
+          "fps": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fps"
+          },
+          "has_audio": {
+            "title": "Has Audio",
+            "type": "boolean"
+          },
+          "has_video": {
+            "title": "Has Video",
+            "type": "boolean"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "audio"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "video_codec": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Video Codec"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
+          }
+        },
+        "required": [
+          "kind",
+          "container",
+          "duration_ms",
+          "width",
+          "height",
+          "fps",
+          "has_video",
+          "has_audio",
+          "video_codec",
+          "audio_codec"
+        ],
+        "title": "MediaProbe",
+        "type": "object"
+      },
       "MemoryItem": {
         "additionalProperties": false,
         "properties": {
@@ -10833,6 +11965,33 @@
           "evidence_ids_after"
         ],
         "title": "ObservationChange",
+        "type": "object"
+      },
+      "OnScreenText": {
+        "additionalProperties": false,
+        "properties": {
+          "frame_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Keyframe at which a vision model reported this text.",
+            "title": "Frame Ms"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "frame_ms"
+        ],
+        "title": "OnScreenText",
         "type": "object"
       },
       "OpenConflictInput-Input": {
@@ -15738,6 +16897,91 @@
         "title": "Rejection",
         "type": "object"
       },
+      "RenderTextRequest": {
+        "additionalProperties": false,
+        "description": "Preview of the Remake: Visuals text step. The base is `base_asset_id` (a generated image), else the original,\nelse a blank canvas. Text is drawn in code; then every locked region is restored pixel for pixel from\n`original_asset_id`, last, so text can never alter a protected logo or product. The answer is a PNG.",
+        "properties": {
+          "background": {
+            "default": "#202020",
+            "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$",
+            "title": "Background",
+            "type": "string"
+          },
+          "base_asset_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base Asset Id"
+          },
+          "boxes": {
+            "items": {
+              "$ref": "#/components/schemas/TextBox"
+            },
+            "maxItems": 12,
+            "minItems": 1,
+            "title": "Boxes",
+            "type": "array"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "maximum": 4096.0,
+                "minimum": 16.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "locked_regions": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/LockedRegion"
+            },
+            "maxItems": 8,
+            "title": "Locked Regions",
+            "type": "array"
+          },
+          "original_asset_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Asset Id"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "maximum": 4096.0,
+                "minimum": 16.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
+          }
+        },
+        "required": [
+          "boxes"
+        ],
+        "title": "RenderTextRequest",
+        "type": "object"
+      },
       "Report": {
         "additionalProperties": false,
         "properties": {
@@ -16345,6 +17589,321 @@
         "title": "RiskCheckCreate",
         "type": "object"
       },
+      "RiskCheckFinding": {
+        "additionalProperties": false,
+        "properties": {
+          "ad_codes": {
+            "items": {
+              "$ref": "#/components/schemas/AdCodeRef"
+            },
+            "title": "Ad Codes",
+            "type": "array"
+          },
+          "anchor": {
+            "$ref": "#/components/schemas/Anchor-Output"
+          },
+          "blocks_go": {
+            "description": "Computed by risk-rules-v1. Counts toward the Go verdict while the finding is open or accepted.",
+            "title": "Blocks Go",
+            "type": "boolean"
+          },
+          "category": {
+            "enum": [
+              "brand_rule",
+              "unsubstantiated_claim",
+              "health_nutrition_claim",
+              "comparative_claim",
+              "children_safety",
+              "unsafe_depiction",
+              "offensive_content",
+              "stereotype_or_derision",
+              "disclaimer_issue",
+              "synthetic_media_disclosure",
+              "regional_sensitivity",
+              "language_ambiguity",
+              "other"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "claim_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Claim Ids",
+            "type": "array"
+          },
+          "confidence_label": {
+            "description": "How much code-checkable support the finding has. A label, not a probability.",
+            "enum": [
+              "insufficient",
+              "limited",
+              "moderate"
+            ],
+            "title": "Confidence Label",
+            "type": "string"
+          },
+          "element_id": {
+            "title": "Element Id",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "interpretation": {
+            "description": "Why it may matter in this region. A model interpretation unless source is deterministic_check.",
+            "title": "Interpretation",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "observation": {
+            "description": "What is there. Not a judgement.",
+            "title": "Observation",
+            "type": "string"
+          },
+          "ordinal": {
+            "title": "Ordinal",
+            "type": "integer"
+          },
+          "quote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Exact text from the element, verified in code; null for a finding about a non-text element.",
+            "title": "Quote"
+          },
+          "quote_end": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quote End"
+          },
+          "quote_start": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quote Start"
+          },
+          "rules_version": {
+            "title": "Rules Version",
+            "type": "string"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "severity_rules": {
+            "items": {
+              "$ref": "#/components/schemas/AppliedRuleView"
+            },
+            "title": "Severity Rules",
+            "type": "array"
+          },
+          "source": {
+            "enum": [
+              "deterministic_check",
+              "model_assessment"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "open",
+              "accepted",
+              "dismissed",
+              "fixed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "status_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status At"
+          },
+          "status_by": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status By"
+          },
+          "status_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status Reason"
+          },
+          "suggested_fix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suggested Fix"
+          },
+          "verification": {
+            "enum": [
+              "quote_verified",
+              "element_reference",
+              "deterministic"
+            ],
+            "title": "Verification",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "run_id",
+          "ordinal",
+          "element_id",
+          "category",
+          "severity",
+          "blocks_go",
+          "confidence_label",
+          "anchor",
+          "quote",
+          "quote_start",
+          "quote_end",
+          "verification",
+          "observation",
+          "interpretation",
+          "suggested_fix",
+          "ad_codes",
+          "claim_ids",
+          "source",
+          "severity_rules",
+          "rules_version",
+          "status",
+          "status_reason",
+          "status_by",
+          "status_at",
+          "limitations"
+        ],
+        "title": "RiskCheckFinding",
+        "type": "object"
+      },
+      "RiskCheckFindingPage": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RiskCheckFinding"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "limit",
+          "offset",
+          "total"
+        ],
+        "title": "RiskCheckFindingPage",
+        "type": "object"
+      },
+      "RiskCheckFindingUpdate": {
+        "additionalProperties": false,
+        "description": "A person's decision on a finding. Dismissing needs a reason.",
+        "properties": {
+          "reason": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "status": {
+            "enum": [
+              "open",
+              "accepted",
+              "dismissed",
+              "fixed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "RiskCheckFindingUpdate",
+        "type": "object"
+      },
       "RiskCheckObservation": {
         "additionalProperties": false,
         "description": "A completed Risk Check. An empty list means it ran and found nothing; it is not proof that no risk exists.",
@@ -16433,7 +17992,7 @@
           },
           "findings": {
             "items": {
-              "$ref": "#/components/schemas/app__schemas__audience__RiskFinding"
+              "$ref": "#/components/schemas/RiskCheckFinding"
             },
             "title": "Findings",
             "type": "array"
@@ -16606,6 +18165,172 @@
         "title": "RiskCounts",
         "type": "object"
       },
+      "RiskFinding": {
+        "additionalProperties": false,
+        "properties": {
+          "brand_rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The Brand Memory rule involved, if any.",
+            "title": "Brand Rule"
+          },
+          "category": {
+            "enum": [
+              "stereotype",
+              "sensitivity",
+              "ambiguity",
+              "brand_inconsistency",
+              "unsupported_claim",
+              "constraint_violation",
+              "visual_context",
+              "other"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "confidence_label": {
+            "enum": [
+              "insufficient",
+              "limited",
+              "moderate"
+            ],
+            "title": "Confidence Label",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "interpretation": {
+            "description": "Why it may matter. A model interpretation unless source is deterministic_check.",
+            "title": "Interpretation",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "observation": {
+            "description": "The exact text excerpt or visible element the finding concerns.",
+            "title": "Observation",
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "deterministic_check",
+              "model_assessment",
+              "vision_model"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "open",
+              "dismissed",
+              "resolved",
+              "applied"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "status_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status Note"
+          },
+          "suggested_alternative": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suggested Alternative"
+          },
+          "text_location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TextLocation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "visual_observation_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Visual Observation Id"
+          }
+        },
+        "required": [
+          "id",
+          "category",
+          "severity",
+          "confidence_label",
+          "source",
+          "text_location",
+          "visual_observation_id",
+          "observation",
+          "interpretation",
+          "brand_rule",
+          "evidence_ids",
+          "limitations",
+          "suggested_alternative",
+          "status",
+          "status_note",
+          "updated_at"
+        ],
+        "title": "RiskFinding",
+        "type": "object"
+      },
       "RiskFindingInput": {
         "additionalProperties": false,
         "properties": {
@@ -16691,36 +18416,36 @@
         "title": "RiskFindingInput",
         "type": "object"
       },
-      "RiskFindingPage": {
+      "RiskFindingUpdate": {
         "additionalProperties": false,
         "properties": {
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/app__schemas__audience__RiskFinding"
-            },
-            "title": "Items",
-            "type": "array"
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
           },
-          "limit": {
-            "title": "Limit",
-            "type": "integer"
-          },
-          "offset": {
-            "title": "Offset",
-            "type": "integer"
-          },
-          "total": {
-            "title": "Total",
-            "type": "integer"
+          "status": {
+            "enum": [
+              "open",
+              "dismissed",
+              "resolved"
+            ],
+            "title": "Status",
+            "type": "string"
           }
         },
         "required": [
-          "items",
-          "limit",
-          "offset",
-          "total"
+          "status"
         ],
-        "title": "RiskFindingPage",
+        "title": "RiskFindingUpdate",
         "type": "object"
       },
       "RiskFlag": {
@@ -16808,7 +18533,7 @@
           },
           "findings": {
             "items": {
-              "$ref": "#/components/schemas/app__schemas__risk__RiskFinding"
+              "$ref": "#/components/schemas/RiskFinding"
             },
             "title": "Findings",
             "type": "array"
@@ -17257,7 +18982,8 @@
               "market_comparison",
               "population_study",
               "social_simulation",
-              "transcreate"
+              "transcreate",
+              "creative_xray"
             ],
             "title": "Run Type",
             "type": "string"
@@ -17337,7 +19063,8 @@
               "market_comparison",
               "population_study",
               "social_simulation",
-              "transcreate"
+              "transcreate",
+              "creative_xray"
             ],
             "title": "Run Type",
             "type": "string"
@@ -17570,7 +19297,8 @@
               "population_study",
               "social_simulation",
               "version",
-              "operation"
+              "operation",
+              "creative_xray"
             ],
             "title": "Resource",
             "type": "string"
@@ -17833,6 +19561,407 @@
           }
         },
         "title": "SamplingPlan",
+        "type": "object"
+      },
+      "Scene": {
+        "additionalProperties": false,
+        "properties": {
+          "anchor": {
+            "$ref": "#/components/schemas/Anchor-Output"
+          },
+          "asset_id": {
+            "format": "uuid",
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "campaign_id": {
+            "format": "uuid",
+            "title": "Campaign Id",
+            "type": "string"
+          },
+          "claims": {
+            "items": {
+              "$ref": "#/components/schemas/AdClaim"
+            },
+            "title": "Claims",
+            "type": "array"
+          },
+          "colours": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Colours",
+            "type": "array"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "creative_asset_id": {
+            "format": "uuid",
+            "title": "Creative Asset Id",
+            "type": "string"
+          },
+          "cultural_interpretations": {
+            "items": {
+              "$ref": "#/components/schemas/SceneInterpretation"
+            },
+            "title": "Cultural Interpretations",
+            "type": "array"
+          },
+          "cultural_observations": {
+            "items": {
+              "$ref": "#/components/schemas/SceneObservation"
+            },
+            "title": "Cultural Observations",
+            "type": "array"
+          },
+          "end_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Null for an image, which is one scene without a duration.",
+            "title": "End Ms"
+          },
+          "frame_ms": {
+            "description": "Timestamps of the keyframes this scene was read from.",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Frame Ms",
+            "type": "array"
+          },
+          "gestures": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Gestures",
+            "type": "array"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "keyframe_asset_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keyframe Asset Id"
+          },
+          "keyframe_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Authenticated API path of the scene's keyframe image.",
+            "title": "Keyframe Url"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "music_mood": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Null unless an audio capability reported it; never guessed from video.",
+            "title": "Music Mood"
+          },
+          "objects": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Objects",
+            "type": "array"
+          },
+          "on_screen_text": {
+            "items": {
+              "$ref": "#/components/schemas/OnScreenText"
+            },
+            "title": "On Screen Text",
+            "type": "array"
+          },
+          "people": {
+            "items": {
+              "type": "string"
+            },
+            "title": "People",
+            "type": "array"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "provenance": {
+            "additionalProperties": {
+              "enum": [
+                "observed",
+                "transcribed",
+                "user_provided",
+                "model_generated",
+                "interpretation"
+              ],
+              "type": "string"
+            },
+            "title": "Provenance",
+            "type": "object"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "setting": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Setting"
+          },
+          "start_ms": {
+            "title": "Start Ms",
+            "type": "integer"
+          },
+          "transcript": {
+            "items": {
+              "$ref": "#/components/schemas/TranscriptSegment"
+            },
+            "title": "Transcript",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "creative_asset_id",
+          "campaign_id",
+          "asset_id",
+          "run_id",
+          "position",
+          "start_ms",
+          "end_ms",
+          "keyframe_asset_id",
+          "keyframe_url",
+          "frame_ms",
+          "on_screen_text",
+          "transcript",
+          "people",
+          "gestures",
+          "setting",
+          "objects",
+          "colours",
+          "music_mood",
+          "claims",
+          "cultural_observations",
+          "cultural_interpretations",
+          "provenance",
+          "limitations",
+          "anchor",
+          "created_at"
+        ],
+        "title": "Scene",
+        "type": "object"
+      },
+      "SceneInterpretation": {
+        "additionalProperties": false,
+        "properties": {
+          "based_on": {
+            "description": "Ids of the observations in this scene it is based on.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Based On",
+            "type": "array"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "enum": [
+                  "language",
+                  "script",
+                  "festival",
+                  "moment",
+                  "food",
+                  "colour",
+                  "symbol",
+                  "humour",
+                  "family",
+                  "custom",
+                  "sensitivity",
+                  "trend",
+                  "demographic",
+                  "media"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "claim_ids": {
+            "default": [],
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Claim Ids",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "text": {
+            "description": "A model's cultural reading. Not an observed fact.",
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "based_on",
+          "category",
+          "limitations",
+          "claim_ids"
+        ],
+        "title": "SceneInterpretation",
+        "type": "object"
+      },
+      "SceneObservation": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "anyOf": [
+              {
+                "enum": [
+                  "language",
+                  "script",
+                  "festival",
+                  "moment",
+                  "food",
+                  "colour",
+                  "symbol",
+                  "humour",
+                  "family",
+                  "custom",
+                  "sensitivity",
+                  "trend",
+                  "demographic",
+                  "media"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "claim_ids": {
+            "default": [],
+            "description": "Regional claims linked to this observation; filled by later steps.",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Claim Ids",
+            "type": "array"
+          },
+          "evidence": {
+            "description": "Frame ids (f1, f2, ...) and transcript segment ids (t1, ...) it rests on.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "category",
+          "evidence",
+          "claim_ids"
+        ],
+        "title": "SceneObservation",
+        "type": "object"
+      },
+      "ScenePage": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Scene"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "limit",
+          "offset",
+          "total"
+        ],
+        "title": "ScenePage",
         "type": "object"
       },
       "ScoreCard": {
@@ -18562,6 +20691,46 @@
           "provisional"
         ],
         "title": "SeriesPoint",
+        "type": "object"
+      },
+      "SidecarStatus": {
+        "additionalProperties": false,
+        "properties": {
+          "format": {
+            "anyOf": [
+              {
+                "enum": [
+                  "srt",
+                  "vtt",
+                  "text"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Format"
+          },
+          "present": {
+            "title": "Present",
+            "type": "boolean"
+          },
+          "redacted": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "Emails and phone numbers removed from the sidecar before any model use, by kind.",
+            "title": "Redacted",
+            "type": "object"
+          }
+        },
+        "required": [
+          "present",
+          "format",
+          "redacted"
+        ],
+        "title": "SidecarStatus",
         "type": "object"
       },
       "SignalUsed": {
@@ -20468,6 +22637,126 @@
         "title": "SyntheticReaction",
         "type": "object"
       },
+      "TextBox": {
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "default": "left",
+            "enum": [
+              "left",
+              "center",
+              "right"
+            ],
+            "title": "Align",
+            "type": "string"
+          },
+          "bbox": {
+            "description": "[x, y, width, height], each from 0 to 1 of the image size.",
+            "items": {
+              "type": "number"
+            },
+            "maxItems": 4,
+            "minItems": 4,
+            "title": "Bbox",
+            "type": "array"
+          },
+          "bold": {
+            "default": false,
+            "title": "Bold",
+            "type": "boolean"
+          },
+          "color": {
+            "default": "#ffffff",
+            "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$",
+            "title": "Color",
+            "type": "string"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "pattern": "^[a-z]{2,3}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "ISO 639 code; lets the font pick language-specific glyph forms (Marathi, Hindi).",
+            "title": "Language"
+          },
+          "line_spacing": {
+            "default": 1.0,
+            "description": "Multiple of the font's own line height.",
+            "maximum": 2.0,
+            "minimum": 0.7,
+            "title": "Line Spacing",
+            "type": "number"
+          },
+          "max_size_px": {
+            "default": 96,
+            "maximum": 400.0,
+            "minimum": 6.0,
+            "title": "Max Size Px",
+            "type": "integer"
+          },
+          "min_size_px": {
+            "default": 10,
+            "maximum": 400.0,
+            "minimum": 6.0,
+            "title": "Min Size Px",
+            "type": "integer"
+          },
+          "script": {
+            "enum": [
+              "Deva",
+              "Taml",
+              "Mlym",
+              "Beng",
+              "Telu",
+              "Knda",
+              "Gujr",
+              "Guru",
+              "Orya",
+              "Latn"
+            ],
+            "title": "Script",
+            "type": "string"
+          },
+          "shadow": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TextShadow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "text": {
+            "maxLength": 400,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          },
+          "valign": {
+            "default": "top",
+            "enum": [
+              "top",
+              "middle",
+              "bottom"
+            ],
+            "title": "Valign",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "script",
+          "bbox"
+        ],
+        "title": "TextBox",
+        "type": "object"
+      },
       "TextLocation": {
         "additionalProperties": false,
         "properties": {
@@ -20514,6 +22803,40 @@
           "end"
         ],
         "title": "TextLocation",
+        "type": "object"
+      },
+      "TextShadow": {
+        "additionalProperties": false,
+        "properties": {
+          "blur": {
+            "default": 0,
+            "maximum": 16.0,
+            "minimum": 0.0,
+            "title": "Blur",
+            "type": "number"
+          },
+          "color": {
+            "default": "#000000aa",
+            "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$",
+            "title": "Color",
+            "type": "string"
+          },
+          "dx": {
+            "default": 2,
+            "maximum": 32.0,
+            "minimum": -32.0,
+            "title": "Dx",
+            "type": "integer"
+          },
+          "dy": {
+            "default": 2,
+            "maximum": 32.0,
+            "minimum": -32.0,
+            "title": "Dy",
+            "type": "integer"
+          }
+        },
+        "title": "TextShadow",
         "type": "object"
       },
       "ThemeCount": {
@@ -20763,6 +23086,45 @@
         "title": "ToneShift",
         "type": "object"
       },
+      "ToolStatus": {
+        "additionalProperties": false,
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Why the tool is unavailable, when it is.",
+            "title": "Message"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          }
+        },
+        "required": [
+          "available",
+          "version",
+          "message"
+        ],
+        "title": "ToolStatus",
+        "type": "object"
+      },
       "TranscreateRequest": {
         "additionalProperties": false,
         "properties": {
@@ -20872,6 +23234,128 @@
           "glossary_violation_lines"
         ],
         "title": "TranscreationObservation",
+        "type": "object"
+      },
+      "TranscribeStatus": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Why there is no transcript, when there is none. A transcript is never invented.",
+            "title": "Message"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Id"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          },
+          "status": {
+            "enum": [
+              "transcribed",
+              "from_sidecar",
+              "not_applicable",
+              "unavailable",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "provider",
+          "model_id",
+          "message"
+        ],
+        "title": "TranscribeStatus",
+        "type": "object"
+      },
+      "TranscriptSegment": {
+        "additionalProperties": false,
+        "properties": {
+          "end_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Ms"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "source": {
+            "enum": [
+              "transcription",
+              "user_sidecar"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "start_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Ms"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "start_ms",
+          "end_ms",
+          "text",
+          "source",
+          "language"
+        ],
+        "title": "TranscriptSegment",
         "type": "object"
       },
       "TrendComparison": {
@@ -22289,263 +24773,19 @@
         "title": "Workspace",
         "type": "object"
       },
-      "app__schemas__audience__RiskFinding": {
+      "XRayCreate": {
         "additionalProperties": false,
+        "description": "Start Creative X-Ray on an uploaded asset (run_type creative_xray).",
         "properties": {
-          "ad_codes": {
-            "items": {
-              "$ref": "#/components/schemas/AdCodeRef"
-            },
-            "title": "Ad Codes",
-            "type": "array"
-          },
-          "anchor": {
-            "$ref": "#/components/schemas/Anchor-Output"
-          },
-          "blocks_go": {
-            "description": "Computed by risk-rules-v1. Counts toward the Go verdict while the finding is open or accepted.",
-            "title": "Blocks Go",
-            "type": "boolean"
-          },
-          "category": {
-            "enum": [
-              "brand_rule",
-              "unsubstantiated_claim",
-              "health_nutrition_claim",
-              "comparative_claim",
-              "children_safety",
-              "unsafe_depiction",
-              "offensive_content",
-              "stereotype_or_derision",
-              "disclaimer_issue",
-              "synthetic_media_disclosure",
-              "regional_sensitivity",
-              "language_ambiguity",
-              "other"
-            ],
-            "title": "Category",
-            "type": "string"
-          },
-          "claim_ids": {
-            "items": {
-              "format": "uuid",
-              "type": "string"
-            },
-            "title": "Claim Ids",
-            "type": "array"
-          },
-          "confidence_label": {
-            "description": "How much code-checkable support the finding has. A label, not a probability.",
-            "enum": [
-              "insufficient",
-              "limited",
-              "moderate"
-            ],
-            "title": "Confidence Label",
-            "type": "string"
-          },
-          "element_id": {
-            "title": "Element Id",
-            "type": "string"
-          },
-          "id": {
+          "asset_id": {
             "format": "uuid",
-            "title": "Id",
+            "title": "Asset Id",
             "type": "string"
           },
-          "interpretation": {
-            "description": "Why it may matter in this region. A model interpretation unless source is deterministic_check.",
-            "title": "Interpretation",
-            "type": "string"
-          },
-          "limitations": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Limitations",
-            "type": "array"
-          },
-          "observation": {
-            "description": "What is there. Not a judgement.",
-            "title": "Observation",
-            "type": "string"
-          },
-          "ordinal": {
-            "title": "Ordinal",
-            "type": "integer"
-          },
-          "quote": {
+          "label": {
             "anyOf": [
               {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Exact text from the element, verified in code; null for a finding about a non-text element.",
-            "title": "Quote"
-          },
-          "quote_end": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Quote End"
-          },
-          "quote_start": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Quote Start"
-          },
-          "rules_version": {
-            "title": "Rules Version",
-            "type": "string"
-          },
-          "run_id": {
-            "format": "uuid",
-            "title": "Run Id",
-            "type": "string"
-          },
-          "severity": {
-            "enum": [
-              "low",
-              "medium",
-              "high"
-            ],
-            "title": "Severity",
-            "type": "string"
-          },
-          "severity_rules": {
-            "items": {
-              "$ref": "#/components/schemas/AppliedRuleView"
-            },
-            "title": "Severity Rules",
-            "type": "array"
-          },
-          "source": {
-            "enum": [
-              "deterministic_check",
-              "model_assessment"
-            ],
-            "title": "Source",
-            "type": "string"
-          },
-          "status": {
-            "enum": [
-              "open",
-              "accepted",
-              "dismissed",
-              "fixed"
-            ],
-            "title": "Status",
-            "type": "string"
-          },
-          "status_at": {
-            "anyOf": [
-              {
-                "format": "date-time",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Status At"
-          },
-          "status_by": {
-            "anyOf": [
-              {
-                "format": "uuid",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Status By"
-          },
-          "status_reason": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Status Reason"
-          },
-          "suggested_fix": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Suggested Fix"
-          },
-          "verification": {
-            "enum": [
-              "quote_verified",
-              "element_reference",
-              "deterministic"
-            ],
-            "title": "Verification",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "run_id",
-          "ordinal",
-          "element_id",
-          "category",
-          "severity",
-          "blocks_go",
-          "confidence_label",
-          "anchor",
-          "quote",
-          "quote_start",
-          "quote_end",
-          "verification",
-          "observation",
-          "interpretation",
-          "suggested_fix",
-          "ad_codes",
-          "claim_ids",
-          "source",
-          "severity_rules",
-          "rules_version",
-          "status",
-          "status_reason",
-          "status_by",
-          "status_at",
-          "limitations"
-        ],
-        "title": "RiskFinding",
-        "type": "object"
-      },
-      "app__schemas__audience__RiskFindingUpdate": {
-        "additionalProperties": false,
-        "description": "A person's decision on a finding. Dismissing needs a reason.",
-        "properties": {
-          "reason": {
-            "anyOf": [
-              {
-                "maxLength": 1000,
+                "maxLength": 120,
                 "minLength": 1,
                 "type": "string"
               },
@@ -22553,221 +24793,39 @@
                 "type": "null"
               }
             ],
-            "title": "Reason"
+            "title": "Label"
           },
-          "status": {
-            "enum": [
-              "open",
-              "accepted",
-              "dismissed",
-              "fixed"
+          "language": {
+            "anyOf": [
+              {
+                "pattern": "^[a-z]{2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
             ],
-            "title": "Status",
-            "type": "string"
+            "description": "Declared spoken language; helps transcription.",
+            "title": "Language"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "pattern": "^IN-[A-Z]{2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Market the creative is read for; optional.",
+            "title": "Region Code"
           }
         },
         "required": [
-          "status"
+          "asset_id"
         ],
-        "title": "RiskFindingUpdate",
-        "type": "object"
-      },
-      "app__schemas__risk__RiskFinding": {
-        "additionalProperties": false,
-        "properties": {
-          "brand_rule": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The Brand Memory rule involved, if any.",
-            "title": "Brand Rule"
-          },
-          "category": {
-            "enum": [
-              "stereotype",
-              "sensitivity",
-              "ambiguity",
-              "brand_inconsistency",
-              "unsupported_claim",
-              "constraint_violation",
-              "visual_context",
-              "other"
-            ],
-            "title": "Category",
-            "type": "string"
-          },
-          "confidence_label": {
-            "enum": [
-              "insufficient",
-              "limited",
-              "moderate"
-            ],
-            "title": "Confidence Label",
-            "type": "string"
-          },
-          "evidence_ids": {
-            "items": {
-              "format": "uuid",
-              "type": "string"
-            },
-            "title": "Evidence Ids",
-            "type": "array"
-          },
-          "id": {
-            "format": "uuid",
-            "title": "Id",
-            "type": "string"
-          },
-          "interpretation": {
-            "description": "Why it may matter. A model interpretation unless source is deterministic_check.",
-            "title": "Interpretation",
-            "type": "string"
-          },
-          "limitations": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Limitations",
-            "type": "array"
-          },
-          "observation": {
-            "description": "The exact text excerpt or visible element the finding concerns.",
-            "title": "Observation",
-            "type": "string"
-          },
-          "severity": {
-            "enum": [
-              "low",
-              "medium",
-              "high"
-            ],
-            "title": "Severity",
-            "type": "string"
-          },
-          "source": {
-            "enum": [
-              "deterministic_check",
-              "model_assessment",
-              "vision_model"
-            ],
-            "title": "Source",
-            "type": "string"
-          },
-          "status": {
-            "enum": [
-              "open",
-              "dismissed",
-              "resolved",
-              "applied"
-            ],
-            "title": "Status",
-            "type": "string"
-          },
-          "status_note": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Status Note"
-          },
-          "suggested_alternative": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Suggested Alternative"
-          },
-          "text_location": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/TextLocation"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "updated_at": {
-            "format": "date-time",
-            "title": "Updated At",
-            "type": "string"
-          },
-          "visual_observation_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Visual Observation Id"
-          }
-        },
-        "required": [
-          "id",
-          "category",
-          "severity",
-          "confidence_label",
-          "source",
-          "text_location",
-          "visual_observation_id",
-          "observation",
-          "interpretation",
-          "brand_rule",
-          "evidence_ids",
-          "limitations",
-          "suggested_alternative",
-          "status",
-          "status_note",
-          "updated_at"
-        ],
-        "title": "RiskFinding",
-        "type": "object"
-      },
-      "app__schemas__risk__RiskFindingUpdate": {
-        "additionalProperties": false,
-        "properties": {
-          "note": {
-            "anyOf": [
-              {
-                "maxLength": 1000,
-                "minLength": 1,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Note"
-          },
-          "status": {
-            "enum": [
-              "open",
-              "dismissed",
-              "resolved"
-            ],
-            "title": "Status",
-            "type": "string"
-          }
-        },
-        "required": [
-          "status"
-        ],
-        "title": "RiskFindingUpdate",
+        "title": "XRayCreate",
         "type": "object"
       }
     },
@@ -23844,7 +25902,9 @@
         "responses": {
           "200": {
             "content": {
-              "image/*": {}
+              "audio/*": {},
+              "image/*": {},
+              "video/*": {}
             },
             "description": "The file bytes."
           },
@@ -23965,6 +26025,304 @@
           }
         ],
         "summary": "Get Asset Content",
+        "tags": [
+          "assets"
+        ]
+      }
+    },
+    "/api/v1/assets/{asset_id}/status": {
+      "get": {
+        "description": "Upload and processing status, the redaction counts, and the files derived from the asset.",
+        "operationId": "get_asset_status",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "asset_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Asset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Asset Status",
+        "tags": [
+          "assets"
+        ]
+      }
+    },
+    "/api/v1/assets/{asset_id}/url": {
+      "get": {
+        "description": "A short-lived signed URL for a Cloud Storage object, or the authenticated stream path (local and database storage).",
+        "operationId": "get_asset_url",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "asset_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Asset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetUrl"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Asset Url",
         "tags": [
           "assets"
         ]
@@ -26504,6 +28862,341 @@
         "summary": "Apply Chip",
         "tags": [
           "creative-studio"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/creative-xrays": {
+      "post": {
+        "description": "Break an uploaded image, video or audio into scenes (run_type creative_xray).\n\nHonours Idempotency-Key. 409 for an asset of another project or a derived file; 503 when the language model\nprovider is not configured. The result is a creative with scenes: fetch it from the run's result URL.",
+        "operationId": "start_creative_xray",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/XRayCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunAccepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Start Creative Xray",
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/creatives": {
+      "get": {
+        "description": "Creatives of a campaign, newest first. Status mirrors each creative's latest X-Ray run.",
+        "operationId": "list_creatives",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Maximum records returned.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "description": "Maximum records returned.",
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Number of records skipped.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "description": "Number of records skipped.",
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreativeSummaryPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Creatives",
+        "tags": [
+          "media"
         ]
       }
     },
@@ -33129,7 +35822,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RiskFindingPage"
+                  "$ref": "#/components/schemas/RiskCheckFindingPage"
                 }
               }
             },
@@ -33297,7 +35990,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/app__schemas__audience__RiskFindingUpdate"
+                "$ref": "#/components/schemas/RiskCheckFindingUpdate"
               }
             }
           },
@@ -33308,7 +36001,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/app__schemas__audience__RiskFinding"
+                  "$ref": "#/components/schemas/RiskCheckFinding"
                 }
               }
             },
@@ -34917,6 +37610,506 @@
         ]
       }
     },
+    "/api/v1/creatives/{creative_id}": {
+      "get": {
+        "description": "The creative, its source asset, and what the current X-Ray run found: probe, transcript status, keyframes, limits.",
+        "operationId": "get_creative",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "creative_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Creative Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Creative"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Creative",
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/api/v1/creatives/{creative_id}/scenes": {
+      "get": {
+        "description": "Scenes in time order: those of the current run, or of the run named by `run_id`.",
+        "operationId": "list_scenes",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "creative_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Creative Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Maximum records returned.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "Maximum records returned.",
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Number of records skipped.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "description": "Number of records skipped.",
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "run_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenePage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Scenes",
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/api/v1/creatives/{creative_id}/scenes/{scene_id}": {
+      "get": {
+        "operationId": "get_scene",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "creative_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Creative Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "scene_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scene Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Scene"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Scene",
+        "tags": [
+          "media"
+        ]
+      }
+    },
     "/api/v1/cultural-profiles/{profile_id}": {
       "get": {
         "operationId": "get_cultural_profile",
@@ -35651,6 +38844,143 @@
         "summary": "Get Me",
         "tags": [
           "workspaces"
+        ]
+      }
+    },
+    "/api/v1/media/capabilities": {
+      "get": {
+        "description": "What this server can process: ffmpeg and ffprobe, complex-script text shaping, bundled fonts, and limits.",
+        "operationId": "get_media_capabilities",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaCapabilities"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Media Capabilities",
+        "tags": [
+          "media"
         ]
       }
     },
@@ -38719,6 +42049,7 @@
     },
     "/api/v1/projects/{project_id}/assets": {
       "get": {
+        "description": "Uploads, newest first. Keyframes, thumbnails and audio tracks derived from an upload are hidden unless asked for.",
         "operationId": "list_assets",
         "parameters": [
           {
@@ -38765,7 +42096,11 @@
             "schema": {
               "anyOf": [
                 {
-                  "const": "image",
+                  "enum": [
+                    "image",
+                    "video",
+                    "audio"
+                  ],
                   "type": "string"
                 },
                 {
@@ -38773,6 +42108,16 @@
                 }
               ],
               "title": "Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include_derived",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Include Derived",
+              "type": "boolean"
             }
           }
         ],
@@ -38909,7 +42254,7 @@
         ]
       },
       "post": {
-        "description": "Upload an image creative. Type and size are validated (contracts/README section 13).",
+        "description": "Upload an image (5 MB), or a video (MP4, MOV, WebM) or audio (MP3, WAV, M4A) of at most 50 MB and 60 seconds.\n\nType and size are checked from the file's bytes; video and audio need `rights_confirmed` and ffprobe. A text sidecar\nand the container's metadata are redacted of emails and phone numbers before any model can use them.",
         "operationId": "upload_asset",
         "parameters": [
           {
@@ -41156,6 +44501,161 @@
         ]
       }
     },
+    "/api/v1/projects/{project_id}/media/render-text": {
+      "post": {
+        "description": "Preview regional text drawn in code (Noto fonts, raqm shaping), with locked regions restored pixel for pixel.\n\nNothing is stored. 501 for Indic text when complex-script shaping is not installed on the server; the response\nheaders report the shaping engine, whether each box fit, and locked-region overlap.",
+        "operationId": "render_text_preview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenderTextRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {}
+            },
+            "description": "The rendered image."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Render Text Preview",
+        "tags": [
+          "media"
+        ]
+      }
+    },
     "/api/v1/projects/{project_id}/populations": {
       "get": {
         "operationId": "list_populations",
@@ -41740,7 +45240,8 @@
                     "market_comparison",
                     "population_study",
                     "social_simulation",
-                    "transcreate"
+                    "transcreate",
+                    "creative_xray"
                   ],
                   "type": "string"
                 },
@@ -43990,7 +47491,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/app__schemas__risk__RiskFindingUpdate"
+                "$ref": "#/components/schemas/RiskFindingUpdate"
               }
             }
           },
@@ -44001,7 +47502,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/app__schemas__risk__RiskFinding"
+                  "$ref": "#/components/schemas/RiskFinding"
                 }
               }
             },

@@ -65,6 +65,24 @@ class Settings(BaseSettings):
     audience_study_max_participants: int = Field(default=60, ge=20)
     audience_ask_max_participants: int = Field(default=60, ge=1)  # participants answering one question
     audience_run_timeout_seconds: int = Field(default=900, ge=30)
+    # --- media stream (Phase 2 contract): video and audio uploads, ffmpeg processing, Creative X-Ray ---
+    # Largest video or audio upload and longest clip. Images keep MAX_IMAGE_BYTES.
+    max_media_bytes: int = 50 * 1024 * 1024
+    max_media_seconds: float = 60.0
+    # ffmpeg and ffprobe: a name found on PATH or an absolute path. Detected at startup; a missing binary makes video and
+    # audio uploads and Creative X-Ray fail with a clear PROVIDER_NOT_CONFIGURED error (images still work).
+    ffmpeg_path: str = "ffmpeg"
+    ffprobe_path: str = "ffprobe"
+    media_probe_timeout_seconds: float = 20
+    media_tool_timeout_seconds: float = 90  # one ffmpeg command (scene detection, one frame, audio extraction)
+    # Keyframes: scene changes at least KEYFRAME_MIN_GAP_MS apart, plus a frame whenever KEYFRAME_MAX_GAP_MS would pass
+    # without one, at most KEYFRAME_MAX_COUNT in all (each frame is one vision call).
+    keyframe_scene_threshold: float = 0.3
+    keyframe_min_gap_ms: int = 1000
+    keyframe_max_gap_ms: int = 4000
+    keyframe_max_count: int = 16
+    keyframe_max_width: int = 768
+    media_signed_url_seconds: int = 600  # lifetime of a Cloud Storage signed URL (ASSET_STORAGE_BACKEND=gcs only)
 
     @field_validator(
         "supabase_url",

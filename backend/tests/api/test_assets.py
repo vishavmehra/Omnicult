@@ -69,11 +69,13 @@ async def test_type_is_checked_from_magic_bytes(client: httpx.AsyncClient, kind:
     assert await stored() == []
 
 
-async def test_audio_uploads_are_not_accepted(client: httpx.AsyncClient) -> None:
+async def test_audio_uploads_need_the_rights_confirmation(client: httpx.AsyncClient) -> None:
+    """Video and audio are accepted since the media stream; they need rights_confirmed (more in test_media_assets.py)."""
     project_id = await live_project(client)
     response = await upload(client, project_id, "audio", WAV, name="brief.wav")
     assert response.status_code == 422, response.text
-    assert response.json()["error"]["code"] == "VALIDATION_ERROR"
+    error = response.json()["error"]
+    assert error["code"] == "VALIDATION_ERROR" and error["details"][0]["field"] == "rights_confirmed"
     assert await stored() == []
 
 

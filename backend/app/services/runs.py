@@ -59,6 +59,7 @@ STAGES: dict[str, tuple[str, ...]] = {
     "population_study": ("preparing_evidence", "constructing_population", "running_interviews", "analysing_results"),
     "social_simulation": ("building_network", "simulating_rounds", "analysing_dynamics", "summarizing"),
     "transcreate": ("loading_context", "transcreating_lines", "checking_terms", "checking_script"),
+    "creative_xray": ("probing_media", "extracting_media", "transcribing", "observing_frames", "structuring_scenes"),
 }
 LABELS = {
     "market_discovery": "discovery",
@@ -72,6 +73,7 @@ LABELS = {
     "population_study": "population study",
     "social_simulation": "social simulation",
     "transcreate": "transcreation",
+    "creative_xray": "Creative X-Ray",
 }
 ENTRY_POINTS = {
     "market_discovery": "run_discovery",
@@ -85,6 +87,7 @@ ENTRY_POINTS = {
     "population_study": "run_population_study",
     "social_simulation": "run_social_simulation",
     "transcreate": "run_transcreate",
+    "creative_xray": "run_creative_xray",
 }
 V3_RUNS = {"population_study", "social_simulation"}  # checkpointed: cancel at a checkpoint, resume from it
 V3_TIMEOUT_SECONDS = 3600
@@ -541,6 +544,10 @@ async def _build_input(run_id: UUID) -> tuple[Any, Any]:
             from app.services import transcreate
 
             workflow_input = await transcreate.build_input(s, run, types, context, grounding)
+        elif run.run_type == "creative_xray":
+            from app.services import xray
+
+            workflow_input = await xray.build_input(s, run, types, context, grounding)
         else:
             from app.services import insights  # v2 run types
 
@@ -695,6 +702,10 @@ async def _persist(run_id: UUID, outcome: Any) -> None:
 
             payload, ref = await transcreate.persist(s, run, outcome, new_ids, now)
             status = payload.pop("_status", status)  # a refused operation (a lock set meanwhile) is a failed run
+        elif run.run_type == "creative_xray":
+            from app.services import xray
+
+            payload, ref = await xray.persist(s, run, outcome, new_ids, now)
         else:
             from app.services import insights  # v2 run types
 

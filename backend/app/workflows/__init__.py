@@ -19,6 +19,7 @@ from app.workflows.rehearsal import run_rehearsal
 from app.workflows.risk import run_risk_scan
 from app.workflows.social import run_social_simulation
 from app.workflows.transcreate import run_transcreate
+from app.workflows.xray import run_creative_xray
 from app.workflows.types import (
     AdaptationInput,
     ArenaInput,
@@ -47,14 +48,26 @@ from app.workflows.types import (
 )
 
 
+def _transcribe_capability(llm: LLMGateway):  # type: ignore[no-untyped-def]
+    """The gateway's `transcribe` adapter when it has one; until it does, the transcript is reported unavailable."""
+    try:
+        return llm.capability("transcribe")
+    except KeyError:
+        return None
+
+
 def build_workflow_deps(mode: DataMode, settings: Settings, *, qloo_cache=None) -> WorkflowDeps:
     """demo -> fixture Qloo + fixture LLM (no network); live -> the qloo exec service + the Google gateway."""
     from app.integrations.qloo import get_qloo_service
+    from app.services.media import MediaPipeline  # local ffmpeg work: allowed in demo too, it calls no provider
 
     if mode == "demo":  # demo never sends uploads or prompts to a provider: no vision, fixture LLM
-        return WorkflowDeps(qloo=get_qloo_service("demo", settings), llm=LLMGateway(settings, fixture=True))
+        return WorkflowDeps(qloo=get_qloo_service("demo", settings), llm=LLMGateway(settings, fixture=True), media=MediaPipeline())
     llm = LLMGateway(settings)
-    return WorkflowDeps(qloo=get_qloo_service("live", settings, cache=qloo_cache), llm=llm, vision=llm.capability("vision"))
+    return WorkflowDeps(
+        qloo=get_qloo_service("live", settings, cache=qloo_cache), llm=llm, vision=llm.capability("vision"),
+        media=MediaPipeline(), transcribe=_transcribe_capability(llm),
+    )
 
 
 __all__ = [
@@ -94,6 +107,7 @@ __all__ = [
     "run_population_study",
     "run_social_simulation",
     "run_transcreate",
+    "run_creative_xray",
     "answer_followup",
     "answer_group_question",
 ]

@@ -19,7 +19,7 @@ from app.db.base import Base, utcnow
 RUN_TYPES = (
     "'market_discovery', 'campaign_rehearsal', 'campaign_adaptation', 'campaign_evaluation', "
     "'cultural_profile', 'campaign_arena', 'risk_scan', 'market_comparison', 'population_study', 'social_simulation', "
-    "'transcreate'"
+    "'transcreate', 'creative_xray'"
 )
 RUN_STATUSES = "'queued', 'running', 'completed', 'partial', 'failed', 'cancelled'"
 
@@ -529,7 +529,11 @@ class RiskFinding(Base):
 
 class Asset(Base):
     """An uploaded file. Bytes live in the ASSET_STORAGE_BACKEND under `storage_name` (server-generated:
-    `{owner_id}/{asset_id}`, the Storage object key; older rows used `{asset_id hex}.{extension}`)."""
+    `{owner_id}/{asset_id}`, the Storage object key; older rows used `{asset_id hex}.{extension}`).
+
+    Media stream (0014): video and audio uploads, plus files derived from them (`parent_asset_id` set: keyframes,
+    thumbnails, the mono 16 kHz audio track). `upload_status` says whether the stored bytes are known good;
+    `processing_status` follows the ffmpeg work (`not_required` for plain images)."""
 
     __tablename__ = "assets"
 
@@ -542,11 +546,30 @@ class Asset(Base):
     sha256: Mapped[str]
     storage_name: Mapped[str] = mapped_column(unique=True)
     created_at: Mapped[datetime] = mapped_column(default=utcnow)
+    upload_status: Mapped[str] = mapped_column(default="stored", server_default="stored")
+    processing_status: Mapped[str] = mapped_column(default="not_required", server_default="not_required")
+    processing_error: Mapped[str | None]
+    rights_confirmed: Mapped[bool] = mapped_column(default=False, server_default="0")
+    rights_confirmed_at: Mapped[datetime | None]
+    duration_ms: Mapped[int | None]
+    width: Mapped[int | None]
+    height: Mapped[int | None]
+    parent_asset_id: Mapped[UUID | None]
+    derived_role: Mapped[str | None]  # keyframe | thumbnail | audio_track
+    derived_at_ms: Mapped[int | None]  # keyframe position in the parent video
+    media_info: Mapped[dict | None]  # sanitized probe facts and the redacted sidecar (never raw tags)
 
     __table_args__ = (
+        _fk(["parent_asset_id", "project_id"], "assets", ["id", "project_id"]),
         UniqueConstraint("id", "project_id"),
-        CheckConstraint("kind IN ('image', 'audio')", name="kind"),
+        CheckConstraint("kind IN ('image', 'audio', 'video')", name="kind"),
+        CheckConstraint("upload_status IN ('stored', 'failed')", name="upload_status"),
+        CheckConstraint(
+            "processing_status IN ('not_required', 'pending', 'processing', 'ready', 'failed')", name="processing_status"
+        ),
+        CheckConstraint("derived_role IN ('keyframe', 'thumbnail', 'audio_track')", name="derived_role"),
         Index("ix_assets_project_id_created_at", "project_id", "created_at"),
+        Index("ix_assets_parent_asset_id", "parent_asset_id"),
     )
 
 
@@ -822,3 +845,4 @@ from app.db.models_versions import (  # noqa: E402,F401  (registers the Creative
 from app.db.models_audience import AudienceRun, PanelAnswer, PanelParticipant, PanelQuestion, RiskFindingRow  # noqa: E402,F401
 from app.db.models_launch import Approval, ReadinessVerdict  # noqa: E402,F401  (Launch Room tables, migration 0016)
 from app.db.models_pulse import MetricSeries, PlatformConnection  # noqa: E402,F401  (Live Pulse tables)
+from app.db.models_media import CreativeAsset, CreativeScene  # noqa: E402,F401  (media stream tables)

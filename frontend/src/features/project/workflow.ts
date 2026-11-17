@@ -15,6 +15,7 @@ export const RUN_TYPE_META: Record<RunType, { label: string; segment: string }> 
   social_simulation: { label: "Social simulation", segment: "audience" },
   // Creative Studio (Phase 2): links to Voice until the Studio workspace page exists.
   transcreate: { label: "Transcreation", segment: "voice" },
+  creative_xray: { label: "Creative X-Ray", segment: "voice" },
 };
 
 /** Section href that keeps the active campaign in the URL. `segment` null is the Overview. */

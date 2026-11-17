@@ -127,6 +127,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/assets/{asset_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Asset Status
+         * @description Upload and processing status, the redaction counts, and the files derived from the asset.
+         */
+        get: operations["get_asset_status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assets/{asset_id}/url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Asset Url
+         * @description A short-lived signed URL for a Cloud Storage object, or the authenticated stream path (local and database storage).
+         */
+        get: operations["get_asset_url"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/audience-lab/sampling-options": {
         parameters: {
             query?: never;
@@ -323,6 +363,49 @@ export interface paths {
          * @description Apply a chip through the operation engine: a new version, locks enforced (409 if its element is locked).
          */
         post: operations["apply_chip"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/creative-xrays": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start Creative Xray
+         * @description Break an uploaded image, video or audio into scenes (run_type creative_xray).
+         *
+         *     Honours Idempotency-Key. 409 for an asset of another project or a derived file; 503 when the language model
+         *     provider is not configured. The result is a creative with scenes: fetch it from the run's result URL.
+         */
+        post: operations["start_creative_xray"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/creatives": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Creatives
+         * @description Creatives of a campaign, newest first. Status mirrors each creative's latest X-Ray run.
+         */
+        get: operations["list_creatives"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1060,6 +1143,63 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/creatives/{creative_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Creative
+         * @description The creative, its source asset, and what the current X-Ray run found: probe, transcript status, keyframes, limits.
+         */
+        get: operations["get_creative"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/creatives/{creative_id}/scenes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Scenes
+         * @description Scenes in time order: those of the current run, or of the run named by `run_id`.
+         */
+        get: operations["list_scenes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/creatives/{creative_id}/scenes/{scene_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Scene */
+        get: operations["get_scene"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/cultural-profiles/{profile_id}": {
         parameters: {
             query?: never;
@@ -1124,6 +1264,26 @@ export interface paths {
          * @description The signed-in user and the workspaces they belong to, with their role in each.
          */
         get: operations["get_me"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/media/capabilities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Media Capabilities
+         * @description What this server can process: ffmpeg and ffprobe, complex-script text shaping, bundled fonts, and limits.
+         */
+        get: operations["get_media_capabilities"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1392,12 +1552,18 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Assets */
+        /**
+         * List Assets
+         * @description Uploads, newest first. Keyframes, thumbnails and audio tracks derived from an upload are hidden unless asked for.
+         */
         get: operations["list_assets"];
         put?: never;
         /**
          * Upload Asset
-         * @description Upload an image creative. Type and size are validated (contracts/README section 13).
+         * @description Upload an image (5 MB), or a video (MP4, MOV, WebM) or audio (MP3, WAV, M4A) of at most 50 MB and 60 seconds.
+         *
+         *     Type and size are checked from the file's bytes; video and audio need `rights_confirmed` and ffprobe. A text sidecar
+         *     and the container's metadata are redacted of emails and phone numbers before any model can use them.
          */
         post: operations["upload_asset"];
         delete?: never;
@@ -1555,6 +1721,29 @@ export interface paths {
          * @description Compare markets with the Atlas pipeline (run_type market_comparison).
          */
         post: operations["start_market_comparison"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{project_id}/media/render-text": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Render Text Preview
+         * @description Preview regional text drawn in code (Noto fonts, raqm shaping), with locked regions restored pixel for pixel.
+         *
+         *     Nothing is stored. 501 for Indic text when complex-script shaping is not installed on the server; the response
+         *     headers report the shaping engine, whether each box fit, and locked-region overlap.
+         */
+        post: operations["render_text_preview"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2178,6 +2367,21 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AdClaim */
+        AdClaim: {
+            /** Segment Id */
+            segment_id: string | null;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "on_screen_text" | "transcript";
+            /**
+             * Text
+             * @description The exact quote, found in the scene's on-screen text or transcript.
+             */
+            text: string;
+        };
         /** AdCodeEntry */
         AdCodeEntry: {
             /** Chapter */
@@ -2473,10 +2677,13 @@ export interface components {
         };
         /**
          * Anchor
-         * @description Where in the creative a finding applies. Normalised 0-1 bbox [x, y, w, h].
+         * @description Where in a creative something applies: a scene, a time span and/or a normalised [x, y, width, height] box.
          */
         "Anchor-Input": {
-            /** Bbox */
+            /**
+             * Bbox
+             * @description Normalised [x, y, width, height]; null when unknown.
+             */
             bbox?: number[] | null;
             /** End Ms */
             end_ms?: number | null;
@@ -2485,7 +2692,10 @@ export interface components {
             /** Start Ms */
             start_ms?: number | null;
         };
-        /** Anchor */
+        /**
+         * Anchor
+         * @description Where in a creative something applies: a scene, a time span and/or a normalised [x, y, width, height] box.
+         */
         "Anchor-Output": {
             /**
              * Bbox
@@ -2831,8 +3041,22 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
+            /**
+             * Derived At Ms
+             * @description Position of a keyframe in its parent video.
+             */
+            derived_at_ms: number | null;
+            /** Derived Role */
+            derived_role: ("keyframe" | "thumbnail" | "audio_track") | null;
+            /**
+             * Duration Ms
+             * @description Video and audio length; null for images.
+             */
+            duration_ms: number | null;
             /** Filename */
             filename: string;
+            /** Height */
+            height: number | null;
             /**
              * Id
              * Format: uuid
@@ -2840,18 +3064,43 @@ export interface components {
             id: string;
             /**
              * Kind
-             * @constant
+             * @enum {string}
              */
-            kind: "image";
+            kind: "image" | "video" | "audio";
+            /**
+             * Parent Asset Id
+             * @description Set on files derived from an upload (keyframes, thumbnails, audio track).
+             */
+            parent_asset_id: string | null;
+            /** Processing Error */
+            processing_error: string | null;
+            /**
+             * Processing Status
+             * @description not_required for plain images; ffmpeg work for video and audio.
+             * @enum {string}
+             */
+            processing_status: "not_required" | "pending" | "processing" | "ready" | "failed";
             /**
              * Project Id
              * Format: uuid
              */
             project_id: string;
+            /**
+             * Rights Confirmed
+             * @description The uploader confirmed they hold the rights to use this file.
+             */
+            rights_confirmed: boolean;
             /** Sha256 */
             sha256: string;
             /** Size Bytes */
             size_bytes: number;
+            /**
+             * Upload Status
+             * @enum {string}
+             */
+            upload_status: "stored" | "failed";
+            /** Width */
+            width: number | null;
         };
         /** AssetPage */
         AssetPage: {
@@ -2863,6 +3112,71 @@ export interface components {
             offset: number;
             /** Total */
             total: number;
+        };
+        /**
+         * AssetStatus
+         * @description Where an asset is in upload and processing, and the files derived from it.
+         */
+        AssetStatus: {
+            /**
+             * Asset Id
+             * Format: uuid
+             */
+            asset_id: string;
+            /** Derived */
+            derived: components["schemas"]["DerivedAsset"][];
+            /** Duration Ms */
+            duration_ms: number | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "image" | "video" | "audio";
+            /**
+             * Metadata Redacted
+             * @description Emails and phone numbers removed from container metadata, by kind.
+             */
+            metadata_redacted: {
+                [key: string]: number;
+            };
+            /** Processing Error */
+            processing_error: string | null;
+            /**
+             * Processing Status
+             * @enum {string}
+             */
+            processing_status: "not_required" | "pending" | "processing" | "ready" | "failed";
+            /** Rights Confirmed */
+            rights_confirmed: boolean;
+            sidecar: components["schemas"]["SidecarStatus"];
+            /**
+             * Upload Status
+             * @enum {string}
+             */
+            upload_status: "stored" | "failed";
+        };
+        /**
+         * AssetUrl
+         * @description How a client reads an asset's bytes: a short-lived signed Cloud Storage URL, or the authenticated stream.
+         */
+        AssetUrl: {
+            /**
+             * Asset Id
+             * Format: uuid
+             */
+            asset_id: string;
+            /**
+             * Expires At
+             * @description Set for signed URLs; stream URLs need the Authorization header.
+             */
+            expires_at: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "signed" | "stream";
+            /** Url */
+            url: string;
         };
         /** AudienceRunAccepted */
         AudienceRunAccepted: {
@@ -3070,9 +3384,20 @@ export interface components {
             file: string;
             /**
              * Kind
-             * @constant
+             * @enum {string}
              */
-            kind: "image";
+            kind: "image" | "video" | "audio";
+            /**
+             * Rights Confirmed
+             * @description Required for video and audio: you hold the rights to this file.
+             * @default false
+             */
+            rights_confirmed: boolean;
+            /**
+             * Sidecar
+             * @description Optional UTF-8 SRT, WebVTT or plain-text notes for a video or audio upload.
+             */
+            sidecar?: string | null;
         };
         /** Brand */
         Brand: {
@@ -3890,6 +4215,99 @@ export interface components {
             /** Version Number */
             version_number: number;
         };
+        /** Creative */
+        Creative: {
+            analysis: components["schemas"]["CreativeAnalysis"] | null;
+            asset: components["schemas"]["Asset"];
+            /**
+             * Asset Id
+             * Format: uuid
+             */
+            asset_id: string;
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Current Run Id */
+            current_run_id: string | null;
+            /** Duration Ms */
+            duration_ms: number | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "image" | "video" | "audio";
+            /** Label */
+            label: string;
+            /** Language */
+            language: string | null;
+            /** Latest Run Id */
+            latest_run_id: string | null;
+            /** Limitations */
+            limitations: string[];
+            /** Mode */
+            mode: ("live" | "demo") | null;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Region Code */
+            region_code: string | null;
+            run_metadata: components["schemas"]["RunMetadata"] | null;
+            /** Scene Count */
+            scene_count: number;
+            /**
+             * Status
+             * @description Status of the latest X-Ray run, which this record always mirrors.
+             */
+            status: ("queued" | "running" | "completed" | "partial" | "failed" | "cancelled") | null;
+            /** Thumbnail Url */
+            thumbnail_url: string | null;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /**
+         * CreativeAnalysis
+         * @description What the current run found about the creative as a whole.
+         */
+        CreativeAnalysis: {
+            /**
+             * Dropped
+             * @description Model items removed because code could not verify them, by kind.
+             */
+            dropped: {
+                [key: string]: number;
+            };
+            /** Frames */
+            frames: components["schemas"]["FrameRecord"][];
+            /** Limitations */
+            limitations: string[];
+            probe: components["schemas"]["MediaProbe"];
+            /**
+             * Sidecar Notes
+             * @description The user's own notes, redacted of emails and phone numbers; never a transcript.
+             */
+            sidecar_notes: string | null;
+            transcribe: components["schemas"]["TranscribeStatus"];
+            /** Transcript */
+            transcript: components["schemas"]["TranscriptSegment"][];
+            vision: components["schemas"]["VisionStatus"];
+        };
         /** CreativeCopy */
         CreativeCopy: {
             /** Body */
@@ -4058,6 +4476,78 @@ export interface components {
             start_ms: number | null;
             /** Summary */
             summary: string | null;
+        };
+        /** CreativeSummary */
+        CreativeSummary: {
+            /**
+             * Asset Id
+             * Format: uuid
+             */
+            asset_id: string;
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Current Run Id */
+            current_run_id: string | null;
+            /** Duration Ms */
+            duration_ms: number | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "image" | "video" | "audio";
+            /** Label */
+            label: string;
+            /** Language */
+            language: string | null;
+            /** Latest Run Id */
+            latest_run_id: string | null;
+            /** Mode */
+            mode: ("live" | "demo") | null;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Region Code */
+            region_code: string | null;
+            /** Scene Count */
+            scene_count: number;
+            /**
+             * Status
+             * @description Status of the latest X-Ray run, which this record always mirrors.
+             */
+            status: ("queued" | "running" | "completed" | "partial" | "failed" | "cancelled") | null;
+            /** Thumbnail Url */
+            thumbnail_url: string | null;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** CreativeSummaryPage */
+        CreativeSummaryPage: {
+            /** Items */
+            items: components["schemas"]["CreativeSummary"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
         };
         /** CulturalProfile */
         CulturalProfile: {
@@ -4307,6 +4797,27 @@ export interface components {
             source_kind: "sample";
             /** Versions */
             versions: string[];
+        };
+        /** DerivedAsset */
+        DerivedAsset: {
+            /** Content Type */
+            content_type: string;
+            /** Content Url */
+            content_url: string;
+            /** Derived At Ms */
+            derived_at_ms: number | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "keyframe" | "thumbnail" | "audio_track";
+            /** Size Bytes */
+            size_bytes: number;
         };
         /** DimensionDefinition */
         DimensionDefinition: {
@@ -5125,6 +5636,22 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** FrameRecord */
+        FrameRecord: {
+            /**
+             * Asset Id
+             * @description The derived keyframe asset; null for an image, which is its own frame.
+             */
+            asset_id: string | null;
+            /** Id */
+            id: string;
+            /** Observations */
+            observations: components["schemas"]["VisualObservation"][];
+            /** Timestamp Ms */
+            timestamp_ms: number;
+            /** Url */
+            url: string;
+        };
         /** Freshness */
         Freshness: {
             /** Dataset Version */
@@ -5785,6 +6312,16 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** LockedRegion */
+        LockedRegion: {
+            /**
+             * Bbox
+             * @description [x, y, width, height], each from 0 to 1 of the image size.
+             */
+            bbox: number[];
+            /** Label */
+            label: string;
+        };
         /** ManualEdit */
         ManualEdit: {
             /** Edits */
@@ -6013,6 +6550,61 @@ export interface components {
             /** Workspaces */
             workspaces: components["schemas"]["Workspace"][];
         };
+        /**
+         * MediaCapabilities
+         * @description Detected once at startup. Images and text rendering work without ffmpeg; video and audio need it.
+         */
+        MediaCapabilities: {
+            ffmpeg: components["schemas"]["ToolStatus"];
+            ffprobe: components["schemas"]["ToolStatus"];
+            limits: components["schemas"]["MediaLimits"];
+            /**
+             * Scripts
+             * @description Scripts with a bundled Noto font.
+             */
+            scripts: ("Deva" | "Taml" | "Mlym" | "Beng" | "Telu" | "Knda" | "Gujr" | "Guru" | "Orya" | "Latn")[];
+            /**
+             * Text Shaping
+             * @description raqm shapes Indic scripts correctly. basic renders Latin only: Indic text is refused, never drawn unshaped.
+             * @enum {string}
+             */
+            text_shaping: "raqm" | "basic";
+        };
+        /** MediaLimits */
+        MediaLimits: {
+            /** Max Image Bytes */
+            max_image_bytes: number;
+            /** Max Media Bytes */
+            max_media_bytes: number;
+            /** Max Media Seconds */
+            max_media_seconds: number;
+        };
+        /** MediaProbe */
+        MediaProbe: {
+            /** Audio Codec */
+            audio_codec: string | null;
+            /** Container */
+            container: string | null;
+            /** Duration Ms */
+            duration_ms: number | null;
+            /** Fps */
+            fps: number | null;
+            /** Has Audio */
+            has_audio: boolean;
+            /** Has Video */
+            has_video: boolean;
+            /** Height */
+            height: number | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "image" | "video" | "audio";
+            /** Video Codec */
+            video_codec: string | null;
+            /** Width */
+            width: number | null;
+        };
         /** MemoryItem */
         MemoryItem: {
             /**
@@ -6232,6 +6824,16 @@ export interface components {
              * @description The query term or entity id the observations are matched on.
              */
             reference_key: string;
+        };
+        /** OnScreenText */
+        OnScreenText: {
+            /**
+             * Frame Ms
+             * @description Keyframe at which a vision model reported this text.
+             */
+            frame_ms: number | null;
+            /** Text */
+            text: string;
         };
         /** OpenConflictInput */
         "OpenConflictInput-Input": {
@@ -8273,6 +8875,34 @@ export interface components {
             /** Message */
             message: string;
         };
+        /**
+         * RenderTextRequest
+         * @description Preview of the Remake: Visuals text step. The base is `base_asset_id` (a generated image), else the original,
+         *     else a blank canvas. Text is drawn in code; then every locked region is restored pixel for pixel from
+         *     `original_asset_id`, last, so text can never alter a protected logo or product. The answer is a PNG.
+         */
+        RenderTextRequest: {
+            /**
+             * Background
+             * @default #202020
+             */
+            background: string;
+            /** Base Asset Id */
+            base_asset_id?: string | null;
+            /** Boxes */
+            boxes: components["schemas"]["TextBox"][];
+            /** Height */
+            height?: number | null;
+            /**
+             * Locked Regions
+             * @default []
+             */
+            locked_regions: components["schemas"]["LockedRegion"][];
+            /** Original Asset Id */
+            original_asset_id?: string | null;
+            /** Width */
+            width?: number | null;
+        };
         /** Report */
         Report: {
             /** Adaptations */
@@ -8506,6 +9136,121 @@ export interface components {
             /** Version Ref */
             version_ref?: string | null;
         };
+        /** RiskCheckFinding */
+        RiskCheckFinding: {
+            /** Ad Codes */
+            ad_codes: components["schemas"]["AdCodeRef"][];
+            anchor: components["schemas"]["Anchor-Output"];
+            /**
+             * Blocks Go
+             * @description Computed by risk-rules-v1. Counts toward the Go verdict while the finding is open or accepted.
+             */
+            blocks_go: boolean;
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "brand_rule" | "unsubstantiated_claim" | "health_nutrition_claim" | "comparative_claim" | "children_safety" | "unsafe_depiction" | "offensive_content" | "stereotype_or_derision" | "disclaimer_issue" | "synthetic_media_disclosure" | "regional_sensitivity" | "language_ambiguity" | "other";
+            /** Claim Ids */
+            claim_ids: string[];
+            /**
+             * Confidence Label
+             * @description How much code-checkable support the finding has. A label, not a probability.
+             * @enum {string}
+             */
+            confidence_label: "insufficient" | "limited" | "moderate";
+            /** Element Id */
+            element_id: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Interpretation
+             * @description Why it may matter in this region. A model interpretation unless source is deterministic_check.
+             */
+            interpretation: string;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Observation
+             * @description What is there. Not a judgement.
+             */
+            observation: string;
+            /** Ordinal */
+            ordinal: number;
+            /**
+             * Quote
+             * @description Exact text from the element, verified in code; null for a finding about a non-text element.
+             */
+            quote: string | null;
+            /** Quote End */
+            quote_end: number | null;
+            /** Quote Start */
+            quote_start: number | null;
+            /** Rules Version */
+            rules_version: string;
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "low" | "medium" | "high";
+            /** Severity Rules */
+            severity_rules: components["schemas"]["AppliedRuleView"][];
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "deterministic_check" | "model_assessment";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "accepted" | "dismissed" | "fixed";
+            /** Status At */
+            status_at: string | null;
+            /** Status By */
+            status_by: string | null;
+            /** Status Reason */
+            status_reason: string | null;
+            /** Suggested Fix */
+            suggested_fix: string | null;
+            /**
+             * Verification
+             * @enum {string}
+             */
+            verification: "quote_verified" | "element_reference" | "deterministic";
+        };
+        /** RiskCheckFindingPage */
+        RiskCheckFindingPage: {
+            /** Items */
+            items: components["schemas"]["RiskCheckFinding"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /**
+         * RiskCheckFindingUpdate
+         * @description A person's decision on a finding. Dismissing needs a reason.
+         */
+        RiskCheckFindingUpdate: {
+            /** Reason */
+            reason?: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "accepted" | "dismissed" | "fixed";
+        };
         /**
          * RiskCheckObservation
          * @description A completed Risk Check. An empty list means it ran and found nothing; it is not proof that no risk exists.
@@ -8546,7 +9291,7 @@ export interface components {
             elements: components["schemas"]["CreativeElementIn-Output"][];
             error: components["schemas"]["RunError"] | null;
             /** Findings */
-            findings: components["schemas"]["app__schemas__audience__RiskFinding"][];
+            findings: components["schemas"]["RiskCheckFinding"][];
             grounding: components["schemas"]["GroundingSummary"];
             /**
              * Human Review Required
@@ -8612,6 +9357,70 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** RiskFinding */
+        RiskFinding: {
+            /**
+             * Brand Rule
+             * @description The Brand Memory rule involved, if any.
+             */
+            brand_rule: string | null;
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "stereotype" | "sensitivity" | "ambiguity" | "brand_inconsistency" | "unsupported_claim" | "constraint_violation" | "visual_context" | "other";
+            /**
+             * Confidence Label
+             * @enum {string}
+             */
+            confidence_label: "insufficient" | "limited" | "moderate";
+            /** Evidence Ids */
+            evidence_ids: string[];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Interpretation
+             * @description Why it may matter. A model interpretation unless source is deterministic_check.
+             */
+            interpretation: string;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Observation
+             * @description The exact text excerpt or visible element the finding concerns.
+             */
+            observation: string;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "low" | "medium" | "high";
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "deterministic_check" | "model_assessment" | "vision_model";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "dismissed" | "resolved" | "applied";
+            /** Status Note */
+            status_note: string | null;
+            /** Suggested Alternative */
+            suggested_alternative: string | null;
+            text_location: components["schemas"]["TextLocation"] | null;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Visual Observation Id */
+            visual_observation_id: string | null;
+        };
         /** RiskFindingInput */
         RiskFindingInput: {
             anchor?: components["schemas"]["Anchor-Input"] | null;
@@ -8653,16 +9462,15 @@ export interface components {
             /** Summary */
             summary: string;
         };
-        /** RiskFindingPage */
-        RiskFindingPage: {
-            /** Items */
-            items: components["schemas"]["app__schemas__audience__RiskFinding"][];
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-            /** Total */
-            total: number;
+        /** RiskFindingUpdate */
+        RiskFindingUpdate: {
+            /** Note */
+            note?: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "dismissed" | "resolved";
         };
         /** RiskFlag */
         RiskFlag: {
@@ -8704,7 +9512,7 @@ export interface components {
             /** Evidence */
             evidence: components["schemas"]["EvidenceRecord"][];
             /** Findings */
-            findings: components["schemas"]["app__schemas__risk__RiskFinding"][];
+            findings: components["schemas"]["RiskFinding"][];
             /**
              * Id
              * Format: uuid
@@ -8878,7 +9686,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray";
             /** Started At */
             started_at: string | null;
             /**
@@ -8900,7 +9708,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray";
             /**
              * Status
              * @enum {string}
@@ -8984,7 +9792,7 @@ export interface components {
              * Resource
              * @enum {string}
              */
-            resource: "discovery" | "rehearsal" | "adaptations" | "evaluation" | "cultural_profile" | "arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "version" | "operation";
+            resource: "discovery" | "rehearsal" | "adaptations" | "evaluation" | "cultural_profile" | "arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "version" | "operation" | "creative_xray";
             /**
              * Url
              * @description API path of the result resource, e.g. /api/v1/projects/{id}/discoveries/{run_id}.
@@ -9054,6 +9862,147 @@ export interface components {
                     [key: string]: number;
                 };
             } | null;
+        };
+        /** Scene */
+        Scene: {
+            anchor: components["schemas"]["Anchor-Output"];
+            /**
+             * Asset Id
+             * Format: uuid
+             */
+            asset_id: string;
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Claims */
+            claims: components["schemas"]["AdClaim"][];
+            /** Colours */
+            colours: string[];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Creative Asset Id
+             * Format: uuid
+             */
+            creative_asset_id: string;
+            /** Cultural Interpretations */
+            cultural_interpretations: components["schemas"]["SceneInterpretation"][];
+            /** Cultural Observations */
+            cultural_observations: components["schemas"]["SceneObservation"][];
+            /**
+             * End Ms
+             * @description Null for an image, which is one scene without a duration.
+             */
+            end_ms: number | null;
+            /**
+             * Frame Ms
+             * @description Timestamps of the keyframes this scene was read from.
+             */
+            frame_ms: number[];
+            /** Gestures */
+            gestures: string[];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Keyframe Asset Id */
+            keyframe_asset_id: string | null;
+            /**
+             * Keyframe Url
+             * @description Authenticated API path of the scene's keyframe image.
+             */
+            keyframe_url: string | null;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Music Mood
+             * @description Null unless an audio capability reported it; never guessed from video.
+             */
+            music_mood: string | null;
+            /** Objects */
+            objects: string[];
+            /** On Screen Text */
+            on_screen_text: components["schemas"]["OnScreenText"][];
+            /** People */
+            people: string[];
+            /** Position */
+            position: number;
+            /** Provenance */
+            provenance: {
+                [key: string]: "observed" | "transcribed" | "user_provided" | "model_generated" | "interpretation";
+            };
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /** Setting */
+            setting: string | null;
+            /** Start Ms */
+            start_ms: number;
+            /** Transcript */
+            transcript: components["schemas"]["TranscriptSegment"][];
+        };
+        /** SceneInterpretation */
+        SceneInterpretation: {
+            /**
+             * Based On
+             * @description Ids of the observations in this scene it is based on.
+             */
+            based_on: string[];
+            /** Category */
+            category: ("language" | "script" | "festival" | "moment" | "food" | "colour" | "symbol" | "humour" | "family" | "custom" | "sensitivity" | "trend" | "demographic" | "media") | null;
+            /**
+             * Claim Ids
+             * @default []
+             */
+            claim_ids: string[];
+            /** Id */
+            id: string;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Text
+             * @description A model's cultural reading. Not an observed fact.
+             */
+            text: string;
+        };
+        /** SceneObservation */
+        SceneObservation: {
+            /** Category */
+            category: ("language" | "script" | "festival" | "moment" | "food" | "colour" | "symbol" | "humour" | "family" | "custom" | "sensitivity" | "trend" | "demographic" | "media") | null;
+            /**
+             * Claim Ids
+             * @description Regional claims linked to this observation; filled by later steps.
+             * @default []
+             */
+            claim_ids: string[];
+            /**
+             * Evidence
+             * @description Frame ids (f1, f2, ...) and transcript segment ids (t1, ...) it rests on.
+             */
+            evidence: string[];
+            /** Id */
+            id: string;
+            /** Text */
+            text: string;
+        };
+        /** ScenePage */
+        ScenePage: {
+            /** Items */
+            items: components["schemas"]["Scene"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
         };
         /** ScoreCard */
         ScoreCard: {
@@ -9314,6 +10263,20 @@ export interface components {
             provisional: boolean;
             /** Value */
             value: number | null;
+        };
+        /** SidecarStatus */
+        SidecarStatus: {
+            /** Format */
+            format: ("srt" | "vtt" | "text") | null;
+            /** Present */
+            present: boolean;
+            /**
+             * Redacted
+             * @description Emails and phone numbers removed from the sidecar before any model use, by kind.
+             */
+            redacted: {
+                [key: string]: number;
+            };
         };
         /** SignalUsed */
         SignalUsed: {
@@ -10089,6 +11052,65 @@ export interface components {
              */
             sentiment: "positive" | "neutral" | "negative" | "mixed";
         };
+        /** TextBox */
+        TextBox: {
+            /**
+             * Align
+             * @default left
+             * @enum {string}
+             */
+            align: "left" | "center" | "right";
+            /**
+             * Bbox
+             * @description [x, y, width, height], each from 0 to 1 of the image size.
+             */
+            bbox: number[];
+            /**
+             * Bold
+             * @default false
+             */
+            bold: boolean;
+            /**
+             * Color
+             * @default #ffffff
+             */
+            color: string;
+            /**
+             * Language
+             * @description ISO 639 code; lets the font pick language-specific glyph forms (Marathi, Hindi).
+             */
+            language?: string | null;
+            /**
+             * Line Spacing
+             * @description Multiple of the font's own line height.
+             * @default 1
+             */
+            line_spacing: number;
+            /**
+             * Max Size Px
+             * @default 96
+             */
+            max_size_px: number;
+            /**
+             * Min Size Px
+             * @default 10
+             */
+            min_size_px: number;
+            /**
+             * Script
+             * @enum {string}
+             */
+            script: "Deva" | "Taml" | "Mlym" | "Beng" | "Telu" | "Knda" | "Gujr" | "Guru" | "Orya" | "Latn";
+            shadow?: components["schemas"]["TextShadow"] | null;
+            /** Text */
+            text: string;
+            /**
+             * Valign
+             * @default top
+             * @enum {string}
+             */
+            valign: "top" | "middle" | "bottom";
+        };
         /** TextLocation */
         TextLocation: {
             /** End */
@@ -10102,6 +11124,29 @@ export interface components {
             field: "headline" | "body" | "call_to_action";
             /** Start */
             start: number | null;
+        };
+        /** TextShadow */
+        TextShadow: {
+            /**
+             * Blur
+             * @default 0
+             */
+            blur: number;
+            /**
+             * Color
+             * @default #000000aa
+             */
+            color: string;
+            /**
+             * Dx
+             * @default 2
+             */
+            dx: number;
+            /**
+             * Dy
+             * @default 2
+             */
+            dy: number;
         };
         /** ThemeCount */
         ThemeCount: {
@@ -10247,6 +11292,18 @@ export interface components {
             kind: "tone_shift";
             tone: components["schemas"]["Tone-Input"];
         };
+        /** ToolStatus */
+        ToolStatus: {
+            /** Available */
+            available: boolean;
+            /**
+             * Message
+             * @description Why the tool is unavailable, when it is.
+             */
+            message: string | null;
+            /** Version */
+            version: string | null;
+        };
         /** TranscreateRequest */
         TranscreateRequest: {
             /**
@@ -10302,6 +11359,41 @@ export interface components {
              * @default 0
              */
             script_error_lines: number;
+        };
+        /** TranscribeStatus */
+        TranscribeStatus: {
+            /**
+             * Message
+             * @description Why there is no transcript, when there is none. A transcript is never invented.
+             */
+            message: string | null;
+            /** Model Id */
+            model_id: string | null;
+            /** Provider */
+            provider: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "transcribed" | "from_sidecar" | "not_applicable" | "unavailable" | "failed";
+        };
+        /** TranscriptSegment */
+        TranscriptSegment: {
+            /** End Ms */
+            end_ms: number | null;
+            /** Id */
+            id: string;
+            /** Language */
+            language: string | null;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "transcription" | "user_sidecar";
+            /** Start Ms */
+            start_ms: number | null;
+            /** Text */
+            text: string;
         };
         /**
          * TrendComparison
@@ -10849,183 +11941,28 @@ export interface components {
              */
             role: "owner" | "editor" | "reviewer" | "viewer";
         };
-        /** RiskFinding */
-        app__schemas__audience__RiskFinding: {
-            /** Ad Codes */
-            ad_codes: components["schemas"]["AdCodeRef"][];
-            anchor: components["schemas"]["Anchor-Output"];
-            /**
-             * Blocks Go
-             * @description Computed by risk-rules-v1. Counts toward the Go verdict while the finding is open or accepted.
-             */
-            blocks_go: boolean;
-            /**
-             * Category
-             * @enum {string}
-             */
-            category: "brand_rule" | "unsubstantiated_claim" | "health_nutrition_claim" | "comparative_claim" | "children_safety" | "unsafe_depiction" | "offensive_content" | "stereotype_or_derision" | "disclaimer_issue" | "synthetic_media_disclosure" | "regional_sensitivity" | "language_ambiguity" | "other";
-            /** Claim Ids */
-            claim_ids: string[];
-            /**
-             * Confidence Label
-             * @description How much code-checkable support the finding has. A label, not a probability.
-             * @enum {string}
-             */
-            confidence_label: "insufficient" | "limited" | "moderate";
-            /** Element Id */
-            element_id: string;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Interpretation
-             * @description Why it may matter in this region. A model interpretation unless source is deterministic_check.
-             */
-            interpretation: string;
-            /** Limitations */
-            limitations: string[];
-            /**
-             * Observation
-             * @description What is there. Not a judgement.
-             */
-            observation: string;
-            /** Ordinal */
-            ordinal: number;
-            /**
-             * Quote
-             * @description Exact text from the element, verified in code; null for a finding about a non-text element.
-             */
-            quote: string | null;
-            /** Quote End */
-            quote_end: number | null;
-            /** Quote Start */
-            quote_start: number | null;
-            /** Rules Version */
-            rules_version: string;
-            /**
-             * Run Id
-             * Format: uuid
-             */
-            run_id: string;
-            /**
-             * Severity
-             * @enum {string}
-             */
-            severity: "low" | "medium" | "high";
-            /** Severity Rules */
-            severity_rules: components["schemas"]["AppliedRuleView"][];
-            /**
-             * Source
-             * @enum {string}
-             */
-            source: "deterministic_check" | "model_assessment";
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "open" | "accepted" | "dismissed" | "fixed";
-            /** Status At */
-            status_at: string | null;
-            /** Status By */
-            status_by: string | null;
-            /** Status Reason */
-            status_reason: string | null;
-            /** Suggested Fix */
-            suggested_fix: string | null;
-            /**
-             * Verification
-             * @enum {string}
-             */
-            verification: "quote_verified" | "element_reference" | "deterministic";
-        };
         /**
-         * RiskFindingUpdate
-         * @description A person's decision on a finding. Dismissing needs a reason.
+         * XRayCreate
+         * @description Start Creative X-Ray on an uploaded asset (run_type creative_xray).
          */
-        app__schemas__audience__RiskFindingUpdate: {
-            /** Reason */
-            reason?: string | null;
+        XRayCreate: {
             /**
-             * Status
-             * @enum {string}
-             */
-            status: "open" | "accepted" | "dismissed" | "fixed";
-        };
-        /** RiskFinding */
-        app__schemas__risk__RiskFinding: {
-            /**
-             * Brand Rule
-             * @description The Brand Memory rule involved, if any.
-             */
-            brand_rule: string | null;
-            /**
-             * Category
-             * @enum {string}
-             */
-            category: "stereotype" | "sensitivity" | "ambiguity" | "brand_inconsistency" | "unsupported_claim" | "constraint_violation" | "visual_context" | "other";
-            /**
-             * Confidence Label
-             * @enum {string}
-             */
-            confidence_label: "insufficient" | "limited" | "moderate";
-            /** Evidence Ids */
-            evidence_ids: string[];
-            /**
-             * Id
+             * Asset Id
              * Format: uuid
              */
-            id: string;
+            asset_id: string;
+            /** Label */
+            label?: string | null;
             /**
-             * Interpretation
-             * @description Why it may matter. A model interpretation unless source is deterministic_check.
+             * Language
+             * @description Declared spoken language; helps transcription.
              */
-            interpretation: string;
-            /** Limitations */
-            limitations: string[];
+            language?: string | null;
             /**
-             * Observation
-             * @description The exact text excerpt or visible element the finding concerns.
+             * Region Code
+             * @description Market the creative is read for; optional.
              */
-            observation: string;
-            /**
-             * Severity
-             * @enum {string}
-             */
-            severity: "low" | "medium" | "high";
-            /**
-             * Source
-             * @enum {string}
-             */
-            source: "deterministic_check" | "model_assessment" | "vision_model";
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "open" | "dismissed" | "resolved" | "applied";
-            /** Status Note */
-            status_note: string | null;
-            /** Suggested Alternative */
-            suggested_alternative: string | null;
-            text_location: components["schemas"]["TextLocation"] | null;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-            /** Visual Observation Id */
-            visual_observation_id: string | null;
-        };
-        /** RiskFindingUpdate */
-        app__schemas__risk__RiskFindingUpdate: {
-            /** Note */
-            note?: string | null;
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "open" | "dismissed" | "resolved";
+            region_code?: string | null;
         };
     };
     responses: never;
@@ -11906,7 +12843,251 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
+                    "audio/*": unknown;
                     "image/*": unknown;
+                    "video/*": unknown;
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_asset_status: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                asset_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssetStatus"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_asset_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                asset_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssetUrl"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -13782,6 +14963,257 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ChipApplied"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_creative_xray: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["XRayCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunAccepted"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_creatives: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreativeSummaryPage"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -18539,7 +19971,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["RiskFindingPage"];
+                    "application/json": components["schemas"]["RiskCheckFindingPage"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -18656,7 +20088,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["app__schemas__audience__RiskFindingUpdate"];
+                "application/json": components["schemas"]["RiskCheckFindingUpdate"];
             };
         };
         responses: {
@@ -18666,7 +20098,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["app__schemas__audience__RiskFinding"];
+                    "application/json": components["schemas"]["RiskCheckFinding"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -19893,6 +21325,376 @@ export interface operations {
             };
         };
     };
+    get_creative: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                creative_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Creative"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_scenes: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+                run_id?: string | null;
+            };
+            header?: never;
+            path: {
+                creative_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenePage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_scene: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                creative_id: string;
+                scene_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Scene"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     get_cultural_profile: {
         parameters: {
             query?: never;
@@ -20397,6 +22199,125 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Me"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_media_capabilities: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaCapabilities"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -22744,7 +24665,8 @@ export interface operations {
                 limit?: number;
                 /** @description Number of records skipped. */
                 offset?: number;
-                kind?: "image" | null;
+                kind?: ("image" | "video" | "audio") | null;
+                include_derived?: boolean;
             };
             header?: never;
             path: {
@@ -24492,6 +26414,131 @@ export interface operations {
             };
         };
     };
+    render_text_preview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RenderTextRequest"];
+            };
+        };
+        responses: {
+            /** @description The rendered image. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/png": unknown;
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_populations: {
         parameters: {
             query?: {
@@ -24877,7 +26924,7 @@ export interface operations {
                 limit?: number;
                 /** @description Number of records skipped. */
                 offset?: number;
-                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate") | null;
+                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray") | null;
                 campaign_id?: string | null;
                 study_id?: string | null;
                 status?: ("queued" | "running" | "completed" | "partial" | "failed" | "cancelled") | null;
@@ -26505,7 +28552,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["app__schemas__risk__RiskFindingUpdate"];
+                "application/json": components["schemas"]["RiskFindingUpdate"];
             };
         };
         responses: {
@@ -26515,7 +28562,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["app__schemas__risk__RiskFinding"];
+                    "application/json": components["schemas"]["RiskFinding"];
                 };
             };
             /** @description UNAUTHENTICATED */

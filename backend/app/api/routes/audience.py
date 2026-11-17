@@ -123,21 +123,21 @@ async def get_risk_check(campaign_id: UUID, run_id: UUID, user: CurrentUser) -> 
     return await audience.get_result(user.id, campaign_id, run_id, "risk_check")
 
 
-@router.get("/campaigns/{campaign_id}/risk-checks/{run_id}/findings", response_model=v.RiskFindingPage)
+@router.get("/campaigns/{campaign_id}/risk-checks/{run_id}/findings", response_model=v.RiskCheckFindingPage)
 async def list_risk_check_findings(
     campaign_id: UUID, run_id: UUID, user: CurrentUser,
     finding_status: Annotated[v.FindingStatus | None, Query(alias="status")] = None,
     severity: Annotated[v.Severity | None, Query()] = None,
     category: Annotated[v.RiskCategory | None, Query()] = None,
     limit: Limit = 50, offset: Offset = 0,
-) -> v.RiskFindingPage:
+) -> v.RiskCheckFindingPage:
     return await audience.list_findings(
         user.id, campaign_id, run_id, status=finding_status, severity=severity, category=category, limit=limit, offset=offset)
 
 
-@router.patch("/campaigns/{campaign_id}/risk-checks/{run_id}/findings/{finding_id}", response_model=v.RiskFinding)
+@router.patch("/campaigns/{campaign_id}/risk-checks/{run_id}/findings/{finding_id}", response_model=v.RiskCheckFinding)
 async def update_risk_check_finding(
-    campaign_id: UUID, run_id: UUID, finding_id: UUID, body: v.RiskFindingUpdate, user: CurrentUser
-) -> v.RiskFinding:
+    campaign_id: UUID, run_id: UUID, finding_id: UUID, body: v.RiskCheckFindingUpdate, user: CurrentUser
+) -> v.RiskCheckFinding:
     """Record a person's decision: accepted, dismissed (with a reason), fixed, or open again. Severity and blocks_go never change."""
     return await audience.update_finding(user.id, campaign_id, run_id, finding_id, body)

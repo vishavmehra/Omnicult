@@ -17,7 +17,7 @@ from pydantic import Field, StringConstraints, field_validator, model_validator
 from app.analytics.panel import DIMENSIONS, reject_protected
 from app.reference.india import LANGUAGES, REGIONS
 from app.schemas.claims import ClaimKind, ConfidenceLevel
-from app.schemas.common import ApiModel, DataMode, MediumText, Page, ShortText, StepTrace, Term
+from app.schemas.common import Anchor, ApiModel, DataMode, MediumText, Page, ShortText, StepTrace, Term
 from app.schemas.population import Comprehension, InterviewAnswer, ReactionCategory, ReactionDistribution, ThemeCount
 from app.schemas.regions import EvidenceStrength
 from app.schemas.runs import RunError, RunProgress, RunStatus
@@ -580,13 +580,6 @@ class RiskCheckCreate(ApiModel):
         return self
 
 
-class Anchor(ApiModel):
-    scene_id: str | None = None
-    start_ms: int | None = None
-    end_ms: int | None = None
-    bbox: list[float] | None = Field(default=None, description="Normalised [x, y, width, height]; null when unknown.")
-
-
 class AdCodeRef(ApiModel):
     id: str
     document: str
@@ -602,7 +595,7 @@ class AppliedRuleView(ApiModel):
     reason: str
 
 
-class RiskFinding(ApiModel):
+class RiskCheckFinding(ApiModel):
     id: UUID
     run_id: UUID
     ordinal: int
@@ -633,14 +626,14 @@ class RiskFinding(ApiModel):
     limitations: list[str]
 
 
-class RiskFindingUpdate(ApiModel):
+class RiskCheckFindingUpdate(ApiModel):
     """A person's decision on a finding. Dismissing needs a reason."""
 
     status: FindingStatus
     reason: MediumText | None = None
 
     @model_validator(mode="after")
-    def _dismissal_needs_reason(self) -> "RiskFindingUpdate":
+    def _dismissal_needs_reason(self) -> "RiskCheckFindingUpdate":
         if self.status == "dismissed" and not (self.reason or "").strip():
             raise ValueError("reason: say why the finding is dismissed.")
         return self
@@ -676,7 +669,7 @@ class RiskCheckResult(ApiModel):
     rules_version: str
     ad_code_index_version: str
     counts: RiskCounts
-    findings: list[RiskFinding]
+    findings: list[RiskCheckFinding]
     dropped: DroppedFindings
     grounding: GroundingSummary
     disclaimer: str = NOT_LEGAL_REVIEW
@@ -688,7 +681,7 @@ class RiskCheckResult(ApiModel):
     created_at: datetime
 
 
-class RiskFindingPage(Page[RiskFinding]):
+class RiskCheckFindingPage(Page[RiskCheckFinding]):
     pass
 
 

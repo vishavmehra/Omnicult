@@ -28,6 +28,9 @@ ENV PATH=/opt/venv/bin:$PATH PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PORT=8
 RUN useradd --system --uid 10001 --home-dir /app --shell /usr/sbin/nologin app
 WORKDIR /app
 COPY --from=builder /opt/venv /opt/venv
+# Fail the build, not a render at run time, if Pillow cannot shape Indic scripts (libraqm, FriBiDi, HarfBuzz) or ffmpeg is unusable.
+RUN python -c "from PIL import features; assert features.check('raqm'), 'Pillow has no raqm: Indic text would be refused'" \
+    && ffmpeg -version > /dev/null && ffprobe -version > /dev/null
 COPY alembic.ini ./
 COPY migrations ./migrations
 COPY app ./app

@@ -12,7 +12,7 @@ from uuid import UUID
 
 from pydantic import Field, StringConstraints, model_validator
 
-from app.schemas.common import ApiModel, DataMode, Label, MediumText, Page, RiskSeverity, ShortText
+from app.schemas.common import Anchor, ApiModel, DataMode, Label, MediumText, Page, RiskSeverity, ShortText
 
 RegionCode = Annotated[str, StringConstraints(pattern=r"^[A-Z]{2}-[A-Z0-9]{1,3}$")]
 ShortId = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=64)]
@@ -32,13 +32,6 @@ ApprovalDecision = Literal["approve", "reject", "request_changes"]
 # --- typed observations (inputs) ------------------------------------------------------------------
 
 
-class Anchor(ApiModel):
-    """Where in the creative a finding applies. Normalised 0-1 bbox [x, y, w, h]."""
-
-    scene_id: str | None = None
-    start_ms: int | None = Field(default=None, ge=0)
-    end_ms: int | None = Field(default=None, ge=0)
-    bbox: Annotated[list[float], Field(min_length=4, max_length=4)] | None = None
 
 
 class Provenance(ApiModel):

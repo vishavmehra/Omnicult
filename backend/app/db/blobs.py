@@ -11,6 +11,7 @@ talks to Storage; every read goes through the API's ownership check first.
 import asyncio
 import itertools
 import logging
+from datetime import timedelta
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -193,3 +194,41 @@ async def content_response(row: m.Asset) -> Response:
     data = await read(row)
     disposition = f"inline; filename*=utf-8''{quote(row.filename)}"
     return Response(data, media_type=row.content_type, headers=CONTENT_HEADERS | {"Content-Disposition": disposition})
+
+
+async def signed_url(row: m.Asset, ttl_seconds: int) -> str | None:
+    """A V4 signed GET URL (media stream), after the caller's ownership check, for an object in Cloud Storage.
+
+    None for every other backend, for bytes that live in the database, and whenever signing is not possible (the
+    caller then streams through the API instead). Cloud Run credentials hold no private key, so signing goes through the
+    IAM Credentials API using the runtime service account (it needs roles/iam.serviceAccountTokenCreator on itself)."""
+    if get_settings().asset_storage_backend != "gcs":
+        return None
+    async with read_session() as s:
+        if await s.scalar(select(m.AssetBlob.asset_id).where(m.AssetBlob.asset_id == row.id)) is not None:
+            return None
+
+    def sign() -> str:
+        global _gcs
+        if _gcs is None:
+            from google.cloud import storage
+
+            _gcs = storage.Client()
+        blob = _gcs.bucket(get_settings().gcs_bucket).blob(row.storage_name)
+        extra: dict[str, Any] = {}
+        credentials = getattr(_gcs, "_credentials", None)
+        if credentials is not None and getattr(credentials, "service_account_email", None) and not hasattr(credentials, "signer"):
+            from google.auth.transport.requests import Request
+
+            credentials.refresh(Request())
+            extra = {"service_account_email": credentials.service_account_email, "access_token": credentials.token}
+        return blob.generate_signed_url(
+            version="v4", expiration=timedelta(seconds=ttl_seconds), method="GET", response_type=row.content_type,
+            response_disposition="inline", **extra,
+        )
+
+    try:
+        return await asyncio.to_thread(sign)
+    except Exception as exc:  # signing is an optimisation; the stream endpoint always works
+        log.warning("signed url unavailable", extra={"failure": type(exc).__name__})
+        return None

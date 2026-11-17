@@ -163,3 +163,14 @@ class RunMetadata(ApiModel):
     started_at: datetime | None = None
     completed_at: datetime | None = None
     steps: list[StepTrace] = []
+
+
+class Anchor(ApiModel):
+    """Where in a creative something applies: a scene, a time span and/or a normalised [x, y, width, height] box."""
+
+    scene_id: str | None = None
+    start_ms: int | None = Field(default=None, ge=0)
+    end_ms: int | None = Field(default=None, ge=0)
+    bbox: Annotated[list[float], Field(min_length=4, max_length=4)] | None = Field(
+        default=None, description="Normalised [x, y, width, height]; null when unknown."
+    )

@@ -298,6 +298,8 @@ class WorkflowDeps:
     qloo: QlooService
     llm: LLMGateway
     vision: VisionAnalyzer | None = None  # None: vision is unavailable (never a text model instead)
+    media: Any = None  # the media pipeline (app/services/media.py): ffmpeg work and derived files; local, no provider
+    transcribe: Any = None  # a `transcribe` capability adapter returning app.media.types.TranscribeResult; None: unavailable
 
 
 # --- Contract v3: population studies and social simulation (contracts/README §14) ---------------------------------

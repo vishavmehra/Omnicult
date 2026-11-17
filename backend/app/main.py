@@ -21,6 +21,7 @@ from app.api.routes import (
     health,
     launch,
     markets,
+    media,
     populations,
     profiles,
     projects,
@@ -40,6 +41,7 @@ from app.core.config import Settings, get_settings
 from app.core.errors import REQUEST_ID_HEADER, RequestContextMiddleware, install_error_handlers
 from app.core.logging import configure_logging
 from app.db.session import dispose_engine
+from app.media.ffmpeg import log_startup_tools
 from app.services import runs as run_engine
 
 ROUTERS = (
@@ -66,6 +68,7 @@ ROUTERS = (
     pulse,
     search,
     assets,
+    media,
     reports,
     runs,
     studio,
@@ -81,6 +84,7 @@ def _operation_id(route: APIRoute) -> str:
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     await run_engine.mark_interrupted_runs()
+    await log_startup_tools()  # ffmpeg and ffprobe: detected once, logged; video features degrade clearly if absent
     yield
     await run_engine.shutdown()
     await dispose_engine()
@@ -118,7 +122,10 @@ def create_app() -> FastAPI:
         allow_origins=settings.cors_origins,
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allow_headers=["Authorization", "Content-Type", REQUEST_ID_HEADER],
-        expose_headers=[REQUEST_ID_HEADER, "Content-Disposition"],
+        expose_headers=[
+            REQUEST_ID_HEADER, "Content-Disposition", "X-Omnicult-Shaping", "X-Omnicult-Text-Fit",
+            "X-Omnicult-Overlaps-Locked", "X-Omnicult-Locked-Restored",
+        ],
     )
     app.include_router(health.router)
     api = APIRouter(prefix=API_PREFIX, responses=ERROR_RESPONSES, dependencies=[Depends(capture_idempotency_key)])

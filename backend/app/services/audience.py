@@ -667,8 +667,8 @@ async def audience_study_result(s: AsyncSession, run: m.AudienceRun) -> v.Audien
         run_metadata=_metadata(run), created_at=run.created_at)
 
 
-def to_finding(row: m.RiskFindingRow) -> v.RiskFinding:
-    return v.RiskFinding(
+def to_finding(row: m.RiskFindingRow) -> v.RiskCheckFinding:
+    return v.RiskCheckFinding(
         id=row.id, run_id=row.run_id, ordinal=row.ordinal, element_id=row.element_id, category=row.category,  # type: ignore[arg-type]
         severity=row.severity, blocks_go=row.blocks_go, confidence_label=row.confidence_label,  # type: ignore[arg-type]
         anchor=v.Anchor.model_validate(row.anchor), quote=row.quote, quote_start=row.quote_start, quote_end=row.quote_end,
@@ -737,7 +737,7 @@ async def list_runs(user_id: UUID, campaign_id: UUID, kind: str, limit: int, off
 async def list_findings(
     user_id: UUID, campaign_id: UUID, run_id: UUID, *, status: str | None, severity: str | None, category: str | None,
     limit: int, offset: int,
-) -> v.RiskFindingPage:
+) -> v.RiskCheckFindingPage:
     async with read_session() as s:
         run, _ = await _run_in(s, user_id, campaign_id, run_id, ("risk_check",))
         stmt = select(m.RiskFindingRow).where(m.RiskFindingRow.run_id == run.id)
@@ -745,12 +745,12 @@ async def list_findings(
             if value is not None:
                 stmt = stmt.where(getattr(m.RiskFindingRow, column) == value)
         rows, total = await paginate(s, stmt.order_by(m.RiskFindingRow.ordinal), limit, offset)
-    return v.RiskFindingPage(items=[to_finding(r) for r in rows], limit=limit, offset=offset, total=total)
+    return v.RiskCheckFindingPage(items=[to_finding(r) for r in rows], limit=limit, offset=offset, total=total)
 
 
 async def update_finding(
-    user_id: UUID, campaign_id: UUID, run_id: UUID, finding_id: UUID, body: v.RiskFindingUpdate
-) -> v.RiskFinding:
+    user_id: UUID, campaign_id: UUID, run_id: UUID, finding_id: UUID, body: v.RiskCheckFindingUpdate
+) -> v.RiskCheckFinding:
     """A person's decision on one finding. Reviewers may decide; viewers may not. Severity and blocks_go never change."""
     now = utcnow()
     async with session() as s, s.begin():
