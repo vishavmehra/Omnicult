@@ -33,7 +33,7 @@ export async function unwrap<R extends FetchResult>(call: Promise<R>): Promise<E
   try {
     result = await call;
   } catch {
-    throw new ApiError(0, "NETWORK_ERROR", "Could not reach the Nativeproof API.");
+    throw new ApiError(0, "NETWORK_ERROR", "Could not reach the Omnicult API.");
   }
   if (!result.response.ok || result.error !== undefined) throw toApiError(result.error, result.response);
   return plainText(result.data) as Exclude<R["data"], undefined>;

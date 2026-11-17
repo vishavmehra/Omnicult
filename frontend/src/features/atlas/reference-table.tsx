@@ -21,7 +21,7 @@ function matchSummary(ref: CulturalReference) {
   if (ref.match_status === "resolved")
     return `“${ref.query_term}” resolved to ${ref.entity_type ?? "entity"} ${ref.name}${ref.entity_id ? ` (${ref.entity_id})` : ""}.`;
   if (ref.match_status === "ambiguous")
-    return `“${ref.query_term}” matched ${ref.candidates.length} candidates. Nativeproof did not choose one, so none is used downstream.`;
+    return `“${ref.query_term}” matched ${ref.candidates.length} candidates. Omnicult did not choose one, so none is used downstream.`;
   return `No usable match was found for “${ref.query_term}”.`;
 }
 

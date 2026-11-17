@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, FlaskConical, Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 import { AppShell } from "@/components/app-shell/app-shell";
 import { useProjectList } from "@/components/app-shell/project-switcher";
@@ -20,8 +20,7 @@ import { useCreateDemoProject } from "@/features/project/projects-dashboard";
 import { sectionHref } from "@/features/project/workflow";
 import { api } from "@/lib/api/client";
 import { unwrap } from "@/lib/api/errors";
-import { getSupabase } from "@/lib/auth/supabase";
-import { env } from "@/lib/env";
+import { useAccount } from "@/lib/auth/session";
 import { formatRelative } from "@/lib/format";
 import { pickImagery } from "@/lib/imagery";
 import { cn } from "@/lib/utils";
@@ -33,21 +32,11 @@ function useGreeting() {
   return hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 }
 
-/** Account label for the greeting (email name), when one exists. Anonymous and dev sessions get none (docs/16 §3). */
+/** Account label for the greeting (email name), when one exists. Anonymous and dev sessions get none. */
 function useAccountName() {
-  const [name, setName] = useState<string | null>(null);
-  useEffect(() => {
-    if (env.authMode !== "supabase") return;
-    void getSupabase()
-      .auth.getSession()
-      .then(({ data }) => {
-        const email = data.session?.user?.email;
-        if (email) setName(email.split("@")[0]);
-      });
-  }, []);
-  return name;
+  const account = useAccount();
+  return account.status === "user" && account.label.includes("@") ? account.label.split("@")[0] : account.status === "user" ? account.label : null;
 }
-
 const CARDS: { key: FeatureKey; title: string; text: string; cta: string }[] = [
   { key: "audience", title: "Audience Intelligence", text: "Synthetic audience groups grounded in Qloo signals.", cta: "Explore audiences" },
   { key: "arena", title: "Campaign Arena", text: "Compare campaign concepts with one audience and criteria.", cta: "Test campaigns" },

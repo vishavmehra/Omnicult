@@ -100,7 +100,7 @@ export function TrendsWorkspace() {
       <PageHeader
         feature="trends"
         title="Cultural Trend Watch"
-        description="Save discovery runs as dated snapshots, then compare two of them. Comparisons are deterministic; Nativeproof never fills in history it did not record."
+        description="Save discovery runs as dated snapshots, then compare two of them. Comparisons are deterministic; Omnicult never fills in history it did not record."
       />
       {snapshotsQuery.isPending ? (
         <LoadingState label="Loading snapshots…" />

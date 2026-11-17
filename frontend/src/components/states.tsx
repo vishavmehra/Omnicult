@@ -1,30 +1,67 @@
 "use client";
 
-import { CircleAlert, LoaderCircle, RotateCw } from "lucide-react";
+import { CircleAlert, CircleCheck, CircleDashed, LoaderCircle, RotateCw } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ApiError, type ErrorCode } from "@/lib/api/errors";
 import { env } from "@/lib/env";
+import { cn } from "@/lib/utils";
 
-export function EmptyState({ title, description, action }: { title: string; description: string; action?: ReactNode }) {
+export type Need = { label: ReactNode; met?: boolean };
+
+/**
+ * A blank folio: why nothing is here, what this place is for, and what it needs before it can start. `needs` lists
+ * prerequisites with their real state (met or not), so the empty state is also a checklist, never a dead end.
+ */
+export function EmptyState({
+  title,
+  description,
+  needs,
+  action,
+  className,
+}: {
+  title: string;
+  description: ReactNode;
+  needs?: Need[];
+  action?: ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="flex flex-col items-start gap-3 rounded-md border border-dashed border-border bg-surface/60 px-5 py-6">
+    <div className={cn("flex flex-col items-start gap-3 rounded-card border border-dashed border-border-strong/50 bg-surface-muted/50 px-5 py-5", className)}>
       <div className="max-w-prose space-y-1">
         {/* Not a heading: empty states appear under h1, h2, or h3 and must not break the outline. */}
         <p className="text-[15px] font-semibold text-ink">{title}</p>
-        <p className="text-sm text-ink-secondary">{description}</p>
+        <div className="text-[13.5px] leading-relaxed text-ink-secondary">{description}</div>
       </div>
+      {needs && needs.length > 0 && (
+        <ul className="space-y-1 text-[13px]" aria-label="What this needs">
+          {needs.map((n, i) => (
+            <li key={i} className="flex items-start gap-2">
+              {n.met ? (
+                <CircleCheck aria-hidden className="mt-0.5 size-3.5 shrink-0 text-success" />
+              ) : (
+                <CircleDashed aria-hidden className="mt-0.5 size-3.5 shrink-0 text-ink-muted" />
+              )}
+              <span className={n.met ? "text-ink-body" : "text-ink-secondary"}>
+                <span className="sr-only">{n.met ? "Done: " : "Needed: "}</span>
+                {n.label}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
       {action}
     </div>
   );
 }
 
-export function LoadingState({ label }: { label: string }) {
+/** Names the actual operation in progress; skeleton rows are reserved for layouts whose shape is known. */
+export function LoadingState({ label, className }: { label: string; className?: string }) {
   return (
-    <div role="status" aria-live="polite" className="flex items-center gap-2 px-1 py-6 text-sm text-ink-secondary">
-      <LoaderCircle aria-hidden className="size-4 animate-spin" />
+    <div role="status" aria-live="polite" className={cn("flex items-center gap-2 px-1 py-6 text-sm text-ink-secondary", className)}>
+      <LoaderCircle aria-hidden className="size-4 animate-spin motion-reduce:animate-none" />
       {label}
     </div>
   );
@@ -38,7 +75,7 @@ function explain(code: ErrorCode | "NETWORK_ERROR"): Explanation {
   switch (code) {
     case "NETWORK_ERROR":
       return {
-        title: "Could not reach the Nativeproof API",
+        title: "Could not reach the Omnicult API",
         saved: "The request may not have reached the server. If you were saving a change, reload to check before trying again.",
         retry: "Retrying is safe for viewing data.",
         next: `Check that the backend is running at ${env.apiBaseUrl}.`,
@@ -55,23 +92,38 @@ function explain(code: ErrorCode | "NETWORK_ERROR"): Explanation {
         title: "Your session is missing or has expired",
         saved: NOTHING_SAVED,
         retry: "Retrying will fail until you sign in again.",
-        next: env.authMode === "supabase" ? <Link className="underline underline-offset-2" href="/login">Sign in again</Link> : "Restart the frontend in development auth mode, or check the backend's AUTH_MODE.",
+        next:
+          env.authMode === "firebase" ? (
+            <Link className="underline underline-offset-2" href="/login">
+              Sign in again
+            </Link>
+          ) : (
+            "Restart the frontend in development auth mode, or check the backend's AUTH_MODE."
+          ),
       };
     case "FORBIDDEN":
-      return { title: "This action is not permitted", saved: NOTHING_SAVED, retry: "Retrying will not help.", next: "Check that you are working in the right project." };
+      return { title: "This action is not permitted", saved: NOTHING_SAVED, retry: "Retrying will not help.", next: "Check that you are working in the right brand and campaign." };
     case "NOT_FOUND":
       return {
         title: "Not found",
         saved: NOTHING_SAVED,
         retry: "Retrying will not help.",
-        next: <>It may have been archived, or it belongs to another account. <Link className="underline underline-offset-2" href="/projects">Return to projects</Link>.</>,
+        next: (
+          <>
+            It may have been archived, or it belongs to another account.{" "}
+            <Link className="underline underline-offset-2" href="/app">
+              Return to Campaign Desk
+            </Link>
+            .
+          </>
+        ),
       };
     case "CONFLICT":
       return {
         title: "This conflicts with the current state",
         saved: "Nothing was changed.",
         retry: "Retrying unchanged will fail again.",
-        next: "Demo campaigns and archived projects are read-only. Create a live project to change content.",
+        next: "Demo campaigns and archived brands are read-only. Create a live brand to change content.",
       };
     case "RATE_LIMITED":
       return { title: "Too many active runs", saved: "No new run was started.", retry: "Retry once a running operation finishes.", next: "Each account can run 2 operations at a time." };
@@ -80,10 +132,18 @@ function explain(code: ErrorCode | "NETWORK_ERROR"): Explanation {
         title: "A live provider is not configured",
         saved: "No run was started and nothing was saved.",
         retry: "Retrying will fail until the provider credentials are configured on the backend.",
-        next: <>Live projects call Qloo and the model provider. <Link className="underline underline-offset-2" href="/projects">Try a demo project</Link> to explore the workflow on labeled fixtures.</>,
+        next: (
+          <>
+            Live brands call the configured data and model providers.{" "}
+            <Link className="underline underline-offset-2" href="/app">
+              Try the demo
+            </Link>{" "}
+            to explore the workflow on labelled fixtures.
+          </>
+        ),
       };
     case "UNSUPPORTED_CAPABILITY":
-      return { title: "The verified Qloo workflows cannot answer this request", saved: NOTHING_SAVED, retry: "Retrying unchanged will fail again.", next: "Rephrase the request or use different reference terms." };
+      return { title: "The data sources cannot answer this request", saved: NOTHING_SAVED, retry: "Retrying unchanged will fail again.", next: "Rephrase the request or use different reference terms." };
     case "PROVIDER_ERROR":
     case "PROVIDER_TIMEOUT":
       return { title: "An external provider failed", saved: "The message above states what was saved.", retry: "Retrying is usually safe.", next: "Try again in a moment." };
@@ -101,12 +161,12 @@ function explain(code: ErrorCode | "NETWORK_ERROR"): Explanation {
 }
 
 /** Explains a failed request: what failed, whether anything was saved, whether retry is safe, and what to do next. */
-export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
+export function ErrorState({ error, onRetry, className }: { error: unknown; onRetry?: () => void; className?: string }) {
   const apiError = error instanceof ApiError ? error : null;
   const info = explain(apiError?.code ?? "INTERNAL_ERROR");
   const message = apiError?.message ?? (error instanceof Error ? error.message : null);
   return (
-    <div role="alert" className="rounded-md border border-danger/25 bg-danger-soft/60 px-4 py-3.5">
+    <div role="alert" className={cn("rounded-card border border-danger/35 bg-danger-soft/60 px-4 py-3.5", className)}>
       <div className="flex items-start gap-2.5">
         <CircleAlert aria-hidden className="mt-0.5 size-4 shrink-0 text-danger" />
         <div className="min-w-0 space-y-2 text-sm">
@@ -139,9 +199,7 @@ export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () =>
                 Try again
               </Button>
             )}
-            {apiError?.requestId && (
-              <span className="font-mono text-[11px] text-ink-secondary">request {apiError.requestId}</span>
-            )}
+            {apiError?.requestId && <span className="font-mono text-[11px] text-ink-secondary">request {apiError.requestId}</span>}
           </div>
         </div>
       </div>

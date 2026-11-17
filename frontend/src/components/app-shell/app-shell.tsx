@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Bell, ChevronsUpDown, House, LoaderCircle, LogOut, Menu, Settings } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams, useSelectedLayoutSegment } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 import { useProjectList } from "@/components/app-shell/project-switcher";
 import { ModeBadge } from "@/components/evidence/badges";
@@ -25,11 +25,12 @@ import { FEATURES, FEATURE_GROUPS } from "@/features/project/features";
 import { projectKeys } from "@/features/project/project-context";
 import { RUN_TYPE_META, sectionHref } from "@/features/project/workflow";
 import { ProjectSearch } from "@/features/search/project-search";
+import { Wordmark } from "@/components/shell/wordmark";
 import { api } from "@/lib/api/client";
 import { unwrap } from "@/lib/api/errors";
 import { isTerminal } from "@/lib/api/runs";
 import type { ProjectSummary } from "@/lib/api/types";
-import { getSupabase } from "@/lib/auth/supabase";
+import { signOut as endSession, useAccount as useSessionAccount } from "@/lib/auth/session";
 import { env } from "@/lib/env";
 import { formatRelative } from "@/lib/format";
 import { pickImagery } from "@/lib/imagery";
@@ -37,41 +38,22 @@ import { cn } from "@/lib/utils";
 
 export type Crumb = { label: string; href?: string };
 
-/** Indigo four-petal mark + wordmark (reference logo). */
+/** Omnicult seal and wordmark (shared with the new shell); links to Campaign Desk. */
 export function Logo() {
-  return (
-    <Link href="/projects" className="flex items-center gap-2.5 rounded-md text-ink">
-      <svg aria-hidden viewBox="0 0 32 32" className="size-8 text-primary" fill="currentColor">
-        <path d="M16 3c3.6 0 6 2.7 6 6.2 0 2.4-1.3 4.6-3.3 5.8 2-1.2 4.2-2.5 6.6-2.5C28.8 12.5 31 15 31 16s-2.2 3.5-5.7 3.5c-2.4 0-4.6-1.3-6.6-2.5 2 1.2 3.3 3.4 3.3 5.8C22 26.3 19.6 29 16 29s-6-2.7-6-6.2c0-2.4 1.3-4.6 3.3-5.8-2 1.2-4.2 2.5-6.6 2.5C3.2 19.5 1 17 1 16s2.2-3.5 5.7-3.5c2.4 0 4.6 1.3 6.6 2.5C11.3 13.8 10 11.6 10 9.2 10 5.7 12.4 3 16 3Z" />
-      </svg>
-      <span className="text-[21px] font-semibold tracking-tight">Nativeproof</span>
-    </Link>
-  );
+  return <Wordmark href="/app" className="text-ink" />;
 }
-
 // ---------- account ----------
 
 function useAccount() {
-  const [label, setLabel] = useState<string | null>(env.authMode === "dev" ? "Development mode" : null);
-  useEffect(() => {
-    if (env.authMode !== "supabase") return;
-    void getSupabase()
-      .auth.getSession()
-      .then(({ data }) => {
-        const user = data.session?.user;
-        setLabel(user ? (user.is_anonymous ? "Anonymous demo session" : (user.email ?? "Signed in")) : null);
-      });
-  }, []);
-  return label;
+  return useSessionAccount().label;
 }
-
 /** Account menu shared by the avatar and the sidebar Settings entry: who is signed in, and sign out. */
 function AccountMenu({ trigger, side = "bottom" }: { trigger: ReactNode; side?: "bottom" | "top" }) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const label = useAccount();
   async function signOut() {
-    await getSupabase().auth.signOut();
+    await endSession();
     queryClient.clear();
     router.replace("/login");
   }
@@ -83,7 +65,7 @@ function AccountMenu({ trigger, side = "bottom" }: { trigger: ReactNode; side?: 
           <DropdownMenuLabel>{label ?? "Account"}</DropdownMenuLabel>
           {env.authMode === "dev" && <DropdownMenuItem disabled>Local development token · no sign-in</DropdownMenuItem>}
         </DropdownMenuGroup>
-        {env.authMode === "supabase" && (
+        {env.authMode === "firebase" && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => void signOut()}>

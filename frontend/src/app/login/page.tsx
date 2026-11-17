@@ -1,22 +1,25 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import { LoginPanel } from "@/components/auth/login-panel";
+import { ThemeToggle } from "@/components/shell/theme-toggle";
+import { Wordmark } from "@/components/shell/wordmark";
 
 export const metadata: Metadata = { title: "Sign in" };
 
+/** Sign-in on one raised clay panel over the same continuous ground as the landing page and the app. */
 export default function LoginPage() {
   return (
-    <main id="main" className="grid min-h-dvh place-items-center px-4 py-10">
-      <div className="w-full max-w-sm space-y-8">
-        <div className="space-y-2">
-          <Link href="/" className="font-serif text-[26px] font-semibold tracking-tight text-ink">
-            Nativeproof
-          </Link>
-          <h1 className="font-serif text-[30px] leading-tight font-medium text-ink">Sign in to your research workspace</h1>
-          <p className="text-sm text-ink-secondary">Projects, evidence, and reports are private to your account.</p>
-        </div>
-        <div className="rounded-2xl border border-border bg-surface p-6 shadow-card">
+    <main id="main" className="relative grid min-h-dvh place-items-center px-4 py-12 text-ink">
+      <div className="absolute top-5 right-5">
+        <ThemeToggle />
+      </div>
+      <div className="w-full max-w-[26rem] space-y-6">
+        <Wordmark href="/" size="lg" />
+        <div className="clay-panel border border-border/60 p-6 sm:p-8">
+          <div className="mb-6 space-y-1.5">
+            <h1 className="type-title text-[30px] text-ink">Sign in to Omnicult</h1>
+            <p className="text-[14px] text-ink-secondary">Brands, campaigns and evidence are private to your team.</p>
+          </div>
           <LoginPanel />
         </div>
       </div>

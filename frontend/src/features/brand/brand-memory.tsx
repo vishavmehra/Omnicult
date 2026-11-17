@@ -115,7 +115,7 @@ function BrandMemoryEditor({ brand, projectId, demo, markets }: { brand: Brand; 
       <FeatureHeader
         feature="brand"
         className="mb-2"
-        description="Define your brand, audience, guidelines, and preferences. Nativeproof uses them to keep results relevant and consistent."
+        description="Define your brand, audience, guidelines, and preferences. Omnicult uses them to keep results relevant and consistent."
         actions={
           <a href="#brand-usage" className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-surface px-4 text-[15px] font-medium text-ink shadow-card hover:bg-surface-muted">
             View usage
@@ -413,7 +413,7 @@ function UsageBand() {
         </span>
         <div>
           <h2 id="brand-usage-title" className="font-serif text-[21px] font-semibold text-ink">
-            How Nativeproof uses your Brand Memory
+            How Omnicult uses your Brand Memory
           </h2>
           <p className="text-[14px] text-ink-body">Every workflow reads it, and each result records which rules it applied. Only people write it.</p>
         </div>

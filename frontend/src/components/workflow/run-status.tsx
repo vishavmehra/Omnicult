@@ -1,6 +1,6 @@
 "use client";
 
-import { Ban, CircleAlert, CircleCheck, LoaderCircle, RotateCw, TriangleAlert } from "lucide-react";
+import { Ban, CircleAlert, CircleCheck, Clock3, Hand, LoaderCircle, RotateCw, TriangleAlert, type LucideIcon } from "lucide-react";
 import type { ComponentType, ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,38 @@ import type { Run } from "@/lib/api/types";
 import { formatElapsed, formatRelative, humanize } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
+/**
+ * Omnicult run states (design direction 7.4). `waiting_for_approval` is not in the API contract yet; the badge supports it
+ * so approval runs render correctly the day the contract adds it. `partial` is the API's "completed with gaps".
+ */
+export type RunState = Run["status"] | "waiting_for_approval";
+
+const STATE: Record<RunState, { label: string; Icon: LucideIcon; className: string; spin?: boolean }> = {
+  queued: { label: "Queued", Icon: Clock3, className: "text-info" },
+  running: { label: "Running", Icon: LoaderCircle, className: "text-info", spin: true },
+  waiting_for_approval: { label: "Waiting for approval", Icon: Hand, className: "text-warning" },
+  completed: { label: "Completed", Icon: CircleCheck, className: "text-success" },
+  partial: { label: "Completed with gaps", Icon: TriangleAlert, className: "text-warning" },
+  failed: { label: "Failed", Icon: CircleAlert, className: "text-danger" },
+  cancelled: { label: "Cancelled", Icon: Ban, className: "text-ink-muted" },
+};
+
+/** Compact run state: icon and word in a fixed slot, so a changing row keeps its columns (state is held, not reflowed). */
+export function RunStatusBadge({ status, className }: { status: RunState; className?: string }) {
+  const { label, Icon, className: tone, spin } = STATE[status];
+  return (
+    <span className={cn("inline-flex items-center gap-1.5 text-[12.5px] font-medium whitespace-nowrap", tone, className)}>
+      <Icon aria-hidden className={cn("size-3.5 shrink-0", spin && "animate-spin motion-reduce:animate-none")} />
+      {label}
+    </span>
+  );
+}
+
 type Tone = "info" | "success" | "warning" | "danger" | "neutral";
 
 const TONE: Record<Tone, string> = {
   info: "border-info/25 bg-info-soft/60 [&_[data-icon]]:text-info",
-  success: "border-primary/25 bg-accent/60 [&_[data-icon]]:text-primary",
+  success: "border-success/25 bg-success-soft/60 [&_[data-icon]]:text-success",
   warning: "border-warning/30 bg-warning-soft/70 [&_[data-icon]]:text-warning",
   danger: "border-danger/25 bg-danger-soft/60 [&_[data-icon]]:text-danger",
   neutral: "border-border bg-surface-muted/60 [&_[data-icon]]:text-ink-secondary",

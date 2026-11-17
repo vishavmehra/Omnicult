@@ -117,14 +117,29 @@ export function ConfidenceBadge({ label }: { label: ConfidenceLabel }) {
   );
 }
 
-/** Persistent disclosure for AI-generated reactions (docs/08_UI_UX_SPEC.md §7.3). */
-export function SyntheticBadge() {
+/**
+ * Persistent disclosure for anything a simulation produced: participants, answers, panels, buzz. Dashed rule and the robot
+ * mark read as "made, not observed" before the words do. `compact` keeps only the word for dense rows (with a tooltip).
+ */
+export function SyntheticLabel({ compact, children, className }: { compact?: boolean; children?: ReactNode; className?: string }) {
+  const full = children ?? "Synthetic: simulated opinion, not real research";
   return (
-    <Tag className="h-auto min-h-5 max-w-full border-dashed border-ink-secondary/50 bg-surface-muted py-0.5 leading-tight whitespace-normal text-ink-secondary">
+    <Tag
+      title={compact ? "Synthetic: simulated by a model. Not a real participant and not real research." : undefined}
+      className={cn(
+        "h-auto min-h-5 max-w-full border-dashed border-ink-secondary/60 bg-surface-muted py-0.5 leading-tight whitespace-normal text-ink-secondary",
+        className,
+      )}
+    >
       <Bot aria-hidden />
-      AI-generated reaction, not a real participant
+      {compact ? "Synthetic" : full}
     </Tag>
   );
+}
+
+/** Persistent disclosure for AI-generated reactions (legacy NativeProof pages). */
+export function SyntheticBadge() {
+  return <SyntheticLabel>AI-generated reaction, not a real participant</SyntheticLabel>;
 }
 
 /** Project/run mode. Demo data must never be confused with live results. */

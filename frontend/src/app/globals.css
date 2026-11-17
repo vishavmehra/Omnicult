@@ -2,30 +2,61 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * Design tokens: docs/08_UI_UX_SPEC.md §3 (v2 visual system).
- * Barely-warm canvas, white cards, navy ink, indigo primary, Fraunces headings, warm neutrals.
- * Feature tokens: text-{f} (accent), bg-{f}-soft (tint), text-{f}-ink (AA text on canvas/tint). Feature hues appear only
- * on the page eyebrow and the active nav marker; amber is reserved for Unverified, partial, and DEMO/fixture states.
+ * Omnicult design system (brief: handoff 03_DESIGN_DIRECTION). World: a ledger of clay. Ruled entries, each finding with its
+ * receipt (source, date, kind, scope, confidence), on raised clay panels over one continuous ground.
+ * Graphite and Ember, dark by default, with a light clay theme. Colour carries meaning: the ember pop = the primary action,
+ * focus and the active place (a pinch, never a fill for whole regions); light ember = links; green/amber/red/blue = status,
+ * always with a word and an icon. Clay depth is reserved for things you can press or that hold a value (buttons,
+ * segmented thumbs, selected nav, wells and meter tracks); text, tables and evidence stay flat.
  */
 @theme inline {
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-fraunces);
-  --font-mono: var(--font-jetbrains-mono);
-  --font-heading: var(--font-inter);
+  --font-sans: var(--font-archivo), var(--font-noto-deva), var(--font-noto-taml), var(--font-noto-mlym), var(--font-noto-beng),
+    var(--font-noto-telu), var(--font-noto-knda), var(--font-noto-gujr), var(--font-noto-guru), var(--font-noto-orya), ui-sans-serif,
+    system-ui, sans-serif;
+  --font-display: var(--font-eczar), Georgia, serif;
+  /* Legacy NativeProof pages use font-serif for titles: they now get the display face. */
+  --font-serif: var(--font-eczar), Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-heading: var(--font-archivo);
 
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
   --color-surface-muted: var(--surface-muted);
   --color-ink: var(--ink);
   --color-ink-body: var(--ink-body);
   --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted: var(--ink-muted);
+  --color-border-strong: var(--border-strong);
   --color-accent-hover: var(--accent-hover);
-  --color-lavender: var(--lavender);
-  --color-lavender-ink: var(--lavender-ink);
-  --radius-card: 0.875rem;
+  --color-pop: var(--pop);
+  --color-pop-ink: var(--pop-ink);
+  --color-pop-soft: var(--pop-soft);
+  --color-pink: var(--pink);
+  --color-tint-peach: var(--tint-peach);
+  --color-tint-mint: var(--tint-mint);
+  --color-tint-sky: var(--tint-sky);
+  --color-tint-butter: var(--tint-butter);
+  --color-tint-rose: var(--tint-rose);
+  --color-rose: var(--rose);
+  --color-rose-soft: var(--rose-soft);
+  --color-brass: var(--brass);
+  --color-brass-soft: var(--brass-soft);
+  --color-plum: var(--plum);
+  --color-spine: var(--spine);
+  --color-spine-raised: var(--spine-raised);
+  --color-spine-ink: var(--spine-ink);
+  --color-spine-secondary: var(--spine-secondary);
+  --color-spine-rule: var(--spine-rule);
+  --color-mat: var(--mat);
+  --color-mat-ink: var(--mat-ink);
+  /* Legacy names kept so the NativeProof pages keep rendering: lavender is now the plum selection. */
+  --color-lavender: var(--plum);
+  --color-lavender-ink: var(--rose);
+
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
@@ -35,43 +66,44 @@
   --color-info: var(--info);
   --color-info-soft: var(--info-soft);
 
-  --color-atlas: var(--f-atlas);
-  --color-atlas-soft: var(--f-atlas-soft);
-  --color-atlas-ink: var(--f-atlas-ink);
-  --color-dna: var(--f-dna);
-  --color-dna-soft: var(--f-dna-soft);
-  --color-dna-ink: var(--f-dna-ink);
-  --color-markets: var(--f-markets);
-  --color-markets-soft: var(--f-markets-soft);
-  --color-markets-ink: var(--f-markets-ink);
-  --color-trends: var(--f-trends);
-  --color-trends-soft: var(--f-trends-soft);
-  --color-trends-ink: var(--f-trends-ink);
-  --color-audience: var(--f-audience);
-  --color-audience-soft: var(--f-audience-soft);
-  --color-audience-ink: var(--f-audience-ink);
-  --color-arena: var(--f-arena);
-  --color-arena-soft: var(--f-arena-soft);
-  --color-arena-ink: var(--f-arena-ink);
-  --color-risk: var(--f-risk);
-  --color-risk-soft: var(--f-risk-soft);
-  --color-risk-ink: var(--f-risk-ink);
-  --color-risk-amber: var(--f-risk-amber);
-  --color-voice: var(--f-voice);
-  --color-voice-soft: var(--f-voice-soft);
-  --color-voice-ink: var(--f-voice-ink);
-  --color-loop: var(--f-loop);
-  --color-loop-soft: var(--f-loop-soft);
-  --color-loop-ink: var(--f-loop-ink);
-  --color-brand: var(--f-brand);
-  --color-brand-soft: var(--f-brand-soft);
-  --color-brand-ink: var(--f-brand-ink);
-  --color-proof: var(--f-proof);
-  --color-proof-soft: var(--f-proof-soft);
-  --color-proof-ink: var(--f-proof-ink);
-  --color-graph: var(--f-graph);
-  --color-graph-soft: var(--f-graph-soft);
-  --color-graph-ink: var(--f-graph-ink);
+  /* Legacy per-feature hues collapse onto the palette (one family, meaning over decoration). */
+  --color-atlas: var(--rose);
+  --color-atlas-soft: var(--rose-soft);
+  --color-atlas-ink: var(--rose);
+  --color-dna: var(--rose);
+  --color-dna-soft: var(--rose-soft);
+  --color-dna-ink: var(--rose);
+  --color-markets: var(--brass);
+  --color-markets-soft: var(--brass-soft);
+  --color-markets-ink: var(--brass);
+  --color-trends: var(--brass);
+  --color-trends-soft: var(--brass-soft);
+  --color-trends-ink: var(--brass);
+  --color-audience: var(--rose);
+  --color-audience-soft: var(--rose-soft);
+  --color-audience-ink: var(--rose);
+  --color-arena: var(--rose);
+  --color-arena-soft: var(--rose-soft);
+  --color-arena-ink: var(--rose);
+  --color-risk: var(--danger);
+  --color-risk-soft: var(--danger-soft);
+  --color-risk-ink: var(--danger);
+  --color-risk-amber: var(--warning);
+  --color-voice: var(--rose);
+  --color-voice-soft: var(--rose-soft);
+  --color-voice-ink: var(--rose);
+  --color-loop: var(--brass);
+  --color-loop-soft: var(--brass-soft);
+  --color-loop-ink: var(--brass);
+  --color-brand: var(--rose);
+  --color-brand-soft: var(--rose-soft);
+  --color-brand-ink: var(--rose);
+  --color-proof: var(--brass);
+  --color-proof-soft: var(--brass-soft);
+  --color-proof-ink: var(--brass);
+  --color-graph: var(--brass);
+  --color-graph-soft: var(--brass-soft);
+  --color-graph-ink: var(--brass);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -104,137 +136,555 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
 
-  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 4px 14px -6px rgb(15 23 42 / 0.06);
-  --shadow-raised: 0 4px 16px -4px rgb(15 23 42 / 0.08), 0 1px 2px rgb(15 23 42 / 0.04);
+  /* Geometry: cards 14px, controls 9px, stamps 3px; restrained against the reference's 30px. */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: var(--radius);
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 20px;
+  --radius-4xl: 24px;
+  --radius-card: 14px;
+  --radius-stamp: 3px;
+
+  --shadow-card: var(--clay-flat);
+  --shadow-raised: var(--clay-raised);
+  --shadow-clay: var(--clay-raised);
+  --shadow-clay-pressed: var(--clay-pressed);
+  --shadow-well: var(--clay-well);
+  --shadow-float: var(--clay-float);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/*
+ * Graphite and Ember. Two themes share one structure:
+ *   dark (default): near-black graphite clay, ember coral-orange pop;
+ *   light: refined claymorphism after the reference image, cool grey ground, white clay cards with soft pastel tints
+ *          (peach, mint, sky, butter, rose), the ember darkened so white text on it passes AA.
+ * Pop rules: the primary action, focus rings, the active place, and a few highlights. Never a fill for whole regions.
+ */
 :root {
-  /* Foundation (final, 2026-10-26): barely-warm white canvas; cards, surfaces, and sidebar stay pure white so they
-     lift off it; sand only for subtle insets and table headers. Navy on canvas 17.1:1, slate 10.1:1, gray 4.6:1. */
-  --canvas: #ffffff; /* the sidebar shares it */
-  --surface: #ffffff;
-  --lavender: #efebfe; /* active nav pill, next-step bar */
-  --lavender-ink: #4338ca;
-  --surface-muted: #f6f4ef; /* warm sand: insets, table headers, hover */
-  --ink: #0f172a; /* deep navy */
-  --ink-body: #334155; /* slate */
-  --ink-secondary: #5f5b54; /* warm stone: 6.8:1 on white, 6.6:1 on canvas, 6.1:1 on sand */
-  --accent-hover: #4338ca;
+  color-scheme: light;
+  --canvas: #eceef2;
+  --surface: #f7f8fa;
+  --surface-raised: #ffffff;
+  --surface-muted: #e2e5eb; /* wells, tracks, table heads */
+  --ink: #1b1d22;
+  --ink-body: #33363d;
+  --ink-secondary: #4e535c;
+  --ink-muted: #626872; /* metadata only, 4.8:1 on the canvas */
+  --border: #d6dae1;
+  --border-strong: #8a909b; /* control boundaries, 3.2:1 on white */
+  --pop: #c2410c; /* white text on it 5.2:1 */
+  --pop-ink: #ffffff;
+  --pop-soft: #fde4d8;
+  --accent-hover: #a8380a;
+  --pink: #c7245c; /* rare secondary highlight only */
+  --rose: #b33a0b; /* links: the ember family, darkened for paper-light grounds (5.1:1) */
+  --rose-soft: #fde4d8;
+  --brass: var(--ink-secondary); /* legacy name: receipts now read in neutral ink */
+  --brass-soft: var(--surface-muted);
+  --plum: #dde3ec; /* selected rows (legacy name) */
 
-  /* Status (text shades chosen for WCAG AA on their soft tints) */
-  --success: #047857;
-  --success-soft: #ecfdf5;
-  --warning: #92400e;
-  --warning-soft: #fef3c7;
-  --danger: #be123c;
-  --danger-soft: #fff1f2;
-  --info: #0369a1;
-  --info-soft: #f0f9ff;
+  --tint-peach: #fbe6da;
+  --tint-mint: #dff2e7;
+  --tint-sky: #deebf8;
+  --tint-butter: #fbf2d6;
+  --tint-rose: #f8e1e6;
 
-  /* Feature icon colors from the reference sidebar (docs/16 §1): accent / soft tint / AA text */
-  --f-atlas: #e5484d; /* red target */
-  --f-atlas-soft: #fdecec;
-  --f-atlas-ink: #b4232c;
-  --f-dna: #4f46e5; /* indigo */
-  --f-dna-soft: #eef0fe;
-  --f-dna-ink: #4338ca;
-  --f-markets: #14b8a6; /* teal */
-  --f-markets-soft: #e7f8f5;
-  --f-markets-ink: #0f766e;
-  --f-trends: #6366f1; /* indigo sparkle */
-  --f-trends-soft: #eef0fe;
-  --f-trends-ink: #4338ca;
-  --f-audience: #4f46e5; /* indigo */
-  --f-audience-soft: #eef0fe;
-  --f-audience-ink: #4338ca;
-  --f-arena: #ef4444; /* red */
-  --f-arena-soft: #fdecec;
-  --f-arena-ink: #b91c1c;
-  --f-risk: #e5484d; /* red diamond */
-  --f-risk-soft: #fdecec;
-  --f-risk-ink: #b4232c;
-  --f-risk-amber: #f59e0b;
-  --f-voice: #f97316; /* orange */
-  --f-voice-soft: #fff1e6;
-  --f-voice-ink: #c2410c;
-  --f-loop: #f97316; /* orange */
-  --f-loop-soft: #fff1e6;
-  --f-loop-ink: #c2410c;
-  --f-brand: #f97316; /* orange */
-  --f-brand-soft: #fff1e6;
-  --f-brand-ink: #c2410c;
-  --f-proof: #2563eb; /* blue */
-  --f-proof-soft: #eaf1fe;
-  --f-proof-ink: #1d4ed8;
-  --f-graph: #2563eb; /* blue */
-  --f-graph-soft: #eaf1fe;
-  --f-graph-ink: #1d4ed8;
+  --spine: var(--surface-raised);
+  --spine-raised: var(--canvas);
+  --spine-ink: var(--ink);
+  --spine-secondary: var(--ink-secondary);
+  --spine-rule: var(--border);
 
-  /* shadcn/ui semantic slots (primary = indigo, accent = indigo tint) */
+  --mat: #ffffff;
+  --mat-ink: #1b1d22;
+
+  --success: #1f7a4d;
+  --success-soft: #dcf1e5;
+  --warning: #8a5a00;
+  --warning-soft: #fbefd2;
+  --danger: #b42318;
+  --danger-soft: #fbe1de;
+  --info: #1f5f9e;
+  --info-soft: #dce9f7;
+
+  /* Clay, after the reference: inner top-left highlight, inner bottom-right shade, soft outer drop. */
+  --clay-flat: inset 1px 1px 0 rgb(255 255 255 / 0.9), 0 1px 2px rgb(28 36 52 / 0.06);
+  --clay-raised: inset 2px 2px 3px rgb(255 255 255 / 0.95), inset -3px -4px 8px rgb(28 36 52 / 0.07), 0 2px 4px rgb(28 36 52 / 0.06),
+    0 16px 32px -16px rgb(28 36 52 / 0.3);
+  --clay-pressed: inset 2px 2px 5px rgb(28 36 52 / 0.16), inset -2px -2px 4px rgb(255 255 255 / 0.75);
+  --clay-well: inset 3px 3px 7px rgb(28 36 52 / 0.12), inset -2px -2px 5px rgb(255 255 255 / 0.85);
+  --clay-float: 0 2px 6px rgb(28 36 52 / 0.08), 0 24px 48px -20px rgb(28 36 52 / 0.35);
+  --grain-opacity: 0.035;
+  /* Butterflies (landing): deeper tones on the light ground. */
+  /* Meadow (landing ground band) and motes: low contrast, never competing with text. */
+  --grass-base: #c5d3cb;
+  --grass-back: #d3ded8;
+  --grass-rim: rgb(194 65 12 / 0.32);
+  --mote: rgb(217 119 6 / 0.55);
+  --hopper-body: #2f3540;
+  --hopper-shade: #1f242c;
+  --hopper-glow: #d97706;
+  --bfly-ember-in: #c2410c;
+  --bfly-ember-out: #f08a5d;
+  --bfly-pink-in: #c7245c;
+  --bfly-pink-out: #ef8fb0;
+  --bfly-edge: rgb(27 29 34 / 0.55);
+  --bfly-vein: rgb(27 29 34 / 0.28);
+  --bfly-spot: rgb(255 255 255 / 0.85);
+  --bfly-body: #1b1d22;
+  --glow-a: rgb(251 190 160 / 0.45);
+  --glow-b: rgb(170 205 240 / 0.5);
+  --glow-c: rgb(200 236 215 / 0.35);
+
+  --primary: var(--pop);
+  --primary-foreground: var(--pop-ink);
+  --ring: #c2410c;
+  --chart-1: #c2410c;
+  --chart-2: #1f5f9e;
+  --chart-3: #4e535c;
+  --chart-4: #1f7a4d;
+  --chart-5: #c7245c;
+}
+
+.dark {
+  color-scheme: dark;
+  --canvas: #0d0e11;
+  --surface: #15171b;
+  --surface-raised: #1d2026;
+  --surface-muted: #0a0b0d;
+  --ink: #f4f2ef;
+  --ink-body: #d6d8dd;
+  --ink-secondary: #a9adb6;
+  --ink-muted: #858b95; /* 4.8:1 on the raised surface */
+  --border: #2a2e36;
+  --border-strong: #5c636e;
+  --pop: #ff6a3d; /* ember: dark text on it 6.8:1, as text on the canvas 6.8:1 */
+  --pop-ink: #140a06;
+  --pop-soft: #2a1710;
+  --accent-hover: #ff8257;
+  --pink: #ff4f8b;
+  --rose: #ff9f7f; /* links: a light ember */
+  --rose-soft: #2a1710;
+  --plum: #232730;
+
+  --tint-peach: #1c1917;
+  --tint-mint: #161b19;
+  --tint-sky: #161a20;
+  --tint-butter: #1b1a16;
+  --tint-rose: #1c1719;
+
+  --mat: #1d2026;
+  --mat-ink: #f4f2ef;
+
+  --success: #4cc38a;
+  --success-soft: #0f241a;
+  --warning: #f2b84b;
+  --warning-soft: #2a2110;
+  --danger: #f2655f;
+  --danger-soft: #2c1413;
+  --info: #6ba7f0;
+  --info-soft: #111d2e;
+
+  /* Dark clay: a faint top highlight and a deep soft shadow. */
+  --clay-flat: inset 0 1px 0 rgb(255 255 255 / 0.035), 0 1px 2px rgb(0 0 0 / 0.4);
+  --clay-raised: inset 0 1px 0 rgb(255 255 255 / 0.07), inset 0 -1px 0 rgb(0 0 0 / 0.45), 0 1px 2px rgb(0 0 0 / 0.5),
+    0 14px 30px -14px rgb(0 0 0 / 0.85);
+  --clay-pressed: inset 0 2px 5px rgb(0 0 0 / 0.55), inset 0 -1px 0 rgb(255 255 255 / 0.04);
+  --clay-well: inset 0 2px 6px rgb(0 0 0 / 0.6), inset 0 -1px 0 rgb(255 255 255 / 0.04);
+  --clay-float: 0 2px 6px rgb(0 0 0 / 0.5), 0 28px 56px -22px rgb(0 0 0 / 0.95);
+  --grain-opacity: 0.07;
+  --grass-base: #15181d;
+  --grass-back: #1b1f25;
+  --grass-rim: rgb(255 128 80 / 0.42);
+  --mote: rgb(255 176 110 / 0.95);
+  --hopper-body: #3a404b;
+  --hopper-shade: #23272e;
+  --hopper-glow: #f59e0b;
+  --bfly-ember-in: #ff6a3d;
+  --bfly-ember-out: #ffb08a;
+  --bfly-pink-in: #ff4f8b;
+  --bfly-pink-out: #ffb3cb;
+  --bfly-edge: rgb(35 22 16 / 0.9);
+  --bfly-vein: rgb(20 10 6 / 0.35);
+  --bfly-spot: rgb(255 255 255 / 0.9);
+  --bfly-body: #5a4636;
+  --glow-a: rgb(255 106 61 / 0.1);
+  --glow-b: rgb(70 92 128 / 0.16);
+  --glow-c: rgb(255 79 139 / 0.035);
+
+  --ring: var(--pop);
+  --chart-1: #ff6a3d;
+  --chart-2: #6ba7f0;
+  --chart-3: #a9adb6;
+  --chart-4: #4cc38a;
+  --chart-5: #ff4f8b;
+}
+
+/* Semantic slots for shadcn components, resolved per theme. */
+:root,
+.dark {
+  --radius: 9px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --background: var(--canvas);
   --foreground: var(--ink);
   --card: var(--surface);
   --card-foreground: var(--ink);
-  --popover: var(--surface);
+  --popover: var(--surface-raised);
   --popover-foreground: var(--ink);
-  --primary: #4f46e5;
-  --primary-foreground: #ffffff;
   --secondary: var(--surface-muted);
   --secondary-foreground: var(--ink);
-  --muted: #f3f1ec;
+  --muted: var(--surface-muted);
   --muted-foreground: var(--ink-secondary);
-  --accent: #eef2ff;
+  --accent: var(--rose-soft);
   --accent-foreground: var(--ink);
   --destructive: var(--danger);
-  --border: #e7e3dc; /* warm stone */
-  --input: #dfdad1;
-  --ring: #4f46e5;
-  --chart-1: #4f46e5;
-  --chart-2: #14b8a6;
-  --chart-3: #f59e0b;
-  --chart-4: #0ea5e9;
-  --chart-5: #f43f5e;
-  --radius: 0.625rem;
-  --sidebar: var(--canvas);
-  --sidebar-foreground: var(--ink);
-  --sidebar-primary: #4f46e5;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f6f4ef;
-  --sidebar-accent-foreground: var(--ink);
-  --sidebar-border: #e7e3dc;
-  --sidebar-ring: #4f46e5;
+  --input: var(--border-strong);
+  --sidebar: var(--spine);
+  --sidebar-foreground: var(--spine-ink);
+  --sidebar-primary: var(--spine-raised);
+  --sidebar-primary-foreground: var(--spine-ink);
+  --sidebar-accent: var(--spine-raised);
+  --sidebar-accent-foreground: var(--spine-ink);
+  --sidebar-border: var(--spine-rule);
+  --sidebar-ring: var(--pop);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "cv11", "ss01";
-  }
   html {
     @apply font-sans;
+    color-scheme: dark;
+    scrollbar-color: var(--border-strong) transparent;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "kern", "liga";
+    caret-color: var(--rose);
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--rose) 32%, transparent);
+    color: var(--ink);
+  }
+  a {
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
   }
   /* Room for the fixed MOCK API banner (components/app-shell/mock-banner.tsx). */
   body[data-mock] {
     --mock-offset: 1.5rem;
     padding-bottom: var(--mock-offset);
   }
+
+  /* Indic scripts: regional copy must carry `lang`. Noto faces shape each script; taller lines keep matras and conjuncts clear. */
+  :lang(hi),
+  :lang(mr),
+  :lang(ne),
+  :lang(sa),
+  :lang(kok) {
+    font-family: var(--font-noto-deva), var(--font-archivo), sans-serif;
+    line-height: 1.6;
+  }
+  :lang(ta) {
+    font-family: var(--font-noto-taml), var(--font-archivo), sans-serif;
+    line-height: 1.6;
+  }
+  :lang(ml) {
+    font-family: var(--font-noto-mlym), var(--font-archivo), sans-serif;
+    line-height: 1.6;
+  }
+  :lang(bn),
+  :lang(as) {
+    font-family: var(--font-noto-beng), var(--font-archivo), sans-serif;
+    line-height: 1.6;
+  }
+  :lang(te) {
+    font-family: var(--font-noto-telu), var(--font-archivo), sans-serif;
+    line-height: 1.6;
+  }
+  :lang(kn) {
+    font-family: var(--font-noto-knda), var(--font-archivo), sans-serif;
+    line-height: 1.6;
+  }
+  :lang(gu) {
+    font-family: var(--font-noto-gujr), var(--font-archivo), sans-serif;
+    line-height: 1.6;
+  }
+  :lang(pa) {
+    font-family: var(--font-noto-guru), var(--font-archivo), sans-serif;
+    line-height: 1.6;
+  }
+  :lang(or) {
+    font-family: var(--font-noto-orya), var(--font-archivo), sans-serif;
+    line-height: 1.6;
+  }
+}
+
+@layer components {
+  /* Display voice: Eczar (Vaibhav Singh, Rosetta), a Devanagari+Latin editorial serif. Workspace titles and the landing statement only. */
+  .type-display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+  }
+  /* Landing statement: the display face at a lighter weight, tight but not cramped. */
+  .type-hero {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.032em;
+    line-height: 1.04;
+  }
+  .type-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.1;
+  }
+  /* Ledger column voice: Archivo at its narrow width for dense, ruled columns. */
+  .type-ledger {
+    font-stretch: 88%;
+    font-variant-numeric: tabular-nums;
+  }
+  .type-meta {
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Clay material. Panels and pressable things are raised; values sit in wells; text and tables stay flat. */
+  .clay-panel {
+    background-color: var(--surface);
+    border-radius: var(--radius-card);
+    box-shadow: var(--clay-raised);
+  }
+  /* Every card container in the app is a clay panel (one rule instead of editing each card). */
+  .rounded-card.bg-surface,
+  .rounded-card.bg-surface-raised {
+    box-shadow: var(--clay-raised);
+    border-color: color-mix(in oklab, var(--border) 70%, transparent);
+  }
+  /* Pastel tints for bento cards: soft in the light theme, a whisper of hue on graphite. */
+  .tint-peach {
+    background-color: var(--tint-peach);
+  }
+  .tint-mint {
+    background-color: var(--tint-mint);
+  }
+  .tint-sky {
+    background-color: var(--tint-sky);
+  }
+  .tint-butter {
+    background-color: var(--tint-butter);
+  }
+  .tint-rose {
+    background-color: var(--tint-rose);
+  }
+  .clay {
+    background-color: var(--surface-raised);
+    background-image: linear-gradient(180deg, color-mix(in oklab, var(--surface-raised) 96%, white), var(--surface-raised));
+    box-shadow: var(--clay-raised);
+  }
+  .clay-well {
+    background: var(--surface-muted);
+    box-shadow: var(--clay-well);
+  }
+  .clay-pressed {
+    box-shadow: var(--clay-pressed);
+  }
+
+  /* Ruled ledger rows: hairline rules between entries, a 1px double margin rule before the entry column. */
+  .ledger-rules > * + * {
+    border-top: 1px solid var(--border);
+  }
+  .margin-rule {
+    box-shadow:
+      inset 1px 0 0 var(--border-strong),
+      inset 4px 0 0 transparent,
+      inset 5px 0 0 var(--border);
+  }
+
+  /* A receipt bracket on the top-left corner of evidence entries: this entry has a source attached. */
+  .receipt-corner {
+    position: relative;
+  }
+  .receipt-corner::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 10px;
+    height: 10px;
+    border-top: 1.5px solid var(--ink-muted);
+    border-left: 1.5px solid var(--ink-muted);
+    border-top-left-radius: 3px;
+    pointer-events: none;
+  }
+
+  /* First-load moment on the Today ledger: entries are inked in, left to right, one after another. */
+  .ledger-ink {
+    animation: ledger-ink 520ms var(--ease-out-expo) both;
+  }
+
+  /* Creative preview mat: a raised sheet on the desk, with its own ink. */
+  .creative-mat {
+    background-color: var(--mat);
+    color: var(--mat-ink);
+    box-shadow: var(--clay-raised);
+  }
+}
+
+/* Landing hero: the statement settles out of a blur (always visible, so it paints as the LCP at once); the rest rises in. */
+.hero-settle {
+  animation: hero-settle 1.5s var(--ease-out-expo) both;
+}
+.hero-rise {
+  animation: hero-rise 1.1s var(--ease-out-expo) both;
+}
+@keyframes hero-settle {
+  from {
+    filter: blur(14px);
+    transform: translateY(0.16em);
+  }
+}
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
 }
 
 /*
- * Focus indicator for every interactive element: full-strength 2px ring color with a 2px offset (WCAG 2.4.7, 2.4.11).
- * Deliberately unlayered so component `outline-none` utilities cannot remove it; outlines also survive forced-colors mode.
- * Rows inside overflow-hidden lists opt into an inset outline with `focus-visible:-outline-offset-2!`.
+ * One continuous ground behind every page: graphite (or cool clay grey) with three slow ambient glows and a fine grain.
+ * Fixed and owned by <body>, so it never unmounts between routes: the landing page and the app are the same scene.
+ * Inside the app it drifts at half speed and quieter.
+ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -15%;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 36% at 80% 16%, var(--glow-a), transparent 70%),
+    radial-gradient(46% 42% at 12% 88%, var(--glow-b), transparent 72%),
+    radial-gradient(28% 28% at 54% 50%, var(--glow-c), transparent 70%);
+  animation: ground-drift 70s ease-in-out infinite alternate;
+  will-change: transform;
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+html[data-zone="app"] body::before {
+  animation-duration: 140s;
+  opacity: 0.7;
+}
+@keyframes ground-drift {
+  from {
+    transform: translate3d(-3%, -2%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(3%, 2.5%, 0) scale(1.06);
+  }
+}
+
+/* Arriving in the app from the landing page or sign-in: panels settle in, in order, over the same ground. */
+.shell-arrive .arrive-spine {
+  animation: arrive-left 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+}
+.shell-arrive .arrive-1 {
+  animation: arrive 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+}
+.shell-arrive .arrive-2 {
+  animation: arrive 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both;
+}
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.99);
+    filter: blur(4px);
+  }
+}
+@keyframes arrive-left {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+}
+
+/* Page content crossfades over the continuous ground when the browser supports View Transitions. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Horizontal card carousel: native scrolling with snap; arrows, drag and keys are added in JS. */
+.carousel-track {
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+.carousel-track > * {
+  scroll-snap-align: start;
+}
+.carousel-track[data-dragging="true"] {
+  scroll-snap-type: none;
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* Lenis smooth scrolling (landing page only). */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+@keyframes ledger-ink {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/*
+ * Focus indicator for every interactive element: 2px ring colour with a 2px offset (WCAG 2.4.7, 2.4.11).
+ * Unlayered so component `outline-none` utilities cannot remove it; outlines survive forced-colours mode.
  */
 :focus-visible {
   outline: 2px solid var(--ring);
@@ -246,6 +696,12 @@
   ::before,
   ::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
+
+
+
+

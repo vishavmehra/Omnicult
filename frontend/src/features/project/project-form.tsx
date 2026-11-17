@@ -59,7 +59,7 @@ export function ProjectForm({ onCreated, onCancel }: { onCreated(project: Projec
   return (
     <form onSubmit={submit} className="space-y-6" aria-describedby="new-project-note">
       <p id="new-project-note" className="text-[13px] text-ink-secondary">
-        Creates a <strong className="font-medium text-ink">live</strong> project. Its runs call Qloo and the model provider; if they are not configured
+        Creates a <strong className="font-medium text-ink">live</strong> project. Its runs call the configured data and model providers; if they are not configured
         on the backend, starting a run fails with an explanation and nothing is saved.
       </p>
       <div className="grid gap-x-8 gap-y-6 md:grid-cols-2">

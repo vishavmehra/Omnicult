@@ -18,7 +18,7 @@ async function mockTransport(request: Request) {
   return mockFetch(request);
 }
 
-/** Typed client for the Nativeproof API (paths and bodies come from contracts/openapi.json). */
+/** Typed client for the Omnicult API (paths and bodies come from contracts/openapi.json). */
 export const api = createClient<paths>({
   baseUrl: env.apiBaseUrl,
   ...(env.apiMock ? { fetch: mockTransport } : {}),

@@ -14,7 +14,10 @@ import { projectKeys } from "@/features/project/project-context";
 import { api } from "@/lib/api/client";
 import { unwrap } from "@/lib/api/errors";
 import type { Campaign, CampaignCreate, CampaignUpdate, EvaluationCriteria, Market } from "@/lib/api/types";
+import { DEFAULT_WEIGHTS, WEIGHT_FIELDS } from "@/lib/scoring";
 import { cn } from "@/lib/utils";
+
+export { DEFAULT_WEIGHTS, WEIGHT_FIELDS };
 
 type CampaignType = Campaign["campaign_type"];
 
@@ -26,14 +29,7 @@ export const CAMPAIGN_TYPES: { value: CampaignType; label: string }[] = [
   { value: "social_post", label: "Social post" },
 ];
 
-export const DEFAULT_WEIGHTS: EvaluationCriteria = { clarity: 0.3, brand_fidelity: 0.25, cultural_relevance: 0.3, cultural_risk: 0.15 };
 
-export const WEIGHT_FIELDS: { key: keyof EvaluationCriteria; label: string; help: string }[] = [
-  { key: "clarity", label: "Clarity", help: "How clearly the message reads." },
-  { key: "brand_fidelity", label: "Brand fidelity", help: "Consistency with the brand voice and terms." },
-  { key: "cultural_relevance", label: "Cultural relevance", help: "Fit with the target market's context." },
-  { key: "cultural_risk", label: "Cultural risk", help: "Inverted into utility: 100 − risk score." },
-];
 
 const LIMITS = { headline: 300, body: 5000, call_to_action: 200, reference_terms: 20 };
 
@@ -61,7 +57,7 @@ function WeightsEditor({ draft, onChange }: { draft: WeightDraft; onChange(next:
     <fieldset className="space-y-3" aria-describedby="weights-help weights-total">
       <legend className="text-[13px] font-medium text-ink">Evaluation weights</legend>
       <p id="weights-help" className="text-xs text-ink-secondary">
-        Importance of each criterion when Loop computes the overall score. They must add up to exactly 1.00 (±0.001); Nativeproof never rescales them for you.
+        Importance of each criterion when Loop computes the overall score. They must add up to exactly 1.00 (±0.001); Omnicult never rescales them for you.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         {WEIGHT_FIELDS.map((f) => (
