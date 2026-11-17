@@ -21,6 +21,11 @@ const KIND: Record<SearchHit["kind"], { label: string; segment: string | null }>
   risk_finding: { label: "Risk finding", segment: "risk-radar" },
   profile_item: { label: "Cultural DNA item", segment: "cultural-dna" },
   adaptation: { label: "Adaptation", segment: "voice" },
+  version: { label: "Creative version", segment: "voice" },
+  claim: { label: "Claim", segment: null },
+  claim_source: { label: "Claim source", segment: null },
+  scene: { label: "Creative scene", segment: "voice" },
+  finding: { label: "Risk Check finding", segment: "risk-radar" },
 };
 
 /**
