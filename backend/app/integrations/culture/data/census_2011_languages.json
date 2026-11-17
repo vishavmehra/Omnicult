@@ -1,0 +1,290 @@
+{
+  "dataset_id": "census_2011_c16",
+  "table_id": "C-16",
+  "title": "C-16: Population by mother tongue",
+  "year": "2011",
+  "publisher": "Office of the Registrar General & Census Commissioner, India (Census of India 2011)",
+  "retrieved_on": "2026-11-17",
+  "published_at_note": "catalog_created is the date the table was added to the Census Digital Library, not the survey date; the data year is 2011.",
+  "note": "Speaker counts are persons by mother tongue as tabulated in the 2011 census. Shares are computed from the table. This is a 2011 snapshot and must never be presented as current.",
+  "states": {
+    "IN-MH": {
+      "state_code": "27",
+      "state_name": "Maharashtra",
+      "population": 112374333,
+      "languages": [
+        {
+          "mother_tongue_code": "013000",
+          "name": "Marathi",
+          "iso639_1": "mr",
+          "speakers": 77461172
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 14481513
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 7540324
+        },
+        {
+          "mother_tongue_code": "005000",
+          "name": "Gujarati",
+          "iso639_1": "gu",
+          "speakers": 2371743
+        },
+        {
+          "mother_tongue_code": "030000",
+          "name": "Bhili/Bhilodi",
+          "iso639_1": null,
+          "speakers": 2247678
+        },
+        {
+          "mother_tongue_code": "053000",
+          "name": "Khandeshi",
+          "iso639_1": null,
+          "speakers": 1616730
+        },
+        {
+          "mother_tongue_code": "021000",
+          "name": "Telugu",
+          "iso639_1": "te",
+          "speakers": 1320880
+        },
+        {
+          "mother_tongue_code": "007000",
+          "name": "Kannada",
+          "iso639_1": "kn",
+          "speakers": 1000463
+        },
+        {
+          "mother_tongue_code": "019000",
+          "name": "Sindhi",
+          "iso639_1": "sd",
+          "speakers": 723748
+        },
+        {
+          "mother_tongue_code": "020000",
+          "name": "Tamil",
+          "iso639_1": "ta",
+          "speakers": 509887
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 442090
+        },
+        {
+          "mother_tongue_code": "011000",
+          "name": "Malayalam",
+          "iso639_1": "ml",
+          "speakers": 366153
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 106656
+        }
+      ],
+      "other_speakers": 2185296,
+      "reference_id": "PC11_C16-27",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Maharashtra - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10212",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10212/download/13324/DDW-C16-STMT-MDDS-2700.XLSX",
+      "file": "DDW-C16-STMT-MDDS-2700.XLSX"
+    },
+    "IN-TN": {
+      "state_code": "33",
+      "state_name": "Tamil Nadu",
+      "population": 72147030,
+      "languages": [
+        {
+          "mother_tongue_code": "020000",
+          "name": "Tamil",
+          "iso639_1": "ta",
+          "speakers": 63753997
+        },
+        {
+          "mother_tongue_code": "021000",
+          "name": "Telugu",
+          "iso639_1": "te",
+          "speakers": 4234302
+        },
+        {
+          "mother_tongue_code": "007000",
+          "name": "Kannada",
+          "iso639_1": "kn",
+          "speakers": 1286175
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 1264537
+        },
+        {
+          "mother_tongue_code": "011000",
+          "name": "Malayalam",
+          "iso639_1": "ml",
+          "speakers": 726096
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 393380
+        },
+        {
+          "mother_tongue_code": "013000",
+          "name": "Marathi",
+          "iso639_1": "mr",
+          "speakers": 85454
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 24495
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 22969
+        }
+      ],
+      "other_speakers": 355625,
+      "reference_id": "PC11_C16-33",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Tamil Nadu - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10222",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10222/download/13334/DDW-C16-STMT-MDDS-3300.XLSX",
+      "file": "DDW-C16-STMT-MDDS-3300.XLSX"
+    },
+    "IN-KL": {
+      "state_code": "32",
+      "state_name": "Kerala",
+      "population": 33406061,
+      "languages": [
+        {
+          "mother_tongue_code": "011000",
+          "name": "Malayalam",
+          "iso639_1": "ml",
+          "speakers": 32413213
+        },
+        {
+          "mother_tongue_code": "020000",
+          "name": "Tamil",
+          "iso639_1": "ta",
+          "speakers": 502516
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 51928
+        },
+        {
+          "mother_tongue_code": "013000",
+          "name": "Marathi",
+          "iso639_1": "mr",
+          "speakers": 31642
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 29061
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 4471
+        }
+      ],
+      "other_speakers": 373230,
+      "reference_id": "PC11_C16-32",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Kerala - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10209",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10209/download/13321/DDW-C16-STMT-MDDS-3200.XLSX",
+      "file": "DDW-C16-STMT-MDDS-3200.XLSX"
+    },
+    "IN-WB": {
+      "state_code": "19",
+      "state_name": "West Bengal",
+      "population": 91276115,
+      "languages": [
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 78698852
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 6356059
+        },
+        {
+          "mother_tongue_code": "018000",
+          "name": "Santali",
+          "iso639_1": null,
+          "speakers": 2429073
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 1663519
+        },
+        {
+          "mother_tongue_code": "014000",
+          "name": "Nepali",
+          "iso639_1": "ne",
+          "speakers": 1155375
+        },
+        {
+          "mother_tongue_code": "020000",
+          "name": "Tamil",
+          "iso639_1": "ta",
+          "speakers": 15930
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 14945
+        },
+        {
+          "mother_tongue_code": "013000",
+          "name": "Marathi",
+          "iso639_1": "mr",
+          "speakers": 14815
+        },
+        {
+          "mother_tongue_code": "011000",
+          "name": "Malayalam",
+          "iso639_1": "ml",
+          "speakers": 10952
+        }
+      ],
+      "other_speakers": 916595,
+      "reference_id": "PC11_C16-19",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, West Bengal - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10226",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10226/download/13338/DDW-C16-STMT-MDDS-1900.XLSX",
+      "file": "DDW-C16-STMT-MDDS-1900.XLSX"
+    }
+  }
+}

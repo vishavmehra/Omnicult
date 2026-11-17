@@ -1,0 +1,268 @@
+{
+ "recorded_at": "2026-11-17T17:25:53+00:00",
+ "call": {
+  "term": "Pongal (festival)",
+  "region_code": "IN-TN",
+  "start": "2025-11-01",
+  "end": "2026-10-31"
+ },
+ "exchanges": [
+  {
+   "url": "https://www.wikidata.org/w/api.php?action=wbgetentities&props=sitelinks&sitefilter=tawiki%7Cenwiki&format=json&sites=enwiki&titles=Pongal+%28festival%29",
+   "status": 200,
+   "response": {
+    "entities": {
+     "Q29271": {
+      "type": "item",
+      "id": "Q29271",
+      "sitelinks": {
+       "enwiki": {
+        "site": "enwiki",
+        "title": "Pongal (festival)",
+        "badges": []
+       },
+       "tawiki": {
+        "site": "tawiki",
+        "title": "தைப்பொங்கல்",
+        "badges": []
+       }
+      }
+     }
+    },
+    "success": 1
+   }
+  },
+  {
+   "url": "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/ta.wikipedia/all-access/user/%E0%AE%A4%E0%AF%88%E0%AE%AA%E0%AF%8D%E0%AE%AA%E0%AF%8A%E0%AE%99%E0%AF%8D%E0%AE%95%E0%AE%B2%E0%AF%8D/monthly/20251101/20261031",
+   "status": 200,
+   "response": {
+    "items": [
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2025110100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 1624
+     },
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2025120100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 2624
+     },
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2026010100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 18594
+     },
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2026020100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 776
+     },
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2026030100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 838
+     },
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2026040100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 358
+     },
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2026050100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 260
+     },
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2026060100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 273
+     },
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2026070100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 255
+     },
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2026080100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 335
+     },
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2026090100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 479
+     },
+     {
+      "project": "ta.wikipedia",
+      "article": "தைப்பொங்கல்",
+      "granularity": "monthly",
+      "timestamp": "2026100100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 868
+     }
+    ]
+   }
+  },
+  {
+   "url": "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/Pongal_%28festival%29/monthly/20251101/20261031",
+   "status": 200,
+   "response": {
+    "items": [
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2025110100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 7900
+     },
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2025120100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 12969
+     },
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2026010100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 116607
+     },
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2026020100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 6009
+     },
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2026030100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 3872
+     },
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2026040100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 3129
+     },
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2026050100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 2857
+     },
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2026060100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 2464
+     },
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2026070100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 2312
+     },
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2026080100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 3478
+     },
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2026090100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 3940
+     },
+     {
+      "project": "en.wikipedia",
+      "article": "Pongal_(festival)",
+      "granularity": "monthly",
+      "timestamp": "2026100100",
+      "access": "all-access",
+      "agent": "user",
+      "views": 4078
+     }
+    ]
+   }
+  }
+ ]
+}

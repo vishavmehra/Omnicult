@@ -1,0 +1,1270 @@
+{
+  "region_code": "IN-TN",
+  "dataset_version": "1",
+  "retrieved_on": "2026-11-17",
+  "entries": [
+    {
+      "id": "in-tn-festival-pongal",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:pongal",
+      "value": {
+        "name": "Pongal"
+      },
+      "value_text": "Pongal is a festival observed in Tamil Nadu.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/plan-your-trip/tamil-nadu-at-a-glance",
+          "title": "Tamil Nadu at a Glance",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Some of the popular state festivals are International Yoga Festival (Puducherry), Pongal (statewide), Thyagaraja Aradhana (Thiruvaiyaru), Teppam (Float) Festival (Madurai), Natyanjali Dance Festival (Chidambaram), Chithirai Festival (Madurai), Karthikai Deepam Festival (statewide), Chennai Festival of Music & Dance (Chennai) and Mamallapuram Dance Festival (Mamallapuram)"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Pongal_(festival)",
+          "title": "Pongal (festival)",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "the festival is observed for three or four days in Tamil Nadu"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-pongal-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:pongal",
+      "value": {
+        "name": "Pongal",
+        "month_text": "the first day of the Tamil calendar month of Thai; usually 14 or 15 January in the Gregorian calendar"
+      },
+      "value_text": "English Wikipedia states that Thai Pongal is observed on the first day of the Tamil calendar month of Thai and usually falls on 14 or 15 January in the Gregorian calendar.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Pongal_(festival)",
+          "title": "Pongal (festival)",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Thai Pongal is observed on the first day of the Tamil calendar month of Thai and usually falls on 14 or 15 January in the Gregorian calendar"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-pongal-prominence",
+      "category": "festival",
+      "attribute": "festival_prominence",
+      "subject": "festival:pongal",
+      "value": {
+        "name": "Pongal"
+      },
+      "value_text": "Tamil Nadu Tourism lists Pongal (statewide) among the popular state festivals.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/plan-your-trip/tamil-nadu-at-a-glance",
+          "title": "Tamil Nadu at a Glance",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Some of the popular state festivals are International Yoga Festival (Puducherry), Pongal (statewide), Thyagaraja Aradhana (Thiruvaiyaru), Teppam (Float) Festival (Madurai), Natyanjali Dance Festival (Chidambaram), Chithirai Festival (Madurai), Karthikai Deepam Festival (statewide), Chennai Festival of Music & Dance (Chennai) and Mamallapuram Dance Festival (Mamallapuram)"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-puthandu",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:puthandu",
+      "value": {
+        "name": "Puthandu (Tamil New Year)",
+        "native_name": "புத்தாண்டு",
+        "month_text": "generally 14 April; the first day of the Tamil month of Chithirai"
+      },
+      "value_text": "The Tamil New Year, Puthandu, generally falls on 14 April, as the first day of the Tamil month Chithirai.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Puthandu",
+          "title": "Puthandu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The Tamil New Year follows the spring equinox and generally falls on 14 April of the Gregorian year."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_Nadu",
+          "title": "Tamil Nadu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "as the first day of the Tamil month Chithirai and falls on or about 14 April every year on the Gregorian calendar"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-deepavali",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:deepavali",
+      "value": {
+        "name": "Deepavali (Diwali)",
+        "month_text": "between around mid-October and mid-November (Hindu lunisolar months of Ashvin and Kartika)"
+      },
+      "value_text": "English Wikipedia states that Diwali is celebrated between around mid-October and mid-November (Hindu lunisolar months of Ashvin and Kartika).",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Diwali",
+          "title": "Diwali",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Diwali is celebrated during the Hindu lunisolar months of Ashvin (according to the amanta tradition) and Kārtika – between around mid-October and mid-November."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-deepavali-adirasam",
+      "category": "festival",
+      "attribute": "festival_food",
+      "subject": "festival:deepavali",
+      "value": {
+        "name": "Adirasam"
+      },
+      "value_text": "Tamil Nadu Tourism describes adirasam as a sweet delicacy bonding the household of Tamil Nadu and gorged during Deepavali.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/blogs/sweet-savouries-from-tamil-nilam",
+          "title": "Sweet Savouries from Tamil Nilam | Tamil Nadu Tourism",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Adirasam: A sweet delicacy bonding the household of Tamil Nadu and gorged during Deepavali."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-karthigai-deepam",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:karthigai_deepam",
+      "value": {
+        "name": "Karthigai Deepam"
+      },
+      "value_text": "Tamil Nadu Tourism lists the Karthikai Deepam Festival (statewide) among the popular state festivals.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/plan-your-trip/tamil-nadu-at-a-glance",
+          "title": "Tamil Nadu at a Glance",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Some of the popular state festivals are International Yoga Festival (Puducherry), Pongal (statewide), Thyagaraja Aradhana (Thiruvaiyaru), Teppam (Float) Festival (Madurai), Natyanjali Dance Festival (Chidambaram), Chithirai Festival (Madurai), Karthikai Deepam Festival (statewide), Chennai Festival of Music & Dance (Chennai) and Mamallapuram Dance Festival (Mamallapuram)"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-karthigai-deepam-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:karthigai_deepam",
+      "value": {
+        "name": "Karthigai Deepam",
+        "month_text": "the first full moon day of the Tamil calendar month of Karthigai"
+      },
+      "value_text": "English Wikipedia states that the festival is celebrated on the first full moon day of the Tamil calendar month of Karthigai.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Karthigai_Deepam",
+          "title": "Karthika Deepam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The festival is celebrated on the first full moon day of the Tamil calendar month of Karthigai coinciding with the Kṛttikā nakshatra"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-thaipusam",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:thaipusam",
+      "value": {
+        "name": "Thaipusam",
+        "month_text": "the first full moon day of the Tamil month of Thai, coinciding with the Pusam star"
+      },
+      "value_text": "Thaipusam is a Tamil festival celebrated on the first full moon day of the Tamil month of Thai coinciding with the Pusam star.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_Nadu",
+          "title": "Tamil Nadu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Thaipusam is a Tamil festival celebrated on the first full moon day of the Tamil month of Thai coinciding with Pusam star"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-aadi-perukku",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:aadi_perukku",
+      "value": {
+        "name": "Aadi Perukku",
+        "month_text": "the 18th day of the Tamil month of Aadi (Adi)"
+      },
+      "value_text": "Aadi Perukku is a Tamil cultural festival celebrated on the 18th day of the Tamil month of Adi, which pays tribute to water.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_Nadu",
+          "title": "Tamil Nadu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Aadi Perukku is a Tamil cultural festival celebrated on the 18th day of the Tamil month of Adi which pays tribute to water"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-chithirai-festival",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:chithirai_festival",
+      "value": {
+        "name": "Chithirai Festival (Meenakshi Tirukalyanam), Madurai"
+      },
+      "value_text": "The Chithirai Festival is held in Madurai.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/plan-your-trip/tamil-nadu-at-a-glance",
+          "title": "Tamil Nadu at a Glance",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Some of the popular state festivals are International Yoga Festival (Puducherry), Pongal (statewide), Thyagaraja Aradhana (Thiruvaiyaru), Teppam (Float) Festival (Madurai), Natyanjali Dance Festival (Chidambaram), Chithirai Festival (Madurai), Karthikai Deepam Festival (statewide), Chennai Festival of Music & Dance (Chennai) and Mamallapuram Dance Festival (Mamallapuram)"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Chithirai_Thiruvizha",
+          "title": "Meenakshi Tirukalyanam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "is an annual Tamil Hindu celebration in the city of Madurai"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-chithirai-festival-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:chithirai_festival",
+      "value": {
+        "name": "Chithirai Festival (Meenakshi Tirukalyanam), Madurai",
+        "month_text": "the Tamil month of Chithirai; the source says during the month of April"
+      },
+      "value_text": "English Wikipedia states that the Meenakshi Tirukalyanam (Chithirai Thiruvizha) is an annual Tamil Hindu celebration in the city of Madurai during the month of April.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Chithirai_Thiruvizha",
+          "title": "Meenakshi Tirukalyanam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "is an annual Tamil Hindu celebration in the city of Madurai during the month of April."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-chithirai-festival-prominence",
+      "category": "festival",
+      "attribute": "festival_prominence",
+      "subject": "festival:chithirai_festival",
+      "value": {
+        "name": "Chithirai Festival (Madurai)"
+      },
+      "value_text": "Tamil Nadu Tourism lists the Chithirai Festival (Madurai) among the popular state festivals.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/plan-your-trip/tamil-nadu-at-a-glance",
+          "title": "Tamil Nadu at a Glance",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Some of the popular state festivals are International Yoga Festival (Puducherry), Pongal (statewide), Thyagaraja Aradhana (Thiruvaiyaru), Teppam (Float) Festival (Madurai), Natyanjali Dance Festival (Chidambaram), Chithirai Festival (Madurai), Karthikai Deepam Festival (statewide), Chennai Festival of Music & Dance (Chennai) and Mamallapuram Dance Festival (Mamallapuram)"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-navaratri-bommai-kolu",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:navaratri_bommai_kolu",
+      "value": {
+        "name": "Navaratri with Bommai Kolu (doll display)",
+        "native_name": "பொம்மை கொலு",
+        "month_text": "typically September and October (Navaratri)"
+      },
+      "value_text": "Bommai Kolu is part of the annual Dasara-Vijayadasami festival in which young girls and women display dolls, figurines and everyday scenes, and Navaratri typically falls in September and October.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Bommai_Kolu",
+          "title": "Golu (festival)",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It is a part of the annual Dasara-Vijayadasami Hindu festival where young girls and women display dolls, figurine, court life, everyday scenes"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Navaratri",
+          "title": "Navaratri",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The festival is celebrated for nine nights once every year during this month, which typically falls in the Gregorian months of September and October."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-madras-music-season",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:madras_music_season",
+      "value": {
+        "name": "Madras Music Season (Margazhi season), Chennai"
+      },
+      "value_text": "From 1928 the Music Academy planned an annual music festival (the Madras Music Season).",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/blogs/the-magic-of-marghazi",
+          "title": "The magic of Marghazi | Tamil Nadu",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "In 1928, the Music Academy was formally established a music festival was planned for every year."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Madras_Music_Season",
+          "title": "Madras Music Season",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "From 1928, the academy started organizing the Music Season every year during the month of December."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-madras-music-season-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:madras_music_season",
+      "value": {
+        "name": "Madras Music Season (Margazhi season), Chennai",
+        "month_text": "December (the Tamil month of Margazhi)"
+      },
+      "value_text": "English Wikipedia states that from 1928 the academy started organizing the Music Season every year during the month of December.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Madras_Music_Season",
+          "title": "Madras Music Season",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "From 1928, the academy started organizing the Music Season every year during the month of December."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-festival-madras-music-season-description",
+      "category": "festival",
+      "attribute": "festival_description",
+      "subject": "festival:madras_music_season",
+      "value": {
+        "name": "Madras Music Season (Margazhi season), Chennai"
+      },
+      "value_text": "Tamil Nadu Tourism says that, come December, all of Tamil Nadu, especially Chennai, is caught up in the magic of powerful voices raised in song, the flute, the tinkle of anklets and the beat of the ghatam.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/blogs/the-magic-of-marghazi",
+          "title": "The magic of Marghazi | Tamil Nadu",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Come December and all of Tamil Nadu, especially Chennai, is caught up in the magic of powerful voices raised in song, the melodious strains of the flute, the tinkle of anklets, the hypnotic beat of the ghatam and the uplifting sense of a centuries-old tradition."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-food-idli-dosa",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:idli_dosa",
+      "value": {
+        "name": "Idli and dosa with sambar and rice",
+        "meal": "breakfast and lunch"
+      },
+      "value_text": "A typical Tamil breakfast consists of idli or dosa with chutney, while lunch includes rice and sambar.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_cuisine",
+          "title": "Tamil cuisine",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "A typical breakfast meal consists of idli or dosa with chutney, while lunch includes rice, sambar"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-food-sakkarai-pongal",
+      "category": "food",
+      "attribute": "festive_food",
+      "subject": "food:sakkarai_pongal",
+      "value": {
+        "name": "Sweet pongal"
+      },
+      "value_text": "A sweet pongal dish is made on the day of the Pongal festival.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/blogs/sweet-savouries-from-tamil-nilam",
+          "title": "Sweet Savouries from Tamil Nilam | Tamil Nadu Tourism",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Sweet pongal is known as sakkarai pongal in Tamil. It is made in many traditional South Indian homes on the day of Makara sankranthi or pongal festival."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Pongal_(festival)",
+          "title": "Pongal (festival)",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Pongal also refers to a sweet dish of rice boiled with milk and jaggery that is ritually prepared and consumed on the day."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-food-sakkarai-pongal-ingredients",
+      "category": "food",
+      "attribute": "food_description",
+      "subject": "food:sakkarai_pongal",
+      "value": {
+        "name": "Sweet pongal"
+      },
+      "value_text": "English Wikipedia describes pongal as also referring to a sweet dish of rice boiled with milk and jaggery that is ritually prepared and consumed on the day.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Pongal_(festival)",
+          "title": "Pongal (festival)",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Pongal also refers to a sweet dish of rice boiled with milk and jaggery that is ritually prepared and consumed on the day."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-food-sakkarai-pongal-name",
+      "category": "food",
+      "attribute": "food_name",
+      "subject": "food:sakkarai_pongal",
+      "value": {
+        "name": "Sakkarai Pongal (sweet pongal)"
+      },
+      "value_text": "Tamil Nadu Tourism says sweet pongal is known as sakkarai pongal in Tamil.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/blogs/sweet-savouries-from-tamil-nilam",
+          "title": "Sweet Savouries from Tamil Nilam | Tamil Nadu Tourism",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Sweet pongal is known as sakkarai pongal in Tamil."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-food-payasam",
+      "category": "food",
+      "attribute": "festive_food",
+      "subject": "food:payasam",
+      "value": {
+        "name": "Payasam"
+      },
+      "value_text": "Tamil Nadu Tourism describes payasam as a thick, creamy dessert that is ubiquitous throughout the state.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/blogs/sweet-savouries-from-tamil-nilam",
+          "title": "Sweet Savouries from Tamil Nilam | Tamil Nadu Tourism",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Payasam: A thick, creamy dessert, Payasam is ubiquitous throughout the state."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-food-ukkarai",
+      "category": "food",
+      "attribute": "festive_food",
+      "subject": "food:ukkarai",
+      "value": {
+        "name": "Ukkarai"
+      },
+      "value_text": "Tamil Nadu Tourism describes ukkarai as a popular dessert served during Deepavali in Chettinad.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/blogs/sweet-savouries-from-tamil-nilam",
+          "title": "Sweet Savouries from Tamil Nilam | Tamil Nadu Tourism",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Ukkarai: A popular dessert served during Deepavali in Chettinad, it’s made of steamed green gram and Bengal gram flavoured with jaggery, coconut and cardamoms."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-food-puttu",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:puttu",
+      "value": {
+        "name": "Puttu"
+      },
+      "value_text": "Puttu is a dish native to the South Indian states of Kerala and Tamil Nadu.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Puttu",
+          "title": "Puttu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "is a dish native to the South Indian states of Kerala and Tamil Nadu"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-colour-black-and-red-dravidian-flag",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:black_and_red_dravidian_flag",
+      "value": {
+        "colours": [
+          "black",
+          "red"
+        ],
+        "context": "flag of the Dravidar Kazhagam"
+      },
+      "value_text": "The Dravidar Kazhagam flag features a red circle on a black background, and the source explains what each colour represents.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Dravidar_Kazhagam",
+          "title": "Dravidar Kazhagam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The design features a red circle with a black background with the colour black representing \"the deprivations and the indignities that the Dravidians had to face under the strict Hindu religion\" while red represented \"the tireless efforts taken to eliminate the ignorance and blind faith among the people and to free them from any kind of mental and materialistic exploitation\"."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-colour-white-rice-flour-kolam",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:white_rice_flour_kolam",
+      "value": {
+        "colours": [
+          "white"
+        ],
+        "context": "traditional kolam floor designs"
+      },
+      "value_text": "Kolams are traditionally drawn on the ground with white rice flour.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kolam",
+          "title": "Kolam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Traditionally kolams are drawn on the flat surface of the ground with white rice flour."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_Nadu",
+          "title": "Tamil Nadu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Tamils decorate their homes with colourful geometric designs called kolam made from rice powder"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-colour-gold-zari-kanchipuram-silk",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:gold_zari_kanchipuram_silk",
+      "value": {
+        "colours": [
+          "gold"
+        ],
+        "context": "Kanchipuram silk saris"
+      },
+      "value_text": "Kanchipuram saris woven with heavy silk and gold cloth are considered special and are worn on occasions and festivities.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kanchipuram_sari",
+          "title": "Kanchipuram silk sari",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Kanchipuram saris woven with heavy silk and gold cloth are considered to be special and are worn on occasions and festivities."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-symbol-state-emblem-gopuram",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:state_emblem_gopuram",
+      "value": {
+        "name": "State emblem with a temple gopuram"
+      },
+      "value_text": "The Tamil Nadu state emblem is the only Indian state emblem with the Indian flag and a temple tower on its seal, and its gopuram is based on the west tower of the Madurai Meenakshi Temple.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Emblem_of_Tamil_Nadu",
+          "title": "Emblem of Tamil Nadu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It is the only Indian state emblem that has the Indian flag and a temple tower on its seal."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/List_of_Tamil_Nadu_state_symbols",
+          "title": "List of Tamil Nadu state symbols",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "As per Rao, the image of the gopuram is based on the west tower of the Madurai Meenakshi Temple"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-symbol-state-symbols",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:state_symbols",
+      "value": {
+        "bird": "Emerald dove",
+        "butterfly": "Tamil yeoman",
+        "flower": "Gloriosa lily",
+        "fruit": "Jackfruit",
+        "mammal": "Nilgiri tahr",
+        "tree": "Palmyra palm"
+      },
+      "value_text": "The Tamil Nadu article lists the state symbols: bird emerald dove, butterfly Tamil yeoman, flower gloriosa lily, fruit jackfruit, mammal Nilgiri tahr and tree palmyra palm.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_Nadu",
+          "title": "Tamil Nadu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Symbols of Tamil Nadu Bird Emerald dove Butterfly Tamil yeoman Flower Gloriosa lily Fruit Jackfruit Mammal Nilgiri tahr Tree Palmyra palm"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-symbol-tamil-thai-valthu",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:tamil_thai_valthu",
+      "value": {
+        "name": "Tamil Thai Valthu (invocation to Tamil Mother)",
+        "role": "official state song"
+      },
+      "value_text": "On 23 November 1970 the Government of Tamil Nadu announced that verses of the song would be recited as Tamil Thai Valthu at the beginning of state government functions.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/List_of_Tamil_Nadu_state_symbols",
+          "title": "List of Tamil Nadu state symbols",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "On 23 November 1970, the Government of Tamil Nadu announced that verses of the song would be recited as Tamil Thai Valthu at the beginning of state government functions."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-symbol-kolam",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:kolam",
+      "value": {
+        "name": "Kolam",
+        "native_name": "கோலம்"
+      },
+      "value_text": "Kolams are thought to bring prosperity to homes.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kolam",
+          "title": "Kolam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Kolams or muggulu are thought to bring prosperity to homes."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-moment-tamil-nadu-day",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:tamil_nadu_day",
+      "value": {
+        "name": "Tamil Nadu Day",
+        "dates_stated": [
+          "1 November (announced 2019, formation of the state)",
+          "18 July (announced 2022, renaming of the state)",
+          "1 November (announced for 2026 onwards)"
+        ]
+      },
+      "value_text": "Tamil Nadu Day has been designated on different dates: 1 November (formation of the state) in 2019, 18 July (renaming of the state) from 2022, and 1 November again from 2026.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/List_of_Tamil_Nadu_state_symbols",
+          "title": "List of Tamil Nadu state symbols",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "In July 2022, the state government announced that 18 July of every year will be celebrated as \"Tamil Nadu Day\" beginning that year to mark the renaming of the state."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_Nadu_Day",
+          "title": "Tamil Nadu Day",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "announced that 1 November will be celebrated annually as \"Tamil Nadu Day\" from 2026 to commemorate the formation of the state (as previously designated by the AIADMK govt in 2019)"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-moment-madras-state-renamed",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:madras_state_renamed",
+      "value": {
+        "name": "Renaming of Madras State as Tamil Nadu",
+        "date_stated": "14 January 1969"
+      },
+      "value_text": "On 14 January 1969 Madras state was renamed Tamil Nadu.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_Nadu",
+          "title": "Tamil Nadu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "On 14 January 1969, Madras state was renamed Tamil Nadu, meaning \"Tamil country\"."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-moment-tamil-classical-language",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:tamil_classical_language",
+      "value": {
+        "name": "Tamil recognised as a classical language of India",
+        "date_stated": "12 October 2004"
+      },
+      "value_text": "Tamil was the first language to be recognised as a classical language of India, on 12 October 2004.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_Nadu",
+          "title": "Tamil Nadu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Tamil is one of the oldest languages and was the first to be recognised as a classical language of India"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/List_of_Tamil_Nadu_state_symbols",
+          "title": "List of Tamil Nadu state symbols",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It was the first language to be recognised as a classical language of India on 12 October 2004."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-moment-margazhi-month",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:margazhi_month",
+      "value": {
+        "name": "Margazhi month",
+        "period": "December to January"
+      },
+      "value_text": "The Tamil month of Margazhi falls in December to January.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/blogs/the-magic-of-marghazi",
+          "title": "The magic of Marghazi | Tamil Nadu",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Mid-December to mid-January - the Tamil month of Marghazi"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Margazhi",
+          "title": "Margazhi",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "falls in December–January in the Gregorian calendar"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-moment-margazhi-month-ordinal",
+      "category": "moment",
+      "attribute": "moment_description",
+      "subject": "moment:margazhi_month",
+      "value": {
+        "name": "Margazhi month"
+      },
+      "value_text": "English Wikipedia states that Margazhi or Margali is the ninth month of the Tamil calendar.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Margazhi",
+          "title": "Margazhi",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Margazhi or Margali is the ninth month of the Tamil calendar"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-moment-margazhi-month-auspicious",
+      "category": "moment",
+      "attribute": "moment_timing",
+      "subject": "moment:margazhi_month",
+      "value": {
+        "name": "Margazhi month",
+        "period": "mid-December to mid-January"
+      },
+      "value_text": "Tamil Nadu Tourism gives mid-December to mid-January as the Tamil month of Marghazi and calls it an auspicious month.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/blogs/the-magic-of-marghazi",
+          "title": "The magic of Marghazi | Tamil Nadu",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Mid-December to mid-January - the Tamil month of Marghazi – is an auspicious month – traditional Kolams (rangoli) outside residences add to the visual dimension while temples celebrate with early morning spiritual chanting and offerings of devotional music."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-custom-banana-leaf-meals",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:banana_leaf_meals",
+      "value": {
+        "name": "Serving meals on banana leaves"
+      },
+      "value_text": "Eating on banana leaves is a traditional custom.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/blogs/explore-the-regional-cuisine-of-tamil-nadu",
+          "title": "Tamil Regional cuisine | Tamil Nadu Tourism",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Eating on a banana leaf is an old custom and imparts a unique flavour to the food and is considered healthy."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_cuisine",
+          "title": "Tamil cuisine",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "On special occasions, traditional Tamil dishes are served in a traditional manner, using banana leaves in place of utensils."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-custom-banana-leaf-meals-occasions",
+      "category": "custom",
+      "attribute": "custom_occasion",
+      "subject": "topic:banana_leaf_meals",
+      "value": {
+        "name": "Serving meals on banana leaves"
+      },
+      "value_text": "English Wikipedia states that on special occasions traditional Tamil dishes are served in a traditional manner, using banana leaves in place of utensils.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_cuisine",
+          "title": "Tamil cuisine",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "On special occasions, traditional Tamil dishes are served in a traditional manner, using banana leaves in place of utensils."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-custom-banana-leaf-meals-old-custom",
+      "category": "custom",
+      "attribute": "custom_description",
+      "subject": "topic:banana_leaf_meals",
+      "value": {
+        "name": "Serving meals on banana leaves"
+      },
+      "value_text": "Tamil Nadu Tourism calls eating on a banana leaf an old custom that imparts a unique flavour to the food and is considered healthy.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.tamilnadutourism.tn.gov.in/blogs/explore-the-regional-cuisine-of-tamil-nadu",
+          "title": "Tamil Regional cuisine | Tamil Nadu Tourism",
+          "publisher": "Tamil Nadu Tourism (Department of Tourism, Government of Tamil Nadu)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:tamilnadutourism.tn.gov.in",
+          "excerpt": "Eating on a banana leaf is an old custom and imparts a unique flavour to the food and is considered healthy."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-custom-daily-kolam-at-dawn",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:daily_kolam_at_dawn",
+      "value": {
+        "name": "Daily kolam at the house entrance"
+      },
+      "value_text": "Women draw kolams in front of their home entrance every day at the break of dawn.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kolam",
+          "title": "Kolam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "women draw kolams in front of their home entrance every day at the break of dawn."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-custom-bommai-kolu-visits",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:bommai_kolu_visits",
+      "value": {
+        "name": "Bommai Kolu home visits"
+      },
+      "value_text": "During the golu display season, families and neighbours visit each other with gifts to view the display, share festive foods, and sometimes play music or sing devotional songs together.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Bommai_Kolu",
+          "title": "Golu (festival)",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "During the golu display season, families and neighbors visit each other with gifts to view and chit-chat over the golu display, share festive foods, and sometimes play music or sing devotional songs together."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-custom-jallikattu-on-mattu-pongal",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:jallikattu_on_mattu_pongal",
+      "value": {
+        "name": "Jallikattu",
+        "native_name": "ஜல்லிக்கட்டு"
+      },
+      "value_text": "Jallikattu is held, specifically in southern Tamil Nadu, as part of Pongal celebrations on Mattu Pongal day, which occurs annually in January.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Jallikattu",
+          "title": "Jallikattu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "specifically in southern Tamil Nadu, as a part of Pongal celebrations on Mattu Pongal day, which occurs annually in January."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-family-puthandu-elders-blessing",
+      "category": "family",
+      "attribute": "family_custom",
+      "subject": "topic:puthandu_elders_blessing",
+      "value": {
+        "name": "Seeking elders' blessings on Puthandu"
+      },
+      "value_text": "On Puthandu people wear new clothes, children go to elders to pay their respects and seek blessings, and the family sits down to a vegetarian feast.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Puthandu",
+          "title": "Puthandu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "People wear new clothes and children go to elders to pay their respects and seek their blessings, then the family sits down to a vegetarian feast."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-family-kanu-pidi",
+      "category": "family",
+      "attribute": "family_custom",
+      "subject": "topic:kanu_pidi",
+      "value": {
+        "name": "Kanu Pidi"
+      },
+      "value_text": "Kanu Pidi is observed on Mattu Pongal by women and young girls who place a turmeric leaf outside their home, feed birds and pray for their brothers' wellbeing.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Pongal_(festival)",
+          "title": "Pongal (festival)",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Kanu Pidi is a tradition observed on Mattu Pongal by women and young girls where they place a leaf of turmeric plant outside their home, and feed pongal dish and food to the birds, particularly crow and pray for their brothers' well being."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-family-diwali-oil-bath",
+      "category": "family",
+      "attribute": "family_custom",
+      "subject": "topic:diwali_oil_bath",
+      "value": {
+        "name": "Pre-dawn oil massage and ritual bath at Diwali"
+      },
+      "value_text": "Traditionally, South Indian Hindus receive an oil massage from the elders in the family on the day and then take a ritual bath, all before sunrise.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Diwali",
+          "title": "Diwali",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Traditionally, Marathi Hindus and South Indian Hindus receive an oil massage from the elders in the family on the day and then take a ritual bath, all before sunrise."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-sensitivity-hindi-language-policy",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:hindi_language_policy",
+      "value": {
+        "topic": "Official status of Hindi in Tamil Nadu"
+      },
+      "value_text": "The anti-Hindi agitations involved several mass protests, riots, and student and political movements in Tamil Nadu concerning the official status of Hindi in the state.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Anti-Hindi_agitations_of_Tamil_Nadu",
+          "title": "Anti-Hindi agitations of Tamil Nadu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The agitations involve several mass protests, riots, student and political movements in Tamil Nadu concerning the official status of Hindi in the state."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-sensitivity-three-language-formula",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:three_language_formula",
+      "value": {
+        "topic": "Three-language formula and Tamil Nadu's two-language policy"
+      },
+      "value_text": "The source says the three-language system was never implemented in Tamil Nadu, due to the efforts of a former chief minister.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Three-language_formula",
+          "title": "Three-language formula",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The three language system was never implemented in Tamil Nadu due to efforts of former Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "in-tn-sensitivity-jallikattu-ban-and-protests",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:jallikattu_ban_and_protests",
+      "value": {
+        "topic": "Jallikattu ban and protests"
+      },
+      "value_text": "Animal rights organisations called for a ban on jallikattu, resulting in the Supreme Court of India banning it several times, and protests from the people against the ban led to a new ordinance in 2017.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Jallikattu",
+          "title": "Jallikattu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Because of incidents of injury and death associated with the sport, both to the participants and to the animals forced into it, animal rights organizations have called for a ban on the sport, resulting in the Supreme Court of India banning it several times over the past years. However, with protests from the people against the ban, a new ordinance was enacted in 2017 to continue the sport."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-sensitivity-kaveri-water-sharing",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:kaveri_water_sharing",
+      "value": {
+        "topic": "Kaveri river water sharing with Karnataka"
+      },
+      "value_text": "In the Kaveri water dispute, Tamil Nadu argued that about 3 million acres under cultivation depend heavily on the river water and that any change to the sharing pattern would adversely affect millions of farmers.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kaveri_River_water_dispute",
+          "title": "Kaveri River water dispute",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "However, Tamil Nadu argued that it has about 3 million acres of land under cultivation, which is heavily dependent on the river water, and any change in the existing water sharing pattern would adversely affect the livelihood of millions of farmers in the state."
+        }
+      ]
+    },
+    {
+      "id": "in-tn-language-official",
+      "category": "language",
+      "attribute": "official_language",
+      "subject": "region:IN-TN",
+      "value": "Tamil",
+      "value_text": "Tamil is the official language of Tamil Nadu.",
+      "kind": "observed",
+      "language": "ta",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamil_Nadu",
+          "title": "Tamil Nadu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Tamil is the official language of Tamil Nadu, while English serves as the additional official language."
+        },
+        {
+          "url": "https://www.elections.tn.gov.in/Factsheet.aspx",
+          "title": "Public (Election) Department || State Fact Sheet",
+          "publisher": "Public (Election) Department, Government of Tamil Nadu",
+          "source_type": "curated_reference",
+          "independence_group": "gov:elections.tn.gov.in",
+          "excerpt": "Tamil is the official language of Tamil Nadu state and one of the Official languages mentioned in the eighth schedule of the Indian constitution."
+        }
+      ]
+    }
+  ]
+}

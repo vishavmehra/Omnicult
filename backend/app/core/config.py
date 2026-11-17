@@ -83,6 +83,14 @@ class Settings(BaseSettings):
     keyframe_max_count: int = 16
     keyframe_max_width: int = 768
     media_signed_url_seconds: int = 600  # lifetime of a Cloud Storage signed URL (ASSET_STORAGE_BACKEND=gcs only)
+    # --- culture data layer (docs/CONTRACTS_PHASE1.md section 1; backend/app/integrations/culture/) ---
+    culture_http_timeout_seconds: float = 15
+    # Wikimedia asks every client for a descriptive User-Agent with a way to reach the operator. The default names
+    # no person or organisation: set WIKIMEDIA_USER_AGENT to "<app>/<version> (<contact URL or email>)" in deployment.
+    wikimedia_user_agent: str = "CultureDataClient/0.1 (cultural research client; operator contact not configured)"
+    # Both optional: the adapters that need them are reported as not configured, never faked.
+    data_gov_in_api_key: SecretStr | None = None
+    youtube_api_key: SecretStr | None = None
 
     @field_validator(
         "supabase_url",
@@ -92,6 +100,8 @@ class Settings(BaseSettings):
         "qloo_transport",
         "gcs_bucket",
         "firebase_project_id",
+        "data_gov_in_api_key",
+        "youtube_api_key",
         mode="before",
     )
     @classmethod

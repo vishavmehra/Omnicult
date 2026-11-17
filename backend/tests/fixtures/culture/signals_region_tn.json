@@ -1,0 +1,411 @@
+{
+ "recorded_at": "2026-11-17T16:50:05+00:00",
+ "call": {
+  "entity_id": "region:IN-TN",
+  "region_code": "IN-TN",
+  "limit": 100
+ },
+ "exchanges": [
+  {
+   "url": "https://query.wikidata.org/sparql?query=SELECT+%3Fregion+%3FregionLabel+%3Flang+%3FlangLabel+%3Fiso+%3Fscript+%3FscriptLabel+%3FscriptCode+%3Fmod+WHERE+%7B+%3Fregion+wdt%3AP300+%22IN-TN%22+.+%3Fregion+wdt%3AP37+%3Flang+.+OPTIONAL+%7B+%3Flang+wdt%3AP218+%3Fiso+%7D+OPTIONAL+%7B+%3Flang+wdt%3AP282+%3Fscript+.+OPTIONAL+%7B+%3Fscript+wdt%3AP506+%3FscriptCode+%7D+%7D+OPTIONAL+%7B+%3Fregion+schema%3AdateModified+%3Fmod+%7D+SERVICE+wikibase%3Alabel+%7B+bd%3AserviceParam+wikibase%3Alanguage+%22en%22.+%7D+%7D&format=json",
+   "status": 200,
+   "response": {
+    "head": {
+     "vars": [
+      "region",
+      "regionLabel",
+      "lang",
+      "langLabel",
+      "iso",
+      "script",
+      "scriptLabel",
+      "scriptCode",
+      "mod"
+     ]
+    },
+    "results": {
+     "bindings": [
+      {
+       "lang": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1860"
+       },
+       "script": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q754673"
+       },
+       "region": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1445"
+       },
+       "iso": {
+        "type": "literal",
+        "value": "en"
+       },
+       "mod": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type": "literal",
+        "value": "2026-11-14T10:12:45Z"
+       },
+       "regionLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil Nadu"
+       },
+       "langLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "English"
+       },
+       "scriptLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "English alphabet"
+       }
+      },
+      {
+       "lang": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1860"
+       },
+       "script": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1200582"
+       },
+       "region": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1445"
+       },
+       "iso": {
+        "type": "literal",
+        "value": "en"
+       },
+       "mod": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type": "literal",
+        "value": "2026-11-14T10:12:45Z"
+       },
+       "regionLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil Nadu"
+       },
+       "langLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "English"
+       },
+       "scriptLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Deseret alphabet"
+       },
+       "scriptCode": {
+        "type": "literal",
+        "value": "Dsrt"
+       }
+      },
+      {
+       "lang": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1860"
+       },
+       "script": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1970098"
+       },
+       "region": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1445"
+       },
+       "iso": {
+        "type": "literal",
+        "value": "en"
+       },
+       "mod": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type": "literal",
+        "value": "2026-11-14T10:12:45Z"
+       },
+       "regionLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil Nadu"
+       },
+       "langLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "English"
+       },
+       "scriptLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Shavian alphabet"
+       },
+       "scriptCode": {
+        "type": "literal",
+        "value": "Shaw"
+       }
+      },
+      {
+       "lang": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1860"
+       },
+       "script": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q7884923"
+       },
+       "region": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1445"
+       },
+       "iso": {
+        "type": "literal",
+        "value": "en"
+       },
+       "mod": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type": "literal",
+        "value": "2026-11-14T10:12:45Z"
+       },
+       "regionLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil Nadu"
+       },
+       "langLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "English"
+       },
+       "scriptLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Unified English Braille"
+       }
+      },
+      {
+       "lang": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q5885"
+       },
+       "script": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q26803"
+       },
+       "region": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1445"
+       },
+       "iso": {
+        "type": "literal",
+        "value": "ta"
+       },
+       "mod": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type": "literal",
+        "value": "2026-11-14T10:12:45Z"
+       },
+       "regionLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil Nadu"
+       },
+       "langLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil"
+       },
+       "scriptLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil script"
+       },
+       "scriptCode": {
+        "type": "literal",
+        "value": "Taml"
+       }
+      },
+      {
+       "lang": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q5885"
+       },
+       "script": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1828555"
+       },
+       "region": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1445"
+       },
+       "iso": {
+        "type": "literal",
+        "value": "ta"
+       },
+       "mod": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type": "literal",
+        "value": "2026-11-14T10:12:45Z"
+       },
+       "regionLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil Nadu"
+       },
+       "langLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil"
+       },
+       "scriptLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Arabic script"
+       },
+       "scriptCode": {
+        "type": "literal",
+        "value": "Arab"
+       }
+      },
+      {
+       "lang": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q5885"
+       },
+       "script": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1992000"
+       },
+       "region": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1445"
+       },
+       "iso": {
+        "type": "literal",
+        "value": "ta"
+       },
+       "mod": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type": "literal",
+        "value": "2026-11-14T10:12:45Z"
+       },
+       "regionLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil Nadu"
+       },
+       "langLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil"
+       },
+       "scriptLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Vatteluttu"
+       }
+      },
+      {
+       "lang": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q5885"
+       },
+       "script": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q6427218"
+       },
+       "region": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q1445"
+       },
+       "iso": {
+        "type": "literal",
+        "value": "ta"
+       },
+       "mod": {
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type": "literal",
+        "value": "2026-11-14T10:12:45Z"
+       },
+       "regionLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil Nadu"
+       },
+       "langLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Tamil"
+       },
+       "scriptLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Koleluttu"
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "url": "https://query.wikidata.org/sparql?query=SELECT+DISTINCT+%3Fitem+%3FitemLabel+%3FitemDescription+%3Fcls+WHERE+%7B+VALUES+%3Fcls+%7B+wd%3AQ132241+wd%3AQ746549+wd%3AQ570116+%7D+%3Fitem+wdt%3AP31%2Fwdt%3AP279%2A+%3Fcls+.+%7B+%3Fitem+wdt%3AP131+wd%3AQ1445+%7D+UNION+%7B+%3Fitem+wdt%3AP495+wd%3AQ1445+%7D+UNION+%7B+%3Fitem+wdt%3AP276+wd%3AQ1445+%7D+SERVICE+wikibase%3Alabel+%7B+bd%3AserviceParam+wikibase%3Alanguage+%22en%22.+%7D+%7D+LIMIT+60&format=json",
+   "status": 200,
+   "response": {
+    "head": {
+     "vars": [
+      "item",
+      "itemLabel",
+      "itemDescription",
+      "cls"
+     ]
+    },
+    "results": {
+     "bindings": [
+      {
+       "cls": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q132241"
+       },
+       "item": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q13112508"
+       },
+       "itemLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Thiruvathira"
+       },
+       "itemDescription": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "women's festival in South Indian states Kerala, Tamilnadu"
+       }
+      },
+      {
+       "cls": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q570116"
+       },
+       "item": {
+        "type": "uri",
+        "value": "http://www.wikidata.org/entity/Q5505185"
+       },
+       "itemLabel": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "Frog Hill View Point"
+       },
+       "itemDescription": {
+        "xml:lang": "en",
+        "type": "literal",
+        "value": "tourist spot above Gudalur, Nilgiris, Tamil Nadu"
+       }
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

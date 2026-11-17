@@ -1,0 +1,404 @@
+{
+ "recorded_at": "2026-11-17T16:48:27+00:00",
+ "call": {
+  "query": "Pongal",
+  "language": "en",
+  "region_code": "IN-TN"
+ },
+ "exchanges": [
+  {
+   "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&search=Pongal&language=en&uselang=en&type=item&limit=7&format=json",
+   "status": 200,
+   "response": {
+    "searchinfo": {
+     "search": "Pongal"
+    },
+    "search": [
+     {
+      "id": "Q10253",
+      "title": "Q10253",
+      "pageid": 11661,
+      "concepturi": "http://www.wikidata.org/entity/Q10253",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q10253",
+      "display": {
+       "label": {
+        "value": "Makar Sankranti",
+        "language": "en"
+       },
+       "description": {
+        "value": "Hindu festival that reveres Surya (sun god)",
+        "language": "en"
+       }
+      },
+      "label": "Makar Sankranti",
+      "description": "Hindu festival that reveres Surya (sun god)",
+      "match": {
+       "type": "alias",
+       "language": "en",
+       "text": "Pongal"
+      },
+      "aliases": [
+       "Pongal"
+      ]
+     },
+     {
+      "id": "Q29271",
+      "title": "Q29271",
+      "pageid": 32605,
+      "concepturi": "http://www.wikidata.org/entity/Q29271",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q29271",
+      "display": {
+       "label": {
+        "value": "Pongal",
+        "language": "en"
+       },
+       "description": {
+        "value": "multi-day annual harvest Tamils festival in South India and Sri Lanka various region",
+        "language": "en"
+       }
+      },
+      "label": "Pongal",
+      "description": "multi-day annual harvest Tamils festival in South India and Sri Lanka various region",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongal"
+      }
+     },
+     {
+      "id": "Q2723706",
+      "title": "Q2723706",
+      "pageid": 2617162,
+      "concepturi": "http://www.wikidata.org/entity/Q2723706",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q2723706",
+      "display": {
+       "label": {
+        "value": "Pongal",
+        "language": "en"
+       },
+       "description": {
+        "value": "popular rice dish",
+        "language": "en"
+       }
+      },
+      "label": "Pongal",
+      "description": "popular rice dish",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongal"
+      }
+     },
+     {
+      "id": "Q7227793",
+      "title": "Q7227793",
+      "pageid": 7130249,
+      "concepturi": "http://www.wikidata.org/entity/Q7227793",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q7227793",
+      "display": {
+       "label": {
+        "value": "Pongalei",
+        "language": "en"
+       },
+       "description": {
+        "value": "island in Nui atoll, Tuvalu",
+        "language": "en"
+       }
+      },
+      "label": "Pongalei",
+      "description": "island in Nui atoll, Tuvalu",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongalei"
+      }
+     },
+     {
+      "id": "Q7227789",
+      "title": "Q7227789",
+      "pageid": 7130245,
+      "concepturi": "http://www.wikidata.org/entity/Q7227789",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q7227789",
+      "display": {
+       "label": {
+        "value": "Pongalur Assembly constituency",
+        "language": "en"
+       },
+       "description": {
+        "value": "Tamil Nadu state assembly constituency",
+        "language": "en"
+       }
+      },
+      "label": "Pongalur Assembly constituency",
+      "description": "Tamil Nadu state assembly constituency",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongalur Assembly constituency"
+      }
+     },
+     {
+      "id": "Q25553048",
+      "title": "Q25553048",
+      "pageid": 27505733,
+      "concepturi": "http://www.wikidata.org/entity/Q25553048",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q25553048",
+      "display": {
+       "label": {
+        "value": "Pongalur block",
+        "language": "en"
+       },
+       "description": {
+        "value": "c.d. block in Tiruppur district, in Tamil Nadu state, India",
+        "language": "en"
+       }
+      },
+      "label": "Pongalur block",
+      "description": "c.d. block in Tiruppur district, in Tamil Nadu state, India",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongalur block"
+      }
+     },
+     {
+      "id": "Q101197535",
+      "title": "Q101197535",
+      "pageid": 98659688,
+      "concepturi": "http://www.wikidata.org/entity/Q101197535",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q101197535",
+      "display": {
+       "label": {
+        "value": "Pongalloor",
+        "language": "en"
+       },
+       "description": {
+        "value": "electoral ward in Mampad Grama panchayat, Kerala, India",
+        "language": "en"
+       }
+      },
+      "label": "Pongalloor",
+      "description": "electoral ward in Mampad Grama panchayat, Kerala, India",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongalloor"
+      }
+     }
+    ],
+    "search-continue": 7,
+    "success": 1
+   }
+  },
+  {
+   "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&search=Pongal&language=ta&uselang=ta&type=item&limit=7&format=json",
+   "status": 200,
+   "response": {
+    "searchinfo": {
+     "search": "Pongal"
+    },
+    "search": [
+     {
+      "id": "Q29271",
+      "title": "Q29271",
+      "pageid": 32605,
+      "concepturi": "http://www.wikidata.org/entity/Q29271",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q29271",
+      "display": {
+       "label": {
+        "value": "பொங்கல்",
+        "language": "ta"
+       },
+       "description": {
+        "value": "தமிழர் ஆண்டுதோறும் கொண்டாடும் அறுவடைப் பண்டிகை.",
+        "language": "ta"
+       }
+      },
+      "label": "பொங்கல்",
+      "description": "தமிழர் ஆண்டுதோறும் கொண்டாடும் அறுவடைப் பண்டிகை.",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongal"
+      },
+      "aliases": [
+       "Pongal"
+      ]
+     },
+     {
+      "id": "Q10253",
+      "title": "Q10253",
+      "pageid": 11661,
+      "concepturi": "http://www.wikidata.org/entity/Q10253",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q10253",
+      "display": {
+       "label": {
+        "value": "மகர சங்கிராந்தி",
+        "language": "ta"
+       },
+       "description": {
+        "value": "சூரியன் தன் வான்வழிப் பயணத்தில் மகர ராசிக்கு மாறும் நாள்",
+        "language": "ta"
+       }
+      },
+      "label": "மகர சங்கிராந்தி",
+      "description": "சூரியன் தன் வான்வழிப் பயணத்தில் மகர ராசிக்கு மாறும் நாள்",
+      "match": {
+       "type": "alias",
+       "language": "en",
+       "text": "Pongal"
+      },
+      "aliases": [
+       "Pongal"
+      ]
+     },
+     {
+      "id": "Q2723706",
+      "title": "Q2723706",
+      "pageid": 2617162,
+      "concepturi": "http://www.wikidata.org/entity/Q2723706",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q2723706",
+      "display": {
+       "label": {
+        "value": "பொங்கல்",
+        "language": "ta"
+       },
+       "description": {
+        "value": "தென்னிந்தியப் பாரம்பரிய உணவு.",
+        "language": "ta"
+       }
+      },
+      "label": "பொங்கல்",
+      "description": "தென்னிந்தியப் பாரம்பரிய உணவு.",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongal"
+      },
+      "aliases": [
+       "Pongal"
+      ]
+     },
+     {
+      "id": "Q92768616",
+      "title": "Q92768616",
+      "pageid": 91932097,
+      "concepturi": "http://www.wikidata.org/entity/Q92768616",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q92768616",
+      "display": {
+       "label": {
+        "value": "Pongal",
+        "language": "en"
+       },
+       "description": {
+        "value": "Wikimedia disambiguation page",
+        "language": "en"
+       }
+      },
+      "label": "Pongal",
+      "description": "Wikimedia disambiguation page",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongal"
+      }
+     },
+     {
+      "id": "Q7227793",
+      "title": "Q7227793",
+      "pageid": 7130249,
+      "concepturi": "http://www.wikidata.org/entity/Q7227793",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q7227793",
+      "display": {
+       "label": {
+        "value": "Pongalei",
+        "language": "en"
+       },
+       "description": {
+        "value": "island in Nui atoll, Tuvalu",
+        "language": "en"
+       }
+      },
+      "label": "Pongalei",
+      "description": "island in Nui atoll, Tuvalu",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongalei"
+      }
+     },
+     {
+      "id": "Q7227789",
+      "title": "Q7227789",
+      "pageid": 7130245,
+      "concepturi": "http://www.wikidata.org/entity/Q7227789",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q7227789",
+      "display": {
+       "label": {
+        "value": "பொங்கலூர் சட்டமன்றத் தொகுதி",
+        "language": "ta"
+       },
+       "description": {
+        "value": "தமிழ்நாட்டிலேயே மிகப்பெரிய முதல் சட்டமன்ற தொகுதியும்,பேரூராட்சியும் ஆகும்",
+        "language": "ta"
+       }
+      },
+      "label": "பொங்கலூர் சட்டமன்றத் தொகுதி",
+      "description": "தமிழ்நாட்டிலேயே மிகப்பெரிய முதல் சட்டமன்ற தொகுதியும்,பேரூராட்சியும் ஆகும்",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongalur Assembly constituency"
+      },
+      "aliases": [
+       "Pongalur Assembly constituency"
+      ]
+     },
+     {
+      "id": "Q25553048",
+      "title": "Q25553048",
+      "pageid": 27505733,
+      "concepturi": "http://www.wikidata.org/entity/Q25553048",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q25553048",
+      "display": {
+       "label": {
+        "value": "பொங்கலூர் ஊராட்சி ஒன்றியம்",
+        "language": "ta"
+       },
+       "description": {
+        "value": "இந்தியாவின் தமிழ்நாட்டில், திருப்பூர் மாவட்டத்திலுள்ள ஓர் ஊராட்சி ஒன்றியம்.",
+        "language": "ta"
+       }
+      },
+      "label": "பொங்கலூர் ஊராட்சி ஒன்றியம்",
+      "description": "இந்தியாவின் தமிழ்நாட்டில், திருப்பூர் மாவட்டத்திலுள்ள ஓர் ஊராட்சி ஒன்றியம்.",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Pongalur block"
+      },
+      "aliases": [
+       "Pongalur block"
+      ]
+     }
+    ],
+    "search-continue": 7,
+    "success": 1
+   }
+  }
+ ]
+}

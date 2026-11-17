@@ -44,6 +44,7 @@ from app.schemas.studies import (
 )
 
 if TYPE_CHECKING:
+    from app.integrations.culture import CultureService
     from app.integrations.qloo import QlooService
     from app.llm import LLMGateway
 
@@ -300,6 +301,7 @@ class WorkflowDeps:
     vision: VisionAnalyzer | None = None  # None: vision is unavailable (never a text model instead)
     media: Any = None  # the media pipeline (app/services/media.py): ffmpeg work and derived files; local, no provider
     transcribe: Any = None  # a `transcribe` capability adapter returning app.media.types.TranscribeResult; None: unavailable
+    culture: CultureService | None = None  # the Qloo replacement; workflows switch to it in a later change
 
 
 # --- Contract v3: population studies and social simulation (contracts/README §14) ---------------------------------

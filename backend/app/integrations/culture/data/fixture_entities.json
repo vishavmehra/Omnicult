@@ -1,0 +1,288 @@
+{
+ "recorded_on": "2026-11-17",
+ "note": "FIXTURE data: candidates are real Wikidata wbsearchentities results (en plus the regional language) recorded on this date. Used only by FixtureCultureSource.",
+ "queries": {
+  "pongal": [
+   {
+    "entity_id": "Q10253",
+    "label": "Makar Sankranti",
+    "description": "Hindu festival that reveres Surya (sun god)",
+    "language": "en",
+    "match_type": "alias",
+    "matched_text": "Pongal",
+    "url": "https://www.wikidata.org/wiki/Q10253"
+   },
+   {
+    "entity_id": "Q29271",
+    "label": "Pongal",
+    "description": "multi-day annual harvest Tamils festival in South India and Sri Lanka various region",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Pongal",
+    "url": "https://www.wikidata.org/wiki/Q29271"
+   },
+   {
+    "entity_id": "Q2723706",
+    "label": "Pongal",
+    "description": "popular rice dish",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Pongal",
+    "url": "https://www.wikidata.org/wiki/Q2723706"
+   },
+   {
+    "entity_id": "Q7227793",
+    "label": "Pongalei",
+    "description": "island in Nui atoll, Tuvalu",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Pongalei",
+    "url": "https://www.wikidata.org/wiki/Q7227793"
+   },
+   {
+    "entity_id": "Q7227789",
+    "label": "Pongalur Assembly constituency",
+    "description": "Tamil Nadu state assembly constituency",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Pongalur Assembly constituency",
+    "url": "https://www.wikidata.org/wiki/Q7227789"
+   },
+   {
+    "entity_id": "Q25553048",
+    "label": "Pongalur block",
+    "description": "c.d. block in Tiruppur district, in Tamil Nadu state, India",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Pongalur block",
+    "url": "https://www.wikidata.org/wiki/Q25553048"
+   },
+   {
+    "entity_id": "Q101197535",
+    "label": "Pongalloor",
+    "description": "electoral ward in Mampad Grama panchayat, Kerala, India",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Pongalloor",
+    "url": "https://www.wikidata.org/wiki/Q101197535"
+   },
+   {
+    "entity_id": "Q92768616",
+    "label": "Pongal",
+    "description": "Wikimedia disambiguation page",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Pongal",
+    "url": "https://www.wikidata.org/wiki/Q92768616"
+   }
+  ],
+  "onam": [
+   {
+    "entity_id": "Q26252217",
+    "label": "Onam",
+    "description": "village in Keerom Regency, Papua, Indonesia",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Onam",
+    "url": "https://www.wikidata.org/wiki/Q26252217"
+   },
+   {
+    "entity_id": "Q276944",
+    "label": "Ōkuninushi",
+    "description": "divinity (kami) in Japanese Shinto",
+    "language": "en",
+    "match_type": "alias",
+    "matched_text": "Ōnamuchi-no-Kami",
+    "url": "https://www.wikidata.org/wiki/Q276944"
+   },
+   {
+    "entity_id": "Q1969250",
+    "label": "Onam",
+    "description": "harvest festival of Kerala state, India",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Onam",
+    "url": "https://www.wikidata.org/wiki/Q1969250"
+   },
+   {
+    "entity_id": "Q115481992",
+    "label": "Onam",
+    "description": "human biblical figure in 1 Chronicles 2:26, son of Jerahmeel and Atarah, step-brother of his siblings",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Onam",
+    "url": "https://www.wikidata.org/wiki/Q115481992"
+   },
+   {
+    "entity_id": "Q12607757",
+    "label": "Onam",
+    "description": "town in Namyangju, Gyeonggi, South Korea",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Onam",
+    "url": "https://www.wikidata.org/wiki/Q12607757"
+   },
+   {
+    "entity_id": "Q105180971",
+    "label": "Onambele",
+    "description": "family name",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Onambele",
+    "url": "https://www.wikidata.org/wiki/Q105180971"
+   },
+   {
+    "entity_id": "Q22615835",
+    "label": "Onaman River",
+    "description": "river in Thunder Bay District, Ontario, Canada",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Onaman River",
+    "url": "https://www.wikidata.org/wiki/Q22615835"
+   },
+   {
+    "entity_id": "Q138580877",
+    "label": "Onam",
+    "description": "son of Shobal and grandson of Seir the Horite",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Onam",
+    "url": "https://www.wikidata.org/wiki/Q138580877"
+   },
+   {
+    "entity_id": "Q133810351",
+    "label": "O-nam",
+    "description": "Korean male given name (오남)",
+    "language": "en",
+    "match_type": "alias",
+    "matched_text": "Onam",
+    "url": "https://www.wikidata.org/wiki/Q133810351"
+   }
+  ],
+  "thrissur pooram": [
+   {
+    "entity_id": "Q1818709",
+    "label": "Thrissur Pooram",
+    "description": "Hindu festival celebrated at Thrissur",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Thrissur Pooram",
+    "url": "https://www.wikidata.org/wiki/Q1818709"
+   },
+   {
+    "entity_id": "Q85809426",
+    "label": "Thrissur Pooram",
+    "description": "film directed by Rajesh Nair",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Thrissur Pooram",
+    "url": "https://www.wikidata.org/wiki/Q85809426"
+   },
+   {
+    "entity_id": "Q7798281",
+    "label": "Thrissur Pooram Exhibition",
+    "description": "Exhibition of native goods",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Thrissur Pooram Exhibition",
+    "url": "https://www.wikidata.org/wiki/Q7798281"
+   }
+  ],
+  "gudi padwa": [
+   {
+    "entity_id": "Q615384",
+    "label": "Gudi Padwa",
+    "description": "Marathi Hindu new year festival",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Gudi Padwa",
+    "url": "https://www.wikidata.org/wiki/Q615384"
+   }
+  ],
+  "durga puja": [
+   {
+    "entity_id": "Q1145922",
+    "label": "Durga Puja",
+    "description": "Hindu festival in Indian subcontinent",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Durga Puja",
+    "url": "https://www.wikidata.org/wiki/Q1145922"
+   },
+   {
+    "entity_id": "Q99482845",
+    "label": "Durga Puja in Odisha",
+    "description": "Odia photobook on Durga Puja",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Durga Puja in Odisha",
+    "url": "https://www.wikidata.org/wiki/Q99482845"
+   },
+   {
+    "entity_id": "Q48733007",
+    "label": "Durga Puja in West Bengal",
+    "description": "biggest festival in West Bengal",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Durga Puja in West Bengal",
+    "url": "https://www.wikidata.org/wiki/Q48733007"
+   },
+   {
+    "entity_id": "Q16345168",
+    "label": "Durga Puja in Kolkata",
+    "description": "Brindaban Matri Mandir - The Oldest Barowari Durga Puja committee in the city of Kolkata - Since 1910",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Durga Puja in Kolkata",
+    "url": "https://www.wikidata.org/wiki/Q16345168"
+   },
+   {
+    "entity_id": "Q48732666",
+    "label": "Durga Puja in Bangladesh",
+    "description": null,
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Durga Puja in Bangladesh",
+    "url": "https://www.wikidata.org/wiki/Q48732666"
+   },
+   {
+    "entity_id": "Q130349143",
+    "label": "Durga Puja in Bangladesh",
+    "description": "overview of Durga Puja in Bangladesh",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Durga Puja in Bangladesh",
+    "url": "https://www.wikidata.org/wiki/Q130349143"
+   },
+   {
+    "entity_id": "Q4121183",
+    "label": "Durga Puja in Odisha",
+    "description": "a hindu festival",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Durga Puja in Odisha",
+    "url": "https://www.wikidata.org/wiki/Q4121183"
+   }
+  ],
+  "ganesh chaturthi": [
+   {
+    "entity_id": "Q929250",
+    "label": "Ganesh Chaturthi",
+    "description": "multi-day Hindu festival revering god Ganesha (August–September)",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Ganesh Chaturthi",
+    "url": "https://www.wikidata.org/wiki/Q929250"
+   },
+   {
+    "entity_id": "Q19808956",
+    "label": "Ganesh Chaturthi in Pune",
+    "description": "annual festival in Pune, India",
+    "language": "en",
+    "match_type": "label",
+    "matched_text": "Ganesh Chaturthi in Pune",
+    "url": "https://www.wikidata.org/wiki/Q19808956"
+   }
+  ]
+ }
+}

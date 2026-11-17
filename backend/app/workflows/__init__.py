@@ -57,16 +57,20 @@ def _transcribe_capability(llm: LLMGateway):  # type: ignore[no-untyped-def]
 
 
 def build_workflow_deps(mode: DataMode, settings: Settings, *, qloo_cache=None) -> WorkflowDeps:
-    """demo -> fixture Qloo + fixture LLM (no network); live -> the qloo exec service + the Google gateway."""
+    """demo -> fixture Qloo + fixture LLM (no network); live -> the qloo exec service + the Google gateway.
+    `culture` (the Qloo replacement) is built alongside: fixture sources in demo, the live adapters otherwise."""
+    from app.integrations.culture import build_culture_service
     from app.integrations.qloo import get_qloo_service
     from app.services.media import MediaPipeline  # local ffmpeg work: allowed in demo too, it calls no provider
 
     if mode == "demo":  # demo never sends uploads or prompts to a provider: no vision, fixture LLM
-        return WorkflowDeps(qloo=get_qloo_service("demo", settings), llm=LLMGateway(settings, fixture=True), media=MediaPipeline())
+        return WorkflowDeps(qloo=get_qloo_service("demo", settings), llm=LLMGateway(settings, fixture=True),
+                            media=MediaPipeline(), culture=build_culture_service(settings, mode="demo"))
     llm = LLMGateway(settings)
     return WorkflowDeps(
         qloo=get_qloo_service("live", settings, cache=qloo_cache), llm=llm, vision=llm.capability("vision"),
         media=MediaPipeline(), transcribe=_transcribe_capability(llm),
+        culture=build_culture_service(settings, mode="live", research=llm.capability("grounded_research")),
     )
 
 

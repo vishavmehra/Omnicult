@@ -1,0 +1,395 @@
+{
+ "recorded_at": "2026-11-17T16:48:29+00:00",
+ "call": {
+  "query": "Onam",
+  "language": "en",
+  "region_code": "IN-KL"
+ },
+ "exchanges": [
+  {
+   "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&search=Onam&language=en&uselang=en&type=item&limit=7&format=json",
+   "status": 200,
+   "response": {
+    "searchinfo": {
+     "search": "Onam"
+    },
+    "search": [
+     {
+      "id": "Q26252217",
+      "title": "Q26252217",
+      "pageid": 28203567,
+      "concepturi": "http://www.wikidata.org/entity/Q26252217",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q26252217",
+      "display": {
+       "label": {
+        "value": "Onam",
+        "language": "en"
+       },
+       "description": {
+        "value": "village in Keerom Regency, Papua, Indonesia",
+        "language": "en"
+       }
+      },
+      "label": "Onam",
+      "description": "village in Keerom Regency, Papua, Indonesia",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Onam"
+      }
+     },
+     {
+      "id": "Q276944",
+      "title": "Q276944",
+      "pageid": 267772,
+      "concepturi": "http://www.wikidata.org/entity/Q276944",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q276944",
+      "display": {
+       "label": {
+        "value": "Ōkuninushi",
+        "language": "en"
+       },
+       "description": {
+        "value": "divinity (kami) in Japanese Shinto",
+        "language": "en"
+       }
+      },
+      "label": "Ōkuninushi",
+      "description": "divinity (kami) in Japanese Shinto",
+      "match": {
+       "type": "alias",
+       "language": "en",
+       "text": "Ōnamuchi-no-Kami"
+      },
+      "aliases": [
+       "Ōnamuchi-no-Kami"
+      ]
+     },
+     {
+      "id": "Q1969250",
+      "title": "Q1969250",
+      "pageid": 1898266,
+      "concepturi": "http://www.wikidata.org/entity/Q1969250",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q1969250",
+      "display": {
+       "label": {
+        "value": "Onam",
+        "language": "en"
+       },
+       "description": {
+        "value": "harvest festival of Kerala state, India",
+        "language": "en"
+       }
+      },
+      "label": "Onam",
+      "description": "harvest festival of Kerala state, India",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Onam"
+      }
+     },
+     {
+      "id": "Q115481992",
+      "title": "Q115481992",
+      "pageid": 110057041,
+      "concepturi": "http://www.wikidata.org/entity/Q115481992",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q115481992",
+      "display": {
+       "label": {
+        "value": "Onam",
+        "language": "en"
+       },
+       "description": {
+        "value": "human biblical figure in 1 Chronicles 2:26, son of Jerahmeel and Atarah, step-brother of his siblings",
+        "language": "en"
+       }
+      },
+      "label": "Onam",
+      "description": "human biblical figure in 1 Chronicles 2:26, son of Jerahmeel and Atarah, step-brother of his siblings",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Onam"
+      }
+     },
+     {
+      "id": "Q12607757",
+      "title": "Q12607757",
+      "pageid": 13908171,
+      "concepturi": "http://www.wikidata.org/entity/Q12607757",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q12607757",
+      "display": {
+       "label": {
+        "value": "Onam",
+        "language": "en"
+       },
+       "description": {
+        "value": "town in Namyangju, Gyeonggi, South Korea",
+        "language": "en"
+       }
+      },
+      "label": "Onam",
+      "description": "town in Namyangju, Gyeonggi, South Korea",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Onam"
+      }
+     },
+     {
+      "id": "Q105180971",
+      "title": "Q105180971",
+      "pageid": 100566630,
+      "concepturi": "http://www.wikidata.org/entity/Q105180971",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q105180971",
+      "display": {
+       "label": {
+        "value": "Onambele",
+        "language": "en"
+       },
+       "description": {
+        "value": "family name",
+        "language": "en"
+       }
+      },
+      "label": "Onambele",
+      "description": "family name",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Onambele"
+      }
+     },
+     {
+      "id": "Q22615835",
+      "title": "Q22615835",
+      "pageid": 24641330,
+      "concepturi": "http://www.wikidata.org/entity/Q22615835",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q22615835",
+      "display": {
+       "label": {
+        "value": "Onaman River",
+        "language": "en"
+       },
+       "description": {
+        "value": "river in Thunder Bay District, Ontario, Canada",
+        "language": "en"
+       }
+      },
+      "label": "Onaman River",
+      "description": "river in Thunder Bay District, Ontario, Canada",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Onaman River"
+      }
+     }
+    ],
+    "search-continue": 7,
+    "success": 1
+   }
+  },
+  {
+   "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&search=Onam&language=ml&uselang=ml&type=item&limit=7&format=json",
+   "status": 200,
+   "response": {
+    "searchinfo": {
+     "search": "Onam"
+    },
+    "search": [
+     {
+      "id": "Q1969250",
+      "title": "Q1969250",
+      "pageid": 1898266,
+      "concepturi": "http://www.wikidata.org/entity/Q1969250",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q1969250",
+      "display": {
+       "label": {
+        "value": "ഓണം",
+        "language": "ml"
+       },
+       "description": {
+        "value": "മലയാളികളുടെ ദേശീയോൽസവം",
+        "language": "ml"
+       }
+      },
+      "label": "ഓണം",
+      "description": "മലയാളികളുടെ ദേശീയോൽസവം",
+      "match": {
+       "type": "alias",
+       "language": "ml",
+       "text": "Onam"
+      },
+      "aliases": [
+       "Onam"
+      ]
+     },
+     {
+      "id": "Q26252217",
+      "title": "Q26252217",
+      "pageid": 28203567,
+      "concepturi": "http://www.wikidata.org/entity/Q26252217",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q26252217",
+      "display": {
+       "label": {
+        "value": "Onam",
+        "language": "mul"
+       },
+       "description": {
+        "value": "village in Keerom Regency, Papua, Indonesia",
+        "language": "en"
+       }
+      },
+      "label": "Onam",
+      "description": "village in Keerom Regency, Papua, Indonesia",
+      "match": {
+       "type": "label",
+       "language": "mul",
+       "text": "Onam"
+      }
+     },
+     {
+      "id": "Q12607757",
+      "title": "Q12607757",
+      "pageid": 13908171,
+      "concepturi": "http://www.wikidata.org/entity/Q12607757",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q12607757",
+      "display": {
+       "label": {
+        "value": "Onam",
+        "language": "en"
+       },
+       "description": {
+        "value": "town in Namyangju, Gyeonggi, South Korea",
+        "language": "en"
+       }
+      },
+      "label": "Onam",
+      "description": "town in Namyangju, Gyeonggi, South Korea",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Onam"
+      }
+     },
+     {
+      "id": "Q115481992",
+      "title": "Q115481992",
+      "pageid": 110057041,
+      "concepturi": "http://www.wikidata.org/entity/Q115481992",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q115481992",
+      "display": {
+       "label": {
+        "value": "Onam",
+        "language": "en"
+       },
+       "description": {
+        "value": "human biblical figure in 1 Chronicles 2:26, son of Jerahmeel and Atarah, step-brother of his siblings",
+        "language": "en"
+       }
+      },
+      "label": "Onam",
+      "description": "human biblical figure in 1 Chronicles 2:26, son of Jerahmeel and Atarah, step-brother of his siblings",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Onam"
+      }
+     },
+     {
+      "id": "Q138580877",
+      "title": "Q138580877",
+      "pageid": 132083808,
+      "concepturi": "http://www.wikidata.org/entity/Q138580877",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q138580877",
+      "display": {
+       "label": {
+        "value": "Onam",
+        "language": "en"
+       },
+       "description": {
+        "value": "son of Shobal and grandson of Seir the Horite",
+        "language": "en"
+       }
+      },
+      "label": "Onam",
+      "description": "son of Shobal and grandson of Seir the Horite",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Onam"
+      }
+     },
+     {
+      "id": "Q133810351",
+      "title": "Q133810351",
+      "pageid": 127674833,
+      "concepturi": "http://www.wikidata.org/entity/Q133810351",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q133810351",
+      "display": {
+       "label": {
+        "value": "O-nam",
+        "language": "en"
+       },
+       "description": {
+        "value": "Korean male given name (오남)",
+        "language": "en"
+       }
+      },
+      "label": "O-nam",
+      "description": "Korean male given name (오남)",
+      "match": {
+       "type": "alias",
+       "language": "en",
+       "text": "Onam"
+      },
+      "aliases": [
+       "Onam"
+      ]
+     },
+     {
+      "id": "Q105180971",
+      "title": "Q105180971",
+      "pageid": 100566630,
+      "concepturi": "http://www.wikidata.org/entity/Q105180971",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q105180971",
+      "display": {
+       "label": {
+        "value": "Onambele",
+        "language": "mul"
+       },
+       "description": {
+        "value": "കുടുംബ നാമം",
+        "language": "ml"
+       }
+      },
+      "label": "Onambele",
+      "description": "കുടുംബ നാമം",
+      "match": {
+       "type": "alias",
+       "language": "ml",
+       "text": "Onambele"
+      }
+     }
+    ],
+    "search-continue": 7,
+    "success": 1
+   }
+  }
+ ]
+}

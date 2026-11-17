@@ -1,0 +1,333 @@
+{
+ "recorded_at": "2026-11-17T16:49:15+00:00",
+ "call": {
+  "entity_id": "Q1969250",
+  "region_code": "IN-KL",
+  "limit": 100
+ },
+ "exchanges": [
+  {
+   "url": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q1969250&props=claims%7Clabels%7Cdescriptions%7Cinfo&languages=mr%7Cta%7Cml%7Cbn%7Chi%7Cen&format=json",
+   "status": 200,
+   "response": {
+    "entities": {
+     "Q1969250": {
+      "pageid": 1898266,
+      "ns": 0,
+      "title": "Q1969250",
+      "lastrevid": 2570735635,
+      "modified": "2026-11-17T06:15:28Z",
+      "type": "item",
+      "id": "Q1969250",
+      "labels": {
+       "hi": {
+        "language": "hi",
+        "value": "ओणम"
+       },
+       "en": {
+        "language": "en",
+        "value": "Onam"
+       },
+       "ta": {
+        "language": "ta",
+        "value": "ஓணம்"
+       },
+       "ml": {
+        "language": "ml",
+        "value": "ഓണം"
+       },
+       "mr": {
+        "language": "mr",
+        "value": "ओणम"
+       },
+       "bn": {
+        "language": "bn",
+        "value": "ওণম্"
+       }
+      },
+      "descriptions": {
+       "en": {
+        "language": "en",
+        "value": "harvest festival of Kerala state, India"
+       },
+       "hi": {
+        "language": "hi",
+        "value": "केरल राज्य, भारत का एक प्रमुख त्यौहार"
+       },
+       "ml": {
+        "language": "ml",
+        "value": "മലയാളികളുടെ ദേശീയോൽസവം"
+       },
+       "mr": {
+        "language": "mr",
+        "value": "केरळ राज्याचा प्रमुख सण"
+       },
+       "ta": {
+        "language": "ta",
+        "value": "மகாவிஷ்ணுவின் அவதாரம், 'வாமனர்' பிறந்த, ஆண்டின் ஆவணி மாத திருவோணம் நட்சத்திரத்தில் பண்டிகை."
+       },
+       "bn": {
+        "language": "bn",
+        "value": "ধান কাটার উৎসব"
+       }
+      },
+      "claims": {
+       "P31": [
+        {
+         "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "c2a0ee151de1754add1319a66704316e33bd252e",
+          "datavalue": {
+           "value": {
+            "entity-type": "item",
+            "numeric-id": 2304773,
+            "id": "Q2304773"
+           },
+           "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+         },
+         "type": "statement",
+         "id": "Q1969250$1eb5bef0-46f0-15a7-0c89-f9d957d4b228",
+         "rank": "normal"
+        },
+        {
+         "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "16eae957847db78c6e018b93e1fcaaed9f0c9c89",
+          "datavalue": {
+           "value": {
+            "entity-type": "item",
+            "numeric-id": 58687420,
+            "id": "Q58687420"
+           },
+           "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+         },
+         "type": "statement",
+         "id": "Q1969250$b619868f-484c-a6c6-8294-0886c8a40284",
+         "rank": "normal"
+        }
+       ],
+       "P17": [
+        {
+         "mainsnak": {
+          "snaktype": "value",
+          "property": "P17",
+          "hash": "18fb076bdc1c07e578546d1670ba193b768531ac",
+          "datavalue": {
+           "value": {
+            "entity-type": "item",
+            "numeric-id": 668,
+            "id": "Q668"
+           },
+           "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+         },
+         "type": "statement",
+         "id": "Q1969250$d034c185-4306-b390-bef7-c1f477a2bdfc",
+         "rank": "normal"
+        }
+       ],
+       "P131": [
+        {
+         "mainsnak": {
+          "snaktype": "value",
+          "property": "P131",
+          "hash": "266e4b6fc847dc8a983d7bd26ab0703cafcf2c40",
+          "datavalue": {
+           "value": {
+            "entity-type": "item",
+            "numeric-id": 1186,
+            "id": "Q1186"
+           },
+           "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+         },
+         "type": "statement",
+         "id": "Q1969250$6b22daea-4770-04bf-d886-15208e4e0209",
+         "rank": "normal"
+        }
+       ]
+      }
+     }
+    },
+    "success": 1
+   }
+  },
+  {
+   "url": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q1186%7CQ2304773%7CQ58687420%7CQ668&props=labels%7Cdescriptions&languages=mr%7Cta%7Cml%7Cbn%7Chi%7Cen&format=json",
+   "status": 200,
+   "response": {
+    "entities": {
+     "Q1186": {
+      "type": "item",
+      "id": "Q1186",
+      "labels": {
+       "en": {
+        "language": "en",
+        "value": "Kerala"
+       },
+       "ml": {
+        "language": "ml",
+        "value": "കേരളം"
+       },
+       "bn": {
+        "language": "bn",
+        "value": "কেরল"
+       },
+       "hi": {
+        "language": "hi",
+        "value": "केरल"
+       },
+       "mr": {
+        "language": "mr",
+        "value": "केरळ"
+       },
+       "ta": {
+        "language": "ta",
+        "value": "கேரளம்"
+       }
+      },
+      "descriptions": {
+       "en": {
+        "language": "en",
+        "value": "Indian state"
+       },
+       "hi": {
+        "language": "hi",
+        "value": "भारत का राज्य"
+       },
+       "mr": {
+        "language": "mr",
+        "value": "भारतातील एक राज्य."
+       },
+       "ta": {
+        "language": "ta",
+        "value": "தென் மேற்கு இந்தியாவிலுள்ள ஒரு மாநிலம்"
+       },
+       "ml": {
+        "language": "ml",
+        "value": "ദക്ഷിണേന്ത്യയിലെ ഒരു സംസ്ഥാനം"
+       },
+       "bn": {
+        "language": "bn",
+        "value": "ভারতের একটি রাজ্য"
+       }
+      }
+     },
+     "Q2304773": {
+      "type": "item",
+      "id": "Q2304773",
+      "labels": {
+       "en": {
+        "language": "en",
+        "value": "harvest festival"
+       },
+       "ta": {
+        "language": "ta",
+        "value": "அறுவடைத் திருவிழா"
+       },
+       "hi": {
+        "language": "hi",
+        "value": "फसलों का त्यौहार"
+       }
+      },
+      "descriptions": {
+       "en": {
+        "language": "en",
+        "value": "type of festive celebration"
+       }
+      }
+     },
+     "Q58687420": {
+      "type": "item",
+      "id": "Q58687420",
+      "labels": {
+       "en": {
+        "language": "en",
+        "value": "cultural event"
+       },
+       "ml": {
+        "language": "ml",
+        "value": "സാംസ്കാരിക പരിപാടി"
+       }
+      },
+      "descriptions": {
+       "en": {
+        "language": "en",
+        "value": "event of cultural kind"
+       },
+       "ml": {
+        "language": "ml",
+        "value": "സാംസ്കാരികമായ സംഭവം"
+       }
+      }
+     },
+     "Q668": {
+      "type": "item",
+      "id": "Q668",
+      "labels": {
+       "ta": {
+        "language": "ta",
+        "value": "இந்தியா"
+       },
+       "hi": {
+        "language": "hi",
+        "value": "भारत"
+       },
+       "bn": {
+        "language": "bn",
+        "value": "ভারত"
+       },
+       "en": {
+        "language": "en",
+        "value": "India"
+       },
+       "ml": {
+        "language": "ml",
+        "value": "ഇന്ത്യ"
+       },
+       "mr": {
+        "language": "mr",
+        "value": "भारत"
+       }
+      },
+      "descriptions": {
+       "mr": {
+        "language": "mr",
+        "value": "आशिया खंडातील देश"
+       },
+       "bn": {
+        "language": "bn",
+        "value": "দক্ষিণ এশিয়ার সার্বভৌম দেশ"
+       },
+       "en": {
+        "language": "en",
+        "value": "country in South Asia"
+       },
+       "hi": {
+        "language": "hi",
+        "value": "दक्षिण एशिया का देश"
+       },
+       "ta": {
+        "language": "ta",
+        "value": "தெற்கு ஆசியாவிலுள்ள ஒரு நாடு"
+       },
+       "ml": {
+        "language": "ml",
+        "value": "തെക്കനേഷ്യയിലെ ഒരു രാജ്യം"
+       }
+      }
+     }
+    },
+    "success": 1
+   }
+  }
+ ]
+}

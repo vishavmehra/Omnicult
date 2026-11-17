@@ -1,0 +1,1034 @@
+{
+  "region_code": "IN-WB",
+  "dataset_version": "1",
+  "retrieved_on": "2026-11-17",
+  "entries": [
+    {
+      "id": "in-wb-festival-durga-puja",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:durga_puja",
+      "value": {
+        "name": "Durga Puja"
+      },
+      "value_text": "Durga Puja is a major festival of West Bengal.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://www.incredibleindia.gov.in/en/west-bengal",
+          "title": "West Bengal",
+          "publisher": "Incredible India (Ministry of Tourism, Government of India)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:incredibleindia.gov.in",
+          "excerpt": "West Bengal hosts an array of vibrant festivals, with Durga Puja reigning as the region's most beloved celebration, attracting visitors from around the globe."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Culture_of_West_Bengal",
+          "title": "Culture of West Bengal",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Durga Puja is the most important festival of West Bengal"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-festival-durga-puja-popularity",
+      "category": "festival",
+      "attribute": "festival_popularity",
+      "subject": "festival:durga_puja",
+      "value": {
+        "name": "Durga Puja"
+      },
+      "value_text": "Incredible India states that West Bengal hosts an array of vibrant festivals, with Durga Puja reigning as the region's most beloved celebration, attracting visitors from around the globe.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://www.incredibleindia.gov.in/en/west-bengal",
+          "title": "West Bengal",
+          "publisher": "Incredible India (Ministry of Tourism, Government of India)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:incredibleindia.gov.in",
+          "excerpt": "West Bengal hosts an array of vibrant festivals, with Durga Puja reigning as the region's most beloved celebration, attracting visitors from around the globe."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-festival-durga-puja-importance",
+      "category": "festival",
+      "attribute": "festival_importance",
+      "subject": "festival:durga_puja",
+      "value": {
+        "name": "Durga Puja"
+      },
+      "value_text": "English Wikipedia states that Durga Puja is the most important festival of West Bengal.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Culture_of_West_Bengal",
+          "title": "Culture of West Bengal",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Durga Puja is the most important festival of West Bengal"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-festival-durga-puja-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:durga_puja",
+      "value": {
+        "name": "Durga Puja",
+        "month_text": "month of Ashvin (September–October)"
+      },
+      "value_text": "English Wikipedia states that the Durga Puja festival is observed in the Indian calendar in the month of Ashvin (September–October).",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Durga_Puja",
+          "title": "Durga Puja",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The festival is observed in the Indian calendar in the month of Ashvin (September–October) on the Hindu luni-solar calendar."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-festival-poila-boishakh",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:poila_boishakh",
+      "value": {
+        "name": "Poila Boishakh (Pohela Boishakh)",
+        "native_name": "পয়লা বৈশাখ"
+      },
+      "value_text": "Pohela Boishakh is an official regional holiday in the Indian states of West Bengal and Tripura.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Pohela_Boishakh",
+          "title": "Pohela Boishakh",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Bengalis of India have historically celebrated Pohela Boishakh, and it is an official regional holiday in its states of West Bengal and Tripura."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-festival-kali-puja",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:kali_puja",
+      "value": {
+        "name": "Kali Puja"
+      },
+      "value_text": "Kali Puja is a festival celebrated in West Bengal.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.incredibleindia.gov.in/en/west-bengal",
+          "title": "West Bengal",
+          "publisher": "Incredible India (Ministry of Tourism, Government of India)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:incredibleindia.gov.in",
+          "excerpt": "In addition to Durga Puja, other festivals like Kali Puja (celebrated during Diwali) and Lakshmi Puja (honouring the Indian Goddess of Wealth) punctuate the calendar, ensuring that festivities grace West Bengal throughout the year."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Kali_Puja",
+          "title": "Kali Puja",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Kali Puja is a major festival in West Bengal."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-festival-kali-puja-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:kali_puja",
+      "value": {
+        "name": "Kali Puja",
+        "month_text": "celebrated during Diwali"
+      },
+      "value_text": "Incredible India states that Kali Puja is celebrated during Diwali.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.incredibleindia.gov.in/en/west-bengal",
+          "title": "West Bengal",
+          "publisher": "Incredible India (Ministry of Tourism, Government of India)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:incredibleindia.gov.in",
+          "excerpt": "In addition to Durga Puja, other festivals like Kali Puja (celebrated during Diwali)"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-festival-kali-puja-prominence",
+      "category": "festival",
+      "attribute": "festival_prominence",
+      "subject": "festival:kali_puja",
+      "value": {
+        "name": "Kali Puja"
+      },
+      "value_text": "English Wikipedia states that Kali Puja is a major festival in West Bengal.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kali_Puja",
+          "title": "Kali Puja",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Kali Puja is a major festival in West Bengal."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-festival-saraswati-puja",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:saraswati_puja",
+      "value": {
+        "name": "Saraswati Puja (Vasant Panchami)",
+        "month_text": "fifth day of the bright half of the Hindu lunisolar calendar month of Magha"
+      },
+      "value_text": "Vasant Panchami, the Saraswati Puja festival, is celebrated every year on the fifth day of the bright half of the Hindu lunisolar month of Magha.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Saraswati_Puja",
+          "title": "Vasant Panchami",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Vasant Panchami is celebrated every year on the fifth day of the bright half of the Hindu lunisolar calendar month of Magha"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-festival-lakshmi-puja",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:lakshmi_puja",
+      "value": {
+        "name": "Lakshmi Puja"
+      },
+      "value_text": "Incredible India lists Lakshmi Puja, honouring the Indian Goddess of Wealth, among the festivals that punctuate West Bengal's calendar.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.incredibleindia.gov.in/en/west-bengal",
+          "title": "West Bengal",
+          "publisher": "Incredible India (Ministry of Tourism, Government of India)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:incredibleindia.gov.in",
+          "excerpt": "In addition to Durga Puja, other festivals like Kali Puja (celebrated during Diwali) and Lakshmi Puja (honouring the Indian Goddess of Wealth) punctuate the calendar, ensuring that festivities grace West Bengal throughout the year."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-festival-poush-sankranti",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:poush_sankranti",
+      "value": {
+        "name": "Poush Sankranti",
+        "month_text": "Bengali month of Poush"
+      },
+      "value_text": "In West Bengal, Makar Sankranti is also known as Poush Sankranti, named after the Bengali month in which it falls.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Poush_Sankranti",
+          "title": "Makar Sankranti",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "In West Bengal, Makar Sankranti is also known as Poush Sankranti named after the Bengali month in which it falls."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-food-hilsa",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:hilsa",
+      "value": {
+        "name": "Hilsa (ilish mach)"
+      },
+      "value_text": "Hilsa (ilish mach) is a fish of West Bengal.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://www.incredibleindia.gov.in/en/west-bengal",
+          "title": "West Bengal",
+          "publisher": "Incredible India (Ministry of Tourism, Government of India)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:incredibleindia.gov.in",
+          "excerpt": "The diversity of fish available, ranging from prawns to hilsa (ilish mach), has given rise to a plethora of unique Bengali dishes like Malai curry and patori."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Hilsa",
+          "title": "Ilish",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It is also the state fish of the Indian state of West Bengal"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-food-hilsa-bengali-dishes",
+      "category": "food",
+      "attribute": "food_description",
+      "subject": "food:hilsa",
+      "value": {
+        "name": "Hilsa (ilish mach)"
+      },
+      "value_text": "Incredible India states that the diversity of fish available, ranging from prawns to hilsa (ilish mach), has given rise to a plethora of unique Bengali dishes like Malai curry and patori.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://www.incredibleindia.gov.in/en/west-bengal",
+          "title": "West Bengal",
+          "publisher": "Incredible India (Ministry of Tourism, Government of India)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:incredibleindia.gov.in",
+          "excerpt": "The diversity of fish available, ranging from prawns to hilsa (ilish mach), has given rise to a plethora of unique Bengali dishes like Malai curry and patori."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-food-hilsa-state-fish",
+      "category": "food",
+      "attribute": "food_designation",
+      "subject": "food:hilsa",
+      "value": {
+        "name": "Hilsa (ilish mach)"
+      },
+      "value_text": "English Wikipedia states that hilsa is also the state fish of the Indian state of West Bengal.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Hilsa",
+          "title": "Ilish",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It is also the state fish of the Indian state of West Bengal"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-food-rasgulla",
+      "category": "food",
+      "attribute": "festive_food",
+      "subject": "food:rasgulla",
+      "value": {
+        "name": "Rasgulla (rosogolla)"
+      },
+      "value_text": "The spongy, white rosogolla is believed to have been introduced in present-day West Bengal in 1868.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Rasgulla",
+          "title": "Rasgulla",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The spongy, white rosogolla is believed to have been introduced in present-day West Bengal in 1868"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-food-sandesh",
+      "category": "food",
+      "attribute": "festive_food",
+      "subject": "food:sandesh",
+      "value": {
+        "name": "Sandesh"
+      },
+      "value_text": "The Gupo or Gufo style of sandesh from Guptipara is considered by some to be the first branded sweet of Bengal.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Sandesh_(confectionery)",
+          "title": "Sandesh (confectionery)",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The Gupo or Gufo style of sandesh from Guptipara is considered by some to be the \"first branded sweet of Bengal\"."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-food-mishti-doi",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:mishti_doi",
+      "value": {
+        "name": "Mishti doi"
+      },
+      "value_text": "Mishti doi is a fermented sweet curd originating from the Bengal region of the Indian subcontinent.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Mishti_doi",
+          "title": "Mishti doi",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "is a fermented sweet doi (curd) originating from the Bengal region of the Indian subcontinent"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-food-panta-bhat",
+      "category": "food",
+      "attribute": "festive_food",
+      "subject": "food:panta_bhat",
+      "value": {
+        "name": "Panta bhat"
+      },
+      "value_text": "Panta bhat is a popular dish on the day of Pahela Baishakh, the Bengali new year.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Panta_bhat",
+          "title": "Panta bhat",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It is a popular dish on the day of Pahela Baishakh or Bengali new year."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-food-phuchka",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:phuchka",
+      "value": {
+        "name": "Phuchka"
+      },
+      "value_text": "In West Bengal, phuchka is often flavoured with gondhoraj lime.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Phuchka",
+          "title": "Panipuri",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "In West Bengal, phuchka is often flavoured with gondhoraj lime"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-colour-saraswati-yellow",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:saraswati_yellow",
+      "value": {
+        "name": "yellow",
+        "tradition": "Saraswati Puja (Vasant Panchami)"
+      },
+      "value_text": "A photo caption in the article shows Goddess Saraswati dressed in a yellow sari on Vasant Panchami in Kolkata.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Saraswati_Puja",
+          "title": "Vasant Panchami",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Goddess Saraswati dressed in a yellow sari on Vasant Panchami, Kolkata."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-colour-durga-puja-vermilion",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:durga_puja_vermilion",
+      "value": {
+        "name": "red (vermilion)",
+        "tradition": "Durga Puja ritual"
+      },
+      "value_text": "In a Durga Puja ritual described in the article, a surrogate effigy is smeared in red vermilion to symbolise the blood spilled.",
+      "kind": "interpretation",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Durga_Puja",
+          "title": "Durga Puja",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The surrogate effigy is smeared in red vermilion to symbolise the blood spilled."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-colour-pohela-boishakh-red-white",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:pohela_boishakh_red_white",
+      "value": {
+        "name": "red or white",
+        "tradition": "Pohela Boishakh"
+      },
+      "value_text": "At Pohela Boishakh, males are seen wearing red or white kurtas with traditional designs imprinted or embroidered.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Pohela_Boishakh",
+          "title": "Pohela Boishakh",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "On this occasion, males are seen wearing red or white Kurta with traditional designs on them, imprinted or embroidered."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-colour-kali-red-hibiscus",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:kali_red_hibiscus",
+      "value": {
+        "name": "red (hibiscus)",
+        "tradition": "Kali Puja"
+      },
+      "value_text": "The Kali Puja article says Kali is prescribed offerings of red hibiscus flowers, sweets, rice and lentils.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kali_Puja",
+          "title": "Kali Puja",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "She is prescribed offerings of red hibiscus flowers, sweets, rice, and lentils."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-symbol-alpona",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:alpona",
+      "value": {
+        "name": "alpona (alpana) motifs"
+      },
+      "value_text": "Among Hindu families, alpanas may contain religious motifs with symbolic designs relating to religious austerity, festivals and specific deities.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Alpona",
+          "title": "Alpana",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Amongst Hindu families, alpanas may contain religious motifs with symbolic designs that relate to religious austerity, festivals, and specific deities."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-symbol-shiuli",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:shiuli",
+      "value": {
+        "name": "Shiuli (night-flowering jasmine)",
+        "native_name": "শিউলি",
+        "role": "state flower"
+      },
+      "value_text": "The flower of Nyctanthes arbor-tristis is the official state flower of West Bengal and is called shiuli or shephali in Bengali.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Night-flowering_jasmine",
+          "title": "Nyctanthes arbor-tristis",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The flower of Nyctanthes arbor-tristis is the official state flower of the Indian state of West Bengal and is called shiuli or shephali in Bengali"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-symbol-royal-bengal-tiger",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:royal_bengal_tiger",
+      "value": {
+        "name": "Royal Bengal Tiger"
+      },
+      "value_text": "The West Bengal state portal names the Royal Bengal Tiger among the endangered species housed in the Sunderbans, a UNESCO World Heritage site.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://wb.gov.in/about-west-bengal-at-a-glance.aspx",
+          "title": "Bengal at a Glance",
+          "publisher": "Government of West Bengal (State Portal)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:wb.gov.in",
+          "excerpt": "Declared a UNESCO World Heritage site, the Sunderbans is universally acclaimed for housing globally endangered species such as the Royal Bengal Tiger."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-symbol-fishing-cat",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:fishing_cat",
+      "value": {
+        "name": "Fishing cat",
+        "role": "state animal"
+      },
+      "value_text": "The fishing cat is the state animal of West Bengal.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Fishing_cat",
+          "title": "Fishing cat",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It is the state animal of the Indian state of West Bengal"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-symbol-sindoor",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:sindoor",
+      "value": {
+        "name": "sindoor"
+      },
+      "value_text": "In Bengali tradition the sindoor serves as a lifelong symbol of commitment, respect and marital devotion.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Bengali_Hindu_wedding",
+          "title": "Bengali Hindu wedding",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The sindoor serves as a lifelong symbol of commitment, respect, and marital devotion in Bengali tradition."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-moment-pohela-boishakh-date",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:pohela_boishakh_date",
+      "value": {
+        "name": "Pohela Boishakh",
+        "date_text": "14 or 15 April"
+      },
+      "value_text": "For Bengalis of West Bengal and other Indian states, Pohela Boishakh falls either on 14 or 15 April every year.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Pohela_Boishakh",
+          "title": "Pohela Boishakh",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "For Bengalis of West Bengal and other Indian states, the festival falls either on 14 or 15 April every year."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-moment-rabindra-jayanti",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:rabindra_jayanti",
+      "value": {
+        "name": "Rabindra Jayanti",
+        "date_text": "early May, on the 25th day of the Bengali month of Boishakh"
+      },
+      "value_text": "Rabindra Jayanti, the birth anniversary of Rabindranath Tagore, is celebrated in early May on the 25th day of the Bengali month of Boishakh.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Rabindra_Jayanti",
+          "title": "Rabindra Jayanti",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "it is celebrated in early May, on the 25th day of the Bengali month of Boishakh"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-moment-west-bengal-day",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:west_bengal_day",
+      "value": {
+        "name": "West Bengal Day",
+        "date_text": "20 June"
+      },
+      "value_text": "Observed annually on 20 June, West Bengal Day commemorates a 1947 Bengal Legislative Assembly resolution that led to the creation of West Bengal as a separate state.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Paschimbanga_Dibas",
+          "title": "West Bengal Day",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Observed annually on 20 June, the day commemorates the adoption of a resolution by the Bengal Legislative Assembly in 1947 that led to the creation of West Bengal as a separate state following the partition of Bengal"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-moment-durga-puja-unesco-2021",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:durga_puja_unesco_2021",
+      "value": {
+        "name": "Durga Puja in Kolkata inscribed by UNESCO",
+        "date_text": "2021"
+      },
+      "value_text": "In 2021, Durga Puja in Kolkata was inscribed on UNESCO's Representative List of the Intangible Cultural Heritage of Humanity.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Durga_Puja",
+          "title": "Durga Puja",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "In 2021, Durga Puja in Kolkata was inscribed on UNESCO's Representative List of the Intangible Cultural Heritage of Humanity"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-humour-gopal-bhar-humour",
+      "category": "humour",
+      "attribute": "humour_style",
+      "subject": "topic:gopal_bhar_humour",
+      "value": {
+        "name": "humorous tales that ridicule figures of authority (Gopal Bhar)"
+      },
+      "value_text": "Tales of Gopal Bhar are narrated in West Bengal and Bangladesh; the stories are popular and humorous, often ridiculing figures of authority including the king.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Gopal_Bhar",
+          "title": "Gopal Bhar",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Tales of his exploits are narrated in West Bengal and Bangladesh to this day in numerous short stories. Their origin may be traced to local oral cultures of humour. The stories are popular and humorous, often ridiculing figures of authority, including the king, Krishnachandra, himself."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-family-bhai-phonta",
+      "category": "family",
+      "attribute": "family_custom",
+      "subject": "topic:bhai_phonta",
+      "value": {
+        "name": "Bhai Phonta (Bhai Phota)"
+      },
+      "value_text": "In Bengal the day is celebrated as Bhai Phota, which comes one day after Kali Puja.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Bhai_Phonta",
+          "title": "Bhai Dooj",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "In Bengal, the day is celebrated as Bhai Phota, which comes one day after Kali Puja."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-family-annaprashan",
+      "category": "family",
+      "attribute": "family_custom",
+      "subject": "topic:annaprashan",
+      "value": {
+        "name": "Annaprashan (mukhebhat)"
+      },
+      "value_text": "The article on annaprashan says it is also known as mukhebhat in West Bengal.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Annaprashan",
+          "title": "Annaprashana",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It is also known as mukhēbhāt in West Bengal, cōṟūṇŭ in Kerala, and bhāt khulai in Himachal Pradesh."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-custom-adda",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:adda",
+      "value": {
+        "name": "adda"
+      },
+      "value_text": "Adda is a Bengali term for when several individuals hang out informally, typically in neighbourhoods, homes, tea stalls, clubs, parks and other spaces.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Adda_(South_Asian)",
+          "title": "Adda (South Asian)",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "is a term in Bengali referring to when several individuals hang out (informally socialise) typically in neighbourhoods, homes, tea stalls, clubs, parks, and other public or private spaces."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-custom-gaye-holud",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:gaye_holud",
+      "value": {
+        "name": "Gaye Holud"
+      },
+      "value_text": "Both the bride's and groom's families apply turmeric paste during their respective Gaye Holud ceremonies on the wedding day.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Bengali_Hindu_wedding",
+          "title": "Bengali Hindu wedding",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Both the bride's and groom's families apply turmeric paste during their respective Gaye Holud ceremonies on the wedding day."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-custom-dhunuchi-naach",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:dhunuchi_naach",
+      "value": {
+        "name": "dhunuchi naach"
+      },
+      "value_text": "Dhunuchi naach involves a dance ritual performed with a dhunuchi (incense burner).",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Durga_Puja",
+          "title": "Durga Puja",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Dhunuchi naach involves a dance ritual performed with dhunuchi (incense burner)."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-custom-shared-festivals",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:shared_festivals",
+      "value": {
+        "name": "Id, Christmas and the Pujas celebrated together"
+      },
+      "value_text": "The West Bengal state portal says people of different castes, races and colours celebrate festivals like Id, Christmas and the Pujas with equal fervour.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://wb.gov.in/about-west-bengal-at-a-glance.aspx",
+          "title": "Bengal at a Glance",
+          "publisher": "Government of West Bengal (State Portal)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:wb.gov.in",
+          "excerpt": "The people of different caste, race and colour all live in perfect harmony, celebrating festivals like Id, Christmas and the Pujas in equal fervour and enjoying cuisines of different kinds."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-sensitivity-west-bengal-day-date",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:west_bengal_day_date",
+      "value": {
+        "topic": "competing dates for West Bengal Day"
+      },
+      "value_text": "The article records a decision to adopt 1st Boishakh or Pohela Boishakh (April 14/15) as the official West Bengal Day, and a later declaration on 3 June 2026 that West Bengal Day will be celebrated on 20 June every year starting from 2026.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Paschimbanga_Dibas",
+          "title": "West Bengal Day",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "it was decided on August 22 to adopt the date 1st Boishakh or Pohela Boishakh (April 14/15) of the Bengal calendar (original version) as the official West Bengal Day. On 3rd June 2026, it was declared by the newly elected government that \"West Bengal Day\" will be celebrated on 20th June every year starting from 20th June 2026"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-sensitivity-gorkhaland",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:gorkhaland",
+      "value": {
+        "topic": "Gorkhaland demand in Darjeeling"
+      },
+      "value_text": "A demand for a separate administrative unit in Darjeeling has existed since 1909, when the Hillmen's Association of Darjeeling submitted a memorandum demanding a separate administrative setup.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Gorkhaland",
+          "title": "Gorkhaland Territorial Administration",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "A demand for a separate administrative unit in Darjeeling has existed since 1909, when the Hillmen's Association of Darjeeling submitted a memorandum to Minto-Morley Reforms demanding a separate administrative setup."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-sensitivity-cattle-slaughter-law",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:cattle_slaughter_law",
+      "value": {
+        "topic": "cow slaughter rules"
+      },
+      "value_text": "Most Indian states prohibit cow slaughter at all ages, but Assam and West Bengal permit the slaughter of cows over the ages of 10 and 14 years respectively.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Cattle_slaughter_in_India",
+          "title": "Cattle slaughter in India",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Most states prohibit the slaughter of cows of all ages, however, Assam and West Bengal permit the slaughter of cows of over the ages of 10 and 14 years, respectively."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-sensitivity-rasgulla-origin-dispute",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:rasgulla_origin_dispute",
+      "value": {
+        "topic": "rasgulla origin claimed by West Bengal and Odisha"
+      },
+      "value_text": "When West Bengal received GI status for Banglar rosogolla in 2017, the Registry Office of India clarified that Odisha could claim it too if it cited the place of origin of its variant.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Rasgulla",
+          "title": "Rasgulla",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "In 2017, when West Bengal received its rosogolla's geographical indication (GI) status, the Registry Office of India clarified that West Bengal was given GI status for Banglar rosogolla, and Odisha could claim it too if it cited the place of origin of its variant along with colour, texture, taste, juice content, and method of manufacture."
+        }
+      ]
+    },
+    {
+      "id": "in-wb-language-official",
+      "category": "language",
+      "attribute": "official_language",
+      "subject": "region:IN-WB",
+      "value": "Bengali",
+      "value_text": "Bengali is an official language of West Bengal.",
+      "kind": "observed",
+      "language": "bn",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/West_Bengal",
+          "title": "West Bengal",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The state's official languages are Bengali and English"
+        }
+      ]
+    },
+    {
+      "id": "in-wb-language-share-hindi-wikipedia",
+      "category": "language",
+      "attribute": "language_share",
+      "subject": "region:IN-WB",
+      "value": 5.0,
+      "value_text": "English Wikipedia states that, as of the 2011 census, 5.00% of West Bengal's population spoke Hindi as their first language.",
+      "kind": "observed",
+      "language": "hi",
+      "period": "2011",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/West_Bengal",
+          "title": "West Bengal",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "census_2011",
+          "excerpt": "As of the 2011 census, 86.22% of the population spoke Bengali, 5.00% Hindi, 2.66% Santali, 1.82% Urdu and 1.26% Nepali as their first language"
+        }
+      ]
+    }
+  ]
+}

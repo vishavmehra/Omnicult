@@ -1,0 +1,1600 @@
+{
+  "region_code": "IN-KL",
+  "dataset_version": "1",
+  "retrieved_on": "2026-11-17",
+  "entries": [
+    {
+      "id": "in-kl-festival-onam",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:onam",
+      "value": {
+        "name": "Onam"
+      },
+      "value_text": "Onam is a harvest festival celebrated in Kerala.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/onam/",
+          "title": "Onam | National Festival of Kerala | Cultural Events in Kerala",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Legends and myths are a rich part of Onam which is also Kerala’s harvest festival."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Onam",
+          "title": "Onam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "is a Hindu harvest festival mostly celebrated in the Indian state of Kerala"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-onam-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:onam",
+      "value": {
+        "name": "Onam",
+        "month_text": "the Malayalam calendar month of Chingam; the source says this overlaps with August-September"
+      },
+      "value_text": "English Wikipedia states that Onam falls in the Malayalam calendar month of Chingam.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Onam",
+          "title": "Onam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It falls in the Malayalam calendar month of Chingam"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-onam-description",
+      "category": "festival",
+      "attribute": "festival_description",
+      "subject": "festival:onam",
+      "value": {
+        "name": "Onam"
+      },
+      "value_text": "Kerala Tourism describes Onam as an agricultural festival that celebrates the rich harvest of the land.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/onam/",
+          "title": "Onam | National Festival of Kerala | Cultural Events in Kerala",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Onam is also an agricultural festival that celebrates the rich harvest of the land, thus symbolising joy and prosperity."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-vishu",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:vishu",
+      "value": {
+        "name": "Vishu",
+        "native_name": "വിഷു"
+      },
+      "value_text": "Vishu marks the solar new year.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/vishu/",
+          "title": "Vishu: Kerala New Year Festival | Traditions & Celebrations | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Vishu marks the Solar New Year in Kerala and is a celebration of hope, prosperity, and fresh beginnings."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Vishu",
+          "title": "Vishu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "signifying the solar new year as the sun moves into the zodiac sign of Aries"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-vishu-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:vishu",
+      "value": {
+        "name": "Vishu",
+        "month_text": "the first day of the Malayalam month of Medam"
+      },
+      "value_text": "English Wikipedia states that Vishu falls on the first day of the month of Medam.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Vishu",
+          "title": "Vishu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Vishu falls on the first day of the month of Medam"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-vishu-season",
+      "category": "festival",
+      "attribute": "festival_season",
+      "subject": "festival:vishu",
+      "value": {
+        "name": "Vishu",
+        "month_text": "usually mid-April"
+      },
+      "value_text": "Kerala Tourism states that the Vishu festival usually falls in mid-April.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/vishu/",
+          "title": "Vishu: Kerala New Year Festival | Traditions & Celebrations | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Observed with deep cultural significance, the festival usually falls in mid-April, heralding the arrival of spring and the harvest season."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-thrissur-pooram",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:thrissur_pooram",
+      "value": {
+        "name": "Thrissur Pooram"
+      },
+      "value_text": "Thrissur Pooram is a Pooram festival.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/event/",
+          "title": "Colourful festivals of Kerala | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Join in the festivities of Kerala’s Pooram festivals, including the grand spectacle of Thrissur Pooram."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Thrissur_Pooram",
+          "title": "Thrissur Pooram",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The Thrissur Pooram is an annual Hindu temple festival held in Thrissur"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-thrissur-pooram-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:thrissur_pooram",
+      "value": {
+        "name": "Thrissur Pooram",
+        "month_text": "the Pooram day in the Malayalam calendar month of Medam"
+      },
+      "value_text": "English Wikipedia states that Thrissur Pooram is held annually at the Vadakkunnathan Temple in Thrissur on the Pooram day in the Malayalam calendar month of Medam.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Thrissur_Pooram",
+          "title": "Thrissur Pooram",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It is held annually at the Vadakkunnathan Temple in Thrissur on the Pooram day—the day when the moon rises with the Pooram star in the Malayalam Calendar month of Medam"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-thrissur-pooram-description",
+      "category": "festival",
+      "attribute": "festival_description",
+      "subject": "festival:thrissur_pooram",
+      "value": {
+        "name": "Pooram festivals"
+      },
+      "value_text": "Kerala Tourism's Pooram Festivals page describes Pooram festivals as temple festivals that represent the heart and soul of Kerala.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/event/pooram/",
+          "title": "Pooram Festivals of Kerala | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Pooram refer to temple festivals that represent the heart and soul of Kerala."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-attukal-pongala",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:attukal_pongala",
+      "value": {
+        "name": "Attukal Pongala",
+        "month_text": "the month of Kumbham (February-March)"
+      },
+      "value_text": "Attukal Pongala is a 10-day Pongala festival celebrated in the month of Kumbham (February-March) at the Attukal Temple in Thiruvananthapuram.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Attukal_Pongala",
+          "title": "Attukal Pongala",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Attukal Pongala is a 10-day Pongala festival celebrated in the month of Kumbham (February–March), at the Attukal Temple in Thiruvananthapuram in the Indian state of Kerala"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-nehru-trophy-boat-race",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:nehru_trophy_boat_race",
+      "value": {
+        "name": "Nehru Trophy Boat Race (snake boat race)",
+        "month_text": "traditionally the second Saturday of August"
+      },
+      "value_text": "The Nehru Trophy Boat Race is traditionally held on the second Saturday of August.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Nehru_Trophy_Boat_Race",
+          "title": "Nehru Trophy Boat Race",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The race is traditionally held on the second Saturday of August."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-vallam-kali-onam-season",
+      "category": "festival",
+      "attribute": "festival_description",
+      "subject": "festival:vallam_kali",
+      "value": {
+        "name": "Vallam Kali (snake boat race)"
+      },
+      "value_text": "Kerala Tourism says the excitement of the Onam season is best captured in the Vallam Kali snake boat race.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/onam/",
+          "title": "Onam | National Festival of Kerala | Cultural Events in Kerala",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "The excitement of the Onam season is best captured in ‘Vallam Kali’ or snakeboat race."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-theyyam-season",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:theyyam_season",
+      "value": {
+        "name": "Theyyam season"
+      },
+      "value_text": "The Theyyam season starts on the tenth day of the Malayalam month of Thulam.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/artforms/theyyam-ritual/1/",
+          "title": "Theyyam - A ritual art popular in north Kerala | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "The Theyyam season starts from the tenth day of the Malayalam month of Thulaam"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Theyyam",
+          "title": "Theyyam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Theyyam season starts on the tenth day of the Malayalam month of Thulam"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-theyyam-season-duration",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:theyyam_season",
+      "value": {
+        "name": "Theyyam season",
+        "month_text": "usually mid-October to the middle of Edavam (typically late May)"
+      },
+      "value_text": "Kerala Tourism states that the Theyyam season usually starts in mid-October and lasts until the middle of Edavam month, typically late May.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/artforms/theyyam-ritual/1/",
+          "title": "Theyyam - A ritual art popular in north Kerala | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "The Theyyam season starts from the tenth day of the Malayalam month of Thulaam (usually mid-October) and lasts until the middle of Edavam month (typically late May)."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-sabarimala-mandala-season",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:sabarimala_mandala_season",
+      "value": {
+        "name": "Sabarimala Mandala Pooja season",
+        "month_text": "approximately 15 November to 26 December (Mandala Pooja)"
+      },
+      "value_text": "The Sabarimala temple is open for worship during the days of Mandala Pooja, approximately 15 November to 26 December.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Sabarimala_Temple",
+          "title": "Sabarimala Temple",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The temple is open for worship only during the days of Mandala Pooja (approximately 15 November to 26 December)"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-multi-faith-festival-season",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:multi_faith_festival_season",
+      "value": {
+        "name": "Festivals across mosques, temples and churches"
+      },
+      "value_text": "Kerala Tourism lists the spirited revelries of mosques, temples and churches among the highlights of Kerala's festival season.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/event/",
+          "title": "Colourful festivals of Kerala | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "From Onam's grand feasts to the enchanting Theyyam rituals and spirited revelries of mosques, temples and churches, immerse yourself in our rich cultural tapestry."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-festival-onam-regardless-of-faith",
+      "category": "festival",
+      "attribute": "festival_description",
+      "subject": "festival:multi_faith_festival_season",
+      "value": {
+        "name": "Onam, a festival for Malayalis regardless of faith"
+      },
+      "value_text": "English Wikipedia states that Onam is also a major annual event for Malayalis regardless of faith and includes a spectrum of cultural events.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Onam",
+          "title": "Onam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It is also a major annual event for Malayalis regardless of faith and includes a spectrum of cultural events."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-sadya",
+      "category": "food",
+      "attribute": "festive_food",
+      "subject": "food:sadya",
+      "value": {
+        "name": "Sadya",
+        "native_name": "സദ്യ"
+      },
+      "value_text": "Sadya is a traditional feast.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/kerala-food/",
+          "title": "Kerala Cuisine: Popular recipes of Kerala Food | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Explore the traditional vegetarian feast of Sadya, featuring up to 28 dishes that showcase the breadth of Kerala's vegetarian cuisine."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Sadya",
+          "title": "Sadya",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Sadya is typically served as a traditional feast for the festivals of Onam and Vishu"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-sadya-composition",
+      "category": "food",
+      "attribute": "food_description",
+      "subject": "food:sadya",
+      "value": {
+        "name": "Sadya"
+      },
+      "value_text": "English Wikipedia describes a full-course sadya as rice with about 20 different accompaniments and desserts, and as the ceremonial meal usually eaten on celebratory occasions in Kerala, including weddings, Onam and Vishu.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kerala_cuisine",
+          "title": "Kerala cuisine",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "A full-course sadya consists of rice with about 20 different accompaniments and desserts, and is the ceremonial meal usually eaten on celebratory occasions in Kerala, including weddings, Onam and Vishu"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-sadya-dishes",
+      "category": "food",
+      "attribute": "food_dishes",
+      "subject": "food:sadya",
+      "value": {
+        "name": "Sadya"
+      },
+      "value_text": "Kerala Tourism describes the traditional vegetarian feast of Sadya as featuring up to 28 dishes that showcase the breadth of Kerala's vegetarian cuisine.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/kerala-food/",
+          "title": "Kerala Cuisine: Popular recipes of Kerala Food | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Explore the traditional vegetarian feast of Sadya, featuring up to 28 dishes that showcase the breadth of Kerala's vegetarian cuisine."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-payasam",
+      "category": "food",
+      "attribute": "festive_food",
+      "subject": "food:payasam",
+      "value": {
+        "name": "Payasam",
+        "native_name": "പായസം"
+      },
+      "value_text": "In a sadya, the traditional dessert called payasam is served at the end of the meal and is of many kinds.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Sadya",
+          "title": "Sadya",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The traditional dessert called payasam served at the end of the meal is of many kinds"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-appam",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:appam",
+      "value": {
+        "name": "Appam"
+      },
+      "value_text": "Appams are served for breakfast.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/kerala-food/",
+          "title": "Kerala Cuisine: Popular recipes of Kerala Food | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Discover Kerala's diverse breakfast options, from appams to steamed tapioca, tailored to suit every palate with varying spice levels."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Appam",
+          "title": "Appam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Appams are most frequently served for breakfast or dinner, often with a side dish such as a vegetable or egg curry."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-appam-serving",
+      "category": "food",
+      "attribute": "food_serving",
+      "subject": "food:appam",
+      "value": {
+        "name": "Appam"
+      },
+      "value_text": "English Wikipedia states that appams are most frequently served for breakfast or dinner, often with a side dish such as a vegetable or egg curry.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Appam",
+          "title": "Appam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Appams are most frequently served for breakfast or dinner, often with a side dish such as a vegetable or egg curry."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-appam-category",
+      "category": "food",
+      "attribute": "food_category",
+      "subject": "food:appam",
+      "value": {
+        "name": "Appam"
+      },
+      "value_text": "Kerala Tourism lists appams among Kerala's breakfast options.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/kerala-food/",
+          "title": "Kerala Cuisine: Popular recipes of Kerala Food | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Discover Kerala's diverse breakfast options, from appams to steamed tapioca, tailored to suit every palate with varying spice levels."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-puttu",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:puttu",
+      "value": {
+        "name": "Puttu",
+        "native_name": "പുട്ട്"
+      },
+      "value_text": "Puttu is a dish native to the South Indian states of Kerala and Tamil Nadu.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Puttu",
+          "title": "Puttu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "is a dish native to the South Indian states of Kerala and Tamil Nadu"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-avial",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:avial",
+      "value": {
+        "name": "Avial",
+        "native_name": "അവിയൽ"
+      },
+      "value_text": "Avial is a dish served in Kerala.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/kerala-food/",
+          "title": "Kerala Cuisine: Popular recipes of Kerala Food | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Explore a variety of side dishes in Kerala’s cuisine, featuring vegetarian and non-vegetarian options like Avial and Alleppey Fish Curry."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Avial",
+          "title": "Avial",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Avial is considered an essential part of the main meal in Kerala"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-avial-role",
+      "category": "food",
+      "attribute": "food_description",
+      "subject": "food:avial",
+      "value": {
+        "name": "Avial"
+      },
+      "value_text": "English Wikipedia states that Avial is considered an essential part of the main meal in Kerala.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Avial",
+          "title": "Avial",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Avial is considered an essential part of the main meal in Kerala"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-avial-category",
+      "category": "food",
+      "attribute": "food_category",
+      "subject": "food:avial",
+      "value": {
+        "name": "Avial"
+      },
+      "value_text": "Kerala Tourism lists Avial among the side dishes of Kerala's cuisine.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/kerala-food/",
+          "title": "Kerala Cuisine: Popular recipes of Kerala Food | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Explore a variety of side dishes in Kerala’s cuisine, featuring vegetarian and non-vegetarian options like Avial and Alleppey Fish Curry."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-seafood",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:seafood",
+      "value": {
+        "name": "Seafood"
+      },
+      "value_text": "Seafood is part of Kerala's cuisine.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/kerala-food/",
+          "title": "Kerala Cuisine: Popular recipes of Kerala Food | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Savour the best of Kerala’s seafood recipes, from Fish Moilee to Grilled Seer Fish, representing the state’s coastal produce."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Kerala_cuisine",
+          "title": "Kerala cuisine",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Kerala's long coastline and numerous rivers have led to a strong fishing industry in the region, making seafood a common part of meals."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-seafood-coast",
+      "category": "food",
+      "attribute": "food_description",
+      "subject": "food:seafood",
+      "value": {
+        "name": "Seafood"
+      },
+      "value_text": "English Wikipedia states that Kerala's long coastline and numerous rivers have led to a strong fishing industry in the region, making seafood a common part of meals.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kerala_cuisine",
+          "title": "Kerala cuisine",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Kerala's long coastline and numerous rivers have led to a strong fishing industry in the region, making seafood a common part of meals."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-food-seafood-coastal-produce",
+      "category": "food",
+      "attribute": "food_category",
+      "subject": "food:seafood",
+      "value": {
+        "name": "Seafood"
+      },
+      "value_text": "Kerala Tourism describes its seafood recipes as representing the state's coastal produce.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/kerala-food/",
+          "title": "Kerala Cuisine: Popular recipes of Kerala Food | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Savour the best of Kerala’s seafood recipes, from Fish Moilee to Grilled Seer Fish, representing the state’s coastal produce."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-colour-kasavu-white-and-gold",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:kasavu_white_and_gold",
+      "value": {
+        "colours": [
+          "white or off-white",
+          "gold or silver"
+        ],
+        "context": "Kerala saree / Kerala mundu with kasavu border"
+      },
+      "value_text": "A typical white or off-white garment with a gold or silver coloured border is considered traditional and is called Kerala saree or Kerala Mundu.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kasavu",
+          "title": "Kasavu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "A typical white or off-white garment with a gold or silver coloured border is considered traditional and is called Kerala saree or Kerala Mundu"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-colour-golden-konna-vishu",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:golden_konna_vishu",
+      "value": {
+        "colours": [
+          "golden yellow"
+        ],
+        "context": "Konna (Kanikonna) blossoms at Vishu"
+      },
+      "value_text": "Golden Konna flowers are associated with Vishu.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/vishu/",
+          "title": "Vishu: Kerala New Year Festival | Traditions & Celebrations | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Homes and temples come alive with decorations, rituals, and the fragrance of seasonal blooms, especially the golden Konna flowers, symbolizing prosperity."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/List_of_Kerala_state_symbols",
+          "title": "List of Kerala state symbols",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Known as kanikonna, the golden shower tree's yellow blossoms are a central motif of the Vishu harvest festival"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-colour-golden-konna-vishu-motif",
+      "category": "colour",
+      "attribute": "colour_motif",
+      "subject": "colour:golden_konna_vishu",
+      "value": {
+        "colours": [
+          "golden yellow"
+        ],
+        "context": "Konna (Kanikonna) blossoms at Vishu"
+      },
+      "value_text": "English Wikipedia states that the golden shower tree's yellow blossoms are a central motif of the Vishu harvest festival, when they are traditionally viewed first thing in the morning for good fortune.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/List_of_Kerala_state_symbols",
+          "title": "List of Kerala state symbols",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "the golden shower tree's yellow blossoms are a central motif of the Vishu harvest festival, when they are traditionally viewed first thing in the morning for good fortune."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-colour-golden-konna-vishu-prosperity",
+      "category": "colour",
+      "attribute": "colour_symbolism",
+      "subject": "colour:golden_konna_vishu",
+      "value": {
+        "colours": [
+          "golden yellow"
+        ],
+        "context": "Konna (Kanikonna) blossoms at Vishu"
+      },
+      "value_text": "Kerala Tourism says that, at Vishu, homes and temples come alive with decorations, rituals and the fragrance of seasonal blooms, especially the golden Konna flowers, symbolizing prosperity.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/vishu/",
+          "title": "Vishu: Kerala New Year Festival | Traditions & Celebrations | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Homes and temples come alive with decorations, rituals, and the fragrance of seasonal blooms, especially the golden Konna flowers, symbolizing prosperity."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-colour-black-or-blue-sabarimala-attire",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:black_or_blue_sabarimala_attire",
+      "value": {
+        "colours": [
+          "black",
+          "blue"
+        ],
+        "context": "attire of devotees during the Sabarimala pilgrimage vow"
+      },
+      "value_text": "Devotees observing the Sabarimala pilgrimage vow are expected to wear only plain black or blue coloured traditional attire.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Sabarimala_Temple",
+          "title": "Sabarimala Temple",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "They are expected to bathe twice a day and visit the local temples regularly and only wear plain black or blue coloured traditional attire."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-symbol-state-emblem-elephants-conch",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:state_emblem_elephants_conch",
+      "value": {
+        "name": "State emblem with two elephants and a conch"
+      },
+      "value_text": "The Kerala emblem portrays two elephants guarding the Emblem of India and the shankha (conch) of Padmanabhaswamy.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Emblem_of_Kerala",
+          "title": "Emblem of Kerala",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The emblem portrays two elephants guarding the Emblem of India and the shankha (conch) of Padmanabhaswamy"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-symbol-indian-elephant",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:indian_elephant",
+      "value": {
+        "name": "Indian elephant"
+      },
+      "value_text": "Elephants are part of Kerala's temple festivals.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/event/pooram/",
+          "title": "Pooram Festivals of Kerala | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Pooram refer to temple festivals that represent the heart and soul of Kerala. Entire regions come to life as the streets are decked up to celebrate these events. Caparisoned elephants take to the streets and the roars of the approving crowds can be heard far and wide."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/List_of_Kerala_state_symbols",
+          "title": "List of Kerala state symbols",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The Indian elephant is closely woven into Kerala's temple festivals and ceremonial processions"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-symbol-indian-elephant-processions",
+      "category": "symbol",
+      "attribute": "symbol_description",
+      "subject": "symbol:indian_elephant",
+      "value": {
+        "name": "Indian elephant"
+      },
+      "value_text": "English Wikipedia describes the Indian elephant as closely woven into Kerala's temple festivals and ceremonial processions.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/List_of_Kerala_state_symbols",
+          "title": "List of Kerala state symbols",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The Indian elephant is closely woven into Kerala's temple festivals and ceremonial processions"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-symbol-indian-elephant-pooram",
+      "category": "symbol",
+      "attribute": "symbol_usage",
+      "subject": "symbol:indian_elephant",
+      "value": {
+        "name": "Indian elephant"
+      },
+      "value_text": "Kerala Tourism's Pooram Festivals page describes caparisoned elephants taking to the streets at Pooram festivals.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/event/pooram/",
+          "title": "Pooram Festivals of Kerala | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Caparisoned elephants take to the streets and the roars of the approving crowds can be heard far and wide."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-symbol-coconut-tree",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:coconut_tree",
+      "value": {
+        "name": "Coconut tree"
+      },
+      "value_text": "The coconut palm underpins much of Kerala's traditional economy, and one suggested origin of the name Kerala is 'land of coconuts', due to the abundance of coconut trees in the region.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/List_of_Kerala_state_symbols",
+          "title": "List of Kerala state symbols",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The coconut palm underpins much of Kerala's traditional economy, from cuisine and oil to coir production"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Kerala",
+          "title": "Kerala",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It might also have originated from the Malayalam words kera and alam meaning 'coconut tree' and 'land' respectively, thus meaning 'land of coconuts', due to the abundance of coconut trees in the region."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-symbol-kathakali",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:kathakali",
+      "value": {
+        "name": "Kathakali"
+      },
+      "value_text": "Kathakali represents one of Kerala's traditional theatre artforms.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kathakali",
+          "title": "Kathakali",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It represents one of Kerala's traditional theatre artforms."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-moment-kerala-piravi",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:kerala_piravi",
+      "value": {
+        "name": "Kerala Piravi (Kerala Day)",
+        "native_name": "കേരള പിറവി",
+        "date_stated": "1 November 1956"
+      },
+      "value_text": "The state of Kerala was created on 1 November 1956 under the States Reorganisation Act, and Kerala Piravi marks the birth of the state.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kerala_Piravi",
+          "title": "Kerala Day",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The state of Kerala was created on 1 November 1956, long after the Independence of India"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Kerala",
+          "title": "Kerala",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It was formed on 1 November 1956 under the States Reorganisation Act"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-moment-thiruvonam",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:thiruvonam",
+      "value": {
+        "name": "Onam",
+        "period": "ten days"
+      },
+      "value_text": "Onam celebrations are spread over ten days.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/onam/",
+          "title": "Onam | National Festival of Kerala | Cultural Events in Kerala",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "The 10 days that follow the day of ‘Atham’ in the month of ‘Chingam’ are a period of big festivities in Kerala"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Onam",
+          "title": "Onam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The celebrations mark the Malayalam New Year, are spread over ten days, and conclude with Thiruvonam."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-moment-thiruvonam-new-year",
+      "category": "moment",
+      "attribute": "moment_description",
+      "subject": "moment:thiruvonam",
+      "value": {
+        "name": "Thiruvonam, the concluding day of Onam"
+      },
+      "value_text": "English Wikipedia states that the Onam celebrations mark the Malayalam New Year and conclude with Thiruvonam.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Onam",
+          "title": "Onam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The celebrations mark the Malayalam New Year, are spread over ten days, and conclude with Thiruvonam."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-moment-thiruvonam-chingam",
+      "category": "moment",
+      "attribute": "moment_timing",
+      "subject": "moment:thiruvonam",
+      "value": {
+        "name": "Onam",
+        "period": "ten days in Chingam"
+      },
+      "value_text": "Kerala Tourism states that the 10 days that follow the day of Atham in the month of Chingam are a period of big festivities in Kerala.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/onam/",
+          "title": "Onam | National Festival of Kerala | Cultural Events in Kerala",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "The 10 days that follow the day of ‘Atham’ in the month of ‘Chingam’ are a period of big festivities in Kerala"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-moment-onam-state-festival",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:onam_state_festival",
+      "value": {
+        "name": "Onam declared the official state festival of Kerala"
+      },
+      "value_text": "Onam was officially declared the official state festival of Kerala.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Onam",
+          "title": "Onam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Onam was officially declared the official state festival of Kerala."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-custom-vishukkani",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:vishukkani",
+      "value": {
+        "name": "Vishukkani, the first sight on Vishu morning"
+      },
+      "value_text": "It is believed that seeing auspicious things first brings good luck.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/vishu/",
+          "title": "Vishu: Kerala New Year Festival | Traditions & Celebrations | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "It is believed that seeing this sacred arrangement first thing in the morning brings good fortune for the year ahead."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Vishu",
+          "title": "Vishu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It is believed that seeing auspicious things at the very beginning of the new year brings luck, a tradition that is part of Kerala's culture."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-custom-vishukkani-culture",
+      "category": "custom",
+      "attribute": "custom_description",
+      "subject": "topic:vishukkani",
+      "value": {
+        "name": "Vishukkani, the first sight on Vishu morning"
+      },
+      "value_text": "English Wikipedia describes this belief as a tradition that is part of Kerala's culture.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Vishu",
+          "title": "Vishu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It is believed that seeing auspicious things at the very beginning of the new year brings luck, a tradition that is part of Kerala's culture."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-custom-vishukkani-morning",
+      "category": "custom",
+      "attribute": "custom_timing",
+      "subject": "topic:vishukkani",
+      "value": {
+        "name": "Vishukkani, the first sight on Vishu morning"
+      },
+      "value_text": "Kerala Tourism says it is believed that seeing this sacred arrangement first thing in the morning brings good fortune for the year ahead.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/vishu/",
+          "title": "Vishu: Kerala New Year Festival | Traditions & Celebrations | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "It is believed that seeing this sacred arrangement first thing in the morning brings good fortune for the year ahead."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-custom-kasavu-near-vishukkani",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:kasavu_near_vishukkani",
+      "value": {
+        "name": "Placing a new kasavu cloth near the Vishukkani"
+      },
+      "value_text": "During the Vishu festival it is customary to place a brand new kasavu cloth near the traditional Vishukkani as a symbol of wealth and prosperity.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kasavu",
+          "title": "Kasavu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "During the Vishu festival, it is customary to place a brand new kasavu cloth near the traditional Vishukkani (lamp) as a symbol of wealth and prosperity."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-custom-pookalam-competitions",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:pookalam_competitions",
+      "value": {
+        "name": "Pookalam (flower carpet) competitions at Onam"
+      },
+      "value_text": "All over Kerala, Pookalam competitions are a common sight on Onam day.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Onam",
+          "title": "Onam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "All over Kerala, Pookalam competitions are a common sight on Onam day."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-custom-sadya-on-banana-leaf",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:sadya_on_banana_leaf",
+      "value": {
+        "name": "Serving sadya on a banana or plantain leaf"
+      },
+      "value_text": "Traditional dishes are served on a banana (plantain) leaf.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/kerala-food/",
+          "title": "Kerala Cuisine: Popular recipes of Kerala Food | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Learn about the Onam festival's traditional dishes served on a plantain leaf, including various vegetarian delights and desserts."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Sadya",
+          "title": "Sadya",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "consisting of a variety of traditional vegetarian dishes and side-dishes usually served on a banana leaf as lunch."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-custom-sadya-on-banana-leaf-lunch",
+      "category": "custom",
+      "attribute": "custom_description",
+      "subject": "topic:sadya_on_banana_leaf",
+      "value": {
+        "name": "Sadya on a banana leaf"
+      },
+      "value_text": "English Wikipedia describes sadya as consisting of a variety of traditional vegetarian dishes and side-dishes usually served on a banana leaf as lunch.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Sadya",
+          "title": "Sadya",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "consisting of a variety of traditional vegetarian dishes and side-dishes usually served on a banana leaf as lunch."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-custom-sadya-on-banana-leaf-onam",
+      "category": "custom",
+      "attribute": "custom_occasion",
+      "subject": "topic:sadya_on_banana_leaf",
+      "value": {
+        "name": "Onam dishes on a plantain leaf"
+      },
+      "value_text": "Kerala Tourism says the Onam festival's traditional dishes are served on a plantain leaf, including various vegetarian delights and desserts.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/kerala-food/",
+          "title": "Kerala Cuisine: Popular recipes of Kerala Food | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Learn about the Onam festival's traditional dishes served on a plantain leaf, including various vegetarian delights and desserts."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-family-vishu-family-time-and-kaineettam",
+      "category": "family",
+      "attribute": "family_custom",
+      "subject": "topic:vishu_family_time_and_kaineettam",
+      "value": {
+        "name": "Vishukkaineetam gifts at Vishu"
+      },
+      "value_text": "At Vishu, elders give money to younger family members.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://www.keralatourism.org/vishu/",
+          "title": "Vishu: Kerala New Year Festival | Traditions & Celebrations | Kerala Tourism",
+          "publisher": "Kerala Tourism (Department of Tourism, Government of Kerala)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:keralatourism.org",
+          "excerpt": "Festivities also include the giving of Vishukkaineetam (gifts of money) by elders to younger members"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Vishu",
+          "title": "Vishu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "elders give a small amount of pocket money to children"
+        }
+      ]
+    },
+    {
+      "id": "in-kl-family-vishu-family-time",
+      "category": "family",
+      "attribute": "family_time",
+      "subject": "topic:vishu_family_time_and_kaineettam",
+      "value": {
+        "name": "Family time at Vishu"
+      },
+      "value_text": "English Wikipedia states that the festival is marked by family time, preparing colourful auspicious items and viewing these as the first thing on the Vishu day (Vishukkani).",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Vishu",
+          "title": "Vishu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The festival is marked by family time, preparing colourful auspicious items and viewing these as the first thing on the Vishu day (Vishukkani)."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-family-tharavad-matrilineal-family",
+      "category": "family",
+      "attribute": "family_custom",
+      "subject": "topic:tharavad_matrilineal_family",
+      "value": {
+        "name": "Marumakkathayam matrilineal joint family (Tharavad)",
+        "tense": "historical system"
+      },
+      "value_text": "Marumakkathayam was a system in Kerala in which descent and inheritance of property passed from the maternal uncle to nephews or nieces, and a tharavad refers to the extended family sharing the ancestral house.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Marumakkathayam",
+          "title": "Marumakkathayam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Through this system, descent and the inheritance of property were passed from the maternal uncle to nephews or nieces."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Tharavad",
+          "title": "Tharavad",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "By extension, the word refers not just to the family's house but also to the extended family that shares that house."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-humour-chakyar-koothu-stand-up",
+      "category": "humour",
+      "attribute": "humour_style",
+      "subject": "topic:chakyar_koothu_stand_up",
+      "value": {
+        "name": "Chakyar Koothu"
+      },
+      "value_text": "Chakyar Koothu is sometimes a traditional equivalent of a modern stand-up comedy performance, including commentary on current sociopolitical events.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Chakyar_koothu",
+          "title": "Chakyar koothu",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Sometimes, however, it is also a traditional equivalent of a modern stand-up comedy performance, including commentary on current sociopolitical events (as well as personal comments directed at audience members)."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-humour-ottan-thullal-satire",
+      "category": "humour",
+      "attribute": "humour_style",
+      "subject": "topic:ottan_thullal_satire",
+      "value": {
+        "name": "Ottan Thullal and Kunchan Nambiar"
+      },
+      "value_text": "Ottan Thullal is a folksy performance often laced with humour intended at criticism of society, and Kunchan Nambiar's works are described as social criticism wrapped in humour.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Ottan_Thullal",
+          "title": "Ottan Thullal",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The folksy performance, often laced with humour intended at criticism of society, is accompanied by music using a mridangam (a barrel-shaped double-headed drum) and/or the handy idakka besides a pair of elathalam cymbals."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Kunchan_Nambiar",
+          "title": "Kunchan Nambiar",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Social criticism wrapped in humour is the hallmark of his works."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-sensitivity-sabarimala-women-entry",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:sabarimala_women_entry",
+      "value": {
+        "topic": "Entry of women to the Sabarimala temple"
+      },
+      "value_text": "Sabarimala temple management places religious restrictions against the entry of women aged 10 to 50, which the source says is based on the temple's tradition of respecting the deity's celibate nature.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Sabarimala_Temple",
+          "title": "Sabarimala Temple",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Temple management places religious restrictions against the entry of women aged 10 to 50. This is based on the tradition of the temple to respect the celibate nature of the deity."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-sensitivity-mullaperiyar-dam-dispute",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:mullaperiyar_dam_dispute",
+      "value": {
+        "topic": "Mullaperiyar Dam dispute between Kerala and Tamil Nadu"
+      },
+      "value_text": "The validity of the Mullaperiyar Dam agreement is under dispute between Kerala and Tamil Nadu, and as of 2013 the matter was pending before a Division Bench of the Supreme Court.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Mullaperiyar_Dam",
+          "title": "Mullaperiyar Dam",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The validity of this agreement is under dispute between the States of Kerala and Tamil Nadu. As of 2013 the matter is pending before a Division Bench of the Supreme Court."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-sensitivity-beef-and-cattle-slaughter",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:beef_and_cattle_slaughter",
+      "value": {
+        "topic": "Beef consumption and cattle slaughter"
+      },
+      "value_text": "Kerala is a major consumer of beef and has no regulation on the slaughter of cow and its progeny, while some Hindus in Kerala do not consume beef and pork according to religious dietary restrictions.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Beef_in_India",
+          "title": "Cattle slaughter in India",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Kerala is a major consumer of beef and has no regulation on the slaughter of cow and its progeny"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Kerala_cuisine",
+          "title": "Kerala cuisine",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Some Hindus in Kerala do not consume beef and pork according to religious dietary restrictions."
+        }
+      ]
+    },
+    {
+      "id": "in-kl-language-official",
+      "category": "language",
+      "attribute": "official_language",
+      "subject": "region:IN-KL",
+      "value": "Malayalam",
+      "value_text": "Malayalam is the official language of Kerala.",
+      "kind": "observed",
+      "language": "ml",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Kerala",
+          "title": "Kerala",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Malayalam is the official language of Kerala and one of the Classical languages of India"
+        }
+      ]
+    }
+  ]
+}

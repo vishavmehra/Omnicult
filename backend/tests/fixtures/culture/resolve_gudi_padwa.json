@@ -1,0 +1,87 @@
+{
+ "recorded_at": "2026-11-17T17:27:43+00:00",
+ "call": {
+  "query": "Gudi Padwa",
+  "language": "en",
+  "region_code": "IN-MH"
+ },
+ "exchanges": [
+  {
+   "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&search=Gudi+Padwa&language=en&uselang=en&type=item&limit=7&format=json",
+   "status": 200,
+   "response": {
+    "searchinfo": {
+     "search": "Gudi Padwa"
+    },
+    "search": [
+     {
+      "id": "Q615384",
+      "title": "Q615384",
+      "pageid": 579609,
+      "concepturi": "http://www.wikidata.org/entity/Q615384",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q615384",
+      "display": {
+       "label": {
+        "value": "Gudi Padwa",
+        "language": "en"
+       },
+       "description": {
+        "value": "Marathi Hindu new year festival",
+        "language": "en"
+       }
+      },
+      "label": "Gudi Padwa",
+      "description": "Marathi Hindu new year festival",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Gudi Padwa"
+      }
+     }
+    ],
+    "success": 1
+   }
+  },
+  {
+   "url": "https://www.wikidata.org/w/api.php?action=wbsearchentities&search=Gudi+Padwa&language=mr&uselang=mr&type=item&limit=7&format=json",
+   "status": 200,
+   "response": {
+    "searchinfo": {
+     "search": "Gudi Padwa"
+    },
+    "search": [
+     {
+      "id": "Q615384",
+      "title": "Q615384",
+      "pageid": 579609,
+      "concepturi": "http://www.wikidata.org/entity/Q615384",
+      "repository": "wikidata",
+      "url": "//www.wikidata.org/wiki/Q615384",
+      "display": {
+       "label": {
+        "value": "गुढीपाडवा",
+        "language": "mr"
+       },
+       "description": {
+        "value": "हिंदू कालदर्शिकेचा पहिला दिवस आणि उत्सव",
+        "language": "mr"
+       }
+      },
+      "label": "गुढीपाडवा",
+      "description": "हिंदू कालदर्शिकेचा पहिला दिवस आणि उत्सव",
+      "match": {
+       "type": "label",
+       "language": "en",
+       "text": "Gudi Padwa"
+      },
+      "aliases": [
+       "Gudi Padwa"
+      ]
+     }
+    ],
+    "success": 1
+   }
+  }
+ ]
+}

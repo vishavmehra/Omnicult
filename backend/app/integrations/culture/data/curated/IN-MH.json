@@ -1,0 +1,1380 @@
+{
+  "region_code": "IN-MH",
+  "dataset_version": "1",
+  "retrieved_on": "2026-11-17",
+  "entries": [
+    {
+      "id": "in-mh-festival-gudi-padwa",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:gudi_padwa",
+      "value": {
+        "name": "Gudi Padwa",
+        "native_name": "गुढी पाडवा"
+      },
+      "value_text": "Gudi Padwa marks the Marathi new year.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/gudi-padwa/",
+          "title": "Gudi Padwa - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Gudi Padwa is one of the most significant festivals in Maharashtra, celebrated as the Marathi New Year."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Gudi_Padwa",
+          "title": "Gudi Padwa",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Gudi Padwa is a spring festival marking the start of the lunisolar new year for Marathi and Konkani Hindus."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-gudi-padwa-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:gudi_padwa",
+      "value": {
+        "name": "Gudi Padwa",
+        "month_text": "first day of the Chaitra month during the waxing phase of the moon"
+      },
+      "value_text": "Maharashtra Tourism states that Gudi Padwa is observed on the first day of the Chaitra month during the waxing phase of the moon.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/gudi-padwa/",
+          "title": "Gudi Padwa - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Observed on the first day of the Chaitra month during the waxing phase of the moon"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-ganesh-chaturthi",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:ganesh_chaturthi",
+      "value": {
+        "name": "Ganesh Chaturthi",
+        "native_name": "गणेश चतुर्थी",
+        "month_text": "around August-September"
+      },
+      "value_text": "Ganesh Chaturthi is celebrated around August to September.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/ganesh-chaturthi/",
+          "title": "Ganesh Chaturthi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Ganesh Chaturthi is celebrated on the Chaturthi (fourth day) of the waxing moon in the Hindu month of Bhadrapada (around August-September)."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Ganesh_Chaturthi",
+          "title": "Ganesh Chaturthi",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "In the Gregorian calendar, Ganesh Chaturthi falls between 22 August and 20 September every year."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-ganesh-chaturthi-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:ganesh_chaturthi",
+      "value": {
+        "name": "Ganesh Chaturthi",
+        "month_text": "Chaturthi (fourth day) of the waxing moon in the Hindu month of Bhadrapada"
+      },
+      "value_text": "Maharashtra Tourism states that Ganesh Chaturthi is celebrated on the Chaturthi (fourth day) of the waxing moon in the Hindu month of Bhadrapada.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/ganesh-chaturthi/",
+          "title": "Ganesh Chaturthi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Ganesh Chaturthi is celebrated on the Chaturthi (fourth day) of the waxing moon in the Hindu month of Bhadrapada (around August-September)."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-ganesh-chaturthi-region",
+      "category": "festival",
+      "attribute": "festival_region",
+      "subject": "festival:ganesh_chaturthi",
+      "value": {
+        "name": "Ganesh Chaturthi",
+        "region_text": "central and western states of India, including Maharashtra"
+      },
+      "value_text": "English Wikipedia lists Maharashtra among the central and western states of India where Ganesh Chaturthi is primarily celebrated at home and in public by local community groups.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Ganesh_Chaturthi",
+          "title": "Ganesh Chaturthi",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "In India, Ganesh Chaturthi is primarily celebrated at home and in public by local community groups in the central and western states of Maharashtra"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-diwali",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:diwali",
+      "value": {
+        "name": "Diwali"
+      },
+      "value_text": "Diwali is a five-day festival.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/diwali/",
+          "title": "Diwali - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Diwali is a five-day festival celebrated across India and even worldwide."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Diwali",
+          "title": "Diwali",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The five-day festival originated in the Indian subcontinent"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-diwali-timing",
+      "category": "festival",
+      "attribute": "festival_timing",
+      "subject": "festival:diwali",
+      "value": {
+        "name": "Diwali",
+        "month_text": "Hindu lunisolar months of Ashvin and Kartika, between around mid-October and mid-November"
+      },
+      "value_text": "English Wikipedia states that Diwali is celebrated during the Hindu lunisolar months of Ashvin and Kartika, between around mid-October and mid-November.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Diwali",
+          "title": "Diwali",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Diwali is celebrated during the Hindu lunisolar months of Ashvin (according to the amanta tradition) and Kārtika – between around mid-October and mid-November."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-makar-sankranti",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:makar_sankranti",
+      "value": {
+        "name": "Makar Sankranti",
+        "month_text": "14th January"
+      },
+      "value_text": "Makar Sankranti is celebrated every year on 14th January and marks the Sun's transition into the zodiac sign of Capricorn.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/makar-sankranti/",
+          "title": "Makar Sankranti - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Celebrated every year on 14th January, Makar Sankranti marks the transition of the Sun into the zodiac sign of Capricorn (Makar)."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-pola",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:pola",
+      "value": {
+        "name": "Pola (Bail Pola)",
+        "native_name": "बैलपोळा"
+      },
+      "value_text": "Pola, or Bail Pola, falls on the Amavasya (new moon day) of the Shravan month.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/bail-pola/",
+          "title": "Bail Pola - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Farmers in Maharashtra celebrate a holiday known as Bail Pola, or Bullock Pola, to show their appreciation for their livestock. On the Amavasya of the Shravan month, farmers across the nation worship their livestock such as cows and bullocks"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Pola_(festival)",
+          "title": "Pola (festival)",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "It falls on the day of the Pithori Amavasya (the new moon day) in the month of Shraavana (usually in August)."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-pola-description",
+      "category": "festival",
+      "attribute": "festival_description",
+      "subject": "festival:pola",
+      "value": {
+        "name": "Pola (Bail Pola)"
+      },
+      "value_text": "Maharashtra Tourism states that farmers in Maharashtra celebrate a holiday known as Bail Pola, or Bullock Pola, to show their appreciation for their livestock.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/bail-pola/",
+          "title": "Bail Pola - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Farmers in Maharashtra celebrate a holiday known as Bail Pola, or Bullock Pola, to show their appreciation for their livestock."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-dahi-handi",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:dahi_handi",
+      "value": {
+        "name": "Dahi Handi",
+        "month_text": "August or September"
+      },
+      "value_text": "Dahi Handi takes place in August or September.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/dahi-handi/",
+          "title": "Dahi Handi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Dahi Handi is observed on the day of Janmashtami, which falls in the month of August or September, according to the Hindu lunar calendar."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Dahi_Handi",
+          "title": "Dahi Handi",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "During the event, which takes place during August or September on the day after Krishna Janmashtami"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-dahi-handi-day-maharashtra-tourism",
+      "category": "festival",
+      "attribute": "festival_day_relative_to_janmashtami",
+      "subject": "festival:dahi_handi",
+      "value": "same day as Krishna Janmashtami",
+      "value_text": "Maharashtra Tourism states that Dahi Handi is observed on the day of Janmashtami.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/dahi-handi/",
+          "title": "Dahi Handi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Dahi Handi is observed on the day of Janmashtami"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-dahi-handi-day-wikipedia",
+      "category": "festival",
+      "attribute": "festival_day_relative_to_janmashtami",
+      "subject": "festival:dahi_handi",
+      "value": "day after Krishna Janmashtami",
+      "value_text": "English Wikipedia states that Dahi Handi takes place on the day after Krishna Janmashtami.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Dahi_Handi",
+          "title": "Dahi Handi",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "During the event, which takes place during August or September on the day after Krishna Janmashtami"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-ashadhi-ekadashi",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:ashadhi_ekadashi",
+      "value": {
+        "name": "Ashadhi Ekadashi",
+        "month_text": "Ashadha month (June-July)"
+      },
+      "value_text": "Ashadhi Ekadashi falls on the eleventh lunar day of the bright fortnight in the Ashadha month (June-July).",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/ashadhi-ekadashi/",
+          "title": "Ashadhi Ekadashi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Falling on the eleventh lunar day of the Shukla Paksha (bright fortnight) in the Ashadha month (June-July), this auspicious occasion holds profound religious and spiritual significance for devotees."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-festival-holi-shimga",
+      "category": "festival",
+      "attribute": "major_festival",
+      "subject": "festival:holi_shimga",
+      "value": {
+        "name": "Holi (Shimga)"
+      },
+      "value_text": "Holi is popularly known as Shimga in the Konkan region of Maharashtra.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/holi/",
+          "title": "Holi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Holi, popularly known as Shimga in the Konkan region of Maharashtra, is one of the most vibrant and culturally rich festivals celebrated in the coastal districts of the state."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-puran-poli",
+      "category": "food",
+      "attribute": "festive_food",
+      "subject": "food:puran_poli",
+      "value": {
+        "name": "Puran poli"
+      },
+      "value_text": "Puran poli is a dish eaten in Maharashtra.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/bail-pola/",
+          "title": "Bail Pola - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "The traditional Maharashtrian dish Puran Poli is being made for the celebration."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Puran_poli",
+          "title": "Puran poli",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "is an Indian sweet flatbread that is popular in South India and mainly in the state of Maharashtra"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-puran-poli-occasion",
+      "category": "food",
+      "attribute": "food_occasion",
+      "subject": "food:puran_poli",
+      "value": {
+        "name": "Puran poli"
+      },
+      "value_text": "Maharashtra Tourism's Bail Pola page states that the traditional Maharashtrian dish Puran Poli is being made for the celebration.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/bail-pola/",
+          "title": "Bail Pola - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "The traditional Maharashtrian dish Puran Poli is being made for the celebration."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-puran-poli-description",
+      "category": "food",
+      "attribute": "food_description",
+      "subject": "food:puran_poli",
+      "value": {
+        "name": "Puran poli"
+      },
+      "value_text": "English Wikipedia describes puran poli as an Indian sweet flatbread.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Puran_poli",
+          "title": "Puran poli",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "is an Indian sweet flatbread that is popular in South India and mainly in the state of Maharashtra"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-modak",
+      "category": "food",
+      "attribute": "festive_food",
+      "subject": "food:modak",
+      "value": {
+        "name": "Modak"
+      },
+      "value_text": "Modak is considered to be the favourite sweet of Ganesha.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/ganesh-chaturthi/",
+          "title": "Ganesh Chaturthi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "The most iconic among these is Modak, believed to be Ganesha’s favorite."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Modak",
+          "title": "Modak",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Modak is considered to be the favourite sweet of the Hindu deity, Ganesha"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-modak-ukadiche",
+      "category": "food",
+      "attribute": "food_description",
+      "subject": "food:modak",
+      "value": {
+        "name": "Ukadiche modak"
+      },
+      "value_text": "Maharashtra Tourism lists Ukadiche Modak as steamed dumplings filled with coconut and jaggery, made with rice flour.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/ganesh-chaturthi/",
+          "title": "Ganesh Chaturthi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Ukadiche Modak: Steamed dumplings filled with coconut and jaggery, made with rice flour."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-misal",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:misal",
+      "value": {
+        "name": "Misal (Misal pav)"
+      },
+      "value_text": "Misal is a dish from Maharashtra.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/flavors-of-maharashtra/",
+          "title": "Flavors of Maharashtra - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Kolhapuri cuisine is not for the faint-hearted – its signature spice blends, infused with garlic and dry coconut, create some of the most flavorful and fiery dishes in Maharashtra. Famous for the iconic Kolhapuri Misal and spicy tambda rassa (red curry), this cuisine leaves a lingering warmth on your taste buds."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Misal_pav",
+          "title": "Misal pav",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "is a dish from the Indian state of Maharashtra"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-misal-kolhapuri",
+      "category": "food",
+      "attribute": "food_description",
+      "subject": "food:misal",
+      "value": {
+        "name": "Kolhapuri Misal"
+      },
+      "value_text": "Maharashtra Tourism's Flavors of Maharashtra page says Kolhapuri cuisine is famous for the iconic Kolhapuri Misal and spicy tambda rassa (red curry).",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/flavors-of-maharashtra/",
+          "title": "Flavors of Maharashtra - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Famous for the iconic Kolhapuri Misal and spicy tambda rassa (red curry), this cuisine leaves a lingering warmth on your taste buds."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-misal-serving",
+      "category": "food",
+      "attribute": "food_serving",
+      "subject": "food:misal",
+      "value": {
+        "name": "Misal pav"
+      },
+      "value_text": "English Wikipedia states that misal pav is served as a breakfast dish, as a snack and also as a full meal.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Misal_pav",
+          "title": "Misal pav",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Misal pav is served as a breakfast dish, as a snack and also as a full meal."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-vada-pav",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:vada_pav",
+      "value": {
+        "name": "Vada pav"
+      },
+      "value_text": "Vada pav is claimed to be a part of the culture of Mumbaikars.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Vada_pav",
+          "title": "Vada pav",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "vada pav is claimed to be a part of the culture of Mumbaikars"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-flatbreads-and-rice",
+      "category": "food",
+      "attribute": "staple_food",
+      "subject": "food:flatbreads_and_rice",
+      "value": {
+        "name": "Flatbreads and rice"
+      },
+      "value_text": "Staple dishes of Maharashtrian cuisine are based on a variety of flatbreads and rice.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Maharashtrian_cuisine",
+          "title": "Maharashtrian cuisine",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Staple dishes in the cuisine are based on a variety of flatbreads and rice"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-tilgul",
+      "category": "food",
+      "attribute": "festive_food",
+      "subject": "food:tilgul",
+      "value": {
+        "name": "Tilgul"
+      },
+      "value_text": "Exchanging tilgul, made from sesame seeds and jaggery, is a Makar Sankranti tradition.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/makar-sankranti/",
+          "title": "Makar Sankranti - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "One of the key traditions is exchanging sesame seeds and jaggery (tilgul), symbolizing unity, love, and goodwill among friends and family."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Makar_Sankranti",
+          "title": "Makar Sankranti",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Makar Sankranti is celebrated by the exchange of tilgul, sweets made from sesame seeds and jaggery"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-food-tilgul-greeting",
+      "category": "food",
+      "attribute": "food_custom",
+      "subject": "food:tilgul",
+      "value": {
+        "name": "Tilgul"
+      },
+      "value_text": "English Wikipedia states that in Maharashtra, Makar Sankranti is celebrated by the exchange of tilgul, sweets made from sesame seeds and jaggery, accompanied by the traditional greeting \"Tilgul ghya, goad goad bola\".",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Makar_Sankranti",
+          "title": "Makar Sankranti",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "In Maharashtra, Makar Sankranti is celebrated by the exchange of tilgul, sweets made from sesame seeds and jaggery, accompanied by the traditional greeting \"Tilgul ghya, goad goad bola\" (\"Accept this tilgul and speak sweetly\")."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-colour-makar-sankranti-black",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:makar_sankranti_black",
+      "value": {
+        "name": "black",
+        "tradition": "Makar Sankranti"
+      },
+      "value_text": "The article's Maharashtra section describes wearing black clothing on Makar Sankranti as a regional custom, explained as keeping the body warm in winter, and notes that black is otherwise barred on festival days.",
+      "kind": "interpretation",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Makar_Sankranti",
+          "title": "Makar Sankranti",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Wearing black clothing on Makar Sankranti is a unique regional custom. Since Sakranti falls in the winter months, wearing black keeps the body warm. This is an essential reason behind wearing black, which is otherwise barred on festival days."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-colour-rang-panchami",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:rang_panchami",
+      "value": {
+        "name": "festival of colours",
+        "tradition": "Rang Panchami"
+      },
+      "value_text": "Rang Panchami is observed on the fifth day after Holika Dahan and takes its name from \"Rang\" (colour) and \"Panchmi\" (fifth day).",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/rangpanchmi/",
+          "title": "Rangpanchmi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "This festival is observed on the fifth day after Holika Dahan and derives its name from “Rang” (color) and “Panchmi” (fifth day)."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-colour-haldi-kunku-wedding",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:haldi_kunku_wedding",
+      "value": {
+        "name": "turmeric (yellow) and vermilion (red)",
+        "tradition": "Marathi Hindu wedding Akshata ritual"
+      },
+      "value_text": "In a Marathi Hindu wedding ritual named Akshata, people throw haldi (turmeric) and kunku (vermilion) coloured rice grains on the couple.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Marathi_people",
+          "title": "Marathi people",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "A ritual named Akshata is performed in which people around the groom and bride throw haldi (turmeric) and kunku (vermilion) coloured rice grains on the couple."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-colour-hartalika-green-gold",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:hartalika_green_gold",
+      "value": {
+        "name": "green and gold",
+        "tradition": "Hartalika (Harita Gauri)"
+      },
+      "value_text": "The third day of the month of Bhadrapada (usually around August/September) is celebrated as Hartalika in honour of Harita Gauri, the green and golden goddess of harvests and prosperity.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Marathi_people",
+          "title": "Marathi people",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The third day of the month of Bhadrapada (usually around August/September) is celebrated as Hartalika in honour of Harita Gauri or the green and golden goddess of harvests and prosperity."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-colour-warli-brown-white",
+      "category": "colour",
+      "attribute": "colour_association",
+      "subject": "colour:warli_brown_white",
+      "value": {
+        "name": "brown and white",
+        "tradition": "Warli painting"
+      },
+      "value_text": "Warli wall paintings use basic geometric shapes (a circle, a triangle and a square) and a set of colours usually consisting of brown and white.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Warli_painting",
+          "title": "Warli painting",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "These rudimentary wall paintings use a set of basic geometric shapes: a circle, a triangle, and a square and also a set of colours usually consisting of brown and white."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-symbol-gudi",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:gudi",
+      "value": {
+        "name": "Gudi"
+      },
+      "value_text": "The Gudi (Gudhi) is a symbol associated with Gudi Padwa.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/gudi-padwa/",
+          "title": "Gudi Padwa - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "On this special day, a Gudi is raised outside homes as a symbol of victory and prosperity."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Culture_of_Maharashtra",
+          "title": "Culture of Maharashtra",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Gudhi Padwa is celebrated as the first day of the Hindu year. Gudhi is symbol-characterized by bamboo stick with a coloured silk cloth and garlanded with flowers and sweet a top."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-symbol-gudi-meaning",
+      "category": "symbol",
+      "attribute": "symbol_meaning",
+      "subject": "symbol:gudi",
+      "value": {
+        "name": "Gudi"
+      },
+      "value_text": "Maharashtra Tourism states that on Gudi Padwa a Gudi is raised outside homes as a symbol of victory and prosperity.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/gudi-padwa/",
+          "title": "Gudi Padwa - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "On this special day, a Gudi is raised outside homes as a symbol of victory and prosperity."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-moment-maharashtra-day",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:maharashtra_day",
+      "value": {
+        "name": "Maharashtra Day"
+      },
+      "value_text": "Maharashtra Day marks the formation of the state of Maharashtra.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/maharashtra-din/",
+          "title": "Maharashtra Din - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Maharashtra Day, celebrated on 1st May every year, marks the foundation of the state of Maharashtra."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Maharashtra_Day",
+          "title": "Maharashtra Day",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "commemorating the formation of the state of Maharashtra in India"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-moment-maharashtra-day-date",
+      "category": "moment",
+      "attribute": "moment_date",
+      "subject": "moment:maharashtra_day",
+      "value": {
+        "name": "Maharashtra Day",
+        "date_text": "1 May"
+      },
+      "value_text": "Maharashtra Tourism states that Maharashtra Day is celebrated on 1st May every year.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/maharashtra-din/",
+          "title": "Maharashtra Din - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Maharashtra Day, celebrated on 1st May every year"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-moment-maharashtra-day-formation",
+      "category": "moment",
+      "attribute": "moment_description",
+      "subject": "moment:maharashtra_day",
+      "value": {
+        "name": "Maharashtra Day",
+        "date_text": "1 May 1960"
+      },
+      "value_text": "English Wikipedia states that the state of Maharashtra was formed from the division of the Bombay State on 1 May 1960.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Maharashtra_Day",
+          "title": "Maharashtra Day",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "from the division of the Bombay State on 1 May 1960."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-moment-shivaji-jayanti",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:shivaji_jayanti",
+      "value": {
+        "name": "Shivaji Maharaj Jayanti",
+        "date_text": "February 19"
+      },
+      "value_text": "Shree Chhatrapati Shivaji Maharaj Jayanti, the birth anniversary of Shivaji Maharaj, is celebrated every year on February 19.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/chh-shivaji-maharaj-jayanti/",
+          "title": "Chh. Shivaji maharaj jayanti - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Shree Chhatrapati Shivaji Maharaj Jayanti is celebrated every year on February 19."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-moment-marathi-language-day",
+      "category": "moment",
+      "attribute": "cultural_moment",
+      "subject": "moment:marathi_language_day",
+      "value": {
+        "name": "Marathi Language Pride Day",
+        "date_text": "27 February",
+        "native_name": "मराठी भाषा गौरव दिन"
+      },
+      "value_text": "27 February is listed as Marathi Language Pride Day, one of two days celebrated as Marathi Language Day in Maharashtra.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Marathi_Language_Day",
+          "title": "Marathi Language Day",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "27 February - \"Marathi Language Pride Day\" (मराठी भाषा गौरव दिन)"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-humour-tamasha-loud-humour",
+      "category": "humour",
+      "attribute": "humour_style",
+      "subject": "topic:tamasha_loud_humour",
+      "value": {
+        "name": "loud humour and suggestive lyrics (tamasha)"
+      },
+      "value_text": "Main elements of tamasha include loud humour, suggestive lyrics and dance numbers, which proved influential on the Bollywood idiom.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Tamasha",
+          "title": "Tamasha",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Main elements of tamasha, like loud humour, suggestive lyrics and dance numbers, proved influential in the development the Bollywood idiom, which is based in Mumbai."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-family-kuladevata",
+      "category": "family",
+      "attribute": "family_custom",
+      "subject": "topic:kuladevata",
+      "value": {
+        "name": "kuladevata (family deity)"
+      },
+      "value_text": "Most Marathi families have their own family patron or protective deity, the kuladevata.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Marathi_people",
+          "title": "Marathi people",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Most Marathi families have their own family patron or protective deity or the kuladevata"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-family-bhau-beej",
+      "category": "family",
+      "attribute": "family_custom",
+      "subject": "topic:bhau_beej",
+      "value": {
+        "name": "Bhau Beej"
+      },
+      "value_text": "Bhau Beej, the fifth day of Diwali, celebrates the bond between brothers and sisters.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/diwali/",
+          "title": "Diwali - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Day 5 (Bhau Beej): Celebrates the bond between brothers and sisters."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-custom-haldi-kumkum",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:haldi_kumkum",
+      "value": {
+        "name": "haldi-kumkum"
+      },
+      "value_text": "Haldi-kumkum ceremonies are held in Maharashtra.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/makar-sankranti/",
+          "title": "Makar Sankranti - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "In Maharashtra, women host haldi-kumkum ceremonies, children enjoy colorful kite festivals, and families come together for delicious feasts."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Haldi_Kumkum",
+          "title": "Haldi Kumkum",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The ceremony is particularly popular in the Deccan Indian states of Maharashtra"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-custom-haldi-kumkum-hosts",
+      "category": "custom",
+      "attribute": "custom_participants",
+      "subject": "topic:haldi_kumkum",
+      "value": {
+        "name": "haldi-kumkum"
+      },
+      "value_text": "Maharashtra Tourism's Makar Sankranti page states that in Maharashtra, women host haldi-kumkum ceremonies.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/makar-sankranti/",
+          "title": "Makar Sankranti - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "In Maharashtra, women host haldi-kumkum ceremonies, children enjoy colorful kite festivals, and families come together for delicious feasts."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-custom-haldi-kumkum-prevalence",
+      "category": "custom",
+      "attribute": "custom_prevalence",
+      "subject": "topic:haldi_kumkum",
+      "value": {
+        "name": "haldi-kumkum"
+      },
+      "value_text": "English Wikipedia states that the haldi kumkum ceremony is particularly popular in the Deccan Indian states, including Maharashtra.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Haldi_Kumkum",
+          "title": "Haldi Kumkum",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The ceremony is particularly popular in the Deccan Indian states of Maharashtra"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-custom-pandharpur-wari",
+      "category": "custom",
+      "attribute": "custom",
+      "subject": "topic:pandharpur_wari",
+      "value": {
+        "name": "Pandharpur Wari"
+      },
+      "value_text": "Devotees go on foot in processions to Pandharpur.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/ashadhi-ekadashi/",
+          "title": "Ashadhi Ekadashi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "During this day the devotees keep fast the whole day and they go walking in huge processions to Pandharpur."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Pandharpur_Wari",
+          "title": "Pandharpur Vari",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "from their respective shrines to Pandharpur. Many pilgrims join this procession on foot."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-custom-pandharpur-wari-ekadashi",
+      "category": "custom",
+      "attribute": "custom_timing",
+      "subject": "topic:pandharpur_wari",
+      "value": {
+        "name": "Pandharpur Wari"
+      },
+      "value_text": "Maharashtra Tourism's Ashadhi Ekadashi page states that on this day the devotees keep fast the whole day and go walking in huge processions to Pandharpur.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/ashadhi-ekadashi/",
+          "title": "Ashadhi Ekadashi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "During this day the devotees keep fast the whole day and they go walking in huge processions to Pandharpur."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-custom-pandharpur-wari-route",
+      "category": "custom",
+      "attribute": "custom_description",
+      "subject": "topic:pandharpur_wari",
+      "value": {
+        "name": "Pandharpur Wari"
+      },
+      "value_text": "English Wikipedia states that marches happen on foot from various locations in Maharashtra to the Vithoba Temple.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Pandharpur_Wari",
+          "title": "Pandharpur Vari",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Marches happen on foot from various locations in Maharashtra to Vithoba Temple"
+        }
+      ]
+    },
+    {
+      "id": "in-mh-sensitivity-cattle-slaughter-law",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:cattle_slaughter_law",
+      "value": {
+        "topic": "cow slaughter and beef sale ban"
+      },
+      "value_text": "Wikipedia reports that the Maharashtra cow slaughter ban was later extended to ban the sale and export of beef, with a punishment of 5 years jail and/or a 10,000 rupee fine for possession or sale.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Cattle_slaughter_in_India",
+          "title": "Cattle slaughter in India",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Maharashtra cow slaughter ban was later extended to ban the sale and export of beef, with a punishment of 5 years jail, and/or a ₹ 10,000 fine for possession or sale."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-sensitivity-belgaum-border-dispute",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:belgaum_border_dispute",
+      "value": {
+        "topic": "Karnataka-Maharashtra border dispute over Belgaum"
+      },
+      "value_text": "The Belgaum border dispute is a dispute between Karnataka and Maharashtra over the administration of the city of Belgaum and surrounding areas.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Belgaum_border_dispute",
+          "title": "Belgaum border dispute",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "is a dispute between the Indian states of Karnataka and Maharashtra over the administration of the city of Belgaum and surrounding areas."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-sensitivity-maratha-reservation",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:maratha_reservation",
+      "value": {
+        "topic": "Maratha reservation demand"
+      },
+      "value_text": "The demand for Maratha reservation began in 1981 when Annasaheb Patil, a leader of the Mathadi Labour Union, organised a rally in Mumbai advocating for the cause.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Maratha_reservation_agitation",
+          "title": "Maratha reservation agitation",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The demand for Maratha reservation began in 1981, when Annasaheb Patil, a leader of the Mathadi Labour Union, organised a rally in Mumbai advocating for the cause."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-sensitivity-dahi-handi-safety-limits",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:dahi_handi_safety_limits",
+      "value": {
+        "topic": "age and height limits on Dahi Handi human pyramids"
+      },
+      "value_text": "The Bombay High Court ruled that the minimum age for Dahi Handi participants should be raised to 18 years and the pyramid height should be no more than 20 feet due to safety reasons.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Dahi_Handi",
+          "title": "Dahi Handi",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "The Bombay High Court later ruled in August that the minimum age should be raised to 18 years and height of the pyramid should be no more than 20 feet due to safety reasons."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-sensitivity-shivaji-book-ban",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:shivaji_book_ban",
+      "value": {
+        "topic": "depiction of Shivaji and the 2004 book ban"
+      },
+      "value_text": "The article on James Laine, author of a controversial book on Shivaji, states that after attacks and public unrest the book was banned in Maharashtra in January 2004.",
+      "kind": "interpretation",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/James_Laine",
+          "title": "James Laine",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "In view of the attacks and the public unrest, the book was banned in the state of Maharashtra in January 2004."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-sensitivity-ganesh-idol-eco",
+      "category": "sensitivity",
+      "attribute": "sensitivity",
+      "subject": "topic:ganesh_idol_eco",
+      "value": {
+        "topic": "eco-friendly Ganesh Chaturthi idols and water bodies"
+      },
+      "value_text": "Maharashtra Tourism notes a growing emphasis on eco-friendly Ganesh Chaturthi, including clay idols, natural colours and smaller idols that cause less harm to water bodies.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/festivals/ganesh-chaturthi/",
+          "title": "Ganesh Chaturthi - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "In recent years, there has been a growing emphasis on celebrating eco-friendly Ganesh Chaturthi. This includes using clay idols, natural colors, and smaller idols that dissolve easily, causing less harm to water bodies."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-symbol-paithani-peacock",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:paithani_peacock",
+      "value": {
+        "name": "peacock design on the Paithani padar"
+      },
+      "value_text": "Paithani is characterised by selvedges of an oblique square design and a padar with a peacock design.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Paithani",
+          "title": "Paithani",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Paithani is characterised by selvedges of an oblique square design, and a padar with a peacock design."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-symbol-ashtavinayak",
+      "category": "symbol",
+      "attribute": "symbol_association",
+      "subject": "symbol:ashtavinayak",
+      "value": {
+        "name": "Ashtavinayak (eight Ganesha temples)"
+      },
+      "value_text": "Maharashtra Tourism refers to eight revered Ashtavinayak temples dedicated to Lord Ganesha.",
+      "kind": "observed",
+      "language": null,
+      "sources": [
+        {
+          "url": "https://maharashtratourism.gov.in/ashtavinayak/pali/",
+          "title": "Pali - Department of Tourism Maharashtra",
+          "publisher": "Maharashtra Tourism (Directorate of Tourism, Government of Maharashtra)",
+          "source_type": "curated_reference",
+          "independence_group": "gov:maharashtratourism.gov.in",
+          "excerpt": "Among the eight revered Ashtavinayak temples dedicated to Lord Ganesha, Ballaleshwar holds a unique distinction—it is the only temple named after a devotee rather than the deity himself."
+        }
+      ]
+    },
+    {
+      "id": "in-mh-language-official",
+      "category": "language",
+      "attribute": "official_language",
+      "subject": "region:IN-MH",
+      "value": "Marathi",
+      "value_text": "Marathi is the official language of Maharashtra.",
+      "kind": "observed",
+      "language": "mr",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Maharashtra",
+          "title": "Maharashtra",
+          "publisher": "Wikipedia",
+          "source_type": "wikipedia",
+          "independence_group": "wikimedia",
+          "excerpt": "Marathi is the official language, spoken by 68.9%."
+        }
+      ]
+    }
+  ]
+}
