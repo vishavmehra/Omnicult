@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<title>Aamod (fictional brand, Omnicult demo)</title>
+<circle cx="100" cy="100" r="98" fill="#0E4D58"/>
+<circle cx="100" cy="100" r="88" fill="none" stroke="#C99A3B" stroke-width="3"/>
+<path d="M100,38 C108,58 124,74 123,94 C122,110 112,119 100,119 C88,119 78,110 77,94 C76,74 92,58 100,38 Z" fill="#F2A33A"/>
+<path d="M100,68 C105,81 112,90 111,100 C110,109 105,113 100,113 C95,113 90,109 89,100 C88,90 95,81 100,68 Z" fill="#FBF1DD"/>
+<path d="M44,120 C70,131 130,131 156,120 C150,146 128,160 100,160 C72,160 50,146 44,120 Z" fill="#FBF1DD"/>
+<path d="M44,120 C70,131 130,131 156,120" fill="none" stroke="#C99A3B" stroke-width="3" stroke-linecap="round"/>
+<circle cx="82" cy="173" r="4.5" fill="#C99A3B"/><circle cx="100" cy="177" r="4.5" fill="#C99A3B"/>
+<circle cx="118" cy="173" r="4.5" fill="#C99A3B"/>
+</svg>

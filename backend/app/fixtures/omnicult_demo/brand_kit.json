@@ -1,0 +1,109 @@
+{
+  "fixture": {
+    "id": "omnicult-demo-brand-kit-aamod",
+    "version": 1,
+    "kind": "demo_fixture",
+    "label": "Demonstration fixture: Aamod is a fictional brand created for the Omnicult demo. Any resemblance to a real company is unintended."
+  },
+  "brand_id": "demo-brand-aamod",
+  "name": "Aamod",
+  "fictional": true,
+  "name_meaning": "From Sanskrit आमोद (aamod): delight, joy; also fragrance.",
+  "category": "Festive sweets and snacks for gifting",
+  "description": "A packaged festive sweets brand. Its signature product, the Aamod Festive Tin, holds a region-specific assortment of traditional festive sweets and savouries, packed for gifting and delivered before the festival day.",
+  "name_check": {
+    "checked_at": "2026-11-17",
+    "method": "Web searches for the name together with sweets, mithai, foods and gifting in India, and for the bare name as a brand.",
+    "result": "No existing well-known brand named Aamod was found in food, sweets or gifting. The nearest hit was AMMOD, an unrelated US trademark.",
+    "rejected_candidates": [
+      {"name": "Mithora", "reason": "A small sweets business with this name has a website. Also, in Marathi मीठ (meeth) means salt."},
+      {"name": "Madhuvi", "reason": "Too close to an existing 'Madhvi Sweets'; and in Tamil மது (madhu) commonly means liquor."}
+    ]
+  },
+  "logo": {
+    "description": "A lit diya in a peacock-teal disc: marigold flame, cream lamp bowl, three rangoli dots and a brass ring. Wordmark 'Aamod' in DM Serif Display, converted to outlines.",
+    "lockups": [
+      {"id": "primary", "svg": "brand/logo.svg", "png": "brand/logo.png", "use": "Horizontal, teal wordmark, on light backgrounds."},
+      {"id": "reversed", "svg": "brand/logo_reversed.svg", "png": "brand/logo_reversed.png", "use": "Horizontal, cream wordmark, on teal or dark photography."},
+      {"id": "stacked", "svg": "brand/logo_stacked.svg", "png": "brand/logo_stacked.png", "use": "Pack medallion and square formats."},
+      {"id": "mark", "svg": "brand/logo_mark.svg", "png": "brand/logo_mark.png", "use": "Avatar, favicon and sizes where the wordmark would be illegible."}
+    ],
+    "clear_space": "At least a quarter of the mark's diameter on every side.",
+    "min_width_px": {"horizontal": 160, "stacked": 96, "mark": 32},
+    "rules": [
+      "Never recolour, stretch, rotate, outline or add effects to the logo.",
+      "Keep the Latin wordmark in every region; never translate or transliterate the wordmark inside the logo.",
+      "Use the reversed lockup on teal or dark backgrounds."
+    ]
+  },
+  "colours": [
+    {"id": "peacock-teal", "name": "Peacock Teal", "hex": "#0E4D58", "role": "Primary: pack body, end-card background, wordmark."},
+    {"id": "marigold", "name": "Marigold", "hex": "#F2A33A", "role": "Accent: flame, highlights, tagline on dark backgrounds."},
+    {"id": "ghee-cream", "name": "Ghee Cream", "hex": "#FBF1DD", "role": "Light background, text on dark backgrounds, pack medallion."},
+    {"id": "kumkum", "name": "Kumkum", "hex": "#B8323A", "role": "Call-to-action buttons only."},
+    {"id": "brass", "name": "Brass", "hex": "#C99A3B", "role": "Rings, rules, pack lid and band. Decorative only, not for text."},
+    {"id": "jaggery", "name": "Jaggery", "hex": "#3B2618", "role": "Body text on light backgrounds."}
+  ],
+  "contrast": {
+    "method": "WCAG 2.x relative luminance, calculated",
+    "pairs": [
+      {"text": "ghee-cream", "background": "peacock-teal", "ratio": 8.43},
+      {"text": "marigold", "background": "peacock-teal", "ratio": 4.54},
+      {"text": "ghee-cream", "background": "kumkum", "ratio": 5.27},
+      {"text": "jaggery", "background": "ghee-cream", "ratio": 12.68},
+      {"text": "brass", "background": "peacock-teal", "ratio": 3.68, "note": "Below 4.5:1, so brass is never used for text."}
+    ]
+  },
+  "fonts": [
+    {"family": "DM Serif Display", "weights": [400], "scripts": ["Latn"], "role": "Wordmark, English headlines, product name and tagline.", "license": "OFL-1.1", "source": "https://fonts.google.com/specimen/DM+Serif+Display"},
+    {"family": "Noto Serif Devanagari", "weights": [700], "scripts": ["Deva"], "role": "Marathi and Hindi headlines.", "license": "OFL-1.1", "source": "https://fonts.google.com/noto/specimen/Noto+Serif+Devanagari"},
+    {"family": "Noto Sans Devanagari", "weights": [400, 600], "scripts": ["Deva"], "role": "Marathi and Hindi body, captions, CTA and small print.", "license": "OFL-1.1", "source": "https://fonts.google.com/noto/specimen/Noto+Sans+Devanagari"},
+    {"family": "Noto Sans", "weights": [400, 600], "scripts": ["Latn"], "role": "English body, CTA and small print next to Indic text.", "license": "OFL-1.1", "source": "https://fonts.google.com/noto/specimen/Noto+Sans"},
+    {"family": "Noto Serif Tamil", "weights": [700], "scripts": ["Taml"], "role": "Tamil headlines (adaptations).", "license": "OFL-1.1", "source": "https://fonts.google.com/noto/specimen/Noto+Serif+Tamil"},
+    {"family": "Noto Sans Tamil", "weights": [400, 600], "scripts": ["Taml"], "role": "Tamil body and captions (adaptations).", "license": "OFL-1.1", "source": "https://fonts.google.com/noto/specimen/Noto+Sans+Tamil"},
+    {"family": "Noto Serif Malayalam", "weights": [700], "scripts": ["Mlym"], "role": "Malayalam headlines (adaptations).", "license": "OFL-1.1", "source": "https://fonts.google.com/noto/specimen/Noto+Serif+Malayalam"},
+    {"family": "Noto Sans Malayalam", "weights": [400, 600], "scripts": ["Mlym"], "role": "Malayalam body and captions (adaptations).", "license": "OFL-1.1", "source": "https://fonts.google.com/noto/specimen/Noto+Sans+Malayalam"},
+    {"family": "Noto Serif Bengali", "weights": [700], "scripts": ["Beng"], "role": "Bengali headlines (adaptations).", "license": "OFL-1.1", "source": "https://fonts.google.com/noto/specimen/Noto+Serif+Bengali"},
+    {"family": "Noto Sans Bengali", "weights": [400, 600], "scripts": ["Beng"], "role": "Bengali body and captions (adaptations).", "license": "OFL-1.1", "source": "https://fonts.google.com/noto/specimen/Noto+Sans+Bengali"}
+  ],
+  "typography_rules": [
+    "Indic text is always rendered in code with these fonts (HarfBuzz shaping), never drawn by an image model.",
+    "One headline face per script: Noto Serif <script> Bold; English headlines in DM Serif Display.",
+    "Captions at least 40 px tall on a 1080 x 1920 frame."
+  ],
+  "tone_of_voice": {
+    "summary": "Warm, familial and gently playful. Celebrates shared festive rituals through specific, sensory detail.",
+    "traits": ["warm", "familial", "specific", "gently playful", "inclusive"],
+    "do": [
+      "Speak like a member of the family, not a salesperson.",
+      "Use each region's own words for its festivals, foods and relationships.",
+      "Show real moments of giving: siblings, grandparents, neighbours.",
+      "Keep calls to action practical: delivery dates and how to order."
+    ],
+    "dont": [
+      "No health, nutrition or financial claims.",
+      "No superiority or No. 1 claims unless independently substantiated, with the source and date shown.",
+      "No stereotypes or caricature of any community; never mock a custom.",
+      "Never borrow one region's festival words for another region."
+    ]
+  },
+  "tagline": {"text": "Every bond, a little sweeter.", "language": "en", "script": "Latn", "locked": true, "translate": false, "note": "Shown and voiced in English in every region."},
+  "protected_terms": [
+    {"term": "Aamod", "rule": "Never translate. Transliterate only as listed in the Brand Glossary."},
+    {"term": "Aamod Festive Tin", "rule": "Never translate. Transliterate only as listed in the Brand Glossary."},
+    {"term": "Every bond, a little sweeter.", "rule": "Never translate or alter."}
+  ],
+  "never_change": [
+    {"id": "logo", "description": "Logo artwork, colours and proportions, in every lockup.", "assets": ["brand/logo.svg", "brand/logo_reversed.svg", "brand/logo_stacked.svg", "brand/logo_mark.svg"]},
+    {"id": "product_pack", "description": "The Aamod Festive Tin exterior: cylindrical peacock-teal tin, brass-gold lid and base rim, gold paisley band, cream medallion with the stacked logo. The assortment inside may change by region; the tin may not.", "assets": ["brand/pack.png"], "regions": {"medallion_bbox": [0.3182, 0.4355, 0.3622, 0.3925]}, "bbox_note": "Normalised [x, y, w, h] within brand/pack.png."},
+    {"id": "tagline", "description": "The English tagline on end cards and key visuals.", "text": "Every bond, a little sweeter."}
+  ],
+  "product_images": [
+    {"id": "pack", "path": "brand/pack.png", "width": 773, "height": 721, "background": "transparent", "description": "Branded packshot of the Aamod Festive Tin.", "provenance": "Tin generated by gemini-3.1-flash-image (no text requested); cut out, medallion cleaned and stacked logo composited in code."},
+    {"id": "pack_reference", "path": "brand/pack_reference.png", "width": 1024, "height": 1024, "background": "white", "description": "The same tin with the emblem only and no lettering. Given to the image model as a reference so every generated scene shows the same pack.", "provenance": "Derived from the generated tin in code."}
+  ],
+  "claims_policy": {
+    "allowed": ["True product facts of the fictional product: contents, net weight (750 g), delivery window."],
+    "forbidden": ["Health, nutrition or wellness claims.", "Financial claims.", "Superiority, leadership or No. 1 claims without independent substantiation."]
+  }
+}

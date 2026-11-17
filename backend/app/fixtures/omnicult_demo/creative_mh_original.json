@@ -1,0 +1,974 @@
+{
+  "fixture": {
+    "id": "omnicult-demo-creative-mh-original",
+    "version": 1,
+    "kind": "demo_fixture",
+    "label": "Demonstration fixture: original creative of a fictional brand, made for the Omnicult demo. Not a real advertisement; imagery and voice are AI-generated, all text is rendered in code."
+  },
+  "brand_id": "demo-brand-aamod",
+  "campaign_id": "demo-campaign-aamod-diwali-2027",
+  "region_code": "IN-MH",
+  "languages": [
+    "mr",
+    "en"
+  ],
+  "scripts": [
+    "Deva",
+    "Latn"
+  ],
+  "creatives": [
+    {
+      "id": "demo-creative-aamod-mh-video",
+      "format": "vertical_video",
+      "channel_fit": [
+        "instagram_reels",
+        "youtube_shorts"
+      ],
+      "asset": {
+        "path": "creative/mh_original/video.mp4",
+        "bytes": 6667461,
+        "sha256": "d6adeb15cab9ce46a5f6f8a0c69aee1be38288f3d7ee6b22137f40bbe7e006a6",
+        "mime_type": "video/mp4",
+        "width": 1080,
+        "height": 1920,
+        "fps": 30,
+        "duration_ms": 29400
+      },
+      "scenes": [
+        {
+          "id": "mh-s1",
+          "start_ms": 0,
+          "end_ms": 4711,
+          "description": "Dusk on a Pune apartment balcony on Diwali: glowing akash kandil (star lantern), clay panti lamps on the ledge, rangoli at the doorway; the Aamod tin stands among the lamps.",
+          "plate": "creative/mh_original/scenes/mh-s1_balcony.jpg",
+          "on_screen_text_en": "Diwali means faral!",
+          "image_model": "gemini-3.1-flash-image",
+          "image_prompt": "A vertical 9:16 photograph at dusk on the balcony of an older apartment building in Pune, Maharashtra, on a Diwali evening. A large traditional akash kandil, a star-shaped paper lantern in saffron, red and yellow with paper tassels, hangs from the balcony ceiling and glows from inside. A row of small clay panti oil lamps burns along the balcony ledge. A colourful rangoli of dots and flower patterns decorates the balcony floor near the open doorway. Strings of warm lights; the neighbourhood's lit windows softly blurred in the background against a deep blue sky. On the ledge, among the lamps, stands the tin from the reference image, facing the camera. No people. Keep the upper third of the frame calm, mostly sky and soft lantern glow, for a headline. Keep the lower fifth of the frame simple."
+        },
+        {
+          "id": "mh-s2",
+          "start_ms": 4711,
+          "end_ms": 10191,
+          "description": "Grandmother (aaji) in a Paithani saree and her granddaughter arrange homemade faral (chakli, karanji, besan ladoo, shankarpali) on a brass plate; the tin on the table.",
+          "plate": "creative/mh_original/scenes/mh-s2_aaji.jpg",
+          "on_screen_text_en": "The taste of Grandma's cooking",
+          "image_model": "gemini-3.1-flash-image",
+          "image_prompt": "A vertical 9:16 photograph inside a warm Maharashtrian family home on Diwali. A grandmother in her late sixties, wearing a purple Paithani silk saree with a green and gold peacock border, and her granddaughter in her twenties, wearing a simple yellow festive kurta, sit at a wooden dining table, smiling and talking as they arrange homemade Diwali faral on a large round brass plate: spiral chakli, crescent-shaped karanji, round yellow besan ladoo and small diamond-shaped shankarpali. The closed tin from the reference image stands on the table next to the plate, facing the camera. Marigold garlands on the doorway behind them, clay diyas glowing on a shelf, soft evening window light. Candid, joyful, documentary-style family moment. Keep the upper quarter of the frame uncluttered (wall and garlands) for a headline."
+        },
+        {
+          "id": "mh-s3",
+          "start_ms": 10191,
+          "end_ms": 15032,
+          "description": "Product hero: the open Aamod tin filled with faral on a carved table with diyas and marigolds.",
+          "plate": "creative/mh_original/scenes/mh-s3_tin.jpg",
+          "on_screen_text_en": "Faral that tastes like home, now in one tin",
+          "image_model": "gemini-3.1-flash-image",
+          "image_prompt": "A vertical 9:16 close-up food photograph. The tin from the reference image stands on a carved wooden table, its brass-gold lid leaning against its side, filled to the top with Maharashtrian Diwali faral: spiral chakli, crescent-shaped karanji, round besan ladoo and diamond-shaped shankarpali. The tin's front with the round cream medallion faces the camera. Around it: small glowing clay diyas, a few marigold flowers and petals, a red and gold cloth, warm bokeh lights in the background. Appetising, premium, warm golden light. The tin is the hero, placed in the lower middle of the frame; keep the upper third calm and dark for a headline."
+        },
+        {
+          "id": "mh-s4",
+          "start_ms": 15032,
+          "end_ms": 19912,
+          "description": "Bhau Beej: the sister (the granddaughter from scene 2) performs aukshan (aarti) for her brother seated on a pat; he gives her the Aamod tin.",
+          "plate": "creative/mh_original/scenes/mh-s4_bhaubeej.jpg",
+          "on_screen_text_en": "Give a sweet gift this Bhau Beej",
+          "image_model": "gemini-3.1-flash-image",
+          "image_prompt": "A vertical 9:16 photograph of a Bhau Beej celebration in a Maharashtrian home: two siblings close in age. The sister, a young woman of about twenty-two, is the young woman shown in the second reference image (same face, hair and features); she is not middle-aged. She wears a green festive silk saree and holds a brass aarti plate with a small lit diya, rice and kumkum, performing the aukshan ritual for her brother, a young man of about eighteen. He sits cross-legged on a low wooden pat with a colourful rangoli in front of it, wearing a cream kurta, and with both hands he presents her the tin from the first reference image. Both are laughing warmly. Warm diya light, marigold garlands, a softly lit home in the background. Keep the upper quarter of the frame uncluttered for a headline."
+        },
+        {
+          "id": "mh-s5",
+          "start_ms": 19912,
+          "end_ms": 29400,
+          "description": "Code-rendered end card: greeting, logo, Aamod Festive Tin packshot, CTA, tagline and small print.",
+          "plate": null,
+          "on_screen_text_en": null,
+          "image_model": null,
+          "image_prompt": null
+        }
+      ],
+      "transcript": [
+        {
+          "id": "mh-vo-1",
+          "start_ms": 500,
+          "end_ms": 4261,
+          "scene_id": "mh-s1",
+          "text": "दिवाळी आली की घरभर फराळाचा सुगंध दरवळतो.",
+          "language": "mr",
+          "script": "Deva",
+          "translation_en": "When Diwali arrives, the aroma of faral fills the whole house.",
+          "burned_caption": true
+        },
+        {
+          "id": "mh-vo-2",
+          "start_ms": 5061,
+          "end_ms": 9741,
+          "scene_id": "mh-s2",
+          "text": "आजीच्या हातची चकली, करंजी, बेसनाचे लाडू…",
+          "language": "mr",
+          "script": "Deva",
+          "translation_en": "Grandma's own chakli, karanji, besan laddoos…",
+          "burned_caption": true
+        },
+        {
+          "id": "mh-vo-3",
+          "start_ms": 10541,
+          "end_ms": 14582,
+          "scene_id": "mh-s3",
+          "text": "तीच घरची चव, आता आमोद फेस्टिव्ह टिनमध्ये.",
+          "language": "mr",
+          "script": "Deva",
+          "translation_en": "That same taste of home, now in the Aamod Festive Tin.",
+          "burned_caption": true
+        },
+        {
+          "id": "mh-vo-4",
+          "start_ms": 15382,
+          "end_ms": 19462,
+          "scene_id": "mh-s4",
+          "text": "या भाऊबीजेला, आपल्या माणसांना द्या गोड भेट.",
+          "language": "mr",
+          "script": "Deva",
+          "translation_en": "This Bhau Beej, give your loved ones a sweet gift.",
+          "burned_caption": true
+        },
+        {
+          "id": "mh-vo-5",
+          "start_ms": 20462,
+          "end_ms": 23943,
+          "scene_id": "mh-s5",
+          "text": "भाऊबीजेपूर्वी घरपोच. आजच ऑर्डर करा!",
+          "language": "mr",
+          "script": "Deva",
+          "translation_en": "Delivered home before Bhau Beej. Order today!",
+          "burned_caption": false
+        },
+        {
+          "id": "mh-vo-6",
+          "start_ms": 24393,
+          "end_ms": 28114,
+          "scene_id": "mh-s5",
+          "text": "आमोद. Every bond, a little sweeter.",
+          "language": "mr",
+          "script": "Deva",
+          "translation_en": "Aamod. Every bond, a little sweeter.",
+          "burned_caption": false
+        }
+      ],
+      "captions": {
+        "path": "creative/mh_original/captions_mr.srt",
+        "bytes": 771,
+        "sha256": "561c4cfe0e438a764381c2db16441350eef1a10010ed935d332d5b5cd8a16e19",
+        "mime_type": "application/x-subrip"
+      },
+      "elements": [
+        {
+          "id": "mh-vid-logo",
+          "kind": "logo",
+          "value": "brand/logo_reversed.svg",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.05,
+            0.1208,
+            0.2148,
+            0.0354
+          ],
+          "scene_id": null,
+          "locked": true
+        },
+        {
+          "id": "mh-vid-s1-headline",
+          "kind": "headline",
+          "value": "दिवाळी म्हणजे फराळ!",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.2694,
+            0.4167,
+            0.4602,
+            0.1062
+          ],
+          "scene_id": "mh-s1",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-s1-scene",
+          "kind": "scene",
+          "value": "creative/mh_original/scenes/mh-s1_balcony.jpg",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ],
+          "scene_id": "mh-s1",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-s1-product",
+          "kind": "product",
+          "value": "Aamod Festive Tin (drawn by the image model from brand/pack_reference.png)",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.572,
+            0.536,
+            0.146,
+            0.082
+          ],
+          "scene_id": "mh-s1",
+          "locked": true
+        },
+        {
+          "id": "mh-vid-s1-akash-kandil",
+          "kind": "image_region",
+          "value": "Akash kandil (star-shaped paper lantern)",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.4,
+            0.02,
+            0.24,
+            0.37
+          ],
+          "scene_id": "mh-s1",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-s2-headline",
+          "kind": "headline",
+          "value": "आजीच्या हातची चव",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.1824,
+            0.1938,
+            0.6343,
+            0.05
+          ],
+          "scene_id": "mh-s2",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-s2-scene",
+          "kind": "scene",
+          "value": "creative/mh_original/scenes/mh-s2_aaji.jpg",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ],
+          "scene_id": "mh-s2",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-s2-product",
+          "kind": "product",
+          "value": "Aamod Festive Tin (drawn by the image model from brand/pack_reference.png)",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.73,
+            0.702,
+            0.205,
+            0.116
+          ],
+          "scene_id": "mh-s2",
+          "locked": true
+        },
+        {
+          "id": "mh-vid-s2-faral-plate",
+          "kind": "image_region",
+          "value": "Brass plate of faral: chakli, karanji, besan ladoo, shankarpali",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.15,
+            0.725,
+            0.57,
+            0.13
+          ],
+          "scene_id": "mh-s2",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-s3-headline",
+          "kind": "headline",
+          "value": "घरच्या चवीचा फराळ, आता एकाच टिनमध्ये",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.1639,
+            0.1938,
+            0.6731,
+            0.1135
+          ],
+          "scene_id": "mh-s3",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-s3-product-label",
+          "kind": "body",
+          "value": "Aamod Festive Tin",
+          "language": "en",
+          "script": "Latn",
+          "bbox": [
+            0.2972,
+            0.3208,
+            0.4065,
+            0.0208
+          ],
+          "scene_id": "mh-s3",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-s3-scene",
+          "kind": "scene",
+          "value": "creative/mh_original/scenes/mh-s3_tin.jpg",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ],
+          "scene_id": "mh-s3",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-s3-product",
+          "kind": "product",
+          "value": "Aamod Festive Tin (drawn by the image model from brand/pack_reference.png)",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.23,
+            0.535,
+            0.74,
+            0.27
+          ],
+          "scene_id": "mh-s3",
+          "locked": true
+        },
+        {
+          "id": "mh-vid-s4-headline",
+          "kind": "headline",
+          "value": "भाऊबीजेला द्या गोड भेट",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.2676,
+            0.1938,
+            0.4648,
+            0.1057
+          ],
+          "scene_id": "mh-s4",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-s4-scene",
+          "kind": "scene",
+          "value": "creative/mh_original/scenes/mh-s4_bhaubeej.jpg",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ],
+          "scene_id": "mh-s4",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-s4-product",
+          "kind": "product",
+          "value": "Aamod Festive Tin (drawn by the image model from brand/pack_reference.png)",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.505,
+            0.602,
+            0.176,
+            0.094
+          ],
+          "scene_id": "mh-s4",
+          "locked": true
+        },
+        {
+          "id": "mh-vid-cap-1",
+          "kind": "caption",
+          "value": "दिवाळी आली की घरभर फराळाचा सुगंध दरवळतो.",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.0731,
+            0.6687,
+            0.8528,
+            0.0448
+          ],
+          "scene_id": "mh-s1",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-cap-2",
+          "kind": "caption",
+          "value": "आजीच्या हातची चकली, करंजी, बेसनाचे लाडू…",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.0963,
+            0.6687,
+            0.8074,
+            0.0458
+          ],
+          "scene_id": "mh-s2",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-cap-3",
+          "kind": "caption",
+          "value": "तीच घरची चव, आता आमोद फेस्टिव्ह टिनमध्ये.",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.1028,
+            0.3771,
+            0.7935,
+            0.0427
+          ],
+          "scene_id": "mh-s3",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-cap-4",
+          "kind": "caption",
+          "value": "या भाऊबीजेला, आपल्या माणसांना द्या गोड भेट.",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.0944,
+            0.7417,
+            0.8111,
+            0.0417
+          ],
+          "scene_id": "mh-s4",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-greeting",
+          "kind": "headline",
+          "value": "दिवाळीच्या हार्दिक शुभेच्छा!",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.2083,
+            0.1562,
+            0.5833,
+            0.0396
+          ],
+          "scene_id": "mh-s5",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-endcard-logo",
+          "kind": "logo",
+          "value": "brand/logo_reversed.svg",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.25,
+            0.2188,
+            0.5,
+            0.0823
+          ],
+          "scene_id": "mh-s5",
+          "locked": true
+        },
+        {
+          "id": "mh-vid-packshot",
+          "kind": "packshot",
+          "value": "brand/pack.png",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.2417,
+            0.3177,
+            0.5167,
+            0.2708
+          ],
+          "scene_id": "mh-s5",
+          "locked": true
+        },
+        {
+          "id": "mh-vid-product-name",
+          "kind": "body",
+          "value": "Aamod Festive Tin*",
+          "language": "en",
+          "script": "Latn",
+          "bbox": [
+            0.2713,
+            0.6083,
+            0.4565,
+            0.0234
+          ],
+          "scene_id": "mh-s5",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-cta-hook",
+          "kind": "cta",
+          "value": "भाऊबीजेपूर्वी घरपोच",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.3046,
+            0.6495,
+            0.3917,
+            0.0344
+          ],
+          "scene_id": "mh-s5",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-cta-button",
+          "kind": "cta",
+          "value": "आजच ऑर्डर करा · Order now",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.2213,
+            0.6964,
+            0.5583,
+            0.0406
+          ],
+          "scene_id": "mh-s5",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-tagline",
+          "kind": "tagline",
+          "value": "Every bond, a little sweeter.",
+          "language": "en",
+          "script": "Latn",
+          "bbox": [
+            0.238,
+            0.7578,
+            0.5231,
+            0.0229
+          ],
+          "scene_id": "mh-s5",
+          "locked": true
+        },
+        {
+          "id": "mh-vid-small-print",
+          "kind": "body",
+          "value": "*ग्राहकांच्या पसंतीनुसार महाराष्ट्रातील सर्वोत्तम फराळ टिन.",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.2528,
+            0.7943,
+            0.4935,
+            0.0156
+          ],
+          "scene_id": "mh-s5",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-demo-label",
+          "kind": "body",
+          "value": "Fictional brand · Omnicult demo creative",
+          "language": "en",
+          "script": "Latn",
+          "bbox": [
+            0.3157,
+            0.8172,
+            0.3694,
+            0.0083
+          ],
+          "scene_id": "mh-s5",
+          "locked": false
+        },
+        {
+          "id": "mh-vid-voiceover",
+          "kind": "voiceover",
+          "value": {
+            "path": "creative/mh_original/voiceover_mr.wav",
+            "transcript_ids": [
+              "mh-vo-1",
+              "mh-vo-2",
+              "mh-vo-3",
+              "mh-vo-4",
+              "mh-vo-5",
+              "mh-vo-6"
+            ],
+            "model": "gemini-3.8-flash-tts",
+            "voice": "Sulafat",
+            "language_code": "mr-IN"
+          },
+          "language": "mr",
+          "script": "Deva",
+          "bbox": null,
+          "scene_id": null,
+          "locked": false
+        },
+        {
+          "id": "mh-vid-music",
+          "kind": "music",
+          "value": {
+            "path": "creative/mh_original/music_bed.wav",
+            "model": "lyria-002",
+            "prompt": "Warm, joyful Indian festive instrumental for a family Diwali advertisement: soft dholki and tabla groove, bansuri flute melody, light sitar accents and gentle temple bells, uplifting and homely, 100 BPM, clean modern mix."
+          },
+          "language": null,
+          "script": null,
+          "bbox": null,
+          "scene_id": null,
+          "locked": false
+        }
+      ]
+    },
+    {
+      "id": "demo-creative-aamod-mh-key-visual",
+      "format": "feed_image",
+      "channel_fit": [
+        "meta_feed"
+      ],
+      "asset": {
+        "path": "creative/mh_original/keyvisual.png",
+        "bytes": 1846871,
+        "sha256": "28c568e717e90474effcdc398784a446b19b59f42b6bbd98bdb74d583f2f67c3",
+        "mime_type": "image/png",
+        "width": 1080,
+        "height": 1350
+      },
+      "plate": {
+        "path": "creative/mh_original/keyvisual_plate.jpg",
+        "bytes": 377204,
+        "sha256": "e6af9d72dfc58522b120011f288d12e1a96a012b9b04917eac1b9848cd6dd710",
+        "mime_type": "image/jpeg",
+        "width": 1080,
+        "height": 1350,
+        "image_model": "gemini-3.1-flash-image",
+        "image_prompt": "A 4:5 festive still life for a Diwali advertisement, shot from a slightly high angle. On a dark peacock-teal tabletop, an abundant but tidy spread of Maharashtrian Diwali faral on round brass plates and in small brass bowls: spiral chakli, crescent-shaped karanji, round besan ladoo, diamond-shaped shankarpali and a bowl of poha chivda. Small clay panti lamps glow among the plates, with marigold flowers and petals. In the softly blurred upper background, a glowing star-shaped akash kandil paper lantern. Leave the lower-right third of the frame as an empty, clean area of tabletop (a product pack will be placed there later). The photograph fills the whole frame edge to edge, with no borders, bands or blocks of flat colour; the upper part of the frame shows a dark, softly lit wall with gentle bokeh, giving calm space for a headline. Premium food photography, warm golden light. No packaging, no tins, no boxes."
+      },
+      "elements": [
+        {
+          "id": "mh-kv-plate",
+          "kind": "scene",
+          "value": "creative/mh_original/keyvisual_plate.jpg",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "scene_id": null,
+          "locked": false
+        },
+        {
+          "id": "mh-kv-logo",
+          "kind": "logo",
+          "value": "brand/logo_reversed.svg",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.0519,
+            0.0267,
+            0.2185,
+            0.0511
+          ],
+          "scene_id": null,
+          "locked": true
+        },
+        {
+          "id": "mh-kv-headline",
+          "kind": "headline",
+          "value": "दिवाळी म्हणजे फराळ!",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.0519,
+            0.0956,
+            0.4213,
+            0.1319
+          ],
+          "scene_id": null,
+          "locked": false
+        },
+        {
+          "id": "mh-kv-packshot",
+          "kind": "packshot",
+          "value": "brand/pack.png",
+          "language": null,
+          "script": null,
+          "bbox": [
+            0.5657,
+            0.517,
+            0.3972,
+            0.2963
+          ],
+          "scene_id": null,
+          "locked": true
+        },
+        {
+          "id": "mh-kv-sub",
+          "kind": "body",
+          "value": "घरच्या चवीचा फराळ, आता एकाच टिनमध्ये",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.0519,
+            0.7793,
+            0.5083,
+            0.0259
+          ],
+          "scene_id": null,
+          "locked": false
+        },
+        {
+          "id": "mh-kv-product-name",
+          "kind": "body",
+          "value": "Aamod Festive Tin*",
+          "language": "en",
+          "script": "Latn",
+          "bbox": [
+            0.0519,
+            0.823,
+            0.3306,
+            0.0237
+          ],
+          "scene_id": null,
+          "locked": false
+        },
+        {
+          "id": "mh-kv-cta-hook",
+          "kind": "cta",
+          "value": "भाऊबीजेपूर्वी घरपोच",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.0519,
+            0.863,
+            0.2769,
+            0.0341
+          ],
+          "scene_id": null,
+          "locked": false
+        },
+        {
+          "id": "mh-kv-cta-button",
+          "kind": "cta",
+          "value": "आजच ऑर्डर करा · Order now",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.0519,
+            0.9119,
+            0.3981,
+            0.0415
+          ],
+          "scene_id": null,
+          "locked": false
+        },
+        {
+          "id": "mh-kv-tagline",
+          "kind": "tagline",
+          "value": "Every bond, a little sweeter.",
+          "language": "en",
+          "script": "Latn",
+          "bbox": [
+            0.5389,
+            0.9089,
+            0.4093,
+            0.0252
+          ],
+          "scene_id": null,
+          "locked": true
+        },
+        {
+          "id": "mh-kv-small-print",
+          "kind": "body",
+          "value": "*ग्राहकांच्या पसंतीनुसार महाराष्ट्रातील सर्वोत्तम फराळ टिन.",
+          "language": "mr",
+          "script": "Deva",
+          "bbox": [
+            0.0519,
+            0.9578,
+            0.3602,
+            0.017
+          ],
+          "scene_id": null,
+          "locked": false
+        },
+        {
+          "id": "mh-kv-demo-label",
+          "kind": "body",
+          "value": "Fictional brand · Omnicult demo creative",
+          "language": "en",
+          "script": "Latn",
+          "bbox": [
+            0.6843,
+            0.9667,
+            0.2639,
+            0.0081
+          ],
+          "scene_id": null,
+          "locked": false
+        }
+      ]
+    }
+  ],
+  "stems": {
+    "voiceover": {
+      "path": "creative/mh_original/voiceover_mr.wav",
+      "bytes": 1411892,
+      "sha256": "9140bc7c50b54a4780c1358ee4c6eb3e246c4d5a9e897f9b233bcbfe0aaa93f0",
+      "mime_type": "audio/wav"
+    },
+    "music": {
+      "path": "creative/mh_original/music_bed.wav",
+      "bytes": 3765070,
+      "sha256": "4df38d1914291f0e26dc195f40b53363c2a2eef3b55d1f657c6b7a9b587510cf",
+      "mime_type": "audio/wav"
+    }
+  },
+  "authoring_notes": {
+    "label": "Author's intent, for demo QA only. Not evidence, not model output; never show these as findings.",
+    "adaptation_hooks": [
+      {
+        "id": "hook-bhau-beej",
+        "kind": "festival_reference",
+        "element_ids": [
+          "mh-vid-s4-headline",
+          "mh-vid-cta-hook",
+          "mh-kv-cta-hook"
+        ],
+        "transcript_ids": [
+          "mh-vo-4",
+          "mh-vo-5"
+        ],
+        "note": "Bhau Beej is the Marathi name and framing of the sibling day after Diwali. Check its name, date and weight in each target state before reusing it (the same day has other names and customs elsewhere)."
+      },
+      {
+        "id": "hook-faral",
+        "kind": "regional_food",
+        "element_ids": [
+          "mh-vid-s1-headline",
+          "mh-vid-s3-headline",
+          "mh-vid-s2-faral-plate",
+          "mh-kv-headline",
+          "mh-kv-sub"
+        ],
+        "transcript_ids": [
+          "mh-vo-1",
+          "mh-vo-2"
+        ],
+        "scene_ids": [
+          "mh-s2",
+          "mh-s3"
+        ],
+        "note": "Faral (chakli, karanji, besan ladoo, shankarpali) is the Maharashtrian Diwali snack assortment; both the word and the items are regional. The tin's contents may change by region; the tin itself may not."
+      },
+      {
+        "id": "hook-akash-kandil",
+        "kind": "visual_setting",
+        "scene_ids": [
+          "mh-s1"
+        ],
+        "element_ids": [
+          "mh-vid-s1-akash-kandil",
+          "mh-kv-plate"
+        ],
+        "note": "The star-shaped akash kandil lantern on a Pune balcony is a Maharashtra Diwali signature; check what festive decoration reads as local in each target state."
+      },
+      {
+        "id": "hook-marathi-idiom",
+        "kind": "language",
+        "element_ids": [
+          "mh-vid-s1-headline",
+          "mh-vid-s2-headline"
+        ],
+        "transcript_ids": [
+          "mh-vo-2",
+          "mh-vo-4"
+        ],
+        "note": "\"दिवाळी म्हणजे फराळ!\", \"आजीच्या हातची चव\" (the taste of Grandma's cooking) and \"आपल्या माणसांना\" (to our own people) are idiomatic Marathi and need transcreation, not word-for-word translation."
+      },
+      {
+        "id": "hook-paithani",
+        "kind": "visual_setting",
+        "scene_ids": [
+          "mh-s2"
+        ],
+        "note": "The grandmother's Paithani saree and the Pune flat mark the family as Maharashtrian."
+      },
+      {
+        "id": "hook-festival-deadline-cta",
+        "kind": "cta",
+        "element_ids": [
+          "mh-vid-cta-hook",
+          "mh-kv-cta-hook"
+        ],
+        "transcript_ids": [
+          "mh-vo-5"
+        ],
+        "note": "The CTA promises delivery before Bhau Beej. The delivery deadline must follow the festival day that matters in each region, which is not necessarily the same date."
+      },
+      {
+        "id": "hook-greeting",
+        "kind": "language",
+        "element_ids": [
+          "mh-vid-greeting"
+        ],
+        "note": "Marathi Diwali greeting on the end card; each region needs its own greeting in its own script."
+      }
+    ],
+    "deliberate_risks": [
+      {
+        "id": "risk-unsubstantiated-superiority-claim",
+        "kind": "claim",
+        "planted": true,
+        "element_ids": [
+          "mh-vid-small-print",
+          "mh-kv-small-print",
+          "mh-vid-product-name",
+          "mh-kv-product-name"
+        ],
+        "text": "*ग्राहकांच्या पसंतीनुसार महाराष्ट्रातील सर्वोत्तम फराळ टिन.",
+        "translation_en": "*Maharashtra's best faral tin, as per customer preference.",
+        "why": "A superiority claim ('best faral tin in Maharashtra') attached by asterisk to the product name, based on an unnamed 'customer preference' with no source, sample or date. Indian advertising self-regulation (ASCI Code) expects superiority and leadership claims to be substantiated, and the Aamod brand kit forbids superiority claims. Expected: Risk Check flags it on the end card and the key visual."
+      },
+      {
+        "id": "risk-small-print-legibility",
+        "kind": "legibility",
+        "planted": false,
+        "element_ids": [
+          "mh-vid-small-print",
+          "mh-kv-small-print"
+        ],
+        "why": "Secondary, expected: the small print is set at 26 px on a 1920 px frame (19 px on the key visual), on screen for about eight seconds, near the bottom platform overlay zone of Reels and Shorts."
+      }
+    ]
+  },
+  "provenance": {
+    "prompt_version": "aamod-mh-original-v2",
+    "image_model": "gemini-3.1-flash-image",
+    "image_location": "global",
+    "tts_model": "gemini-3.8-flash-tts",
+    "music_model": "lyria-002",
+    "pack_reference": "brand/pack_reference.png",
+    "text_rendering": "Pillow with raqm (HarfBuzz) layout; Noto Serif Devanagari, Noto Sans Devanagari, Noto Sans, DM Serif Display (all OFL). No text was drawn by the image model.",
+    "scripts": "backend/scripts/demo_assets/ (generate.py for model calls, render.py for compositing)",
+    "spend_log": "kept outside the repository (omnicult-docs/DEMO_ASSETS_LOG.md)"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "fixture": {
+    "id": "omnicult-demo-brand-glossary-aamod",
+    "version": 1,
+    "kind": "demo_fixture",
+    "label": "Demonstration fixture: Brand Glossary of the fictional brand Aamod, made for the Omnicult demo."
+  },
+  "brand_id": "demo-brand-aamod",
+  "review_status": "Drafted by the demo author. Spellings and language notes should be confirmed by native-speaker reviewers before any real use.",
+  "never_translate": ["Aamod", "Aamod Festive Tin", "Every bond, a little sweeter."],
+  "rules": [
+    "Logos and the pack always keep the Latin wordmark; the spellings below are for running text in other scripts.",
+    "Use these spellings exactly. If a script has no entry, request a review instead of improvising one.",
+    "Regional terms marked translate = \"adapt\" belong to their region: replace them with that region's own term, backed by evidence, instead of translating them."
+  ],
+  "entries": [
+    {
+      "id": "gl-aamod",
+      "term": "Aamod",
+      "type": "brand_name",
+      "translate": false,
+      "spellings": {"Latn": "Aamod", "Deva": "आमोद", "Taml": "ஆமோத்", "Mlym": "ആമോദ്", "Beng": "আমোদ"},
+      "pronunciation": {
+        "ipa": "aːmoːd",
+        "guide": "AA-mode: a long 'aa' as in 'father', a long 'o' as in 'go', and a soft dental 'd' (tongue against the teeth). Stress is light and even."
+      },
+      "language_notes": {
+        "mr": "आमोद means delight or joy; also fragrance.",
+        "hi": "आमोद means delight.",
+        "bn": "আমোদ means fun, amusement. Bengali speakers will say 'Amod'; that is acceptable.",
+        "ml": "ആമോദം means joy, delight.",
+        "ta": "Close to ஆமோதம் (approval, assent), a neutral word. The final த் is said as a soft 'd'."
+      }
+    },
+    {
+      "id": "gl-festive-tin",
+      "term": "Aamod Festive Tin",
+      "type": "product_name",
+      "translate": false,
+      "spellings": {"Latn": "Aamod Festive Tin", "Deva": "आमोद फेस्टिव्ह टिन", "Taml": "ஆமோத் ஃபெஸ்டிவ் டின்", "Mlym": "ആമോദ് ഫെസ്റ്റിവ് ടിൻ", "Beng": "আমোদ ফেস্টিভ টিন"},
+      "pronunciation": {"guide": "AA-mode FES-tiv TIN."},
+      "language_notes": {
+        "all": "Transliterate only; never replace 'Festive Tin' with a local word for box or tin.",
+        "mr": "फेस्टिव्ह follows Marathi spelling of English 'v' at the end of a word; Hindi copy would use फेस्टिव."
+      }
+    },
+    {
+      "id": "gl-tagline",
+      "term": "Every bond, a little sweeter.",
+      "type": "tagline",
+      "translate": false,
+      "spellings": {"Latn": "Every bond, a little sweeter."},
+      "language_notes": {"all": "Shown and voiced in English in every region. A local-language line may precede it, never replace it."}
+    },
+    {
+      "id": "gl-faral",
+      "term": "faral",
+      "type": "regional_term",
+      "translate": "adapt",
+      "regions": ["IN-MH"],
+      "spellings": {"Deva": "फराळ"},
+      "language_notes": {
+        "mr": "The Diwali assortment of homemade snacks and sweets: chakli, karanji, besan ladoo, shankarpali, chivda.",
+        "all": "Maharashtra-specific. Do not carry the word or the item list into other states; find each region's own festive term and items through Market Lens evidence."
+      }
+    },
+    {
+      "id": "gl-bhau-beej",
+      "term": "Bhau Beej",
+      "type": "festival_name",
+      "translate": "adapt",
+      "regions": ["IN-MH"],
+      "spellings": {"Deva": "भाऊबीज"},
+      "language_notes": {
+        "mr": "The sibling day after Diwali: the sister performs aukshan (aarti) for her brother, who gives her a gift.",
+        "all": "Marathi name. Check each region's own name, date and importance for this day before using it in copy or in a delivery promise."
+      }
+    },
+    {
+      "id": "gl-akash-kandil",
+      "term": "akash kandil",
+      "type": "regional_term",
+      "translate": "adapt",
+      "regions": ["IN-MH"],
+      "spellings": {"Deva": "आकाशकंदील"},
+      "language_notes": {"mr": "The paper lantern hung outside homes at Diwali.", "all": "A Maharashtra Diwali visual; check the target region's own festive decoration."}
+    },
+    {
+      "id": "gl-diwali-greeting",
+      "term": "Diwali greeting",
+      "type": "preferred_translation",
+      "translate": "per_region",
+      "spellings": {"Deva": "दिवाळीच्या हार्दिक शुभेच्छा!", "Taml": "தீபாவளி நல்வாழ்த்துகள்!", "Mlym": "ദീപാവലി ആശംസകൾ!", "Beng": "শুভ দীপাবলি!"},
+      "language_notes": {"all": "Standard greetings, to be confirmed by native reviewers. Whether a Diwali greeting is the right festive greeting at all in a region is a Market Lens question, not a translation question."}
+    }
+  ]
+}

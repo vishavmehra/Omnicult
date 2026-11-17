@@ -1,0 +1,79 @@
+{
+  "fixture": {
+    "id": "omnicult-demo-campaign-brief-aamod-diwali-2027",
+    "version": 1,
+    "kind": "demo_fixture",
+    "label": "Demonstration fixture: Campaign Brief of the fictional brand Aamod. Budget, prices and targets are sample planning numbers, not real data."
+  },
+  "campaign_id": "demo-campaign-aamod-diwali-2027",
+  "brand_id": "demo-brand-aamod",
+  "name": "Aamod Festive Tin, Diwali 2027: from Maharashtra to three new states",
+  "status": "planning",
+  "related_fixtures": ["brand_kit.json", "brand_glossary.json", "creative_mh_original.json"],
+  "product": {
+    "name": "Aamod Festive Tin",
+    "description": "A reusable peacock-teal tin with a brass-gold lid holding about 750 g of traditional festive sweets and savouries. The assortment follows the region; the tin is the same everywhere. Sold online for gifting and delivered before the festival day.",
+    "net_weight_g": 750,
+    "price_inr": 899,
+    "price_note": "Sample price for the demo."
+  },
+  "objective": "Launch the Aamod Festive Tin in Tamil Nadu, Kerala and West Bengal for the 2027 festive season by adapting the original Maharashtra Diwali film and key visual, so each version feels local without changing the brand.",
+  "target_audience": {
+    "summary": "Adults who buy festive sweets as gifts for family (siblings, parents, grandparents) and hosts, and who order online.",
+    "age_bands": ["25-34", "35-44"],
+    "city_tiers": ["tier1", "tier2"],
+    "targeting_exclusions": "No targeting or sampling by religion, caste or other protected traits."
+  },
+  "regions": {"origin": "IN-MH", "targets": ["IN-TN", "IN-KL", "IN-WB"]},
+  "languages": {"IN-MH": ["mr", "en"], "IN-TN": ["ta", "en"], "IN-KL": ["ml", "en"], "IN-WB": ["bn", "en"]},
+  "scripts": {"IN-MH": ["Deva", "Latn"], "IN-TN": ["Taml", "Latn"], "IN-KL": ["Mlym", "Latn"], "IN-WB": ["Beng", "Latn"]},
+  "channels": [
+    {"id": "instagram_reels", "name": "Instagram Reels", "format": "9:16 video, 20 to 30 s", "creative_id": "demo-creative-aamod-mh-video"},
+    {"id": "youtube_shorts", "name": "YouTube Shorts", "format": "9:16 video, 20 to 30 s", "creative_id": "demo-creative-aamod-mh-video"},
+    {"id": "meta_feed", "name": "Facebook and Instagram feed", "format": "4:5 image", "creative_id": "demo-creative-aamod-mh-key-visual"}
+  ],
+  "budget": {
+    "currency": "INR",
+    "total": 2400000,
+    "by_region": {"IN-MH": 800000, "IN-TN": 600000, "IN-KL": 400000, "IN-WB": 600000},
+    "note": "Sample budget for the demo; not real spend."
+  },
+  "dates": {
+    "start": "2027-10-04",
+    "end": "2027-11-01",
+    "timezone": "Asia/Kolkata",
+    "key_moments": [
+      {"id": "dhanteras-2027", "name": "Dhanteras", "date": "2027-10-27", "region_codes": ["IN-MH"], "source_ids": ["astrosage-diwali-2027"]},
+      {"id": "narak-chaturdashi-2027", "name": "Narak Chaturdashi", "date": "2027-10-28", "region_codes": ["IN-MH"], "source_ids": ["astrosage-diwali-2027"]},
+      {"id": "lakshmi-pujan-2027", "name": "Lakshmi Pujan (Diwali)", "date": "2027-10-29", "region_codes": ["IN-MH"], "source_ids": ["dekhopanchang-diwali-2027-pune", "astrosage-diwali-2027"]},
+      {"id": "diwali-padwa-2027", "name": "Diwali Padwa (Govardhan Puja)", "date": "2027-10-30", "region_codes": ["IN-MH"], "source_ids": ["astrosage-diwali-2027"]},
+      {"id": "bhau-beej-2027", "name": "Bhau Beej (Bhai Dooj)", "date": "2027-10-31", "region_codes": ["IN-MH"], "source_ids": ["astrosage-diwali-2027"], "note": "Date from a New Delhi almanac; confirm against a Maharashtra panchang before promising delivery dates."}
+    ],
+    "sources": [
+      {"id": "dekhopanchang-diwali-2027-pune", "title": "Diwali 2027, Pune, Maharashtra (Lakshmi Puja: Friday, October 29, 2027)", "publisher": "Dekho Panchang", "url": "https://www.dekhopanchang.com/en/festivals/diwali/2027/pune", "retrieved_at": "2026-11-17"},
+      {"id": "astrosage-diwali-2027", "title": "Diwali 2027 festival dates for New Delhi (Dhanteras 27 Oct, Narak Chaturdashi 28 Oct, Lakshmi Puja 29 Oct, Govardhan Puja 30 Oct, Bhai Dooj 31 Oct)", "publisher": "AstroSage", "url": "https://panchang.astrosage.com/festival/diwali?date=2027", "retrieved_at": "2026-11-17"}
+    ],
+    "note": "Only the moments of the Maharashtra original are listed. Festival days in the target states come from Market Lens, with their own sources."
+  },
+  "success_metric": {
+    "primary": {"id": "cost_per_order", "definition": "Media spend divided by orders attributed to the campaign, per region and creative version.", "target": "at most INR 350"},
+    "secondary": [
+      {"id": "video_completion_rate", "definition": "Share of video views watched to the end.", "target": "at least 25%"},
+      {"id": "click_through_rate", "definition": "Clicks divided by impressions.", "target": "at least 1.2%"}
+    ],
+    "note": "Targets are fictional planning numbers."
+  },
+  "primary_message": "Home-style festive sweets, ready to gift and delivered before the festival day.",
+  "cta": {
+    "text_en": "Order now: delivered before the festival day.",
+    "festival_hook": "The delivery promise is tied to the region's own key festival day.",
+    "original": {"region_code": "IN-MH", "text": "भाऊबीजेपूर्वी घरपोच · आजच ऑर्डर करा", "translation_en": "Delivered home before Bhau Beej · Order today"}
+  },
+  "original_creative_ids": ["demo-creative-aamod-mh-video", "demo-creative-aamod-mh-key-visual"],
+  "constraints": [
+    "Keep the logo, the Aamod Festive Tin and the English tagline unchanged in every region.",
+    "Render all Indic text in code with the brand fonts; never let an image model draw lettering.",
+    "No health, financial or unsubstantiated superiority claims.",
+    "Synthetic audience results are labelled synthetic and never presented as consumer research."
+  ]
+}
