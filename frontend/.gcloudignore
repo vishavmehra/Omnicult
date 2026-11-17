@@ -1,0 +1,13 @@
+# What `gcloud builds submit frontend` uploads. Keep in step with .dockerignore; .env files are never uploaded.
+.git/
+node_modules/
+/.next/
+/out/
+/coverage/
+.env
+.env.*
+!.env.example
+.screenshots/
+.impeccable/
+*.tsbuildinfo
+npm-debug.log*

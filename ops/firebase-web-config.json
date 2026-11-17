@@ -1,0 +1,8 @@
+{
+  "_note": "Firebase web app config for project omnicult-app. These are public identifiers (they ship in the browser bundle); access is controlled by Firebase Auth rules and authorized domains, not by hiding them. No secret belongs in this file.",
+  "projectId": "omnicult-app",
+  "appId": "1:671429087856:web:2172e98a4a2280bb0e9ab5",
+  "apiKey": "AIzaSyAuRYJA2g47BZeY7lN6OMW2UiSxn-B8rtg",
+  "authDomain": "omnicult-app.firebaseapp.com",
+  "messagingSenderId": "671429087856"
+}

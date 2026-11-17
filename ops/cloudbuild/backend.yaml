@@ -1,0 +1,14 @@
+# Builds backend/Dockerfile into Artifact Registry. Run through ops/deploy/build.ps1, which supplies the substitutions:
+#   gcloud builds submit backend --config ops/cloudbuild/backend.yaml --substitutions _IMAGE=...,_TAG=...
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_IMAGE}:${_TAG}", "-t", "${_IMAGE}:latest", "."]
+images:
+  - "${_IMAGE}:${_TAG}"
+  - "${_IMAGE}:latest"
+substitutions:
+  _IMAGE: asia-south1-docker.pkg.dev/omnicult-app/omnicult/omnicult-api
+  _TAG: dev
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 1200s

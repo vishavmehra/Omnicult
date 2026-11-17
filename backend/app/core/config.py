@@ -7,7 +7,7 @@ names match backend/.env.example. Secrets are SecretStr so they never print by a
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import SecretStr, ValidationInfo, field_validator
+from pydantic import Field, SecretStr, ValidationInfo, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -59,13 +59,19 @@ class Settings(BaseSettings):
     rerank_model: str | None = None
 
     # Uploaded assets (contracts/README section 13)
-    # database: bytes in a table (local development and tests); supabase: a private Supabase Storage bucket
-    asset_storage_backend: Literal["database", "supabase"] = "database"
+    # database: bytes in a table (tests); local: files under storage/assets (development); gcs: a private Cloud Storage
+    # bucket (production); supabase: legacy Supabase Storage, removed with the rest of Supabase.
+    asset_storage_backend: Literal["database", "supabase", "gcs", "local"] = "database"
     max_image_bytes: int = 5 * 1024 * 1024  # migration 0006 sets the bucket's file_size_limit to the same value
 
     max_active_runs_per_user: int = 2
     # Work limit for one population study run; a larger request is refused with 422, never silently reduced.
     population_max_participants: int = 600
+
+    # --- infra (ops/deploy/) ---
+    # Cloud Storage bucket for ASSET_STORAGE_BACKEND=gcs. Credentials come from the runtime service account (ADC),
+    # never from a key in this file. validate_default so that an unset bucket fails at startup, not at first upload.
+    gcs_bucket: str | None = Field(default=None, validate_default=True)
 
     @field_validator(
         "supabase_url",
@@ -86,6 +92,7 @@ class Settings(BaseSettings):
         "vision_model",
         "rerank_model",
         "rerank_provider",
+        "gcs_bucket",
         mode="before",
     )
     @classmethod
@@ -108,6 +115,13 @@ class Settings(BaseSettings):
     def _supabase_storage_needs_credentials(cls, value: str, info: ValidationInfo) -> str:
         if value == "supabase" and not (info.data.get("supabase_url") and info.data.get("supabase_secret_key")):
             raise ValueError("ASSET_STORAGE_BACKEND=supabase needs SUPABASE_URL and SUPABASE_SECRET_KEY.")
+        return value
+
+    @field_validator("gcs_bucket")
+    @classmethod
+    def _gcs_storage_needs_bucket(cls, value: str | None, info: ValidationInfo) -> str | None:
+        if info.data.get("asset_storage_backend") == "gcs" and not value:
+            raise ValueError("ASSET_STORAGE_BACKEND=gcs needs GCS_BUCKET.")
         return value
 
     @property

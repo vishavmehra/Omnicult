@@ -1,0 +1,32 @@
+# Builds frontend/Dockerfile into Artifact Registry. Run through ops/deploy/build.ps1, which supplies the substitutions.
+# The _NEXT_PUBLIC_* values are public identifiers that the Next.js build inlines into the browser bundle; no secrets.
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - "--build-arg=NEXT_PUBLIC_API_BASE_URL=${_API_BASE_URL}"
+      - "--build-arg=NEXT_PUBLIC_AUTH_MODE=${_AUTH_MODE}"
+      - "--build-arg=NEXT_PUBLIC_FIREBASE_API_KEY=${_FIREBASE_API_KEY}"
+      - "--build-arg=NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${_FIREBASE_AUTH_DOMAIN}"
+      - "--build-arg=NEXT_PUBLIC_FIREBASE_PROJECT_ID=${_FIREBASE_PROJECT_ID}"
+      - "--build-arg=NEXT_PUBLIC_FIREBASE_APP_ID=${_FIREBASE_APP_ID}"
+      - "-t"
+      - "${_IMAGE}:${_TAG}"
+      - "-t"
+      - "${_IMAGE}:latest"
+      - "."
+images:
+  - "${_IMAGE}:${_TAG}"
+  - "${_IMAGE}:latest"
+substitutions:
+  _IMAGE: asia-south1-docker.pkg.dev/omnicult-app/omnicult/omnicult-web
+  _TAG: dev
+  _API_BASE_URL: ""
+  _AUTH_MODE: dev
+  _FIREBASE_API_KEY: ""
+  _FIREBASE_AUTH_DOMAIN: ""
+  _FIREBASE_PROJECT_ID: ""
+  _FIREBASE_APP_ID: ""
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 1800s

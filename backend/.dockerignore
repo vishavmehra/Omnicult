@@ -1,0 +1,19 @@
+# Only pyproject.toml, uv.lock, alembic.ini, migrations/ and app/ go into the image (see Dockerfile).
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+*.db
+*.db-shm
+*.db-wal
+/storage/
+/tests/
+/scripts/
+/qloo/
+Dockerfile
+.dockerignore
+.gcloudignore
