@@ -199,7 +199,10 @@ def live_llm(provider: ScriptedProvider) -> LLMGateway:
     """A gateway that behaves as in live mode (is_fixture False) over a scripted provider; no network."""
     from app.core.config import Settings
 
-    settings = Settings(_env_file=None, nebius_api_key=None, openrouter_api_key=None, qloo_api_key=None, nebius_default_model="test-model")
+    settings = Settings(
+        _env_file=None, qloo_api_key=None, google_cloud_project="qa-test-project",
+        gemini_model_fast="test-model", gemini_model_default="test-model", gemini_model_reasoning="test-model",
+    )
     return LLMGateway(settings, provider=provider, backoff_seconds=0)
 
 
