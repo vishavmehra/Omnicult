@@ -28,7 +28,7 @@ class Slow:
 
 
 async def test_chat_call_has_an_overall_deadline():
-    settings = Settings(_env_file=None, nebius_api_key=None, nebius_default_model="m")
+    settings = Settings(_env_file=None, google_cloud_project="p")
     gateway = LLMGateway(settings, provider=Slow(1.0), deadline_seconds=0.1)
     started = time.perf_counter()
     with pytest.raises(LLMError) as caught:
@@ -56,22 +56,21 @@ class SlowEmbedder:
 
 
 async def test_capability_deadline_scales_with_batches_and_raises_typed_error():
-    wrapper = DeadlinedCapability("embeddings", SlowEmbedder(), request_timeout=30, deadline=0.05, provider="nebius",
+    wrapper = DeadlinedCapability("embeddings", SlowEmbedder(), request_timeout=30, deadline=0.05, provider="google",
                                   model="emb", batch_size=64)
     assert wrapper.space == "space-1" and wrapper.is_configured()  # plain attributes pass through
     with pytest.raises(LLMError) as caught:
         await wrapper.embed(["text"] * 130, kind="document", stage="indexing", agent="retrieval")  # 3 batches: 0.15 s
     error = caught.value
     assert error.code == "PROVIDER_TIMEOUT" and error.retryable
-    assert (error.trace.stage, error.trace.provider, error.trace.model_id) == ("indexing", "nebius", "emb")
-    roomy = DeadlinedCapability("embeddings", SlowEmbedder(), request_timeout=30, deadline=1.0, provider="nebius",
+    assert (error.trace.stage, error.trace.provider, error.trace.model_id) == ("indexing", "google", "emb")
+    roomy = DeadlinedCapability("embeddings", SlowEmbedder(), request_timeout=30, deadline=1.0, provider="google",
                                 model="emb", batch_size=64)
     assert await roomy.embed(["text"] * 2) == 2
 
 
 def test_capabilities_get_their_own_request_timeout():
-    settings = Settings(_env_file=None, nebius_api_key="test-key", embedding_provider="nebius",
-                        embedding_model="Qwen/Qwen3-Embedding-8B", embedding_dimensions=4096)
+    settings = Settings(_env_file=None, google_cloud_project="p", gemini_embedding_dimensions=768)
     wrapper = LLMGateway(settings).capability("embeddings")
     assert isinstance(wrapper, DeadlinedCapability)
     assert (wrapper.request_timeout, wrapper.deadline) == CAPABILITY_LIMITS["embeddings"] == (30.0, 40.0)
@@ -91,7 +90,7 @@ class HangingVision:
 async def test_vision_deadline_fails_vision_but_keeps_the_text_analysis():
     from app.workflows import AssetBlob
 
-    slow = DeadlinedCapability("vision", HangingVision(), request_timeout=20, deadline=0.01, provider="nebius", model="vl")
+    slow = DeadlinedCapability("vision", HangingVision(), request_timeout=20, deadline=0.01, provider="google", model="vl")
     deps = WorkflowDeps(qloo=demo_deps().qloo, llm=LLMGateway(offline_settings(), provider=FixtureLLMProvider()), vision=slow)
     inp = RiskScanInput(context=context("live"), scan_id=uuid4(), market=JP, source_kind="content_version", content=CONTENT,
                         assets=[AssetBlob(asset_id=uuid4(), media_type="image/png", data=b"\x89PNG")])

@@ -33,7 +33,7 @@ TERMS = ["hiking", "minimal design", "great escape"]
 
 def offline_settings() -> Settings:
     """No .env and blank provider keys: these tests can never reach a paid API."""
-    return Settings(_env_file=None, nebius_api_key=None, openrouter_api_key=None, qloo_api_key=None)
+    return Settings(_env_file=None, google_cloud_project=None, gemini_api_key=None, qloo_api_key=None)
 
 
 def demo_deps():

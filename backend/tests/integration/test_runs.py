@@ -47,10 +47,7 @@ LIVE_DISCOVERY = {
     "reference_terms": ["trail running"],
 }
 DUMMY_LLM_ENV = {
-    "NEBIUS_API_KEY": "qa-dummy-nebius-key-0000000000",
-    "NEBIUS_DEFAULT_MODEL": "qa-test-model",
-    "NEBIUS_FAST_MODEL": "qa-test-model",
-    "NEBIUS_REASONING_MODEL": "qa-test-model",
+    "GOOGLE_CLOUD_PROJECT": "qa-test-project",
 }
 PROVIDER_CODES = ("PROVIDER_ERROR", "PROVIDER_TIMEOUT", "PROVIDER_NOT_CONFIGURED", "UNSUPPORTED_CAPABILITY", "RUN_FAILED")
 
@@ -126,7 +123,7 @@ async def test_blank_credentials_count_as_not_configured(
     qa_env: dict[str, str], monkeypatch: pytest.MonkeyPatch, alice: dict[str, str]
 ) -> None:
     """C10: exactly what a copied .env.example produces."""
-    for name in ("NEBIUS_API_KEY", "QLOO_API_KEY", "OPENROUTER_API_KEY"):
+    for name in ("GOOGLE_CLOUD_PROJECT", "QLOO_API_KEY", "GEMINI_API_KEY"):
         monkeypatch.setenv(name, "")
     async with running_app() as app:
         project = await create_live_project(app.client, alice)
@@ -289,7 +286,6 @@ async def test_llm_failure_produces_a_failed_run(
     for name, value in DUMMY_LLM_ENV.items():
         monkeypatch.setenv(name, value)
     with FakeProvider(500, {"error": {"message": "qa simulated provider outage"}}) as provider:
-        monkeypatch.setenv("NEBIUS_BASE_URL", provider.base_url)
         async with running_app() as app:
             project = await create_live_project(app.client, alice)
             campaign = await create_live_campaign(app.client, alice, project.id)

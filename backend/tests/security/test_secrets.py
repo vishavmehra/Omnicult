@@ -27,8 +27,7 @@ from tests.integration.journey import (
 )
 
 DUMMY_SECRETS = {
-    "NEBIUS_API_KEY": "sk-qa-DUMMY-nebius-7f3a9c1e5b2d4f60",
-    "OPENROUTER_API_KEY": "sk-or-qa-DUMMY-2b8d4f6a0c1e3a59",
+    "GEMINI_API_KEY": "AIza-qa-DUMMY-gemini-7f3a9c1e5b2d4f60",
     "QLOO_API_KEY": "qloo-qa-DUMMY-9e1c3a5b7d0f2468",
     "SUPABASE_JWT_SECRET": "jwt-qa-DUMMY-secret-4c6e8a0b2d1f3e57",
 }
@@ -108,13 +107,12 @@ def fake_qloo(tmp_path: Path) -> Path:
 def dummy_secrets(qa_env: dict[str, str], monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict[str, str]:
     for name, value in DUMMY_SECRETS.items():
         monkeypatch.setenv(name, value)
-    for name in ("NEBIUS_DEFAULT_MODEL", "NEBIUS_FAST_MODEL", "NEBIUS_REASONING_MODEL"):
-        monkeypatch.setenv(name, "qa-test-model")
+    monkeypatch.setenv("GOOGLE_CLOUD_PROJECT", "qa-test-project")  # Vertex AI is configured; every call is faked
     monkeypatch.setenv("QLOO_BIN", str(fake_qloo(tmp_path)))
     return all_secrets()
 
 
-ECHO = f"Incorrect API key provided: {DUMMY_SECRETS['NEBIUS_API_KEY']} ({PROVIDER_ECHO})"
+ECHO = f"Incorrect API key provided: {DUMMY_SECRETS['GEMINI_API_KEY']} ({PROVIDER_ECHO})"
 
 
 async def test_no_secret_in_basic_and_error_responses(
@@ -148,8 +146,7 @@ async def test_no_secret_or_provider_detail_in_failed_live_runs(
     caplog.set_level(logging.DEBUG)
     recorder = Recorder()
     alice = auth("qa-sec")
-    with FakeProvider(401, {"error": {"message": ECHO}}) as provider:  # Nebius answers 401 and echoes the key
-        monkeypatch.setenv("NEBIUS_BASE_URL", provider.base_url)
+    with FakeProvider(401, {"error": {"message": ECHO}}):  # the provider answers 401 and echoes the key
         async with running_app() as app:
             app.client.event_hooks["response"].append(recorder)
             project = await create_live_project(app.client, alice)
@@ -196,7 +193,6 @@ async def test_no_secret_in_demo_journey_responses_or_logs(
     caplog.set_level(logging.DEBUG)
     recorder = Recorder()
     with FakeProvider(500, {"error": {"message": "demo must not call out"}}) as provider, respx.mock(assert_all_called=False) as network:
-        monkeypatch.setenv("NEBIUS_BASE_URL", provider.base_url)
         network.route().mock(side_effect=httpx.ConnectError("qa: demo runs must not call out"))
         async with running_app() as app:
             app.client.event_hooks["response"].append(recorder)

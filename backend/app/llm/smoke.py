@@ -1,4 +1,4 @@
-"""Live smoke check: one structured Nebius call through the gateway. Never prints the API key.
+"""Live smoke check: one structured Google call through the gateway. Never prints credentials.
 
 Run from backend/:  uv run python -m app.llm.smoke [task_class]   (default: research_synthesis)
 """
@@ -28,7 +28,7 @@ async def main(task: str) -> int:
         return 2
     gateway = LLMGateway(get_settings())
     if not gateway.is_configured():
-        print("NOT CONFIGURED: set NEBIUS_API_KEY and NEBIUS_DEFAULT_MODEL in backend/.env")
+        print("NOT CONFIGURED: set GOOGLE_CLOUD_PROJECT (Vertex AI with ADC) or GOOGLE_GENAI_BACKEND=gemini_api and GEMINI_API_KEY in backend/.env")
         return 2
     try:
         result = await gateway.generate_structured(

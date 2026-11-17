@@ -1,6 +1,6 @@
 """Opt-in live regression: the full journey through the application with real models.
 
-Skipped unless NATIVEPROOF_LIVE_TESTS=1 and a Nebius key is configured (about 15 model requests per run).
+Skipped unless NATIVEPROOF_LIVE_TESTS=1 and Google credentials are configured (about 15 model requests per run).
 """
 
 import os
@@ -21,8 +21,10 @@ async def test_live_app_journey(monkeypatch: pytest.MonkeyPatch) -> None:
     with tempfile.TemporaryDirectory(prefix="nativeproof-live-") as workdir:
         live._isolate(Path(workdir))
         get_settings.cache_clear()
-        if get_settings().nebius_api_key is None:
-            pytest.skip("NEBIUS_API_KEY is not configured")
+        from app.llm.google import is_configured
+
+        if not is_configured(get_settings()):
+            pytest.skip("Google credentials are not configured")
         result = await live.journey()
         get_settings.cache_clear()
     failed = [name for name, ok in result["checks"].items() if not ok]

@@ -4003,6 +4003,8 @@
               "PROVIDER_TIMEOUT",
               "PROVIDER_NOT_CONFIGURED",
               "UNSUPPORTED_CAPABILITY",
+              "CONTENT_BLOCKED",
+              "BUDGET_EXCEEDED",
               "RUN_FAILED",
               "RUN_INTERRUPTED",
               "INTERNAL_ERROR"
@@ -10343,6 +10345,8 @@
               "PROVIDER_TIMEOUT",
               "PROVIDER_NOT_CONFIGURED",
               "UNSUPPORTED_CAPABILITY",
+              "CONTENT_BLOCKED",
+              "BUDGET_EXCEEDED",
               "RUN_FAILED",
               "RUN_INTERRUPTED",
               "INTERNAL_ERROR"
@@ -11936,7 +11940,7 @@
                 "type": "null"
               }
             ],
-            "description": "qloo, nebius, openrouter, fixture, or nativeproof.",
+            "description": "qloo, google, fixture, or nativeproof (earlier runs may also show nebius or openrouter).",
             "title": "Provider"
           },
           "retries": {
@@ -12602,7 +12606,7 @@
                 "type": "null"
               }
             ],
-            "description": "Null when the provider reports no usage or verified pricing is unknown.",
+            "description": "Estimate from the price table in app/llm/registry.py, never a billed amount. Null when the provider reports no usage or the model has no price entry.",
             "title": "Estimated Cost Usd"
           },
           "input_tokens": {
@@ -12625,7 +12629,20 @@
                 "type": "null"
               }
             ],
+            "description": "Billed output tokens, thinking tokens included.",
             "title": "Output Tokens"
+          },
+          "thinking_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The part of output_tokens spent on model thinking.",
+            "title": "Thinking Tokens"
           },
           "total_tokens": {
             "anyOf": [
@@ -12642,6 +12659,7 @@
         "required": [
           "input_tokens",
           "output_tokens",
+          "thinking_tokens",
           "total_tokens",
           "estimated_cost_usd"
         ],

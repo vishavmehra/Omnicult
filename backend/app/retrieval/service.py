@@ -39,10 +39,11 @@ API = "/api/v1"
 MAX_CHUNK_CHARS = 1200
 SNIPPET_CHARS = 240
 MAX_LIMIT = 50
-# Measured floor per (model, config version): below it a hit is dropped. Qwen3-Embedding-8B with emb-v1
-# (2026-10-26 evaluation): relevant hits in the top 5 never scored below 0.372, no-answer queries peaked at
-# 0.275. Provisional (2 no-answer probes); models without a measured floor return unfiltered top-k.
-MIN_SIMILARITY: dict[tuple[str, str], float] = {("Qwen/Qwen3-Embedding-8B", "emb-v1"): 0.33}
+# Measured floor per (model, config version): below it a hit is dropped. gemini-embedding-2 (768 dimensions) with emb-v2
+# (2026-11-17 evaluation, app/retrieval/evaluation.py, 36 documents and 15 labelled queries: P@1 0.93, MRR 0.97): relevant
+# hits in the top 5 never scored below 0.611, no-answer queries peaked at 0.551. Provisional (2 no-answer probes); models
+# without a measured floor return unfiltered top-k.
+MIN_SIMILARITY: dict[tuple[str, str], float] = {("gemini-embedding-2", "emb-v2"): 0.58}
 NOT_CONFIGURED = "Semantic search is unavailable: no embedding model is configured."
 DEMO_UNAVAILABLE = "Search is not available in demo projects."
 _SENTENCE_END = re.compile(r"(?<=[.!?。！？])\s+")
@@ -333,9 +334,10 @@ class RetrievalService:
 
 
 def get_retrieval_service(
-    mode: Literal["live", "demo"], settings: Settings, store: RetrievalStore, *, http_client: object = None
+    mode: Literal["live", "demo"], settings: Settings, store: RetrievalStore, *, client: object = None
 ) -> RetrievalService:
-    """Demo projects get an unavailable service (contracts/README §13); live projects embed with EMBEDDING_*."""
+    """Demo projects get an unavailable service (contracts/README §13); live projects embed with GEMINI_EMBEDDING_*.
+    `client` is a Gen AI client (or a fake) for tests."""
     if mode == "demo":
         return RetrievalService(None, store, unavailable_message=DEMO_UNAVAILABLE)
-    return RetrievalService(LLMGateway(settings, http_client=http_client).capability("embeddings"), store)
+    return RetrievalService(LLMGateway(settings, client=client).capability("embeddings"), store)

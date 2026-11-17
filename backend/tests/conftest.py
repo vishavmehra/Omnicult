@@ -19,10 +19,20 @@ from app.main import create_app
 from app.schemas.runs import TERMINAL_RUN_STATUSES
 
 BLANKED = (
-    "NEBIUS_API_KEY", "NEBIUS_DEFAULT_MODEL", "NEBIUS_FAST_MODEL", "NEBIUS_REASONING_MODEL", "OPENROUTER_API_KEY",
-    "OPENROUTER_BASE_URL", "OPENROUTER_DEFAULT_MODEL", "QLOO_API_KEY", "SUPABASE_URL", "SUPABASE_JWT_SECRET",
-    "SUPABASE_SECRET_KEY", "EMBEDDING_MODEL", "EMBEDDING_DIMENSIONS", "VISION_MODEL", "RERANK_MODEL", "RERANK_PROVIDER",
+    "GOOGLE_CLOUD_PROJECT", "GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENAI_USE_VERTEXAI", "QLOO_API_KEY",
+    "SUPABASE_URL", "SUPABASE_JWT_SECRET", "SUPABASE_SECRET_KEY",
 )
+
+
+@pytest.fixture(autouse=True)
+def fresh_usage_sink() -> Iterator[None]:
+    """The default usage sink is process-wide (budgets read it); give every test an empty one."""
+    from app.llm.budget import InMemoryUsageSink, get_default_usage_sink, set_default_usage_sink
+
+    original = get_default_usage_sink()
+    set_default_usage_sink(InMemoryUsageSink())
+    yield
+    set_default_usage_sink(original)
 
 
 def pytest_configure(config: pytest.Config) -> None:

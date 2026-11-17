@@ -46,6 +46,8 @@ ErrorCode = Literal[
     "PROVIDER_TIMEOUT",
     "PROVIDER_NOT_CONFIGURED",
     "UNSUPPORTED_CAPABILITY",
+    "CONTENT_BLOCKED",
+    "BUDGET_EXCEEDED",
     "RUN_FAILED",
     "RUN_INTERRUPTED",
     "INTERNAL_ERROR",
@@ -119,10 +121,13 @@ class DimensionScores(ApiModel):
 
 class Usage(ApiModel):
     input_tokens: int | None = None
-    output_tokens: int | None = None
+    output_tokens: int | None = Field(default=None, description="Billed output tokens, thinking tokens included.")
+    thinking_tokens: int | None = Field(default=None, description="The part of output_tokens spent on model thinking.")
     total_tokens: int | None = None
     estimated_cost_usd: float | None = Field(
-        default=None, description="Null when the provider reports no usage or verified pricing is unknown."
+        default=None,
+        description="Estimate from the price table in app/llm/registry.py, never a billed amount. Null when the provider "
+        "reports no usage or the model has no price entry.",
     )
 
 
@@ -140,7 +145,7 @@ class StepTrace(ApiModel):
     stage: str
     agent: str
     status: Literal["completed", "failed", "skipped"]
-    provider: str | None = Field(default=None, description="qloo, nebius, openrouter, fixture, or nativeproof.")
+    provider: str | None = Field(default=None, description="qloo, google, fixture, or nativeproof (earlier runs may also show nebius or openrouter).")
     model_id: str | None = None
     prompt_version: str | None = None
     schema_version: str | None = None

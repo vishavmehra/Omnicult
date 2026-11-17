@@ -536,7 +536,8 @@ async def _answer(function: Any, **kwargs: Any) -> Any:
     except LLMError as exc:
         error = AppError(exc.message)
         error.code = exc.code
-        error.status_code = {"PROVIDER_TIMEOUT": 504, "RATE_LIMITED": 429, "PROVIDER_NOT_CONFIGURED": 503}.get(exc.code, 502)
+        error.status_code = {"PROVIDER_TIMEOUT": 504, "RATE_LIMITED": 429, "PROVIDER_NOT_CONFIGURED": 503,
+                              "CONTENT_BLOCKED": 422, "BUDGET_EXCEEDED": 429}.get(exc.code, 502)
         raise error from exc
 
 

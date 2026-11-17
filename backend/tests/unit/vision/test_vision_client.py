@@ -1,101 +1,97 @@
-"""VisionClient with a mocked HTTP transport: verified-model gate, observation parsing, failure statuses."""
+"""VisionClient on a fake Gen AI client: multimodal-model gate, observation parsing, failure statuses."""
 
 import json
 from uuid import uuid4
 
-import httpx
+from app.llm.budget import BudgetGuard, InMemoryUsageSink, Meter
+from app.llm.vision import VisionClient
+from tests.unit.llm.genai_fakes import FakeClient, api_error, blocked_prompt, reply, settings
 
-from app.core.config import Settings
-from app.llm.vision import VERIFIED_VISION_MODELS, VisionClient
-
-MODEL = "openbmb/MiniCPM-V-4_5"
+MODEL = "gemini-3.8-flash"
 PNG = b"\x89PNG\r\n\x1a\n" + b"0" * 64
 ASSET = uuid4()
 
 
-def settings(**overrides: object) -> Settings:
-    values: dict[str, object] = {"nebius_api_key": "test-key", "vision_provider": "nebius", "vision_model": MODEL,
-                                 "llm_max_retries": 1}
-    values.update(overrides)
-    return Settings(_env_file=None, **values)  # type: ignore[arg-type]
+def client_for(script, *, meter=None, **overrides) -> tuple[VisionClient, FakeClient]:
+    fake = FakeClient(script)
+    return VisionClient(settings(**overrides), client=fake, meter=meter, backoff_seconds=0), fake
 
 
-def chat(content: str) -> httpx.Response:
-    return httpx.Response(200, json={
-        "id": "c1", "object": "chat.completion", "created": 0, "model": MODEL,
-        "choices": [{"index": 0, "finish_reason": "stop", "message": {"role": "assistant", "content": content}}],
-        "usage": {"prompt_tokens": 600, "completion_tokens": 60, "total_tokens": 660},
-    })
-
-
-def client_for(handler, **overrides: object) -> tuple[VisionClient, list[dict]]:
-    requests: list[dict] = []
-
-    def record(request: httpx.Request) -> httpx.Response:
-        requests.append(json.loads(request.content))
-        return handler(requests[-1])
-
-    return VisionClient(settings(**overrides), http_client=httpx.AsyncClient(transport=httpx.MockTransport(record)),
-                        backoff_seconds=0), requests
-
-
-async def test_visible_elements_become_observations() -> None:
+async def test_visible_elements_become_observations():
     output = {"observations": [
         {"kind": "text_in_image", "description": "Find your next great escape", "location": "top"},
         {"kind": "text", "description": "Explore the collection", "location": "bottom-right"},
         {"kind": "mood", "description": "orange   circle", "location": None},
     ]}
-    client, requests = client_for(lambda body: chat(json.dumps(output)))
+    client, fake = client_for([reply(json.dumps(output), prompt=600, out=60)])
     result = await client.observe(ASSET, PNG, "image/png")
 
-    assert (result.status.status, result.status.provider, result.status.model_id) == ("analyzed", "nebius", MODEL)
+    assert (result.status.status, result.status.provider, result.status.model_id) == ("analyzed", "google", MODEL)
     assert [(o.id, o.kind) for o in result.observations] == [
         ("vis-1", "text_in_image"), ("vis-2", "text_in_image"), ("vis-3", "other")]
     assert result.observations[2].description == "orange circle" and result.observations[0].asset_id == ASSET
-    body = requests[0]
-    assert body["model"] == MODEL and body["response_format"] == {"type": "json_object"} and body["temperature"] == 0
-    parts = body["messages"][1]["content"]
-    assert parts[1]["image_url"]["url"].startswith("data:image/png;base64,")
+    sent = fake.calls[0]
+    assert sent.model == MODEL and sent.config.temperature == 0 and sent.config.response_mime_type == "application/json"
+    assert sent.config.thinking_config.thinking_level.value == "LOW"
+    image_part = sent.contents[0].parts[1]
+    assert image_part.inline_data.mime_type == "image/png" and image_part.inline_data.data == PNG
     assert result.trace.status == "completed" and result.trace.prompt_version == "vision-observe-v1"
+    assert result.trace.usage.input_tokens == 600 and result.trace.usage.estimated_cost_usd > 0
 
 
-async def test_unverified_or_missing_models_never_receive_images() -> None:
-    def must_not_call(body: dict) -> httpx.Response:
-        raise AssertionError("an image was sent")
-
+async def test_non_multimodal_or_missing_models_never_receive_images():
     for overrides, message in (
-        ({"vision_model": "some/text-only-model"}, "has not been verified with real image inference"),
-        ({"vision_model": None}, "No vision model is configured."),
-        ({"nebius_api_key": None}, "API key is not configured"),
-        ({"vision_provider": "openrouter", "openrouter_api_key": "k"}, "has not been verified"),
+        ({"gemini_model_default": "some-text-only-model"}, "not a registered multimodal Gemini model"),
+        ({"gemini_model_default": "gemini-embedding-2"}, "not a registered multimodal Gemini model"),
     ):
-        client, _ = client_for(must_not_call, **overrides)
+        client, fake = client_for([], **overrides)
         result = await client.observe(ASSET, PNG, "image/png")
-        assert not client.is_configured()
+        assert not client.is_configured() and fake.calls == []
         assert result.status.status == "unavailable" and message in (result.status.message or "")
         assert result.observations == [] and result.trace is None
+    unconfigured = VisionClient(settings(google_cloud_project=None))
+    result = await unconfigured.observe(ASSET, PNG, "image/png")
+    assert result.status.status == "unavailable" and "credentials are not configured" in result.status.message
 
 
-async def test_unsupported_images_fail_without_a_request() -> None:
-    client, requests = client_for(lambda body: chat("{}"))
+async def test_unsupported_images_fail_without_a_request():
+    client, fake = client_for([reply("{}")])
     for image, content_type in ((PNG, "image/gif"), (b"", "image/png"), (b"0" * (5 * 1024 * 1024 + 1), "image/png")):
         result = await client.observe(ASSET, image, content_type)
         assert result.status.status == "failed"
-    assert requests == []
+    assert fake.calls == []
 
 
-async def test_invalid_output_and_provider_errors_fail_with_a_message() -> None:
-    client, _ = client_for(lambda body: chat("I see a mountain."))
+async def test_invalid_output_and_provider_errors_fail_with_a_message():
+    client, _ = client_for([reply("I see a mountain.")])
     result = await client.observe(ASSET, PNG, "image/png")
     assert result.status.status == "failed" and "did not match" in result.status.message
     assert result.trace.error_code == "RUN_FAILED"
 
-    client, requests = client_for(lambda body: httpx.Response(503))
+    client, fake = client_for([api_error(503)] * 3)
     result = await client.observe(ASSET, PNG, "image/png")
-    assert len(requests) == 2  # one retry for a transient error
+    assert len(fake.calls) == 3  # the first request plus llm_max_retries=2
     assert result.status.status == "failed" and "text analysis continues" in result.status.message
     assert result.trace.error_code == "PROVIDER_ERROR"
 
 
-def test_verified_models_are_vision_models_from_real_inference() -> None:
-    assert set(VERIFIED_VISION_MODELS) == {"openbmb/MiniCPM-V-4_5", "nvidia/Nemotron-3.5-Super-VL", "google/gemma-3-27b-it"}
+async def test_a_safety_block_is_reported_as_content_blocked_without_failing_the_text_analysis():
+    client, fake = client_for([blocked_prompt("IMAGE_SAFETY")])
+    result = await client.observe(ASSET, PNG, "image/png")
+    assert len(fake.calls) == 1 and result.status.status == "failed"
+    assert "safety filter" in result.status.message and result.trace.error_code == "CONTENT_BLOCKED"
+
+
+async def test_budget_exhaustion_fails_the_image_but_keeps_the_text_analysis():
+    sink = InMemoryUsageSink()
+    meter = Meter(sink, BudgetGuard(sink, run_budget_usd=0, daily_budget_usd=0.000001))
+    client, fake = client_for([reply("{}")], meter=meter)
+    result = await client.observe(ASSET, PNG, "image/png")
+    assert fake.calls == [] and result.status.status == "failed" and result.trace.error_code == "BUDGET_EXCEEDED"
+    assert "text analysis continues" in result.status.message
+
+
+def test_default_model_is_registered_as_multimodal():
+    from app.llm.registry import spec_for
+
+    assert spec_for(settings().gemini_model_default).multimodal_input

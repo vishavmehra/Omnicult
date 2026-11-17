@@ -13,7 +13,7 @@ import time
 from uuid import uuid4
 
 from app.core.config import get_settings
-from app.llm import gateway as gw
+from app.llm import google as gw
 from app.llm.gateway import LLMGateway
 from app.workflows import run_discovery
 from app.workflows.population import run_population_study
@@ -25,13 +25,13 @@ async def main(size: int) -> None:
     from tests.unit.workflows.scenario import CONTENT, JP, STUDY, VERSION_ID, context, demo_deps, discovery_input
 
     calls = {"n": 0}
-    original = gw.OpenAICompatibleProvider.complete
+    original = gw.GoogleGenAIProvider.complete
 
     async def counting(self, request):
         calls["n"] += 1
         return await original(self, request)
 
-    gw.OpenAICompatibleProvider.complete = counting
+    gw.GoogleGenAIProvider.complete = counting
     grounding = (await run_discovery(discovery_input(), demo_deps())).evidence
     deps = WorkflowDeps(qloo=demo_deps().qloo, llm=LLMGateway(get_settings()))
     events = []
@@ -64,7 +64,7 @@ async def main(size: int) -> None:
         u = s.usage
         print(f"  {s.stage:<24} {s.provider} {s.model_id} {s.latency_ms} ms tokens={u.input_tokens if u else None}/"
               f"{u.output_tokens if u else None}")
-    gw.OpenAICompatibleProvider.complete = original
+    gw.GoogleGenAIProvider.complete = original
 
 
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ def add_boom_routes(app):  # type: ignore[no-untyped-def]
 
 
 async def test_unhandled_errors_are_safe_500s(qa_env: dict[str, str], monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("NEBIUS_API_KEY", DUMMY)
+    monkeypatch.setenv("GEMINI_API_KEY", DUMMY)
     async with running_app(raise_app_exceptions=False, customize=add_boom_routes) as app:
         for path in (f"{API}/__qa_boom", f"{API}/__qa_boom_lookup"):
             response = await app.client.get(path, headers={"X-Request-ID": "qa-boom-1"})

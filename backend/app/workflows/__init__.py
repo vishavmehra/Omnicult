@@ -47,7 +47,7 @@ from app.workflows.types import (
 
 
 def build_workflow_deps(mode: DataMode, settings: Settings, *, qloo_cache=None) -> WorkflowDeps:
-    """demo -> fixture Qloo + fixture LLM (no network); live -> the qloo exec service + the Nebius gateway."""
+    """demo -> fixture Qloo + fixture LLM (no network); live -> the qloo exec service + the Google gateway."""
     from app.integrations.qloo import get_qloo_service
 
     if mode == "demo":  # demo never sends uploads or prompts to a provider: no vision, fixture LLM

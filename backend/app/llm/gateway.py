@@ -1,9 +1,9 @@
-"""LLM gateway: the single structured-output call path for every agent (docs/05, D-023).
+"""LLM gateway: the single structured-output call path for every agent (docs/05, D-023). Google only.
 
-Flow per call: route task -> tier -> model; call with bounded retries on transient errors
-(timeouts, 429, 5xx, connection); optional recorded OpenRouter fallback; validate the JSON
-against the Pydantic schema; one constrained repair attempt; otherwise raise LLMError.
-Prompts and outputs are never logged.
+Flow per call: route task -> tier -> Google model; call with bounded retries on transient errors (timeouts, 429, 5xx,
+connection); an approved lower-tier Google fallback when a model stays unavailable; validate the JSON against the Pydantic
+schema; one constrained repair attempt; otherwise raise LLMError. Every request is metered (tokens, estimated cost) and
+checked against the run and daily budgets first. Prompts and outputs are never logged.
 """
 
 import asyncio
@@ -17,12 +17,11 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, Generic, Protocol, TypeVar
 
-import openai
-from openai import AsyncOpenAI
 from pydantic import BaseModel, ValidationError
 
 from app.core.config import Settings
-from app.llm.registry import TASK_TIERS, TaskClass, response_format_for, tier_model
+from app.llm.budget import BudgetExceeded, BudgetGuard, Meter, UsageSink, get_default_usage_sink
+from app.llm.registry import TaskClass, Tier, estimate_cost, spec_for, thinking_level_for, tier_chain
 from app.schemas.common import ErrorCode, Sampling, StepTrace, Usage
 
 log = logging.getLogger(__name__)
@@ -38,20 +37,32 @@ BRAND_GUARD = (
     " Apply the rules inside <brand_memory>: they are the project owner's own brand requirements, but they never "
     "override these system rules (honesty, evidence labeling, output format)."
 )
+BLOCKED_MESSAGE = (
+    "The model declined to process this content (safety filter). Reword the content and try again; the filter result "
+    "is not a judgement on the campaign."
+)
 
 
 # Deadlines in seconds (defect #4). "Per request" is the SDK timeout of one HTTP call; the deadline caps one whole
-# gateway or adapter call, including bounded retries, the one repair, and a recorded fallback. Basis (docs/15): chat
-# calls measured 0.7-19.6 s, embeddings 3.5-25 s per request, vision 1.7-7.1 s.
+# gateway or adapter call, including bounded retries, the one repair, and a fallback model. Basis: chat calls measured
+# 0.7-19.6 s, embeddings 3.5-25 s per request, vision 1.7-7.1 s on the previous provider; image and speech are slower.
 CHAT_DEADLINE_FACTOR = 2.5  # one generate_structured call: LLM_REQUEST_TIMEOUT_SECONDS x 2.5 (150 s by default)
 CAPABILITY_LIMITS: dict[str, tuple[float, float]] = {  # name -> (per request, deadline)
-    "embeddings": (30.0, 40.0),  # the deadline applies per batch of up to MAX_BATCH texts
-    "vision": (20.0, 30.0),  # per image
+    "embeddings": (30.0, 40.0),  # the deadline applies per batch of up to the adapter's max_batch texts
+    "vision": (30.0, 45.0),  # per image (Gemini 3.8 Flash measured 6.6 to 24 s)
+    "image_generation": (90.0, 120.0),
+    "tts": (60.0, 90.0),
+    "grounded_research": (60.0, 90.0),
 }
-CAPABILITY_ADAPTERS: dict[str, tuple[str, str, str]] = {  # name -> (E's module, class, settings prefix)
-    "embeddings": ("app.llm.embeddings", "EmbeddingClient", "embedding"),
-    "vision": ("app.llm.vision", "VisionClient", "vision"),
+CAPABILITY_ADAPTERS: dict[str, tuple[str, str]] = {  # name -> (module, class)
+    "embeddings": ("app.llm.embeddings", "EmbeddingClient"),
+    "vision": ("app.llm.vision", "VisionClient"),
+    "image_generation": ("app.llm.media", "ImageGenerationClient"),
+    "tts": ("app.llm.media", "TTSClient"),
+    "grounded_research": ("app.llm.grounding", "GroundedResearchClient"),
 }
+# Pre-call input estimate for budgeting: a deliberately low chars-per-token figure (Indic scripts), so it over-estimates.
+CHARS_PER_TOKEN_FLOOR = 2
 
 
 @dataclass(frozen=True)
@@ -72,23 +83,31 @@ class LLMError(Exception):
 
 
 class ProviderError(Exception):
-    def __init__(self, message: str, *, transient: bool, timeout: bool = False, retry_after: float | None = None):
+    """A failure of the provider itself. `blocked` means a safety filter stopped the content: never transient, never an
+    invalid-output case, and not retried on another model."""
+
+    def __init__(
+        self, message: str, *, transient: bool, timeout: bool = False, retry_after: float | None = None,
+        blocked: bool = False,
+    ):
         super().__init__(message)
         self.transient = transient
         self.timeout = timeout
         self.retry_after = retry_after
+        self.blocked = blocked
 
 
 @dataclass(frozen=True)
 class ChatRequest:
     model: str
-    messages: list[dict[str, Any]]  # multimodal parts allowed (vision adapters)
+    messages: list[dict[str, Any]]  # role/content; content is text or parts ({"type": "image", "mime_type", "data"})
     temperature: float
     seed: int | None
-    max_tokens: int
-    response_format: dict | None
+    max_tokens: int  # visible answer budget plus the model's thinking headroom
+    json_schema: dict | None  # a hint for providers with native structured output; Pydantic validation is authoritative
     prompt_version: str
     fixture_context: Mapping[str, Any] | None = None
+    thinking_level: str | None = None
 
 
 @dataclass(frozen=True)
@@ -103,58 +122,11 @@ class ChatProvider(Protocol):
     async def complete(self, request: ChatRequest) -> Completion: ...
 
 
-class OpenAICompatibleProvider:
-    """Nebius Token Factory and OpenRouter both speak the OpenAI chat-completions API."""
-
-    def __init__(self, name: str, *, base_url: str, api_key: str, timeout: float, http_client: Any = None) -> None:
-        self.name = name
-        self.client = AsyncOpenAI(
-            api_key=api_key, base_url=base_url, timeout=timeout, max_retries=0, http_client=http_client
-        )
-
-    async def complete(self, request: ChatRequest) -> Completion:
-        extra: dict[str, Any] = {}
-        if request.response_format:
-            extra["response_format"] = request.response_format
-        if request.seed is not None:
-            extra["seed"] = request.seed
-        try:
-            response = await self.client.chat.completions.create(
-                model=request.model,
-                messages=request.messages,
-                temperature=request.temperature,
-                max_tokens=request.max_tokens,
-                **extra,
-            )
-        except openai.APITimeoutError as exc:
-            raise ProviderError("timeout", transient=True, timeout=True) from exc
-        except openai.APIConnectionError as exc:
-            raise ProviderError("connection error", transient=True) from exc
-        except openai.RateLimitError as exc:
-            raise ProviderError("HTTP 429", transient=True, retry_after=_retry_after(exc)) from exc
-        except openai.InternalServerError as exc:
-            raise ProviderError(f"HTTP {exc.status_code}", transient=True) from exc
-        except openai.APIStatusError as exc:
-            raise ProviderError(f"HTTP {exc.status_code}", transient=False) from exc
-        choice = response.choices[0] if response.choices else None
-        u = response.usage
-        usage = Usage(input_tokens=u.prompt_tokens, output_tokens=u.completion_tokens, total_tokens=u.total_tokens) if u else None
-        return Completion(text=(choice.message.content or "") if choice else "", usage=usage)
-
-
-def _retry_after(exc: openai.APIStatusError) -> float | None:
-    value = exc.response.headers.get("retry-after") if exc.response is not None else None
-    try:
-        return min(float(value), 10.0) if value else None
-    except ValueError:
-        return None
-
-
 @dataclass(frozen=True)
 class _Target:
     provider: ChatProvider
     model: str
-    fallback: bool = False
+    tier: Tier | None = None
 
 
 class _CallState:
@@ -169,16 +141,52 @@ class _CallState:
 
 
 def merge_usage(usages: list[Usage | None]) -> Usage | None:
-    """Sum token counts; a field is null unless every call reported it. Cost stays null (no verified pricing)."""
+    """Sum token counts and estimated cost; a field is null unless every call reported it."""
     if not usages:
         return None
+    fields = ("input_tokens", "output_tokens", "thinking_tokens", "total_tokens", "estimated_cost_usd")
 
-    def total(field: str) -> int | None:
+    def total(field: str) -> int | float | None:
         values = [getattr(u, field) if u else None for u in usages]
         return None if any(v is None for v in values) else sum(values)
 
-    merged = Usage(input_tokens=total("input_tokens"), output_tokens=total("output_tokens"), total_tokens=total("total_tokens"))
-    return merged if any(v is not None for v in (merged.input_tokens, merged.output_tokens, merged.total_tokens)) else None
+    merged = {field: total(field) for field in fields}
+    if merged["estimated_cost_usd"] is not None:
+        merged["estimated_cost_usd"] = round(merged["estimated_cost_usd"], 6)
+    return Usage(**merged) if any(v is not None for v in merged.values()) else None
+
+
+def priced(usage: Usage | None, model: str) -> Usage | None:
+    """`usage` with the estimated cost filled in; null cost when the model has no price entry."""
+    if usage is None:
+        return None
+    cost = estimate_cost(model, input_tokens=usage.input_tokens, output_tokens=usage.output_tokens)
+    return usage.model_copy(update={"estimated_cost_usd": cost.usd if cost.known else None})
+
+
+def failure_trace(stage: str, agent: str, provider: str, model: str | None, started: float, error_code: str) -> StepTrace:
+    return StepTrace(
+        stage=stage, agent=agent, status="failed", provider=provider, model_id=model,
+        latency_ms=int((time.perf_counter() - started) * 1000), error_code=error_code,
+    )
+
+
+def provider_llm_error(exc: ProviderError, trace: StepTrace, *, timeout_seconds: float) -> LLMError:
+    """ProviderError -> the typed LLMError a capability adapter raises."""
+    if exc.blocked:
+        return LLMError("CONTENT_BLOCKED", BLOCKED_MESSAGE, retryable=False, trace=trace)
+    if exc.timeout:
+        return LLMError("PROVIDER_TIMEOUT", f"The model provider did not respond within {int(timeout_seconds)} seconds.",
+                        retryable=True, trace=trace)
+    if exc.transient:
+        return LLMError("PROVIDER_ERROR", "The model provider is temporarily unavailable.", retryable=True, trace=trace)
+    return LLMError("PROVIDER_ERROR", "The model provider rejected the request.", retryable=False, trace=trace)
+
+
+def budget_llm_error(exc: BudgetExceeded, trace: StepTrace) -> LLMError:
+    scope = "run" if exc.scope == "run" else "daily"
+    return LLMError("BUDGET_EXCEEDED", f"The {scope} AI budget (${exc.limit:.2f}) was reached, so no further model call "
+                    "was made.", retryable=False, trace=trace)
 
 
 class DeadlinedCapability:
@@ -223,65 +231,63 @@ class LLMGateway:
     """`fixture=True` (demo mode) answers from deterministic fixtures and never touches the network."""
 
     def __init__(
-        self, settings: Settings, *, fixture: bool = False, provider: ChatProvider | None = None,
-        http_client: Any = None, backoff_seconds: float = 0.5, deadline_seconds: float | None = None,
+        self, settings: Settings, *, fixture: bool = False, provider: ChatProvider | None = None, client: Any = None,
+        backoff_seconds: float = 0.5, deadline_seconds: float | None = None, usage_sink: UsageSink | None = None,
+        budget: BudgetGuard | None = None,
     ) -> None:
-        """`provider` replaces the primary provider (tests); `http_client` is passed to the OpenAI SDK (tests).
-        `deadline_seconds` caps one generate_structured call (default: request timeout x CHAT_DEADLINE_FACTOR)."""
+        """`provider` replaces the chat provider (tests); `client` is a `genai.Client` (or a fake) shared by the chat
+        provider and the capability adapters (tests). `usage_sink` defaults to the process-wide sink and `budget` to a
+        guard built from AI_RUN_BUDGET_USD and AI_DAILY_BUDGET_USD. `deadline_seconds` caps one generate_structured
+        call (default: request timeout x CHAT_DEADLINE_FACTOR)."""
+        from app.llm import google
+
         self._settings = settings
-        self._http_client = http_client
+        self._client = client
         self._deadline = deadline_seconds or settings.llm_request_timeout_seconds * CHAT_DEADLINE_FACTOR
         self._capabilities: dict[str, Any] = {}
         self._max_retries = max(0, settings.llm_max_retries)
         self._backoff = backoff_seconds
-        self._fallback: _Target | None = None
         self._primary: ChatProvider | None
-        self._providers: dict[str, OpenAICompatibleProvider] = {}
-        if fixture or provider is not None:
+        self._meter: Meter | None = None
+        if fixture:
             from app.llm.fixture import FixtureLLMProvider
 
             self._primary = provider or FixtureLLMProvider()
             return
-        timeout = settings.llm_request_timeout_seconds
-        for name, key, base_url in (
-            ("nebius", settings.nebius_api_key, settings.nebius_base_url),
-            ("openrouter", settings.openrouter_api_key, settings.openrouter_base_url),
-        ):
-            secret = key.get_secret_value().strip() if key else ""
-            if secret and base_url:
-                self._providers[name] = OpenAICompatibleProvider(
-                    name, base_url=base_url, api_key=secret, timeout=timeout, http_client=http_client
-                )
-        self._primary = self._providers.get("nebius")
-        # OpenRouter is a recorded fallback only when explicitly enabled (docs/05 §10). The verified key is free tier,
-        # so only ":free" models work there (D-033).
-        if settings.llm_fallback_enabled and "openrouter" in self._providers and settings.openrouter_default_model:
-            self._fallback = _Target(self._providers["openrouter"], settings.openrouter_default_model, fallback=True)
+        sink = usage_sink or get_default_usage_sink()
+        guard = budget or BudgetGuard(
+            sink, run_budget_usd=settings.ai_run_budget_usd, daily_budget_usd=settings.ai_daily_budget_usd
+        )
+        self._meter = Meter(sink, guard)
+        if provider is not None:
+            self._primary = provider
+        elif client is not None or google.is_configured(settings):
+            self._primary = google.GoogleGenAIProvider(settings, client=client)
+        else:
+            self._primary = None
 
-    def openai_client(self, provider: str) -> AsyncOpenAI | None:
-        """The configured SDK client for capability modules (vision, embeddings); None if unset."""
-        configured = self._providers.get(provider) if not self.is_fixture else None
-        return configured.client if configured else None
+    @property
+    def meter(self) -> Meter | None:
+        return self._meter
 
     def capability(self, name: str) -> Any | None:
-        """the modality adapters (app/llm/vision.py, embeddings.py), routed by the VISION_* and EMBEDDING_* settings.
-        None in demo mode (uploads never reach a provider), when the adapter is absent, or when it is not
-        configured; callers then report the capability as unavailable instead of substituting another model."""
+        """The modality adapters (app/llm/embeddings.py, vision.py, media.py, grounding.py). None in demo mode (uploads
+        never reach a provider), when the adapter is absent, or when it is not configured; callers then report the
+        capability as unavailable and never substitute another model."""
         if self.is_fixture:
             return None
         if name not in self._capabilities:
-            module_name, cls, prefix = CAPABILITY_ADAPTERS[name]
+            module_name, cls = CAPABILITY_ADAPTERS[name]
             request_timeout, deadline = CAPABILITY_LIMITS[name]
             settings = self._settings.model_copy(update={"llm_request_timeout_seconds": request_timeout})
             try:
                 module = importlib.import_module(module_name)
-                client = getattr(module, cls)(settings, http_client=self._http_client)
+                client = getattr(module, cls)(settings, client=self._client, meter=self._meter, backoff_seconds=self._backoff)
             except (ImportError, AttributeError):
                 client = None
             self._capabilities[name] = DeadlinedCapability(
-                name, client, request_timeout=request_timeout, deadline=deadline,
-                provider=getattr(settings, f"{prefix}_provider", None), model=getattr(settings, f"{prefix}_model", None),
-                batch_size=getattr(module, "MAX_BATCH", None) if name == "embeddings" else None,
+                name, client, request_timeout=request_timeout, deadline=deadline, provider="google",
+                model=getattr(client, "model", None), batch_size=getattr(client, "max_batch", None) if name == "embeddings" else None,
             ) if client is not None and client.is_configured() else None
         return self._capabilities[name]
 
@@ -290,20 +296,17 @@ class LLMGateway:
         return self._primary is not None and self._primary.name == "fixture"
 
     def is_configured(self) -> bool:
-        """Nebius key plus at least a default model (always true for the demo fixture provider)."""
+        """Google credentials for the selected backend plus a default model (always true for the demo fixture provider)."""
         if self.is_fixture:
             return True
-        return self._primary is not None and bool((self._settings.nebius_default_model or "").strip())
+        return self._primary is not None and bool((self._settings.gemini_model_default or "").strip())
 
-    def _targets(self, task: TaskClass, route: tuple[str, str] | None = None) -> list[_Target]:
+    def _targets(self, task: TaskClass) -> list[_Target]:
         if self.is_fixture:
             return [_Target(self._primary, "fixture")]
-        if route is not None:  # capability routing: an explicit provider and model, no silent fallback
-            provider = self._providers.get(route[0])
-            return [_Target(provider, route[1])] if provider and route[1] else []
-        model = tier_model(self._settings, TASK_TIERS[task])
-        targets = [_Target(self._primary, model)] if self._primary and model else []
-        return targets + ([self._fallback] if self._fallback else [])
+        if self._primary is None:
+            return []
+        return [_Target(self._primary, model, tier) for tier, model in tier_chain(self._settings, task)]
 
     async def generate_structured(
         self,
@@ -319,9 +322,7 @@ class LLMGateway:
         seed: int | None = None,
         max_tokens: int | None = None,
         fixture_context: Mapping[str, Any] | None = None,
-        route: tuple[str, str] | None = None,
     ) -> LLMResult[T]:
-        """`route=(provider, model)` pins a configured provider and model for capability routing."""
         state = _CallState()
         schema_version = getattr(schema, "schema_version", schema.__name__)
         sampling = None if self.is_fixture else Sampling(temperature=temperature, seed=seed)
@@ -341,7 +342,7 @@ class LLMGateway:
             log.warning("llm call failed", extra={"task": task, "stage": stage, "code": code, "calls": state.calls})
             return LLMError(code, message, retryable=retryable, trace=trace(target, "failed", code))
 
-        targets = self._targets(task, route)
+        targets = self._targets(task)
         if not targets:
             raise fail("PROVIDER_NOT_CONFIGURED", "The language model provider is not configured.", False, None)
         json_schema = schema.model_json_schema()
@@ -355,27 +356,48 @@ class LLMGateway:
             {"role": "user", "content": user},
         ]
 
+        async def attempt(target: _Target) -> Completion:
+            """One provider request, metered; the budget is checked before it is sent."""
+            spec = spec_for(target.model)
+            request = ChatRequest(
+                model=target.model, messages=messages, temperature=temperature, seed=seed,
+                max_tokens=(max_tokens or DEFAULT_MAX_TOKENS) + (spec.thinking_headroom if spec else 0),
+                json_schema=json_schema, prompt_version=prompt_version, fixture_context=fixture_context,
+                thinking_level=thinking_level_for(target.model, target.tier),
+            )
+            if self._meter is None or self.is_fixture:
+                return await target.provider.complete(request)
+            input_chars = sum(len(m["content"]) if isinstance(m["content"], str) else 0 for m in messages)
+            estimate = estimate_cost(
+                target.model, input_tokens=input_chars // CHARS_PER_TOKEN_FLOOR, output_tokens=request.max_tokens
+            ).usd
+            async with self._meter.call(
+                capability="chat", model=target.model, estimate_usd=estimate, stage=stage, agent=agent,
+                prompt_version=prompt_version,
+            ) as record:
+                completion = await target.provider.complete(request)
+                record.usage = completion.usage
+                return Completion(text=completion.text, usage=priced(completion.usage, target.model))
+
         async def complete(target_list: list[_Target]) -> tuple[Completion, _Target]:
             last: ProviderError | None = None
             for index, target in enumerate(target_list):
                 if index:
                     state.fallback_used = True
-                request = ChatRequest(
-                    model=target.model, messages=messages, temperature=temperature, seed=seed,
-                    max_tokens=max_tokens or DEFAULT_MAX_TOKENS, prompt_version=prompt_version,
-                    response_format=response_format_for(target.model, schema.__name__, json_schema),
-                    fixture_context=fixture_context,
-                )
-                for attempt in range(self._max_retries + 1):
+                for retry in range(self._max_retries + 1):
                     state.calls += 1
                     try:
-                        completion = await target.provider.complete(request)
+                        completion = await attempt(target)
+                    except BudgetExceeded as exc:
+                        raise budget_llm_error(exc, trace(target, "failed", "BUDGET_EXCEEDED")) from exc
                     except ProviderError as exc:
                         last = exc
+                        if exc.blocked:
+                            raise fail("CONTENT_BLOCKED", BLOCKED_MESSAGE, False, target) from exc
                         if not exc.transient:
                             raise fail("PROVIDER_ERROR", "The model provider rejected the request.", False, target) from exc
-                        if attempt < self._max_retries:
-                            await asyncio.sleep(exc.retry_after or self._backoff * 2**attempt)
+                        if retry < self._max_retries:
+                            await asyncio.sleep(exc.retry_after or self._backoff * 2**retry)
                         continue
                     state.usages.append(completion.usage)
                     return completion, target
@@ -388,12 +410,12 @@ class LLMGateway:
         target = targets[0]
         try:
             async with asyncio.timeout(self._deadline):  # hard cap: retries, the repair, and any fallback included
-                for attempt in range(2):  # the first answer plus one constrained repair (never a transport retry)
+                for repair in range(2):  # the first answer plus one constrained repair (never a transport retry)
                     completion, target = await complete(targets if not state.fallback_used else [target])
                     try:
                         value = schema.model_validate(parse_json(completion.text))
                     except (ValueError, ValidationError) as exc:
-                        if attempt:
+                        if repair:
                             raise fail(
                                 "RUN_FAILED", "The model output did not match the required format after one repair "
                                 "attempt.", True, target,

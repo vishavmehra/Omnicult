@@ -16,10 +16,7 @@ from tests.integration.journey import JAPAN, STUDY_REQUEST, create_live_campaign
 from tests.integration.v2_support import PNG, upload
 
 LLM_ENV = {
-    "NEBIUS_API_KEY": "qa-dummy-nebius-key-0000000000",
-    "NEBIUS_DEFAULT_MODEL": "qa-text-model",
-    "NEBIUS_FAST_MODEL": "qa-text-model",
-    "NEBIUS_REASONING_MODEL": "qa-text-model",
+    "GOOGLE_CLOUD_PROJECT": "qa-test-project",
 }
 PROVIDER_CODES = ("PROVIDER_ERROR", "PROVIDER_TIMEOUT", "RUN_FAILED")
 
@@ -102,7 +99,6 @@ async def test_live_v2_provider_failure_is_a_failed_run(
     for name, value in LLM_ENV.items():
         monkeypatch.setenv(name, value)
     with FakeProvider(500, {"error": {"message": "qa simulated provider outage"}}) as provider:
-        monkeypatch.setenv("NEBIUS_BASE_URL", provider.base_url)
         async with running_app() as app:
             project, campaign, study_id = await live_setup(app.client, alice)
             if feature == "arena":
@@ -127,11 +123,11 @@ async def test_live_v2_provider_failure_is_a_failed_run(
 async def test_images_never_reach_a_text_only_model(
     qa_env: dict[str, str], monkeypatch: pytest.MonkeyPatch, alice: dict[str, str]
 ) -> None:
-    """§13 Vision: with no verified vision model configured, no request carries the image, and vision is unavailable."""
+    """§13 Vision: when the configured model is not a registered multimodal one, no request carries the image."""
     for name, value in LLM_ENV.items():
         monkeypatch.setenv(name, value)
+    monkeypatch.setenv("GEMINI_MODEL_DEFAULT", "qa-text-only-model")  # runs for text; never receives images
     with FakeProvider(500, {"error": {"message": "qa text model unavailable"}}) as provider:
-        monkeypatch.setenv("NEBIUS_BASE_URL", provider.base_url)
         async with running_app() as app:
             project, campaign, study_id = await live_setup(app.client, alice)
             image = await upload(app.client, alice, project.id, kind="image", filename="ad.png", data=PNG, content_type="image/png")
@@ -146,6 +142,6 @@ async def test_images_never_reach_a_text_only_model(
             )
             await wait_for_run(app.client, arena.run_id, alice)
     for body in provider.bodies:
-        assert b"image_url" not in body and b"data:image" not in body and b"iVBORw0KGgo" not in body, (
+        assert b"inline_data" not in body and b"image_url" not in body and b"iVBORw0KGgo" not in body, (
             "an image was sent to a text-only model (README §13 Vision)"
         )

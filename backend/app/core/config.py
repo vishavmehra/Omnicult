@@ -26,16 +26,7 @@ class Settings(BaseSettings):
 
     database_url: str = "sqlite+aiosqlite:///./nativeproof.db"
 
-    llm_primary_provider: Literal["nebius"] = "nebius"
-    nebius_api_key: SecretStr | None = None
-    nebius_base_url: str = "https://api.tokenfactory.nebius.com/v1/"
-    nebius_default_model: str | None = None
-    nebius_fast_model: str | None = None
-    nebius_reasoning_model: str | None = None
-    llm_fallback_enabled: bool = False
-    openrouter_api_key: SecretStr | None = None
-    openrouter_base_url: str | None = None
-    openrouter_default_model: str | None = None
+    # Provider-neutral call limits. The model gateway itself is configured in the Google block at the end of this class.
     llm_request_timeout_seconds: float = 60
     llm_max_retries: int = 2
 
@@ -47,15 +38,6 @@ class Settings(BaseSettings):
     qloo_transport: Literal["auto", "harness", "rest"] | None = None
     qloo_bin: str = "qloo"
     qloo_timeout_seconds: float = 30
-
-    # Capability routing (docs/15_MODEL_SELECTION.md). Model ids must be verified by real inference first.
-    embedding_provider: Literal["nebius", "openrouter"] = "nebius"
-    embedding_model: str | None = None
-    embedding_dimensions: int | None = None
-    vision_provider: Literal["nebius", "openrouter"] = "nebius"
-    vision_model: str | None = None
-    rerank_provider: Literal["nebius", "openrouter"] | None = None
-    rerank_model: str | None = None
 
     # Uploaded assets (contracts/README section 13)
     # database: bytes in a table (tests); local: files under storage/assets (development); gcs: a private Cloud Storage
@@ -80,28 +62,16 @@ class Settings(BaseSettings):
     @field_validator(
         "supabase_url",
         "supabase_secret_key",
-        "nebius_api_key",
-        "nebius_default_model",
-        "nebius_fast_model",
-        "nebius_reasoning_model",
-        "openrouter_api_key",
-        "openrouter_base_url",
-        "openrouter_default_model",
         "qloo_api_key",
         "qloo_base_url",
         "qloo_transport",
-        "embedding_model",
-        "embedding_dimensions",
-        "vision_model",
-        "rerank_model",
-        "rerank_provider",
         "gcs_bucket",
         "firebase_project_id",
         mode="before",
     )
     @classmethod
     def _blank_is_unset(cls, value: object) -> object:
-        # `NEBIUS_API_KEY=` in a .env file means "not configured", not an empty credential.
+        # `QLOO_API_KEY=` in a .env file means "not configured", not an empty credential.
         return None if isinstance(value, str) and not value.strip() else value
 
     # A field validator, not a model validator: its error input is just the auth mode, never the full settings
@@ -131,6 +101,41 @@ class Settings(BaseSettings):
     @property
     def cors_origins(self) -> list[str]:
         return [origin.strip() for origin in self.frontend_origins.split(",") if origin.strip()]
+
+    # --- gateway (Google Gen AI) ---------------------------------------------------------------------------------
+    # Vertex AI (ADC on Cloud Run or `gcloud auth application-default login` locally; billed to the project) or the
+    # Gemini Developer API (API key; its free tier may use prompts to improve Google products, so never real brand data).
+    google_genai_backend: Literal["vertex", "gemini_api"] = "vertex"
+    google_cloud_project: str | None = None
+    google_cloud_location: str = "global"  # image generation always uses `global`
+    gemini_api_key: SecretStr | None = None
+    # Model ids are configuration. Defaults are the ids verified through scripts/verify_google_models.py on 2026-11-17.
+    gemini_model_fast: str = "gemini-3.5-flash-lite"
+    gemini_model_default: str = "gemini-3.8-flash"
+    gemini_model_reasoning: str = "gemini-4-argon"
+    gemini_model_image: str = "gemini-3.1-flash-image"
+    gemini_model_tts: str = "gemini-3.8-flash-tts"
+    gemini_model_live: str = "gemini-live-2.5-flash"
+    gemini_embedding_model: str = "gemini-embedding-2"
+    gemini_embedding_dimensions: int = 768
+    # Hard ceilings (USD, estimated from the price table in app/llm/registry.py). A call that would cross either one
+    # is refused before it is sent.
+    ai_run_budget_usd: float = 0.50
+    ai_daily_budget_usd: float = 5.0
+
+    @field_validator("google_cloud_project", "gemini_api_key", mode="before")
+    @classmethod
+    def _blank_google_is_unset(cls, value: object) -> object:
+        return None if isinstance(value, str) and not value.strip() else value
+
+    @field_validator(
+        "google_cloud_location", "gemini_model_fast", "gemini_model_default", "gemini_model_reasoning",
+        "gemini_model_image", "gemini_model_tts", "gemini_model_live", "gemini_embedding_model", mode="after",
+    )
+    @classmethod
+    def _blank_google_model_uses_default(cls, value: str, info: ValidationInfo) -> str:
+        # `GEMINI_MODEL_FAST=` in a copied .env means "use the default", not an empty id.
+        return value.strip() or cls.model_fields[info.field_name].default
 
 
 @lru_cache

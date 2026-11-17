@@ -40,20 +40,20 @@ async def journey(out: Path | None = None) -> dict[str, Any]:
     from app.db import models as m
     from app.db.base import Base
     from app.db.session import dispose_engine, get_engine, session
-    from app.llm import gateway as gw
+    from app.llm import google as gw
     from app.main import create_app
     from scripts.verify_inference import test_png
 
     get_settings.cache_clear()
     settings = get_settings()
     calls = {"count": 0}
-    original_complete = gw.OpenAICompatibleProvider.complete
+    original_complete = gw.GoogleGenAIProvider.complete
 
     async def counting_complete(self, request):  # counts every real chat and vision request, never the content
         calls["count"] += 1
         return await original_complete(self, request)
 
-    gw.OpenAICompatibleProvider.complete = counting_complete
+    gw.GoogleGenAIProvider.complete = counting_complete
     await dispose_engine()
     async with get_engine().begin() as connection:
         await connection.run_sync(Base.metadata.create_all)
@@ -128,8 +128,8 @@ async def journey(out: Path | None = None) -> dict[str, Any]:
         arena_view = (await client.get(f"{api}/arenas/{arena['result']['ids'][0]}")).json() if arena.get("result") else {}
         evidence = (await client.get(f"{api}/projects/{pid}/evidence", params={"limit": 100})).json()["items"]
         checks["all runs completed"] = all(r["status"] == "completed" for r in runs)
-        checks["every model step is nebius"] = all(
-            s.get("provider") in ("nebius", "nativeproof", None) for r in runs for s in r["steps"])
+        checks["every model step is google"] = all(
+            s.get("provider") in ("google", "nativeproof", None) for r in runs for s in r["steps"])
         checks["rehearsal re-reads with 6 synthetic reactions"] = len(rehearsal_view.get("reactions", [])) == 6 and all(
             x["is_synthetic"] for x in rehearsal_view.get("reactions", []))
         checks["rehearsal disclosed as ungrounded"] = rehearsal_view.get("simulation_disclosure", {}).get("grounded") is False
@@ -142,10 +142,10 @@ async def journey(out: Path | None = None) -> dict[str, Any]:
         checks["export has the synthetic disclosure and no DEMO banner"] = (
             "DEMO DATA" not in markdown[:300] and "not responses from real people" in markdown)
         checks["JSON export downloads"] = exported.status_code == 200 and exported.json().get("id") == report["id"]
-    gw.OpenAICompatibleProvider.complete = original_complete
+    gw.GoogleGenAIProvider.complete = original_complete
     await dispose_engine()
     tokens = sum((s.get("usage") or {}).get("total_tokens") or 0 for r in runs for s in r["steps"])
-    result = {"runs": runs, "checks": checks, "calls": calls["count"], "tokens": tokens, "reasoning": settings.nebius_reasoning_model}
+    result = {"runs": runs, "checks": checks, "calls": calls["count"], "tokens": tokens, "reasoning": settings.gemini_model_reasoning}
     report_md = render(result)
     print(report_md)
     if out:
@@ -182,8 +182,10 @@ def main() -> int:
         from app.core.config import get_settings
 
         get_settings.cache_clear()
-        if get_settings().nebius_api_key is None or not get_settings().nebius_default_model:
-            print("Skipped: NEBIUS_API_KEY and NEBIUS_DEFAULT_MODEL are required.")
+        from app.llm.google import is_configured
+
+        if not is_configured(get_settings()):
+            print("Skipped: Google credentials (GOOGLE_CLOUD_PROJECT with ADC, or GEMINI_API_KEY) are required.")
             return 0
         result = asyncio.run(journey(args.out))
     return 0 if all(result["checks"].values()) else 1

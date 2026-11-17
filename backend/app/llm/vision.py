@@ -1,13 +1,11 @@
-"""Vision adapter (contracts/README §13, D-035): visible elements only, verified vision models only.
+"""Vision adapter (contracts/README section 13, D-035): visible elements only, multimodal Gemini models only.
 
-Images go only to models in VERIFIED_VISION_MODELS, each verified with real image inference
-(docs/15_MODEL_SELECTION.md). Any other VISION_MODEL counts as not configured: the result is
-`unavailable`, and the image is never sent to a model that may be text-only. Provider or output
-failures return `failed` with a message, so the caller's text analysis still runs. Observations
-are what is visible; cultural readings of them are interpretations made elsewhere.
+Images go only to models the registry marks as multimodal (GEMINI_MODEL_DEFAULT, a Gemini Flash model). Any other
+configured model counts as not configured: the result is `unavailable`, and the image is never sent to a model that may be
+text-only. Provider, budget or output failures return `failed` with a message, so the caller's text analysis still runs.
+Observations are what is visible; cultural readings of them are interpretations made elsewhere.
 """
 
-import base64
 import time
 from dataclasses import dataclass
 from typing import Any, Literal
@@ -16,8 +14,10 @@ from uuid import UUID
 from pydantic import BaseModel, Field
 
 from app.core.config import Settings
-from app.llm.embeddings import capability_endpoint, with_retries
-from app.llm.gateway import ChatRequest, OpenAICompatibleProvider, ProviderError, parse_json
+from app.llm import google
+from app.llm.budget import BudgetExceeded, Meter, metered
+from app.llm.gateway import ChatRequest, ProviderError, parse_json, priced
+from app.llm.registry import capability_model, estimate_cost, spec_for, thinking_level_for
 from app.schemas.assets import VisionStatus, VisualObservation
 from app.schemas.common import Sampling, StepTrace, Usage
 
@@ -25,6 +25,7 @@ VISION_PROMPT_VERSION = "vision-observe-v1"
 VISION_SCHEMA_VERSION = "visual-observations-v1"
 SUPPORTED_IMAGE_TYPES = frozenset({"image/png", "image/jpeg", "image/webp"})
 MAX_OBSERVATIONS = 30
+IMAGE_TOKEN_ESTIMATE = 1600  # a high-detail image; used only to size the pre-call budget estimate
 SYSTEM_PROMPT = (
     "You list what is visibly present in an image for a marketing research tool. Report only visible facts: "
     "objects, text in the image (transcribed exactly, keeping its spelling and case), symbols or logos, people, "
@@ -38,21 +39,6 @@ SYSTEM_PROMPT = (
 USER_PROMPT = "List the visible elements of this image."
 _KINDS = ("object", "text_in_image", "symbol", "person", "color_or_layout", "other")
 _KIND_ALIASES = {"text": "text_in_image", "logo": "symbol", "color": "color_or_layout", "layout": "color_or_layout"}
-
-
-@dataclass(frozen=True)
-class VisionModel:
-    provider: str
-    json_object: bool  # response_format json_object accepted with an image
-
-
-# Only models that passed real image inference on 2026-10-26 (docs/15_MODEL_SELECTION.md, vision section):
-# both test creatives (English headline + shapes; Japanese headline + gate + person) read exactly, valid JSON.
-VERIFIED_VISION_MODELS: dict[str, VisionModel] = {
-    "openbmb/MiniCPM-V-4_5": VisionModel(provider="nebius", json_object=True),  # chosen: 1.7-2.0 s
-    "nvidia/Nemotron-3.5-Super-VL": VisionModel(provider="nebius", json_object=True),  # 4.5 s
-    "google/gemma-3-27b-it": VisionModel(provider="nebius", json_object=True),  # 6.1-7.1 s; one inaccuracy
-}
 
 
 class _Observation(BaseModel):
@@ -90,32 +76,21 @@ def parse_observations(text: str, asset_id: UUID) -> list[VisualObservation]:
 
 
 class VisionClient:
-    def __init__(self, settings: Settings, *, http_client: Any = None, backoff_seconds: float = 0.5) -> None:
-        self._settings = settings
-        self._backoff = backoff_seconds
-        self.provider_name = settings.vision_provider
-        self.model = (settings.vision_model or "").strip() or None
-        self._info = VERIFIED_VISION_MODELS.get(self.model or "")
-        endpoint = capability_endpoint(settings, settings.vision_provider)
+    def __init__(self, settings: Settings, *, client: Any = None, meter: Meter | None = None,
+                 backoff_seconds: float = 0.5) -> None:
+        self._settings, self._backoff, self._meter = settings, backoff_seconds, meter
+        self.provider_name = "google"
+        self.model = capability_model(settings, "vision")
+        spec = spec_for(self.model)
         if not self.model:
             self._reason: str | None = "No vision model is configured."
-        elif self._info is None or self._info.provider != settings.vision_provider:
-            self._reason = (
-                f"{self.model} on {settings.vision_provider} has not been verified with real image inference, so "
-                "images are not sent to it."
-            )
-        elif endpoint is None:
-            self._reason = "The vision provider's API key is not configured."
+        elif spec is None or not spec.multimodal_input:
+            self._reason = f"{self.model} is not a registered multimodal Gemini model, so images are not sent to it."
+        elif client is None and not google.is_configured(settings):
+            self._reason = "Google credentials are not configured."
         else:
             self._reason = None
-        self._provider = (
-            OpenAICompatibleProvider(
-                settings.vision_provider, base_url=endpoint[0], api_key=endpoint[1],
-                timeout=settings.llm_request_timeout_seconds, http_client=http_client,
-            )
-            if self._reason is None and endpoint
-            else None
-        )
+        self._provider = google.GoogleGenAIProvider(settings, client=client) if self._reason is None else None
 
     def is_configured(self) -> bool:
         return self._provider is not None
@@ -131,47 +106,69 @@ class VisionClient:
         self, asset_id: UUID, image: bytes, content_type: str, *, stage: str = "analyzing_creatives",
         agent: str = "vision",
     ) -> VisionResult:
-        """Visible elements of one image. Never raises for provider or output problems."""
-        if self._provider is None or self.model is None or self._info is None:
+        """Visible elements of one image. Never raises for provider, budget or output problems."""
+        if self._provider is None or self.model is None:
             return VisionResult(self._status("unavailable", self._reason), [], None)
         if content_type not in SUPPORTED_IMAGE_TYPES or not image or len(image) > self._settings.max_image_bytes:
             return VisionResult(self._status("failed", "The image type or size cannot be analyzed."), [], None)
         started = time.perf_counter()
-        image_url = f"data:{content_type};base64,{base64.b64encode(image).decode()}"
+        spec = spec_for(self.model)
+        model, provider = self.model, self._provider
         request = ChatRequest(
-            model=self.model,
-            messages=[  # type: ignore[list-item]  # multimodal content parts; F is widening the type
+            model=model,
+            messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": [
                     {"type": "text", "text": USER_PROMPT},
-                    {"type": "image_url", "image_url": {"url": image_url}},
+                    {"type": "image", "mime_type": content_type, "data": image},
                 ]},
             ],
-            temperature=0.0, seed=None, max_tokens=1200, prompt_version=VISION_PROMPT_VERSION,
-            response_format={"type": "json_object"} if self._info.json_object else None,
+            temperature=0.0, seed=None, max_tokens=1200 + (spec.thinking_headroom if spec else 0),
+            json_schema=_Observations.model_json_schema(), prompt_version=VISION_PROMPT_VERSION,
+            thinking_level=thinking_level_for(model, "fast"),
         )
 
         def trace(status: Literal["completed", "failed"], retries: int, usage: Usage | None = None,
                   error_code: str | None = None) -> StepTrace:
             return StepTrace(
-                stage=stage, agent=agent, status=status, provider=self.provider_name, model_id=self.model,
+                stage=stage, agent=agent, status=status, provider=self.provider_name, model_id=model,
                 prompt_version=VISION_PROMPT_VERSION, schema_version=VISION_SCHEMA_VERSION,
                 latency_ms=int((time.perf_counter() - started) * 1000), retries=retries,
                 sampling=Sampling(temperature=0.0), usage=usage, error_code=error_code,
             )
 
+        async def attempt():
+            estimate = estimate_cost(
+                model, input_tokens=IMAGE_TOKEN_ESTIMATE + len(SYSTEM_PROMPT) // 3, output_tokens=request.max_tokens
+            ).usd
+            async with metered(
+                self._meter, capability="vision", model=model, stage=stage, agent=agent,
+                prompt_version=VISION_PROMPT_VERSION, estimate_usd=estimate,
+            ) as record:
+                completion = await provider.complete(request)
+                record.usage = completion.usage
+                return completion
+
         try:
-            completion, retries = await with_retries(
-                lambda: self._provider.complete(request),  # type: ignore[union-attr]
-                retries=max(0, self._settings.llm_max_retries), backoff=self._backoff,
+            completion, retries = await google.with_retries(
+                attempt, retries=max(0, self._settings.llm_max_retries), backoff=self._backoff
             )
+        except BudgetExceeded as exc:
+            message = f"The AI budget was reached ({exc}); the text analysis continues without image observations."
+            return VisionResult(self._status("failed", message), [], trace("failed", 0, error_code="BUDGET_EXCEEDED"))
         except ProviderError as exc:
-            code = "PROVIDER_TIMEOUT" if exc.timeout else "PROVIDER_ERROR"
-            message = f"The vision provider failed ({exc}); the text analysis continues without image observations."
+            code = "CONTENT_BLOCKED" if exc.blocked else "PROVIDER_TIMEOUT" if exc.timeout else "PROVIDER_ERROR"
+            message = (
+                "The vision model declined this image (safety filter); the text analysis continues without image "
+                "observations."
+                if exc.blocked
+                else f"The vision provider failed ({exc}); the text analysis continues without image observations."
+            )
             return VisionResult(self._status("failed", message), [], trace("failed", 0, error_code=code))
+        usage = priced(completion.usage, model)
         try:
             observations = parse_observations(completion.text, asset_id)
         except ValueError:  # includes pydantic.ValidationError
             message = "The vision model's output did not match the required format; no image observations were saved."
-            return VisionResult(self._status("failed", message), [], trace("failed", retries, completion.usage, "RUN_FAILED"))
-        return VisionResult(self._status("analyzed", None), observations, trace("completed", retries, completion.usage))
+            return VisionResult(self._status("failed", message), [], trace("failed", retries, usage, "RUN_FAILED"))
+        return VisionResult(self._status("analyzed", None), observations, trace("completed", retries, usage))

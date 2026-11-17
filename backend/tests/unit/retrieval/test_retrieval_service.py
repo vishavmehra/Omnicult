@@ -141,7 +141,7 @@ async def test_provider_failure_while_indexing_stores_chunks_for_later() -> None
 
 async def test_unavailable_without_embeddings_or_in_demo_projects() -> None:
     store = InMemoryRetrievalStore()
-    live = get_retrieval_service("live", Settings(_env_file=None, embedding_model=None), store)
+    live = get_retrieval_service("live", Settings(_env_file=None, google_cloud_project=None, gemini_api_key=None), store)
     demo = get_retrieval_service("demo", Settings(_env_file=None), store)
     for svc, message in ((live, NOT_CONFIGURED), (demo, DEMO_UNAVAILABLE)):
         assert not svc.is_configured()
@@ -151,11 +151,11 @@ async def test_unavailable_without_embeddings_or_in_demo_projects() -> None:
 
 
 async def test_similarity_floor_applies_to_the_measured_model() -> None:
-    svc, _, _ = service(FakeEmbedder(model="Qwen/Qwen3-Embedding-8B"))
+    svc, _, _ = service(FakeEmbedder(model="gemini-embedding-2"))
     documents = [doc("ev-1", "hiking hiking hiking trail"), doc("ev-2", "price jacket color brand hiking")]
     await svc.index_documents(PROJECT, documents)
     hits = (await svc.search(PROJECT, "hiking trail")).hits
-    assert [hit.id for hit in hits] == ["ev-1"]  # ev-2 scores 0.316, below the 0.33 floor
+    assert [hit.id for hit in hits] == ["ev-1"]  # ev-2 scores 0.316, below the 0.58 floor
     unfiltered, _, _ = service()
     await unfiltered.index_documents(PROJECT, documents)
     assert len((await unfiltered.search(PROJECT, "hiking trail")).hits) == 2

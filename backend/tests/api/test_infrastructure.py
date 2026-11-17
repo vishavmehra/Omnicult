@@ -29,7 +29,7 @@ async def test_ready_live_when_both_providers_configured(client: httpx.AsyncClie
 
     import sys
 
-    values = {"QLOO_API_KEY": "k", "QLOO_BIN": sys.executable, "NEBIUS_API_KEY": "k", "NEBIUS_DEFAULT_MODEL": "m"}
+    values = {"QLOO_API_KEY": "k", "QLOO_BIN": sys.executable, "GOOGLE_CLOUD_PROJECT": "p"}
     for name, value in values.items():
         monkeypatch.setenv(name, value)
     get_settings.cache_clear()
@@ -42,7 +42,7 @@ async def test_unverified_capability_model_is_not_reported_configured(
 ) -> None:
     from app.core.config import get_settings
 
-    for name, value in {"VISION_MODEL": "unverified/model", "NEBIUS_API_KEY": "k", "OPENROUTER_API_KEY": "k"}.items():
+    for name, value in {"GEMINI_MODEL_DEFAULT": "unverified/model", "GOOGLE_CLOUD_PROJECT": "p"}.items():
         monkeypatch.setenv(name, value)
     get_settings.cache_clear()
     capabilities = (await client.get("/ready")).json()["capabilities"]

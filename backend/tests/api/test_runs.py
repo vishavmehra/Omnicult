@@ -34,7 +34,7 @@ def configure(monkeypatch: pytest.MonkeyPatch, **values: str) -> None:
 
 
 QLOO = {"QLOO_API_KEY": "test-key", "QLOO_BIN": sys.executable}  # any existing file counts as a runnable command
-LLM = {"NEBIUS_API_KEY": "test-key", "NEBIUS_DEFAULT_MODEL": "test-model"}
+LLM = {"GOOGLE_CLOUD_PROJECT": "test-project"}
 
 
 @pytest.fixture

@@ -76,7 +76,7 @@ async def test_search_indexes_project_content_once_and_drops_removed_sources(
     assert "sunrise" in top["snippet"] and 0 < top["similarity"] <= 1
     async with session() as s:
         rows = (await s.execute(select(m.Embedding).where(m.Embedding.project_id.is_not(None)))).scalars().all()
-    assert {(row.model, row.dims, row.config_version) for row in rows} == {("fake-embed", len(VOCAB), "emb-v1")}
+    assert {(row.model, row.dims, row.config_version) for row in rows} == {("fake-embed", len(VOCAB), "emb-v2")}
 
     embedded = len(embedder.texts)
     await client.get(f"{API}/projects/{project_id}/search", params={"q": "pack light"})

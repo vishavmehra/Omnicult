@@ -2828,7 +2828,7 @@ export interface components {
              * Code
              * @enum {string}
              */
-            code: "VALIDATION_ERROR" | "UNAUTHENTICATED" | "FORBIDDEN" | "NOT_FOUND" | "CONFLICT" | "RATE_LIMITED" | "PROVIDER_ERROR" | "PROVIDER_TIMEOUT" | "PROVIDER_NOT_CONFIGURED" | "UNSUPPORTED_CAPABILITY" | "RUN_FAILED" | "RUN_INTERRUPTED" | "INTERNAL_ERROR";
+            code: "VALIDATION_ERROR" | "UNAUTHENTICATED" | "FORBIDDEN" | "NOT_FOUND" | "CONFLICT" | "RATE_LIMITED" | "PROVIDER_ERROR" | "PROVIDER_TIMEOUT" | "PROVIDER_NOT_CONFIGURED" | "UNSUPPORTED_CAPABILITY" | "CONTENT_BLOCKED" | "BUDGET_EXCEEDED" | "RUN_FAILED" | "RUN_INTERRUPTED" | "INTERNAL_ERROR";
             /**
              * Details
              * @default []
@@ -5264,7 +5264,7 @@ export interface components {
              * Code
              * @enum {string}
              */
-            code: "VALIDATION_ERROR" | "UNAUTHENTICATED" | "FORBIDDEN" | "NOT_FOUND" | "CONFLICT" | "RATE_LIMITED" | "PROVIDER_ERROR" | "PROVIDER_TIMEOUT" | "PROVIDER_NOT_CONFIGURED" | "UNSUPPORTED_CAPABILITY" | "RUN_FAILED" | "RUN_INTERRUPTED" | "INTERNAL_ERROR";
+            code: "VALIDATION_ERROR" | "UNAUTHENTICATED" | "FORBIDDEN" | "NOT_FOUND" | "CONFLICT" | "RATE_LIMITED" | "PROVIDER_ERROR" | "PROVIDER_TIMEOUT" | "PROVIDER_NOT_CONFIGURED" | "UNSUPPORTED_CAPABILITY" | "CONTENT_BLOCKED" | "BUDGET_EXCEEDED" | "RUN_FAILED" | "RUN_INTERRUPTED" | "INTERNAL_ERROR";
             /**
              * Message
              * @description Safe, user-facing explanation, including whether results were saved.
@@ -5895,7 +5895,7 @@ export interface components {
             prompt_version: string | null;
             /**
              * Provider
-             * @description qloo, nebius, openrouter, fixture, or nativeproof.
+             * @description qloo, google, fixture, or nativeproof (earlier runs may also show nebius or openrouter).
              */
             provider: string | null;
             /**
@@ -6179,13 +6179,21 @@ export interface components {
         Usage: {
             /**
              * Estimated Cost Usd
-             * @description Null when the provider reports no usage or verified pricing is unknown.
+             * @description Estimate from the price table in app/llm/registry.py, never a billed amount. Null when the provider reports no usage or the model has no price entry.
              */
             estimated_cost_usd: number | null;
             /** Input Tokens */
             input_tokens: number | null;
-            /** Output Tokens */
+            /**
+             * Output Tokens
+             * @description Billed output tokens, thinking tokens included.
+             */
             output_tokens: number | null;
+            /**
+             * Thinking Tokens
+             * @description The part of output_tokens spent on model thinking.
+             */
+            thinking_tokens: number | null;
             /** Total Tokens */
             total_tokens: number | null;
         };

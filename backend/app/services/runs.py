@@ -26,6 +26,7 @@ from app.core.idempotency import idempotency_key_var
 from app.db import models as m
 from app.db.base import utcnow
 from app.db.session import read_session, session
+from app.llm.budget import run_scope
 from app.schemas.adaptations import AdaptationCreate
 from app.schemas.campaigns import CampaignContent, EvaluationCriteria
 from app.schemas.common import ErrorDetail, Market
@@ -161,7 +162,7 @@ def _check_provider(mode: str, run_type: str) -> None:
     if run_type not in QLOO_RUNS and not llm_configured(settings):
         raise ProviderNotConfigured(
             f"Live {label} is unavailable: no language model provider is configured on the server. "
-            "Use a demo project or configure Nebius."
+            "Use a demo project or configure Google (Vertex AI or the Gemini API)."
         )
 
 
@@ -387,7 +388,8 @@ async def _execute(run_id: UUID, run_type: str) -> None:
                     from app.services import population
 
                     extra["checkpoint"] = population.checkpoint_for(run_id, run_type)
-                outcome = await run_workflow(workflow_input, deps, _progress_callback(run_id), **extra)
+                with run_scope(str(run_id)):  # model calls made by this run count against its AI budget
+                    outcome = await run_workflow(workflow_input, deps, _progress_callback(run_id), **extra)
             await _persist(run_id, outcome)
         await index_project(run_id=run_id)
     except RunCancelled:

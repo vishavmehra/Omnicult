@@ -30,7 +30,7 @@ def test_supabase_auth_mode_is_gone() -> None:
 
 
 def test_secrets_are_masked_in_settings_repr() -> None:
-    settings = Settings(_env_file=None, nebius_api_key=DUMMY, qloo_api_key=DUMMY, openrouter_api_key=DUMMY)
+    settings = Settings(_env_file=None, gemini_api_key=DUMMY, qloo_api_key=DUMMY)
     if DUMMY in repr(settings) or DUMMY in str(settings.model_dump()):
         pytest.fail("a secret is visible in Settings repr/model_dump", pytrace=False)
 
@@ -42,8 +42,7 @@ def test_settings_error_does_not_echo_secrets() -> None:
             _env_file=None,
             app_env="production",
             auth_mode="dev",
-            nebius_api_key=DUMMY,
-            openrouter_api_key=DUMMY,
+            gemini_api_key=DUMMY,
             qloo_api_key=DUMMY,
             supabase_secret_key=DUMMY,
         )

@@ -14,12 +14,9 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import importlib
-import json
 import logging
-import threading
 from collections.abc import AsyncIterator, Iterable, Mapping
 from concurrent.futures import ThreadPoolExecutor
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -67,7 +64,8 @@ def dev_user_id(label: str) -> UUID:
 
 
 def base_env(tmp_path: Path) -> dict[str, str]:
-    """Hermetic test settings. Provider hosts use the reserved `.invalid` TLD so nothing can reach the network."""
+    """Hermetic test settings. Google credentials are absent unless a test sets them, and tests that configure them
+    also install `FakeProvider`, so no request can reach the network."""
     database = (tmp_path / "nativeproof-test.db").as_posix()
     return {
         "APP_ENV": "test",
@@ -75,10 +73,6 @@ def base_env(tmp_path: Path) -> dict[str, str]:
         "LOG_LEVEL": "INFO",
         "FRONTEND_ORIGINS": "http://localhost:3000",
         "DATABASE_URL": f"sqlite+aiosqlite:///{database}",
-        "LLM_PRIMARY_PROVIDER": "nebius",
-        "NEBIUS_BASE_URL": "https://nebius.invalid/v1/",
-        "OPENROUTER_BASE_URL": "https://openrouter.invalid/api/v1/",
-        "LLM_FALLBACK_ENABLED": "false",
         "LLM_REQUEST_TIMEOUT_SECONDS": "5",
         "LLM_MAX_RETRIES": "0",
         "QLOO_BIN": str(tmp_path / "qloo-not-installed"),
@@ -109,7 +103,7 @@ def migrate(database_url: str) -> None:
 
 
 # Provider credentials are absent (None) by default because .env is not read.
-PROVIDER_SECRET_VARS = ("NEBIUS_API_KEY", "OPENROUTER_API_KEY", "QLOO_API_KEY", "SUPABASE_JWT_SECRET")
+PROVIDER_SECRET_VARS = ("GEMINI_API_KEY", "GOOGLE_CLOUD_PROJECT", "GOOGLE_API_KEY", "QLOO_API_KEY", "SUPABASE_JWT_SECRET")
 
 
 def apply_env(monkeypatch: pytest.MonkeyPatch, env: Mapping[str, str]) -> None:
@@ -127,44 +121,44 @@ def apply_env(monkeypatch: pytest.MonkeyPatch, env: Mapping[str, str]) -> None:
 
 
 class FakeProvider:
-    """OpenAI-compatible stand-in on 127.0.0.1 answering every request with one canned response.
+    """Stand-in for the Google Gen AI client: answers every model request with one canned HTTP error and records it.
 
-    The openai SDK does not send through httpx (F: it uses httpx2), so respx cannot intercept it; a local
-    server works for any client library. Point NEBIUS_BASE_URL at `base_url`.
+    Entering the context patches `app.llm.google.build_client`, the one place a client is created, so the gateway and
+    every capability adapter talk to this object and nothing can reach the network. `requests` holds one line per
+    call and `bodies` a text dump of what was sent (contents and config), so tests can check what left the process.
     """
 
     def __init__(self, status: int, body: dict[str, Any]) -> None:
-        self.status, self.payload = status, json.dumps(body).encode()
+        from google.genai import errors
+
+        self.status, self.payload = status, body
         self.requests: list[str] = []
         self.bodies: list[bytes] = []
         provider = self
+        cls = errors.ClientError if status < 500 else errors.ServerError
 
-        class Handler(BaseHTTPRequestHandler):
-            def _answer(self) -> None:
-                length = int(self.headers.get("Content-Length") or 0)
-                provider.bodies.append(self.rfile.read(length) if length else b"")
-                provider.requests.append(f"{self.command} {self.path}")
-                self.send_response(provider.status)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Content-Length", str(len(provider.payload)))
-                self.end_headers()
-                self.wfile.write(provider.payload)
+        class Models:
+            async def generate_content(self, *, model: str, contents: Any, config: Any) -> Any:
+                provider._record("generate_content", model, contents, config)
+                raise cls(provider.status, provider.payload)
 
-            do_GET = do_POST = _answer
+            async def embed_content(self, *, model: str, contents: Any, config: Any) -> Any:
+                provider._record("embed_content", model, contents, config)
+                raise cls(provider.status, provider.payload)
 
-            def log_message(self, *args: Any) -> None:  # keep test output quiet
-                pass
+        self.client = type("FakeGenAIClient", (), {"aio": type("Aio", (), {"models": Models()})()})()
+        self._patch = pytest.MonkeyPatch()
 
-        self.server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
-        self.base_url = f"http://127.0.0.1:{self.server.server_address[1]}/v1/"
+    def _record(self, operation: str, model: str, contents: Any, config: Any) -> None:
+        self.requests.append(f"{operation} {model}")
+        self.bodies.append(f"{contents!r} {config!r}".encode())
 
     def __enter__(self) -> FakeProvider:
-        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+        self._patch.setattr("app.llm.google.build_client", lambda settings, **kwargs: self.client)
         return self
 
     def __exit__(self, *exc_info: object) -> None:
-        self.server.shutdown()
-        self.server.server_close()
+        self._patch.undo()
 
 
 # --------------------------------------------------------------------------- ASGI lifespan

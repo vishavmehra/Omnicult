@@ -69,15 +69,15 @@ async def chat(gateway: LLMGateway, capability: str, task: str) -> Row:
 async def embeddings(gateway: LLMGateway, settings) -> Row:
     client = gateway.capability("embeddings")
     if client is None:
-        return "embeddings", settings.embedding_provider, settings.embedding_model, "not configured", None, "EMBEDDING_* unset or unverified"
+        return "embeddings", "google", settings.gemini_embedding_model, "not configured", None, "Google credentials or GEMINI_EMBEDDING_MODEL not usable"
     try:
         result = await client.embed(EMBED_TEXTS, kind="document", stage="verification", agent="verify")
     except LLMError as exc:
         return failed("embeddings", exc)
     dims = sorted({len(v) for v in result.vectors})
     norms = ", ".join(f"{math.sqrt(sum(x * x for x in v)):.3f}" for v in result.vectors)
-    ok = len(result.vectors) == len(EMBED_TEXTS) and dims == [settings.embedding_dimensions]
-    summary = f"{len(result.vectors)} vectors, dimensions {dims} (expected {settings.embedding_dimensions}), L2 norms {norms}"
+    ok = len(result.vectors) == len(EMBED_TEXTS) and dims == [settings.gemini_embedding_dimensions]
+    summary = f"{len(result.vectors)} vectors, dimensions {dims} (expected {settings.gemini_embedding_dimensions}), L2 norms {norms}"
     t = result.trace
     return "embeddings", t.provider, t.model_id, "ok" if ok else "fail (shape)", t.latency_ms, summary
 
@@ -85,7 +85,7 @@ async def embeddings(gateway: LLMGateway, settings) -> Row:
 async def vision(gateway: LLMGateway, settings) -> Row:
     client = gateway.capability("vision")
     if client is None:
-        return "vision", settings.vision_provider, settings.vision_model, "not configured", None, "VISION_* unset or unverified"
+        return "vision", "google", settings.gemini_model_default, "not configured", None, "Google credentials or a multimodal GEMINI_MODEL_DEFAULT missing"
     try:
         result = await client.observe(uuid4(), test_png(), "image/png", stage="verification", agent="verify")
     except LLMError as exc:
@@ -102,7 +102,7 @@ async def main(out: Path | None) -> int:
     settings = get_settings()
     gateway = LLMGateway(settings)
     if not gateway.is_configured():
-        print("NOT CONFIGURED: set NEBIUS_API_KEY and NEBIUS_DEFAULT_MODEL in backend/.env")
+        print("NOT CONFIGURED: set GOOGLE_CLOUD_PROJECT (Vertex AI, with ADC) or GOOGLE_GENAI_BACKEND=gemini_api and GEMINI_API_KEY in backend/.env")
         return 2
     rows = [
         await chat(gateway, "chat: fast", "extraction"),

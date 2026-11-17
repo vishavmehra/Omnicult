@@ -126,7 +126,7 @@ K = (1, 3, 5)
 
 async def evaluate(settings: Settings, *, instruction: bool) -> None:
     embedder = LLMGateway(settings).capability("embeddings")  # the one gateway: deadlines, configured checks
-    assert embedder is not None and embedder.space is not None, "EMBEDDING_* is not configured"
+    assert embedder is not None and embedder.space is not None, "GEMINI_EMBEDDING_* or Google credentials are not configured"
     store, project = InMemoryRetrievalStore(), uuid4()
     service = RetrievalService(embedder, store)
     documents = [
@@ -179,7 +179,7 @@ def main() -> None:
     args = parser.parse_args()
     settings = Settings()
     if args.dimensions:
-        settings = settings.model_copy(update={"embedding_dimensions": args.dimensions})
+        settings = settings.model_copy(update={"gemini_embedding_dimensions": args.dimensions})
     asyncio.run(evaluate(settings, instruction=not args.no_instruction))
 
 

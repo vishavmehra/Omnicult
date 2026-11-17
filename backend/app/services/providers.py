@@ -21,7 +21,7 @@ def qloo_configured(settings: Settings) -> bool:
 
 
 def llm_configured(settings: Settings) -> bool:
-    """Nebius key plus a default model; constructing the gateway makes no request."""
+    """Google credentials plus a default model; constructing the gateway makes no request."""
     return LLMGateway(settings).is_configured()
 
 

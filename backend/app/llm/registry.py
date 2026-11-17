@@ -1,16 +1,25 @@
-"""Verified Nebius models and task routing.
+"""Google model registry, task routing and the price table (D-023, Omnicult gateway).
 
-Only capabilities observed on 2026-10-25 are recorded here (evidence: docs/05_MODEL_ROUTING.md,
-appendix "Verified models (2026-10-25)"). A configured model that is not listed is still callable,
-but the gateway sends it no response_format and relies on prompt instructions plus validation.
+Model ids are configuration (`GEMINI_MODEL_*`, Settings); this module only knows what each id can do and what it costs.
+A configured id that is not listed here still runs for plain text, but its cost is unknown (the gateway then budgets
+with a conservative price and records `estimated_cost_usd = null`), and it is never sent images.
+
+PRICES ARE ESTIMATES. Source: the official Gemini pricing page https://aistudio.google.com/docs/pricing (the former
+ai.google.dev/gemini-api/docs/pricing), read on 2026-11-17, plus the Vertex AI model pages under
+https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models for ids and locations. The Vertex AI pricing page
+(https://cloud.google.com/vertex-ai/generative-ai/pricing) is rendered by script and could not be read by the tooling used
+here, so Vertex list prices are assumed equal to the Gemini API paid tier. Check the billing report before relying on
+them. Thinking tokens bill as output. Audio input to Flash models can bill higher than text input; that is not modelled.
 """
 
 from dataclasses import dataclass
+from datetime import date
 from typing import Literal
 
 from app.core.config import Settings
 
 Tier = Literal["fast", "default", "reasoning"]
+Capability = Literal["chat", "embeddings", "vision", "image_generation", "tts", "live", "grounded_research", "music"]
 TaskClass = Literal[
     "extraction",
     "research_synthesis",
@@ -23,9 +32,10 @@ TaskClass = Literal[
     "report_generation",
 ]
 
-ROUTING_POLICY_VERSION = "routing-v1"
+ROUTING_POLICY_VERSION = "routing-v2"
+PRICE_TABLE_VERSION = "prices-2026-11-17"  # bump when any number below changes
 
-# docs/05 §6.3: small, deterministic task -> tier table.
+# docs/05 section 6.3: small, deterministic task -> tier table.
 TASK_TIERS: dict[TaskClass, Tier] = {
     "extraction": "fast",
     "sentiment_analysis": "fast",
@@ -38,46 +48,214 @@ TASK_TIERS: dict[TaskClass, Tier] = {
     "risk_analysis": "reasoning",
 }
 
-
-@dataclass(frozen=True)
-class ModelInfo:
-    model_id: str
-    json_schema: bool  # response_format json_schema accepted and the schema was enforced or followed
-    json_object: bool  # response_format json_object returned schema-valid JSON
-    reasoning_tokens: bool  # spends hidden reasoning tokens (slower, larger budget needed)
-    observed_latency_ms: tuple[int, int]  # min, max over the probe requests
-
-
-VERIFIED_MODELS: dict[str, ModelInfo] = {
-    m.model_id: m
-    for m in (
-        ModelInfo("Qwen/Qwen3-30B-A3B-Instruct-2507", True, True, False, (903, 1854)),
-        ModelInfo("Qwen/Qwen3-235B-A22B-Instruct-2507", True, True, False, (1488, 4085)),
-        ModelInfo("deepseek-ai/DeepSeek-V4-Pro", True, True, False, (1949, 3395)),
-        # Kimi-K3 stopped responding on 2026-10-28 (3 x 60 s timeouts); the reasoning tier moved to DeepSeek-V4-Pro.
-        ModelInfo("moonshotai/Kimi-K3", True, True, True, (1798, 1904)),
-        ModelInfo("zai-org/GLM-5.3", True, True, True, (3433, 7742)),
-        # OpenRouter free tier (D-033): json_object observed valid once each; json_schema not verified (rate-limited).
-        ModelInfo("xingchen-agi/xing4.0-29b-a4b:free", False, True, False, (1121, 1121)),
-        ModelInfo("nvidia/nemotron-3.5-super-vl:free", False, True, True, (3867, 3867)),
-    )
+# Approved same-provider fallback (MASTER_PROMPT 5.2): when a tier's model stays unavailable after bounded retries the
+# call may go to the next tier down, but never below the task's floor, and never outside Google. A fallback is recorded
+# in the StepTrace (`fallback_used`, `model_id`).
+_RANK: dict[Tier, int] = {"fast": 0, "default": 1, "reasoning": 2}
+TASK_FLOOR: dict[TaskClass, Tier] = {
+    "extraction": "fast",
+    "sentiment_analysis": "fast",
+    "report_generation": "fast",
+    "research_synthesis": "fast",
+    "study_design": "fast",
+    "synthetic_generation": "fast",
+    "creative_adaptation": "default",
+    "comparative_judgment": "default",
+    "risk_analysis": "default",
 }
 
 
+@dataclass(frozen=True)
+class Price:
+    """USD. Token prices are per 1M tokens; `per_image` and `per_second` are flat per unit."""
+
+    input_per_m: float = 0.0
+    output_per_m: float = 0.0  # includes thinking tokens
+    per_image: float | None = None  # image models: flat estimate per generated image
+    per_second: float | None = None  # audio models: per generated second (tokens are 25 per second)
+    long_input_threshold: int | None = None  # prompts above this many tokens bill at the long_* rates
+    long_input_per_m: float | None = None
+    long_output_per_m: float | None = None
+
+
+@dataclass(frozen=True)
+class ModelSpec:
+    model_id: str
+    capabilities: frozenset[str]
+    price: Price
+    price_from: tuple[date, Price] | None = None  # a published price change: from this date the other price applies
+    structured_output: bool = False
+    multimodal_input: bool = False
+    thinking: bool = False  # spends thinking tokens before answering
+    thinking_headroom: int = 0  # extra max_output_tokens so thinking cannot starve the visible answer
+    thinking_levels: tuple[str, ...] = ()  # accepted `thinking_level` values; empty = not configurable
+    embedding_task_type: bool = False  # embed_content accepts task_type
+    embedding_max_batch: int = 1  # inputs per embed_content request
+    locations: tuple[str, ...] = ("global",)
+    verified: str | None = None  # date of the last successful live call through this gateway
+    note: str = ""
+
+
+def _spec(model_id: str, caps: str, price: Price, **kw) -> ModelSpec:
+    return ModelSpec(model_id, frozenset(caps.split()), price, **kw)
+
+
+_TEXT = "chat vision grounded_research"
+_FLASH_38_NOW = Price(0.75, 3.75)
+_FLASH_38_2027 = Price(1.50, 7.50)
+
+# Image and TTS models bill per token plus a published per-image figure; the flat figure is used for budgeting.
+MODELS: dict[str, ModelSpec] = {
+    spec.model_id: spec
+    for spec in (
+        _spec("gemini-3.5-flash-lite", _TEXT, Price(0.30, 2.50), structured_output=True, multimodal_input=True,
+              thinking=True, thinking_headroom=1024, locations=("global", "asia-south1"), verified="2026-11-17"),
+        _spec("gemini-3.8-flash", _TEXT, _FLASH_38_NOW, price_from=(date(2027, 1, 1), _FLASH_38_2027),
+              structured_output=True, multimodal_input=True, thinking=True, thinking_headroom=2048,
+              thinking_levels=("LOW", "MEDIUM", "HIGH"), locations=("global", "us", "eu"), verified="2026-11-17"),
+        _spec("gemini-3.6-flash", _TEXT, _FLASH_38_NOW, price_from=(date(2027, 1, 1), _FLASH_38_2027),
+              structured_output=True, multimodal_input=True, thinking=True, thinking_headroom=2048,
+              locations=("global", "us", "eu")),
+        _spec("gemini-3.5-flash", _TEXT, Price(1.50, 9.00), structured_output=True, multimodal_input=True,
+              thinking=True, thinking_headroom=2048, locations=("global",), verified="2026-11-17",
+              note="Vertex price from third-party aggregators; not on the Gemini API page"),
+        # Pro class. Argon: introductory $2/$10 through 2026-11-30, $4/$20 from 2026-12-01 (aggregator reports; Google's Vertex
+        # price page was not machine-readable). Sampling parameters are fixed by the model; MINIMAL thinking is rejected.
+        _spec("gemini-4-argon", _TEXT, Price(2.00, 10.00), price_from=(date(2026, 12, 1), Price(4.00, 20.00)),
+              structured_output=True, multimodal_input=True, thinking=True, thinking_headroom=4096,
+              thinking_levels=("LOW", "MEDIUM", "HIGH"), locations=("global", "us", "eu"), verified="2026-11-17"),
+        _spec("gemini-3.1-pro-preview", _TEXT, Price(2.00, 12.00, long_input_threshold=200_000, long_input_per_m=4.00,
+              long_output_per_m=18.00), structured_output=True, multimodal_input=True, thinking=True,
+              thinking_headroom=4096, verified="2026-11-17", note="preview"),
+        _spec("gemini-2.5-pro", _TEXT, Price(1.25, 10.00, long_input_threshold=200_000, long_input_per_m=2.50,
+              long_output_per_m=15.00), structured_output=True, multimodal_input=True, thinking=True,
+              thinking_headroom=4096, note="deprecated; requests route to gemini-3.8-flash from 2026-12-01"),
+        _spec("gemini-2.5-flash", _TEXT, Price(0.30, 2.50), structured_output=True, multimodal_input=True,
+              thinking=True, thinking_headroom=2048, note="deprecated; routes to gemini-3.5-flash-lite from 2026-12-01"),
+        # Image generation (Vertex location `global`; verified: 1024x1024 PNG).
+        _spec("gemini-3.1-flash-image", "image_generation vision", Price(0.50, 3.00, per_image=0.067),
+              multimodal_input=True, thinking=True, verified="2026-11-17"),
+        _spec("gemini-3.1-flash-lite-image", "image_generation vision", Price(0.25, 1.50, per_image=0.0336),
+              multimodal_input=True),
+        _spec("gemini-nano-banana-2.1", "image_generation vision", Price(1.50, 7.50, per_image=0.0336),
+              multimodal_input=True),
+        _spec("gemini-3-pro-image", "image_generation vision", Price(2.00, 12.00, per_image=0.134),
+              multimodal_input=True, thinking=True),
+        _spec("gemini-2.5-flash-image", "image_generation vision", Price(0.30, 0.0, per_image=0.039),
+              multimodal_input=True, note="deprecated; shuts down 2027-03-15"),
+        # Text to speech (audio output: 25 tokens per second).
+        _spec("gemini-3.8-flash-tts", "tts", Price(0.50, 9.00, per_second=9.00 * 25 / 1e6),
+              price_from=(date(2027, 1, 1), Price(1.00, 18.00, per_second=18.00 * 25 / 1e6)), verified="2026-11-17",
+              note="Hindi and Tamil verified"),
+        _spec("gemini-3.8-flash-lite-tts", "tts", Price(0.50, 6.00, per_second=6.00 * 25 / 1e6),
+              price_from=(date(2027, 1, 1), Price(1.00, 12.00, per_second=12.00 * 25 / 1e6))),
+        _spec("gemini-2.5-flash-preview-tts", "tts", Price(0.50, 10.00, per_second=10.00 * 25 / 1e6), verified="2026-11-17",
+              note="preview; Hindi and Tamil verified"),
+        # Live (not exercised by the gateway; listed so the configured id is recognised).
+        _spec("gemini-live-2.5-flash", "live", Price(0.50, 2.00)),
+        _spec("gemini-3.8-live", "live", Price(0.75, 3.75)),
+        # Music (Lyria 2 on Vertex, 30 s WAV clips at $0.06; exercised by scripts/verify_google_models.py only).
+        _spec("lyria-002", "music", Price(per_second=0.06 / 30), locations=("us-central1",), verified="2026-11-17"),
+        # Embeddings (input tokens only).
+        # Verified 2026-11-17 on Vertex at `global`: gemini-embedding-001 answers 404 (not available to this project there);
+        # gemini-embedding-2 works, folds a list of inputs into ONE vector (so one text per request) and ignores task_type.
+        _spec("gemini-embedding-001", "embeddings", Price(0.15), embedding_task_type=True, note="404 at global"),
+        _spec("gemini-embedding-2", "embeddings", Price(0.20), embedding_max_batch=1, verified="2026-11-17"),
+    )
+}
+
+# Google Search grounding: $14 per 1,000 requests for Gemini 3 and newer after a monthly free quota (not modelled, so
+# this overestimates early use).
+GROUNDING_USD_PER_REQUEST = 0.014
+# Used to budget a call to a model that is not in MODELS: Pro-level, so an unknown model cannot slip under a ceiling.
+UNKNOWN_MODEL_PRICE = Price(2.00, 12.00)
+
+
+def spec_for(model_id: str | None) -> ModelSpec | None:
+    return MODELS.get(model_id or "")
+
+
+def price_for(model_id: str, on: date | None = None) -> tuple[Price, bool]:
+    """(price, known). Unknown models get UNKNOWN_MODEL_PRICE with known=False."""
+    spec = MODELS.get(model_id)
+    if spec is None:
+        return UNKNOWN_MODEL_PRICE, False
+    day = on or date.today()
+    if spec.price_from is not None and day >= spec.price_from[0]:
+        return spec.price_from[1], True
+    return spec.price, True
+
+
 def tier_model(settings: Settings, tier: Tier) -> str | None:
-    """Configured Nebius model for a tier; fast and reasoning fall back to the default model."""
-    chosen = {
-        "fast": settings.nebius_fast_model,
-        "default": settings.nebius_default_model,
-        "reasoning": settings.nebius_reasoning_model,
-    }[tier]
-    return chosen or settings.nebius_default_model
+    """Configured model id for a tier."""
+    return {"fast": settings.gemini_model_fast, "default": settings.gemini_model_default,
+            "reasoning": settings.gemini_model_reasoning}[tier] or None
 
 
-def response_format_for(model_id: str, schema_name: str, json_schema: dict) -> dict | None:
-    info = VERIFIED_MODELS.get(model_id)
-    if info is None:
-        return None
-    if info.json_schema:
-        return {"type": "json_schema", "json_schema": {"name": schema_name, "schema": json_schema}}
-    return {"type": "json_object"} if info.json_object else None
+def tier_chain(settings: Settings, task: TaskClass) -> list[tuple[Tier, str]]:
+    """The task's tier model first, then approved fallbacks: lower tiers down to the task floor, models de-duplicated."""
+    start, floor = TASK_TIERS[task], TASK_FLOOR[task]
+    chain: list[tuple[Tier, str]] = []
+    for tier in sorted(_RANK, key=_RANK.get, reverse=True):
+        if _RANK[tier] > _RANK[start] or _RANK[tier] < _RANK[floor]:
+            continue
+        model = tier_model(settings, tier)
+        if model and model not in (m for _, m in chain):
+            chain.append((tier, model))
+    return chain
+
+
+# Thinking effort per tier, applied only to models that list the level in `thinking_levels` (others use their default).
+TIER_THINKING: dict[Tier, str] = {"fast": "LOW", "default": "LOW", "reasoning": "MEDIUM"}
+
+
+def thinking_level_for(model_id: str, tier: Tier | None) -> str | None:
+    spec = MODELS.get(model_id)
+    level = TIER_THINKING.get(tier) if tier else None
+    return level if spec and level in spec.thinking_levels else None
+
+
+def capability_model(settings: Settings, capability: Capability) -> str | None:
+    """Configured model id for a non-text capability. Vision and grounded research use the default text model."""
+    return {
+        "chat": settings.gemini_model_default,
+        "vision": settings.gemini_model_default,
+        "grounded_research": settings.gemini_model_default,
+        "image_generation": settings.gemini_model_image,
+        "tts": settings.gemini_model_tts,
+        "live": settings.gemini_model_live,
+        "embeddings": settings.gemini_embedding_model,
+    }[capability] or None
+
+
+def supports(model_id: str | None, capability: str) -> bool:
+    spec = MODELS.get(model_id or "")
+    return spec is not None and capability in spec.capabilities
+
+
+@dataclass(frozen=True)
+class CostBreakdown:
+    usd: float
+    known: bool  # False: the model has no entry in MODELS, so `usd` used the conservative stand-in price
+
+
+def estimate_cost(
+    model_id: str, *, input_tokens: int | None = None, output_tokens: int | None = None, images: int = 0,
+    audio_seconds: float = 0.0, grounded_requests: int = 0, on: date | None = None,
+) -> CostBreakdown:
+    """Estimated USD for one call. `output_tokens` must include thinking tokens. Image models bill the flat per-image
+    figure (output tokens are then only the text part); audio models bill `audio_seconds` when no token count exists."""
+    price, known = price_for(model_id, on)
+    in_rate, out_rate = price.input_per_m, price.output_per_m
+    if price.long_input_threshold and (input_tokens or 0) > price.long_input_threshold:
+        in_rate = price.long_input_per_m or in_rate
+        out_rate = price.long_output_per_m or out_rate
+    cost = (input_tokens or 0) * in_rate / 1e6
+    if images and price.per_image is not None:
+        cost += images * price.per_image  # image output tokens are inside the flat figure
+    elif audio_seconds and price.per_second is not None and not output_tokens:
+        cost += audio_seconds * price.per_second
+    else:
+        cost += (output_tokens or 0) * out_rate / 1e6
+    cost += grounded_requests * GROUNDING_USD_PER_REQUEST
+    return CostBreakdown(round(cost, 6), known)
