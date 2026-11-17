@@ -59,6 +59,13 @@ class Settings(BaseSettings):
     auth_mode: Literal["dev", "firebase"] = "dev"
     firebase_project_id: str | None = None
 
+    # --- audience stream (Audience Lab: Quick Read, Audience Study, Ask the Panel, Risk Check) ---
+    # Work limits. A request above a limit is refused with 422, never silently reduced.
+    audience_quick_read_max_participants: int = Field(default=24, ge=6)
+    audience_study_max_participants: int = Field(default=60, ge=20)
+    audience_ask_max_participants: int = Field(default=60, ge=1)  # participants answering one question
+    audience_run_timeout_seconds: int = Field(default=900, ge=30)
+
     @field_validator(
         "supabase_url",
         "supabase_secret_key",

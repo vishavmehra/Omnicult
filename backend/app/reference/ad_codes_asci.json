@@ -1,0 +1,692 @@
+{
+  "dataset": "asci-code-index",
+  "version": "asci-index-v1",
+  "language": "en",
+  "retrieved_at": "2026-11-17",
+  "publisher": "Advertising Standards Council of India (ASCI)",
+  "source": {
+    "title": "The Code for Self-Regulation of Advertising Content in India (with ASCI guidelines for specific categories)",
+    "edition": "OCTOBER 2026 (printed on the document's last page)",
+    "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf",
+    "also_served_at": "https://ascionline.in/wp-content/uploads/2023/08/Code-Book_Codes_Web-ready-2.pdf",
+    "landing_page": "https://www.ascionline.in/the-asci-code-guidelines/",
+    "pages": 82,
+    "bytes": 1806121,
+    "sha256": "6658fd8e7c71e066f819bfd5cb10a2865e9402b208bbbd188232f8106a7243fc",
+    "note": "Both URLs returned byte-identical files on the retrieval date. Excerpts are copied from the PDF text layer, whitespace-normalised and otherwise unaltered; clause numbers follow the printed document. pdf_page is the 1-based PDF page, used as the #page fragment."
+  },
+  "limitations": [
+    "A partial index of the clauses most relevant to claims, comparisons, health and food, children, safety and offence. It is not the full Code and omits other chapters and guidelines.",
+    "ASCI revises its Code and guidelines. Check the current edition at ascionline.in before relying on any clause.",
+    "These excerpts are reference material for screening. They are not legal advice and not an ASCI ruling."
+  ],
+  "entries": [
+    {
+      "id": "asci-1-1",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter I - Truthful & Honest Representation",
+      "clause": "1.1",
+      "title": "Truthful, substantiated claims",
+      "topics": [
+        "claims",
+        "substantiation"
+      ],
+      "excerpt": "Advertisements must be truthful. All descriptions, claims and comparisons, which relate to matters of objectively ascertainable fact, should be capable of substantiation. Advertisers and advertising agencies are required to produce such substantiation as and when called upon to do so by The Advertising Standards Council of India.",
+      "pdf_page": 18,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=18"
+    },
+    {
+      "id": "asci-1-2",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter I - Truthful & Honest Representation",
+      "clause": "1.2",
+      "title": "Source and date of research claims",
+      "topics": [
+        "claims",
+        "substantiation"
+      ],
+      "excerpt": "Where advertising claims are expressly stated to be based on, or supported by independent research or assessment, its source and date should be indicated in the advertisement.",
+      "pdf_page": 18,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=18"
+    },
+    {
+      "id": "asci-1-4",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter I - Truthful & Honest Representation",
+      "clause": "1.4",
+      "title": "No distortion or misleading implication",
+      "topics": [
+        "claims",
+        "misleading"
+      ],
+      "excerpt": "Advertisements shall neither distort facts nor mislead the consumer by means of implications or omissions. Advertisements shall not contain statements or visual presentation, which directly, or by implication or by omission or by ambiguity or by exaggeration, are likely to mislead the consumer about the product advertised or the advertiser, or about any other product or advertiser.",
+      "pdf_page": 18,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=18"
+    },
+    {
+      "id": "asci-1-5",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter I - Truthful & Honest Representation",
+      "clause": "1.5",
+      "title": "No abuse of trust or exaggerated claims",
+      "topics": [
+        "claims",
+        "misleading"
+      ],
+      "excerpt": "Advertisements shall not be so framed as to abuse the trust of consumers, or exploit their lack of experience or knowledge. No advertisement shall be permitted to contain any claim so exaggerated as to lead to grave or widespread disappointment in the minds of consumers.",
+      "pdf_page": 18,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=18"
+    },
+    {
+      "id": "asci-1-5-a",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter I - Truthful & Honest Representation",
+      "clause": "1.5 example (a)",
+      "title": "Use of 'free'",
+      "topics": [
+        "claims",
+        "pricing_offers"
+      ],
+      "excerpt": "Products shall not be described as `free’ where there is any direct cost to the consumer other than the actual cost of any delivery, freight, or postage. Where such costs are payable by the consumer, a clear statement that this is the case shall be made in the advertisement.",
+      "pdf_page": 19,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=19"
+    },
+    {
+      "id": "asci-1-5-c",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter I - Truthful & Honest Representation",
+      "clause": "1.5 example (c)",
+      "title": "'Up to' and 'from as low as' claims",
+      "topics": [
+        "claims",
+        "pricing_offers"
+      ],
+      "excerpt": "Claims which use expressions such as “up to five years guarantee” or “Prices from as low as Rs. Y” are not acceptable if there is a likelihood of the consumer being misled, either as to the extent of the availability, or as to the applicability of the benefits offered.",
+      "pdf_page": 19,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=19"
+    },
+    {
+      "id": "asci-1-5-d",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter I - Truthful & Honest Representation",
+      "clause": "1.5 example (d)",
+      "title": "Special care for health and body claims",
+      "topics": [
+        "claims",
+        "health_food"
+      ],
+      "excerpt": "Special care and restraint has to be exercised in advertisements addressed to those suffering from weakness, any real or perceived inadequacy of any physical attributes such as height or bust development, obesity, illness, impotence, infertility, baldness and the like, to ensure that claims or representations, directly or by implication, do not exceed what is considered prudent by generally accepted standards of medical practice and the actual efficacy of the product.",
+      "pdf_page": 19,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=19"
+    },
+    {
+      "id": "asci-1-6",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter I - Truthful & Honest Representation",
+      "clause": "1.6",
+      "title": "Obvious exaggeration must be clearly hyperbolic",
+      "topics": [
+        "claims"
+      ],
+      "excerpt": "Obvious untruths or exaggerations intended to amuse or to catch the eye of the consumer are permissible, provided that they are clearly to be seen as humorous or hyperbolic, and not likely to be understood as making literal or misleading claims for the advertised product.",
+      "pdf_page": 20,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=20"
+    },
+    {
+      "id": "asci-2",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter II - Non-offensive to Public",
+      "clause": "II",
+      "title": "Nothing indecent, vulgar or repulsive",
+      "topics": [
+        "offence"
+      ],
+      "excerpt": "Advertisements should contain nothing indecent, vulgar, especially in the depiction of women, or nothing repulsive which is likely, in the light of generally prevailing standards of decency and propriety, to cause grave and widespread offence.",
+      "pdf_page": 21,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=21"
+    },
+    {
+      "id": "asci-3-1-b",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter III - Against Harmful Products/Services/Situations",
+      "clause": "3.1(b)",
+      "title": "No derision of groups",
+      "topics": [
+        "offence",
+        "stereotypes"
+      ],
+      "excerpt": "Derides any individual or groups on the basis of race, caste, colour, religion, gender, body shape, age, sexual orientation, gender identity, physical or mental conditions, or nationality.",
+      "pdf_page": 22,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=22"
+    },
+    {
+      "id": "asci-3-2",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter III - Against Harmful Products/Services/Situations",
+      "clause": "3.2",
+      "title": "Advertisements addressed to children",
+      "topics": [
+        "children",
+        "safety"
+      ],
+      "excerpt": "Advertisements addressed to children shall not contain anything, whether in illustration or otherwise, which might result in their physical, mental or moral harm, or which exploits their vulnerability.",
+      "pdf_page": 22,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=22"
+    },
+    {
+      "id": "asci-3-2-b",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter III - Against Harmful Products/Services/Situations",
+      "clause": "3.2(b)",
+      "title": "No hazardous acts children may emulate",
+      "topics": [
+        "children",
+        "safety"
+      ],
+      "excerpt": "Should not feature dangerous or hazardous acts which are likely to encourage children to emulate such acts in a manner which could cause harm or injury.",
+      "pdf_page": 22,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=22"
+    },
+    {
+      "id": "asci-3-2-d",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter III - Against Harmful Products/Services/Situations",
+      "clause": "3.2(d)",
+      "title": "No children for tobacco or alcohol products",
+      "topics": [
+        "children",
+        "safety"
+      ],
+      "excerpt": "Should not feature children for tobacco or alcohol-based products.",
+      "pdf_page": 23,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=23"
+    },
+    {
+      "id": "asci-3-3",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter III - Against Harmful Products/Services/Situations",
+      "clause": "3.3",
+      "title": "No disregard for safety",
+      "topics": [
+        "safety"
+      ],
+      "excerpt": "Advertisements shall not, without justifiable reason, show or refer to dangerous practices, or manifest a disregard for safety, or encourage negligence.",
+      "pdf_page": 23,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=23"
+    },
+    {
+      "id": "asci-4-1",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter IV - Fair in Competition",
+      "clause": "4.1",
+      "title": "Conditions for comparative advertising",
+      "topics": [
+        "comparisons",
+        "claims"
+      ],
+      "excerpt": "Advertisements containing comparisons with other manufacturers or suppliers, or with other products, including those where a competitor is named, are permissible in the interests of vigorous competition and public enlightenment, provided: (a) It is clear what aspects of the advertiser’s product are being compared with what aspects of the competitor’s product. (b) The subject matter of comparison is not chosen in such a way as to confer an artificial advantage upon the advertiser or so as to suggest that a better bargain is offered than is truly the case. (c) The comparisons are factual, accurate and capable of substantiation. (d) There is no likelihood of the consumer being misled as a result of the comparison, whether about the product advertised or that with which it is compared. (e) The advertisement does not unfairly denigrate, attack or discredit other products, advertisers or advertisements directly or by implication.",
+      "pdf_page": 24,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=24"
+    },
+    {
+      "id": "asci-4-1-e",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter IV - Fair in Competition",
+      "clause": "4.1(e)",
+      "title": "No unfair denigration of competitors",
+      "topics": [
+        "comparisons",
+        "offence"
+      ],
+      "excerpt": "The advertisement does not unfairly denigrate, attack or discredit other products, advertisers or advertisements directly or by implication.",
+      "pdf_page": 24,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=24"
+    },
+    {
+      "id": "asci-4-2",
+      "document": "The Code for Self-Regulation of Advertising Content in India",
+      "document_kind": "code",
+      "chapter": "Chapter IV - Fair in Competition",
+      "clause": "4.2",
+      "title": "No unjustifiable use of another firm's name or goodwill",
+      "topics": [
+        "comparisons",
+        "brand_names"
+      ],
+      "excerpt": "Advertisements shall not make unjustifiable use of the name or initials of any other firm, company or institution, nor take unfair advantage of the goodwill attached to the trademark or symbol of another firm, its product or the goodwill acquired by its advertising campaign.",
+      "pdf_page": 24,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=24"
+    },
+    {
+      "id": "asci-fb-1",
+      "document": "ASCI Guidelines on Advertising of Foods & Beverages (F&B)",
+      "document_kind": "guideline",
+      "chapter": "Foods & Beverages",
+      "clause": "1",
+      "title": "No misleading personal-change claims for F&B",
+      "topics": [
+        "health_food",
+        "claims"
+      ],
+      "excerpt": "Advertisements should not be misleading or deceptive. Specifically, advertisements should not mislead consumers to believe that consumption of product advertised will result directly in personal changes in intelligence, physical ability or exceptional recognition. Such claims, if made in advertisements, should be supported and substantiated with evidence and with adequate scientific basis.",
+      "pdf_page": 31,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=31"
+    },
+    {
+      "id": "asci-fb-2",
+      "document": "ASCI Guidelines on Advertising of Foods & Beverages (F&B)",
+      "document_kind": "guideline",
+      "chapter": "Foods & Beverages",
+      "clause": "2",
+      "title": "Health or nutritional claims need scientific evidence",
+      "topics": [
+        "health_food",
+        "claims",
+        "substantiation"
+      ],
+      "excerpt": "Advertisements that include what consumer, acting reasonably, might interpret as health or nutritional claims, shall be supported by appropriate scientific evidence and meeting the requirement of basic food standards laid down under the Food Safety Standards Act and Rules, wherever applicable.",
+      "pdf_page": 31,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=31"
+    },
+    {
+      "id": "asci-fb-3",
+      "document": "ASCI Guidelines on Advertising of Foods & Beverages (F&B)",
+      "document_kind": "guideline",
+      "chapter": "Foods & Beverages",
+      "clause": "3",
+      "title": "Do not disparage good dietary practice",
+      "topics": [
+        "health_food"
+      ],
+      "excerpt": "Advertisements should not disparage good dietary practice or the selection of options, such as fresh fruits and vegetables that accepted dietary opinion recommends should form part of the normal diet.",
+      "pdf_page": 31,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=31"
+    },
+    {
+      "id": "asci-fb-4",
+      "document": "ASCI Guidelines on Advertising of Foods & Beverages (F&B)",
+      "document_kind": "guideline",
+      "chapter": "Foods & Beverages",
+      "clause": "4",
+      "title": "No encouragement of excessive consumption",
+      "topics": [
+        "health_food"
+      ],
+      "excerpt": "Advertisements should not encourage over or excessive consumption or show inappropriately large portions of any food or beverage. It should reflect moderation in consumption and show portion sizes appropriate to the occasion or situation.",
+      "pdf_page": 32,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=32"
+    },
+    {
+      "id": "asci-fb-5",
+      "document": "ASCI Guidelines on Advertising of Foods & Beverages (F&B)",
+      "document_kind": "guideline",
+      "chapter": "Foods & Beverages",
+      "clause": "5",
+      "title": "Do not undermine healthy lifestyles or mislead on nutritive value",
+      "topics": [
+        "health_food",
+        "claims"
+      ],
+      "excerpt": "Advertisements should also not undermine the importance of healthy lifestyles or mislead as to the nutritive value of the food or beverage.",
+      "pdf_page": 32,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=32"
+    },
+    {
+      "id": "asci-fb-6",
+      "document": "ASCI Guidelines on Advertising of Foods & Beverages (F&B)",
+      "document_kind": "guideline",
+      "chapter": "Foods & Beverages",
+      "clause": "6",
+      "title": "Respect parental guidance on children's food choices",
+      "topics": [
+        "health_food",
+        "children"
+      ],
+      "excerpt": "Advertisement should not undermine the role of parental care and guidance in ensuring proper food choices are made by children.",
+      "pdf_page": 32,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=32"
+    },
+    {
+      "id": "asci-fb-8",
+      "document": "ASCI Guidelines on Advertising of Foods & Beverages (F&B)",
+      "document_kind": "guideline",
+      "chapter": "Foods & Beverages",
+      "clause": "8",
+      "title": "Claims consistent with the label",
+      "topics": [
+        "health_food",
+        "claims"
+      ],
+      "excerpt": "Claims in advertisements should not be inconsistent with information on the label or packaging of the food or beverage.",
+      "pdf_page": 32,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=32"
+    },
+    {
+      "id": "asci-fb-9",
+      "document": "ASCI Guidelines on Advertising of Foods & Beverages (F&B)",
+      "document_kind": "guideline",
+      "chapter": "Foods & Beverages",
+      "clause": "9",
+      "title": "No implied endorsement by agencies or professional bodies",
+      "topics": [
+        "health_food",
+        "claims"
+      ],
+      "excerpt": "Advertisement for food and beverages should not claim or imply endorsement by any government agency, professional body, and independent agency or individual in a particular profession in India, unless there is prior consent, the claim is current, the endorsement is verifiable, and the agency body is named.",
+      "pdf_page": 32,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=32"
+    },
+    {
+      "id": "asci-disc-1",
+      "document": "ASCI Guidelines for Disclaimers made in supporting, limiting or explaining claims made in Advertisements",
+      "document_kind": "guideline",
+      "chapter": "Disclaimers",
+      "clause": "1",
+      "title": "A disclaimer must not contradict the claim",
+      "topics": [
+        "disclaimers",
+        "claims"
+      ],
+      "excerpt": "A Disclaimer can expand or clarify a claim, make qualifications, or resolve ambiguities, to explain the claim in further detail, but should not contradict/modify the material claim made nor contradict the main message conveyed by the advertiser or change the dictionary meaning of the words used in the claim as received or perceived by a consumer.",
+      "pdf_page": 36,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=36"
+    },
+    {
+      "id": "asci-disc-2",
+      "document": "ASCI Guidelines for Disclaimers made in supporting, limiting or explaining claims made in Advertisements",
+      "document_kind": "guideline",
+      "chapter": "Disclaimers",
+      "clause": "2",
+      "title": "A disclaimer must not suppress material information",
+      "topics": [
+        "disclaimers",
+        "claims"
+      ],
+      "excerpt": "A disclaimer should not attempt to suppress material information with respect to the claim, the omission / absence of which is likely to make the advertisement deceptive or conceal its commercial intent.",
+      "pdf_page": 36,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=36"
+    },
+    {
+      "id": "asci-disc-3",
+      "document": "ASCI Guidelines for Disclaimers made in supporting, limiting or explaining claims made in Advertisements",
+      "document_kind": "guideline",
+      "chapter": "Disclaimers",
+      "clause": "3",
+      "title": "A disclaimer must not correct a misleading claim",
+      "topics": [
+        "disclaimers",
+        "claims"
+      ],
+      "excerpt": "A disclaimer should not attempt to correct a misleading claim made in an Advertisement.",
+      "pdf_page": 37,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=37"
+    },
+    {
+      "id": "asci-disc-language",
+      "document": "ASCI Guidelines for Disclaimers made in supporting, limiting or explaining claims made in Advertisements",
+      "document_kind": "guideline",
+      "chapter": "Disclaimers",
+      "clause": "Requirement I",
+      "title": "Disclaimer in the language of the claim",
+      "topics": [
+        "disclaimers"
+      ],
+      "excerpt": "A disclaimer shall be in the same language as that of the claim/s of the Advertisement. In case of bilingual advertisements, the disclaimer should be in the dominant language of the advertisement.",
+      "pdf_page": 38,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=38"
+    },
+    {
+      "id": "asci-disc-comparative",
+      "document": "ASCI Guidelines for Disclaimers made in supporting, limiting or explaining claims made in Advertisements",
+      "document_kind": "guideline",
+      "chapter": "Disclaimers",
+      "clause": "Requirement V",
+      "title": "Basis of a comparative claim stated near the claim",
+      "topics": [
+        "disclaimers",
+        "comparisons"
+      ],
+      "excerpt": "For comparative claims, the basis of comparison must be stated in a font size that is at least 25% of the font size of the claim which is being made and positioned in close proximity of the claim i.e. immediately next to or immediately below the claim.",
+      "pdf_page": 39,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=39"
+    },
+    {
+      "id": "asci-disc-hold",
+      "document": "ASCI Guidelines for Disclaimers made in supporting, limiting or explaining claims made in Advertisements",
+      "document_kind": "guideline",
+      "chapter": "Disclaimers",
+      "clause": "Requirement X.A",
+      "title": "On-screen disclaimer length and hold time",
+      "topics": [
+        "disclaimers"
+      ],
+      "excerpt": "In television commercials or any other video advertisement on digital media, all disclaimers should be clearly readable to consumers. In a single frame in an advertisement: i. There should not be more than one disclaimer. Provided, for an advertisement carrying combination claims, interlinked claims or more than 1 claim in a single frame, the disclaimers related to the said claims shall be published in the same frame as the claim. ii. The disclaimer should be restricted to two full length lines (unless as mentioned in Clause 4(c)(vi)) and remain on screen for AT LEAST 4 seconds for every line",
+      "pdf_page": 40,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=40"
+    },
+    {
+      "id": "asci-new-improved-aspect",
+      "document": "ASCI Guidelines: Validity & Duration of Claiming New/Improved",
+      "document_kind": "guideline",
+      "chapter": "New/Improved",
+      "clause": "Definition",
+      "title": "'New' or 'improved' must name what is new",
+      "topics": [
+        "claims"
+      ],
+      "excerpt": "The words “new” or “improved” must specify what aspect of the product/service is new or improved- viz the product’s utility, function, product design, package design, etc.",
+      "pdf_page": 42,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=42"
+    },
+    {
+      "id": "asci-new-improved-period",
+      "document": "ASCI Guidelines: Validity & Duration of Claiming New/Improved",
+      "document_kind": "guideline",
+      "chapter": "New/Improved",
+      "clause": "Period",
+      "title": "'New' or 'improved' usable for one year",
+      "topics": [
+        "claims"
+      ],
+      "excerpt": "The word “new”, “improved” or an ‘improvement’ of a product may be used in advertisements only for a period of one (1) year from the time the new or improved product/service has been launched/introduced in the market.",
+      "pdf_page": 42,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=42"
+    },
+    {
+      "id": "asci-large-pack",
+      "document": "ASCI Guideline for Saving for Large Pack Comparison",
+      "document_kind": "guideline",
+      "chapter": "Saving for Large Pack Comparison",
+      "clause": "Guideline",
+      "title": "Unambiguous large-pack savings",
+      "topics": [
+        "comparisons",
+        "pricing_offers"
+      ],
+      "excerpt": "Marketers may claim saving for a larger pack, provided the comparison is made without any ambiguity by highlighting number of smaller pack units versus the larger promotional pack (viz., “Save INR XX for a 2 KG pack as compared to four 500 gm packs”). Words to be used “save” and not “off”.",
+      "pdf_page": 43,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=43"
+    },
+    {
+      "id": "asci-skin-1",
+      "document": "ASCI Guidelines for Advertising of Skin Lightening or Fairness Improvement Products",
+      "document_kind": "guideline",
+      "chapter": "Skin Lightening or Fairness Improvement Products",
+      "clause": "1",
+      "title": "No discrimination by skin colour",
+      "topics": [
+        "offence",
+        "stereotypes"
+      ],
+      "excerpt": "Advertising should not communicate any discrimination as a result of skin colour. These advertisements should not reinforce negative social stereotyping on the basis of skin colour. Specifically, advertising should not directly or implicitly show people with darker skin, in a way which is widely seen as, unattractive, unhappy, depressed or concerned. These advertisement should not portray people with darker skin, in a way which is widely seen as, at a disadvantage of any kind, or inferior, or unsuccessful in any aspect of life, particularly in relation to being attractive to the opposite sex, matrimony, job placement, promotions and other prospects.",
+      "pdf_page": 44,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=44"
+    },
+    {
+      "id": "asci-gender-main",
+      "document": "ASCI Guidelines on Harmful Gender Stereotypes",
+      "document_kind": "guideline",
+      "chapter": "Harmful Gender Stereotypes",
+      "clause": "Rule",
+      "title": "No gender stereotypes likely to cause harm or offence",
+      "topics": [
+        "stereotypes",
+        "offence"
+      ],
+      "excerpt": "Advertisements must not include gender stereotypes that are likely to cause harm or serious or widespread offence.",
+      "pdf_page": 64,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=64"
+    },
+    {
+      "id": "asci-gender-3",
+      "document": "ASCI Guidelines on Harmful Gender Stereotypes",
+      "document_kind": "guideline",
+      "chapter": "Harmful Gender Stereotypes",
+      "clause": "3",
+      "title": "Do not mock non-conformity to gender stereotypes",
+      "topics": [
+        "stereotypes",
+        "offence"
+      ],
+      "excerpt": "Advertisements should not mock people for not conforming to gender stereotypes, their sexual orientation or gender identity, including in a context that is intended to be humorous, hyperbolic or exaggerated. For example, an ad may not belittle a man for carrying out stereotypically female roles or tasks or make fun of a same-sex relationship.",
+      "pdf_page": 65,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=65"
+    },
+    {
+      "id": "asci-gender-7",
+      "document": "ASCI Guidelines on Harmful Gender Stereotypes",
+      "document_kind": "guideline",
+      "chapter": "Harmful Gender Stereotypes",
+      "clause": "7",
+      "title": "No sexual objectification",
+      "topics": [
+        "stereotypes",
+        "offence"
+      ],
+      "excerpt": "Advertisements should not indulge in the sexual objectification of characters of any gender or depict people in a sexualised and objectified way for the purposes of titillating viewers. This would include the use of language or visual treatments in contexts wholly irrelevant to the product.",
+      "pdf_page": 66,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=66"
+    },
+    {
+      "id": "asci-green-1",
+      "document": "ASCI Guidelines for Advertisements Making Environmental/Green Claims",
+      "document_kind": "guideline",
+      "chapter": "Environmental/Green Claims",
+      "clause": "1",
+      "title": "Absolute environmental claims need robust substantiation",
+      "topics": [
+        "green_claims",
+        "claims",
+        "substantiation"
+      ],
+      "excerpt": "Absolute claims such as but not limited to “environment friendly”, “eco-friendly”, “sustainable”, “planet friendly” that imply that the entire product advertised has no impact or only a positive impact or reduces adverse impact must be capable of being substantiated by robust data and/ or well-recognised and credible accreditations. Such absolute claims cannot be diluted by means of a disclaimer or any other clarificatory mechanism such as a QR code or website link etc.",
+      "pdf_page": 73,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=73"
+    },
+    {
+      "id": "asci-green-2",
+      "document": "ASCI Guidelines for Advertisements Making Environmental/Green Claims",
+      "document_kind": "guideline",
+      "chapter": "Environmental/Green Claims",
+      "clause": "2",
+      "title": "Comparative environmental claims need evidence and a stated basis",
+      "topics": [
+        "green_claims",
+        "comparisons",
+        "claims"
+      ],
+      "excerpt": "Comparative claims such as “greener” or “friendlier” would need evidence that the advertised product or service provides an environmental benefit over that of the advertiser’s previous product or service or competitor products or services and the basis of such comparison is made clear.",
+      "pdf_page": 73,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=73"
+    },
+    {
+      "id": "asci-sgc-prohibited",
+      "document": "ASCI Guidelines for Responsible Labelling of Synthetically Generated Content in Advertising",
+      "document_kind": "guideline",
+      "chapter": "Synthetically Generated Content",
+      "clause": "1",
+      "title": "Prohibited use of synthetic content",
+      "topics": [
+        "synthetic_media",
+        "claims"
+      ],
+      "excerpt": "Advertisements that are illegal, infringe on rights, make misleading claims, or violate the ASCI Code are prohibited. These will violate the ASCI code even if an AI label is used. Examples include:",
+      "pdf_page": 77,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=77"
+    },
+    {
+      "id": "asci-sgc-fabricated-endorsement",
+      "document": "ASCI Guidelines for Responsible Labelling of Synthetically Generated Content in Advertising",
+      "document_kind": "guideline",
+      "chapter": "Synthetically Generated Content",
+      "clause": "1(a)",
+      "title": "No fabricated endorsements or testimonials",
+      "topics": [
+        "synthetic_media",
+        "claims"
+      ],
+      "excerpt": "Fabricating endorsements or testimonials i.e. using AI to create, alter or attribute an endorsement or testimonial in a manner that falsely represents that a real person has used, experienced, approved, recommended or endorsed a product or service when they have not.",
+      "pdf_page": 77,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=77"
+    },
+    {
+      "id": "asci-sgc-likeness",
+      "document": "ASCI Guidelines for Responsible Labelling of Synthetically Generated Content in Advertising",
+      "document_kind": "guideline",
+      "chapter": "Synthetically Generated Content",
+      "clause": "1(d)",
+      "title": "No deepfakes or likeness without consent",
+      "topics": [
+        "synthetic_media"
+      ],
+      "excerpt": "Using unauthorised copyrighted work, deepfakes or a person’s likeness without consent.",
+      "pdf_page": 77,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=77"
+    },
+    {
+      "id": "asci-sgc-labelling",
+      "document": "ASCI Guidelines for Responsible Labelling of Synthetically Generated Content in Advertising",
+      "document_kind": "guideline",
+      "chapter": "Synthetically Generated Content",
+      "clause": "2",
+      "title": "Mandatory labelling where synthetic content materially influences decisions",
+      "topics": [
+        "synthetic_media",
+        "disclaimers"
+      ],
+      "excerpt": "Labelling is mandatory in advertisements which contain SGC in a manner that materially influences consumer decisions, and the lack of a disclosure label would mislead consumers. Labelling is mandatory in all such cases to help consumers understand the nature of the",
+      "pdf_page": 77,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=77"
+    },
+    {
+      "id": "asci-auto-safe-driving",
+      "document": "ASCI Self-Regulation Guidelines for Advertisements Depicting Automotive Vehicles",
+      "document_kind": "guideline",
+      "chapter": "Automotive Vehicles",
+      "clause": "a-b",
+      "title": "No traffic-rule violations or reckless driving",
+      "topics": [
+        "safety"
+      ],
+      "excerpt": "Specifically, advertisements should not: a) Portray violation of traffic rules. b) Show speed maneuverability in a manner which encourages unsafe or reckless driving, which could harm the driver, passengers and/or the general public.",
+      "pdf_page": 28,
+      "url": "https://www.ascionline.in/wp-content/uploads/2025/08/ASCI-Codes-Guidelines_July_2025.pdf.pdf#page=28"
+    }
+  ]
+}

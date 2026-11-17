@@ -819,3 +819,4 @@ from app.db.models_versions import (  # noqa: E402,F401  (registers the Creative
     Operation,
     VersionNode,
 )
+from app.db.models_audience import AudienceRun, PanelAnswer, PanelParticipant, PanelQuestion, RiskFindingRow  # noqa: E402,F401
