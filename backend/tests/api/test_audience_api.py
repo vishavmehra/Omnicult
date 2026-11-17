@@ -94,8 +94,9 @@ class Metered(FixtureLLMProvider):
 @pytest.fixture
 def live(monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
     """Live projects with a scripted provider: tests put responders in `live.responders` (prompt version -> function)."""
-    monkeypatch.setenv("NEBIUS_API_KEY", "test-key")
-    monkeypatch.setenv("NEBIUS_DEFAULT_MODEL", "test-model")
+    monkeypatch.setenv("GOOGLE_CLOUD_PROJECT", "qa-test-project")  # Vertex AI is configured; every call is faked
+    for tier in ("GEMINI_MODEL_FAST", "GEMINI_MODEL_DEFAULT", "GEMINI_MODEL_REASONING"):
+        monkeypatch.setenv(tier, "test-model")
     get_settings.cache_clear()
     state = SimpleNamespace(responders={}, provider=None)
     state.provider = Metered(state.responders)

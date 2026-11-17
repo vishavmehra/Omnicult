@@ -53,8 +53,9 @@ class Rig:
 
 @pytest.fixture
 def rig(monkeypatch: pytest.MonkeyPatch) -> Rig:
-    monkeypatch.setenv("NEBIUS_API_KEY", "test-key")
-    monkeypatch.setenv("NEBIUS_DEFAULT_MODEL", "test-model")
+    monkeypatch.setenv("GOOGLE_CLOUD_PROJECT", "qa-test-project")  # Vertex AI is configured; every call is faked
+    for tier in ("GEMINI_MODEL_FAST", "GEMINI_MODEL_DEFAULT", "GEMINI_MODEL_REASONING"):
+        monkeypatch.setenv(tier, "test-model")
     get_settings.cache_clear()
     holder = Rig(llm=scripted_llm(standard), vision=FakeVision(SEEN))
 
