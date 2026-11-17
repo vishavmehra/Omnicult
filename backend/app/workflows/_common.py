@@ -24,6 +24,7 @@ STAGES: dict[str, tuple[str, str, str, str]] = {
     "risk_scan": ("loading_content", "analyzing_creatives", "assessing_risks", "checking_evidence"),
     "population_study": ("preparing_evidence", "constructing_population", "running_interviews", "analysing_results"),
     "social_simulation": ("building_network", "simulating_rounds", "analysing_dynamics", "summarizing"),
+    "transcreate": ("loading_context", "transcreating_lines", "checking_terms", "checking_script"),
 }
 DEMO_MARKET_CODE = "JP"  # contracts/README §5: demo projects describe one seeded scenario (Northstar, Japan)
 DEMO_UPLOADS_MESSAGE = "Demo projects do not analyze uploads"

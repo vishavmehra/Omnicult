@@ -58,6 +58,7 @@ STAGES: dict[str, tuple[str, ...]] = {
     "risk_scan": ("loading_content", "analyzing_creatives", "assessing_risks", "checking_evidence"),
     "population_study": ("preparing_evidence", "constructing_population", "running_interviews", "analysing_results"),
     "social_simulation": ("building_network", "simulating_rounds", "analysing_dynamics", "summarizing"),
+    "transcreate": ("loading_context", "transcreating_lines", "checking_terms", "checking_script"),
 }
 LABELS = {
     "market_discovery": "discovery",
@@ -70,6 +71,7 @@ LABELS = {
     "risk_scan": "risk scan",
     "population_study": "population study",
     "social_simulation": "social simulation",
+    "transcreate": "transcreation",
 }
 ENTRY_POINTS = {
     "market_discovery": "run_discovery",
@@ -82,6 +84,7 @@ ENTRY_POINTS = {
     "risk_scan": "run_risk_scan",
     "population_study": "run_population_study",
     "social_simulation": "run_social_simulation",
+    "transcreate": "run_transcreate",
 }
 V3_RUNS = {"population_study", "social_simulation"}  # checkpointed: cancel at a checkpoint, resume from it
 V3_TIMEOUT_SECONDS = 3600
@@ -534,6 +537,10 @@ async def _build_input(run_id: UUID) -> tuple[Any, Any]:
             from app.services import population
 
             workflow_input = await population.build_input(s, run, types, context, grounding)
+        elif run.run_type == "transcreate":
+            from app.services import transcreate
+
+            workflow_input = await transcreate.build_input(s, run, types, context, grounding)
         else:
             from app.services import insights  # v2 run types
 
@@ -683,6 +690,11 @@ async def _persist(run_id: UUID, outcome: Any) -> None:
             from app.services import population
 
             payload, ref = await population.persist(s, run, outcome, new_ids, now)
+        elif run.run_type == "transcreate":
+            from app.services import transcreate
+
+            payload, ref = await transcreate.persist(s, run, outcome, new_ids, now)
+            status = payload.pop("_status", status)  # a refused operation (a lock set meanwhile) is a failed run
         else:
             from app.services import insights  # v2 run types
 

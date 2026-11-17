@@ -18,6 +18,7 @@ from app.workflows.profile import run_cultural_profile
 from app.workflows.rehearsal import run_rehearsal
 from app.workflows.risk import run_risk_scan
 from app.workflows.social import run_social_simulation
+from app.workflows.transcreate import run_transcreate
 from app.workflows.types import (
     AdaptationInput,
     ArenaInput,
@@ -92,6 +93,7 @@ __all__ = [
     "run_rehearsal",
     "run_population_study",
     "run_social_simulation",
+    "run_transcreate",
     "answer_followup",
     "answer_group_question",
 ]

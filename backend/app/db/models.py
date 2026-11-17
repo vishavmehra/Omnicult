@@ -18,7 +18,8 @@ from app.db.base import Base, utcnow
 
 RUN_TYPES = (
     "'market_discovery', 'campaign_rehearsal', 'campaign_adaptation', 'campaign_evaluation', "
-    "'cultural_profile', 'campaign_arena', 'risk_scan', 'market_comparison', 'population_study', 'social_simulation'"
+    "'cultural_profile', 'campaign_arena', 'risk_scan', 'market_comparison', 'population_study', 'social_simulation', "
+    "'transcreate'"
 )
 RUN_STATUSES = "'queued', 'running', 'completed', 'partial', 'failed', 'cancelled'"
 
@@ -810,4 +811,11 @@ from app.db.models_omnicult import (  # noqa: E402,F401  (registers the Omnicult
     User,
     Workspace,
     WorkspaceMember,
+)
+from app.db.models_versions import (  # noqa: E402,F401  (registers the Creative Studio tables on Base.metadata)
+    Chip,
+    GlossaryTerm,
+    Lock,
+    Operation,
+    VersionNode,
 )

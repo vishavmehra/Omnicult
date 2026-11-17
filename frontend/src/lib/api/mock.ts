@@ -36,6 +36,7 @@ const RUNNING_STAGE: Record<RunType, string> = {
   market_comparison: "comparing_markets",
   population_study: "running_interviews",
   social_simulation: "simulating_rounds",
+  transcreate: "transcreating_lines",
 };
 const firstPolled = new Map<string, number>();
 

@@ -13,6 +13,8 @@ export const RUN_TYPE_META: Record<RunType, { label: string; segment: string }> 
   // Contract v3: both run under a study; they link to Audience until v3 adds dedicated pages.
   population_study: { label: "Population study", segment: "audience" },
   social_simulation: { label: "Social simulation", segment: "audience" },
+  // Creative Studio (Phase 2): links to Voice until the Studio workspace page exists.
+  transcreate: { label: "Transcreation", segment: "voice" },
 };
 
 /** Section href that keeps the active campaign in the URL. `segment` null is the Overview. */

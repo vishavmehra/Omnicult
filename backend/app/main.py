@@ -28,6 +28,7 @@ from app.api.routes import (
     runs,
     search,
     studies,
+    studio,
     trends,
     workspaces,
 )
@@ -61,6 +62,7 @@ ROUTERS = (
     assets,
     reports,
     runs,
+    studio,
 )
 
 API_PREFIX = "/api/v1"

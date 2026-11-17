@@ -449,3 +449,7 @@ RESPONDERS |= {
 from app.fixtures.demo_population import RESPONDERS as POPULATION_RESPONDERS  # noqa: E402
 
 RESPONDERS |= POPULATION_RESPONDERS
+
+from app.fixtures.demo_studio import RESPONDERS as STUDIO_RESPONDERS  # noqa: E402
+
+RESPONDERS |= STUDIO_RESPONDERS
