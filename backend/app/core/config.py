@@ -19,9 +19,8 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     frontend_origins: str = "http://localhost:3000"
 
-    auth_mode: Literal["supabase", "dev"] = "dev"
+    # Supabase settings remain only for ASSET_STORAGE_BACKEND=supabase (the infra stream replaces that backend with GCS).
     supabase_url: str | None = None
-    supabase_jwt_secret: SecretStr | None = None
     # Server-side Storage credential (ASSET_STORAGE_BACKEND=supabase). Never sent to the browser or logged.
     supabase_secret_key: SecretStr | None = None
 
@@ -73,9 +72,13 @@ class Settings(BaseSettings):
     # never from a key in this file. validate_default so that an unset bucket fails at startup, not at first upload.
     gcs_bucket: str | None = Field(default=None, validate_default=True)
 
+    # --- data-auth stream (Phase 1 contract section 1) ---
+    # dev: `dev-<label>` tokens, refused in production. firebase: Firebase Authentication ID tokens.
+    auth_mode: Literal["dev", "firebase"] = "dev"
+    firebase_project_id: str | None = None
+
     @field_validator(
         "supabase_url",
-        "supabase_jwt_secret",
         "supabase_secret_key",
         "nebius_api_key",
         "nebius_default_model",
@@ -93,6 +96,7 @@ class Settings(BaseSettings):
         "rerank_model",
         "rerank_provider",
         "gcs_bucket",
+        "firebase_project_id",
         mode="before",
     )
     @classmethod

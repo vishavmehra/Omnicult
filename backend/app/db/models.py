@@ -1,9 +1,11 @@
 """ORM tables (docs/06_DATABASE_SCHEMA.md with decisions D-005..D-008, D-018).
 
-Ownership: `projects.owner_id` is the caller's user id. Every child row carries
+Ownership: `projects.workspace_id` places a project in a workspace (the tenant) and workspace membership decides
+access; `projects.owner_id` is the creating user. Every child row carries
 `project_id`, and composite foreign keys such as (campaign_id, project_id) ->
 campaigns(id, project_id) make cross-project references impossible at the database level.
-Nothing cascades: deleting a project archives it (D-011).
+Nothing cascades: deleting a project archives it (D-011). Omnicult tables (users, workspaces, claims, ...) live in
+`models_omnicult` and are re-exported at the bottom of this module.
 """
 
 from datetime import datetime
@@ -30,6 +32,7 @@ class Project(Base):
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     owner_id: Mapped[UUID]
+    workspace_id: Mapped[UUID | None] = mapped_column(ForeignKey("workspaces.id"))  # NULL only before the 0008 backfill
     name: Mapped[str]
     description: Mapped[str | None]
     objective: Mapped[str | None]
@@ -44,7 +47,10 @@ class Project(Base):
         CheckConstraint("mode IN ('live', 'demo')", name="mode"),
         CheckConstraint("status IN ('active', 'archived')", name="status"),
         Index("ix_projects_owner_id_last_activity_at", "owner_id", "last_activity_at"),
+        Index("ix_projects_workspace_id_last_activity_at", "workspace_id", "last_activity_at"),
     )
+
+    access_role = "owner"  # not a column: the caller's workspace role, set by services.common on load
 
 
 class BrandKit(Base):
@@ -156,6 +162,12 @@ class AgentRun(Base):
     started_at: Mapped[datetime | None]
     completed_at: Mapped[datetime | None]
     cancel_requested_at: Mapped[datetime | None]  # cooperative cancel, honored at the next checkpoint (0005)
+    # Idempotency and leases (0011): a retried create returns the existing run; a lease says which instance owns a run.
+    created_by: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"))
+    idempotency_key: Mapped[str | None]
+    attempt: Mapped[int] = mapped_column(default=0, server_default="0")  # times execution has started
+    lease_expires_at: Mapped[datetime | None]
+    heartbeat_at: Mapped[datetime | None]
 
     __table_args__ = (
         _fk(["campaign_id", "project_id"], "campaigns", ["id", "project_id"]),
@@ -167,6 +179,7 @@ class AgentRun(Base):
         Index("ix_agent_runs_project_id_created_at", "project_id", "created_at"),
         Index("ix_agent_runs_study_id_created_at", "study_id", "created_at"),
         Index("ix_agent_runs_status", "status"),
+        Index("uq_agent_runs_created_by_idempotency_key", "created_by", "idempotency_key", unique=True),
     )
 
 
@@ -780,3 +793,21 @@ class FollowUp(Base):
         _fk(["group_question_id", "project_id"], "group_questions", ["id", "project_id"]),
         Index("ix_follow_ups_population_study_id_participant_id", "population_study_id", "participant_id"),
     )
+
+
+from app.db.models_omnicult import (  # noqa: E402,F401  (registers the Omnicult tables on Base.metadata)
+    AiUsageEvent,
+    AuditLog,
+    Claim,
+    ClaimSource,
+    Conflict,
+    ConflictResolution,
+    CountryPack,
+    Language,
+    Region,
+    RegionalMoment,
+    RegionLanguageProfile,
+    User,
+    Workspace,
+    WorkspaceMember,
+)

@@ -27,6 +27,10 @@ class ProjectCreate(ApiModel):
         default=[], description="Terms that must stay verbatim in adaptations when present in the source."
     )
     target_markets: MarketList = []
+    workspace_id: UUID | None = Field(
+        default=None,
+        description="Workspace to create the project in (owner or editor role needed). Omitted: the caller's personal workspace.",
+    )
 
 
 class ProjectUpdate(ApiModel):
@@ -88,6 +92,7 @@ class Brand(ApiModel):
 
 class Project(ApiModel):
     id: UUID
+    workspace_id: UUID | None = Field(default=None, description="The workspace (tenant) the project belongs to.")
     name: str
     description: str | None
     objective: str | None

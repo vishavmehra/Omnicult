@@ -12,9 +12,9 @@ from app.core.config import Settings, get_settings
 HTTP_METHODS = {"get", "head", "post", "put", "patch", "delete"}
 PROD = {
     "APP_ENV": "production",
-    "AUTH_MODE": "supabase",
-    "SUPABASE_URL": "https://example.supabase.co",
-    "DATABASE_URL": "postgresql+asyncpg://user:pw@db.example.supabase.co:5432/postgres?ssl=require",
+    "AUTH_MODE": "firebase",
+    "FIREBASE_PROJECT_ID": "omnicult-test",
+    "DATABASE_URL": "postgresql+asyncpg://user:pw@10.0.0.5:5432/omnicult",
     "FRONTEND_ORIGINS": "https://app.example.com",
 }
 
@@ -35,7 +35,7 @@ def test_dev_auth_is_refused_in_production() -> None:
 @pytest.mark.parametrize(
     ("override", "missing"),
     [
-        ({"SUPABASE_URL": ""}, "SUPABASE_URL"),
+        ({"FIREBASE_PROJECT_ID": ""}, "FIREBASE_PROJECT_ID"),
         ({"DATABASE_URL": "sqlite+aiosqlite:///./prod.db"}, "DATABASE_URL pointing at Postgres"),
         ({"FRONTEND_ORIGINS": "*"}, "FRONTEND_ORIGINS"),
     ],

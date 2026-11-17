@@ -11,7 +11,9 @@ from app.db.base import utcnow
 from app.db.session import read_session, session
 from app.schemas.campaigns import DEFAULT_EVALUATION_CRITERIA
 from app.schemas.projects import Brand, BrandUpdate, Project, ProjectCreate, ProjectPage, ProjectSummary, ProjectUpdate
-from app.services.common import apply_patch, get_project, paginate
+from app.core.errors import Forbidden, NotFound
+from app.services.common import apply_patch, get_project, paginate, visible_projects
+from app.services.identity import WRITE_ROLES, ensure_personal_workspace, member_role
 
 # Seed for POST /projects/demo. Mirrors contracts/fixtures/Project.json and Campaign.json; the
 # demo fixtures are written for exactly this brand, campaign copy, and market.
@@ -115,6 +117,7 @@ async def replace_brand(user_id: UUID, project_id: UUID, body: BrandUpdate) -> B
 def to_project(project: m.Project, brand: m.BrandKit) -> Project:
     return Project(
         id=project.id,
+        workspace_id=project.workspace_id,
         name=project.name,
         description=project.description,
         objective=project.objective,
@@ -129,6 +132,19 @@ def to_project(project: m.Project, brand: m.BrandKit) -> Project:
 
 async def _brand(s: Any, project_id: UUID) -> m.BrandKit:
     return (await s.execute(select(m.BrandKit).where(m.BrandKit.project_id == project_id))).scalar_one()
+
+
+async def _target_workspace(s: Any, user_id: UUID, requested: UUID | None) -> UUID:
+    """The workspace a new project goes into: the requested one (the caller must be able to write there) or the
+    caller's personal workspace, which is created on first use."""
+    if requested is None:
+        return await ensure_personal_workspace(s, user_id)
+    role = await member_role(s, user_id, requested)
+    if role is None:
+        raise NotFound("Workspace was not found.")
+    if role not in WRITE_ROLES:
+        raise Forbidden("Your role in this workspace is read-only.")
+    return requested
 
 
 async def create_project(user_id: UUID, body: ProjectCreate) -> Project:
@@ -146,6 +162,7 @@ async def create_project(user_id: UUID, body: ProjectCreate) -> Project:
         updated_at=now,
     )
     async with session() as s, s.begin():
+        project.workspace_id = await _target_workspace(s, user_id, body.workspace_id)
         s.add(project)
         await s.flush()
         s.add(brand)
@@ -172,6 +189,7 @@ async def create_demo_project(user_id: UUID) -> Project:
         **DEMO_STUDY,
     )
     async with session() as s, s.begin():
+        project.workspace_id = await ensure_personal_workspace(s, user_id)
         s.add(project)
         await s.flush()
         s.add_all([brand, campaign])
@@ -182,7 +200,7 @@ async def create_demo_project(user_id: UUID) -> Project:
 
 async def list_projects(user_id: UUID, limit: int, offset: int, include_archived: bool) -> ProjectPage:
     stmt = select(m.Project, m.BrandKit.name).join(m.BrandKit, m.BrandKit.project_id == m.Project.id)
-    stmt = stmt.where(m.Project.owner_id == user_id)
+    stmt = stmt.where(visible_projects(user_id))
     if not include_archived:
         stmt = stmt.where(m.Project.status == "active")
     stmt = stmt.order_by(m.Project.last_activity_at.desc(), m.Project.created_at.desc(), m.Project.id)

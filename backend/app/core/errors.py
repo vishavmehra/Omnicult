@@ -55,6 +55,10 @@ class Unauthenticated(AppError):
     status_code, code = 401, "UNAUTHENTICATED"
 
 
+class Forbidden(AppError):
+    status_code, code = 403, "FORBIDDEN"
+
+
 class NotFound(AppError):
     status_code, code = 404, "NOT_FOUND"
 

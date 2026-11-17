@@ -19,9 +19,14 @@ def test_dev_auth_is_allowed_outside_production(app_env: str) -> None:
     assert Settings(_env_file=None, app_env=app_env, auth_mode="dev").auth_mode == "dev"
 
 
-def test_production_accepts_supabase_auth() -> None:
-    settings = Settings(_env_file=None, app_env="production", auth_mode="supabase", supabase_url="https://x.supabase.co")
-    assert settings.auth_mode == "supabase"
+def test_production_accepts_firebase_auth() -> None:
+    settings = Settings(_env_file=None, app_env="production", auth_mode="firebase", firebase_project_id="omnicult-test")
+    assert settings.auth_mode == "firebase"
+
+
+def test_supabase_auth_mode_is_gone() -> None:
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None, auth_mode="supabase")  # type: ignore[arg-type]
 
 
 def test_secrets_are_masked_in_settings_repr() -> None:
@@ -40,7 +45,7 @@ def test_settings_error_does_not_echo_secrets() -> None:
             nebius_api_key=DUMMY,
             openrouter_api_key=DUMMY,
             qloo_api_key=DUMMY,
-            supabase_jwt_secret=DUMMY,
+            supabase_secret_key=DUMMY,
         )
     if DUMMY in str(caught.value) or DUMMY in repr(caught.value.errors()):
         pytest.fail("the settings ValidationError echoes a configured secret", pytrace=False)

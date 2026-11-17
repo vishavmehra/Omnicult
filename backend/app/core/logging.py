@@ -46,8 +46,7 @@ class JsonFormatter(logging.Formatter):
 
 
 def _secret_values(settings: Settings) -> list[str]:
-    fields = (settings.nebius_api_key, settings.openrouter_api_key, settings.qloo_api_key, settings.supabase_jwt_secret,
-              settings.supabase_secret_key)
+    fields = (settings.nebius_api_key, settings.openrouter_api_key, settings.qloo_api_key, settings.supabase_secret_key)
     values = [field.get_secret_value() for field in fields if field is not None]
     if "@" in settings.database_url and "://" in settings.database_url:
         # The password segment of a database URL: scheme://user:password@host/...

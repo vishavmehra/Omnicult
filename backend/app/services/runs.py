@@ -12,6 +12,7 @@ import asyncio
 import importlib
 import logging
 from collections.abc import Callable
+from datetime import timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -21,6 +22,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.errors import Conflict, ProviderNotConfigured, RateLimited, ValidationFailed
+from app.core.idempotency import idempotency_key_var
 from app.db import models as m
 from app.db.base import utcnow
 from app.db.session import read_session, session
@@ -85,6 +87,7 @@ V3_TIMEOUT_SECONDS = 3600
 QLOO_RUNS = {"market_discovery", "market_comparison"}  # the Atlas pipeline; everything else needs the LLM
 MAX_CONCURRENT_RUNS = 4  # per-process semaphore; a worker queue if runs must survive restarts
 RUN_TIMEOUT_SECONDS = 900
+RUN_LEASE_SECONDS = V3_TIMEOUT_SECONDS  # the longest a run may hold its lease; a sweep may reclaim it afterwards
 SHUTDOWN_GRACE_SECONDS = 5
 
 class RunCancelled(Exception):
@@ -170,14 +173,32 @@ async def _create_run(
     """Record a queued run (plus any resource rows it fills later, same transaction) and start it."""
     _check_provider(project.mode, run_type)
     engine = executor.bind()
+    key = idempotency_key_var.get()
     async with engine.start_lock:  # count and insert atomically on this instance
         async with session() as s, s.begin():
+            if key is not None:  # a retried request returns the run it already created
+                earlier = await s.scalar(
+                    select(m.AgentRun).where(m.AgentRun.created_by == user_id, m.AgentRun.idempotency_key == key)
+                )
+                if earlier is not None:
+                    if (earlier.project_id, earlier.run_type) != (project.id, run_type):
+                        raise Conflict("This Idempotency-Key was already used for a different request.")
+                    return RunAccepted(
+                        run_id=earlier.id, status=earlier.status, run_type=run_type,  # type: ignore[arg-type]
+                        status_url=f"{API}/runs/{earlier.id}",
+                    )
             await _check_active_limit(s, user_id)
             run = m.AgentRun(
                 id=uuid4(), project_id=project.id, campaign_id=campaign_id, study_id=study_id, run_type=run_type,
                 status="queued", mode=project.mode, inputs=inputs, steps=[], created_at=utcnow(),
+                created_by=user_id, idempotency_key=key,
             )
             s.add(run)
+            if key is not None:
+                try:
+                    await s.flush()
+                except IntegrityError:  # the same key arrived on another instance at the same moment
+                    raise Conflict("A request with this Idempotency-Key is already in progress. Retry shortly.") from None
             await s.execute(update(m.Project).where(m.Project.id == project.id).values(last_activity_at=run.created_at))
             if extra_rows is not None:
                 await s.flush()
@@ -420,7 +441,11 @@ async def _mark_running(run_id: UUID, run_type: str) -> bool:
         result = await s.execute(
             update(m.AgentRun)
             .where(m.AgentRun.id == run_id, m.AgentRun.status == "queued")
-            .values(status="running", started_at=utcnow(), progress=first.model_dump())
+            .values(
+                status="running", started_at=utcnow(), progress=first.model_dump(),
+                heartbeat_at=utcnow(), lease_expires_at=utcnow() + timedelta(seconds=RUN_LEASE_SECONDS),
+                attempt=m.AgentRun.attempt + 1,
+            )
         )
     return result.rowcount == 1  # type: ignore[attr-defined]
 
@@ -762,8 +787,8 @@ async def _cancelled(run_id: UUID) -> None:
 
 async def _check_active_limit(s: AsyncSession, user_id: UUID) -> None:
     active = await s.scalar(
-        select(func.count(m.AgentRun.id)).join(m.Project, m.Project.id == m.AgentRun.project_id)
-        .where(m.Project.owner_id == user_id, m.AgentRun.status.in_(ACTIVE))
+        select(func.count(m.AgentRun.id))
+        .where(m.AgentRun.created_by == user_id, m.AgentRun.status.in_(ACTIVE))
     )
     limit = get_settings().max_active_runs_per_user
     if (active or 0) >= limit:

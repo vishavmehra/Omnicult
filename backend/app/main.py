@@ -1,7 +1,7 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
 
@@ -12,6 +12,7 @@ from app.api.routes import (
     assets,
     brand,
     campaigns,
+    conflicts,
     discoveries,
     evaluations,
     evidence,
@@ -21,13 +22,16 @@ from app.api.routes import (
     populations,
     profiles,
     projects,
+    regions,
     reports,
     risk,
     runs,
     search,
     studies,
     trends,
+    workspaces,
 )
+from app.api.deps import capture_idempotency_key
 from app.core.config import Settings, get_settings
 from app.core.errors import REQUEST_ID_HEADER, RequestContextMiddleware, install_error_handlers
 from app.core.logging import configure_logging
@@ -35,6 +39,9 @@ from app.db.session import dispose_engine
 from app.services import runs as run_engine
 
 ROUTERS = (
+    workspaces,
+    regions,
+    conflicts,
     projects,
     brand,
     campaigns,
@@ -75,8 +82,8 @@ def check_production(settings: Settings) -> None:
     """Fail closed: refuse to start a production app without real auth, a real database, and explicit origins.
     (AUTH_MODE=dev under APP_ENV=production is already refused when the settings load.)"""
     problems = []
-    if settings.auth_mode != "supabase" or not settings.supabase_url:
-        problems.append("AUTH_MODE=supabase with SUPABASE_URL set")
+    if settings.auth_mode != "firebase" or not settings.firebase_project_id:
+        problems.append("AUTH_MODE=firebase with FIREBASE_PROJECT_ID set")
     if not settings.database_url.startswith("postgresql"):
         problems.append("DATABASE_URL pointing at Postgres (SQLite is for development and tests)")
     if not settings.cors_origins or "*" in settings.cors_origins:
@@ -106,7 +113,7 @@ def create_app() -> FastAPI:
         expose_headers=[REQUEST_ID_HEADER, "Content-Disposition"],
     )
     app.include_router(health.router)
-    api = APIRouter(prefix=API_PREFIX, responses=ERROR_RESPONSES)
+    api = APIRouter(prefix=API_PREFIX, responses=ERROR_RESPONSES, dependencies=[Depends(capture_idempotency_key)])
     for module in ROUTERS:
         api.include_router(module.router)
     app.include_router(api)

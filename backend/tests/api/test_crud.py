@@ -95,7 +95,7 @@ async def test_demo_project_matches_fixture_seed(client: httpx.AsyncClient) -> N
     assert response.status_code == 201
     project = response.json()
     expected = json.loads((FIXTURES / "Project.json").read_text(encoding="utf-8"))
-    volatile = {"id", "created_at", "updated_at"}
+    volatile = {"id", "created_at", "updated_at", "workspace_id"}
     assert {k: v for k, v in project.items() if k not in volatile | {"brand"}} == {
         k: v for k, v in expected.items() if k not in volatile | {"brand"}}
     assert {k: v for k, v in project["brand"].items() if k not in volatile} == {

@@ -280,6 +280,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Me
+         * @description The signed-in user and the workspaces they belong to, with their role in each.
+         */
+        get: operations["get_me"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/population-studies/{population_study_id}": {
         parameters: {
             query?: never;
@@ -479,7 +499,7 @@ export interface paths {
         put?: never;
         /**
          * Create Project
-         * @description Create a live-mode project and its brand kit in one operation.
+         * @description Create a live-mode project and its brand kit in one operation. Anonymous users get 403: they may only explore the demo.
          */
         post: operations["create_project"];
         delete?: never;
@@ -844,6 +864,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/regions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Regions
+         * @description Regions of a country (all 36 Indian states and union territories for IN), with their languages.
+         */
+        get: operations["list_regions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/regions/{region_code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Region */
+        get: operations["get_region"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/reports/{report_id}": {
         parameters: {
             query?: never;
@@ -1156,6 +1213,89 @@ export interface paths {
         };
         /** Get Trend Comparison */
         get: operations["get_trend_comparison"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/conflicts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Conflicts
+         * @description Disagreements between claims, unresolved first. Both claims, their sources, dates and scope are included.
+         */
+        get: operations["list_conflicts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/conflicts/{conflict_id}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resolve Conflict
+         * @description Accept the value in use, switch to the other, or request a native review. Recorded with the user and time.
+         *     Needs the owner, editor or reviewer role (403 otherwise); anonymous users get 403.
+         */
+        post: operations["resolve_conflict"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/regions/{region_code}/evidence-meter": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Evidence Meter
+         * @description Sources, supported claims, freshness, coverage, open conflicts, stale claims and claims needing review.
+         *     A region with weak evidence is rated weak.
+         */
+        get: operations["get_evidence_meter"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/regions/{region_code}/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Region Profile
+         * @description The region's claims grouped by category, each with its five tags, plus the Evidence Meter.
+         *     Shows shared reference claims and the workspace's own claims. 404 for a workspace the caller does not belong to.
+         */
+        get: operations["get_region_profile"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1948,6 +2088,122 @@ export interface components {
             /** Weaknesses */
             weaknesses: string[];
         };
+        /** CategoryClaims */
+        CategoryClaims: {
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "language" | "script" | "festival" | "moment" | "food" | "colour" | "symbol" | "humour" | "family" | "custom" | "sensitivity" | "trend" | "demographic" | "media";
+            /**
+             * Claims
+             * @description Empty when the region has no claim in this category: a visible gap.
+             */
+            claims: components["schemas"]["ClaimView"][];
+        };
+        /** CategoryCoverage */
+        CategoryCoverage: {
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "language" | "script" | "festival" | "moment" | "food" | "colour" | "symbol" | "humour" | "family" | "custom" | "sensitivity" | "trend" | "demographic" | "media";
+            /** Claims */
+            claims: number;
+            /** Supported Claims */
+            supported_claims: number;
+        };
+        /** ClaimScope */
+        ClaimScope: {
+            /** City Tier */
+            city_tier?: string | null;
+            /**
+             * Country
+             * @default IN
+             */
+            country: string;
+            /** Language */
+            language?: string | null;
+            /** Period */
+            period?: string | null;
+            /** Region Code */
+            region_code?: string | null;
+        };
+        /** ClaimView */
+        ClaimView: {
+            /** Attribute */
+            attribute: string;
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "language" | "script" | "festival" | "moment" | "food" | "colour" | "symbol" | "humour" | "family" | "custom" | "sensitivity" | "trend" | "demographic" | "media";
+            /**
+             * Confidence
+             * @description Computed from the sources by the server; never set by a source or a model.
+             * @enum {string}
+             */
+            confidence: "low" | "moderate" | "high";
+            /** Confidence Reason */
+            confidence_reason: string;
+            /**
+             * Conflict Ids
+             * @description Unresolved conflicts this claim is part of.
+             */
+            conflict_ids: string[];
+            /**
+             * Effective Confidence
+             * @description One level lower than `confidence` while the claim is in an open conflict.
+             * @enum {string}
+             */
+            effective_confidence: "low" | "moderate" | "high";
+            /** Expires At */
+            expires_at: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "observed" | "calculated" | "synthetic" | "interpretation" | "unverified";
+            /** Published At */
+            published_at: string | null;
+            /**
+             * Retrieved At
+             * Format: date-time
+             */
+            retrieved_at: string;
+            scope: components["schemas"]["ClaimScope"];
+            /**
+             * Shared
+             * @description True for shared reference claims; false for claims owned by the workspace.
+             */
+            shared: boolean;
+            /** Sources */
+            sources: components["schemas"]["SourceView"][];
+            /**
+             * Stale
+             * @description No observed source is under two years old, or the claim has expired.
+             */
+            stale: boolean;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "needs_review" | "rejected" | "superseded";
+            /** Subject */
+            subject: string;
+            /**
+             * Value
+             * @description The JSON value; `value_text` is the statement to show people.
+             */
+            value: unknown;
+            /** Value Text */
+            value_text: string;
+        };
         /** Comparability */
         Comparability: {
             /** Notes */
@@ -1964,6 +2220,15 @@ export interface components {
             same_scoring_version: boolean;
             /** Same Source Version */
             same_source_version: boolean;
+        };
+        /** ConfidenceBreakdown */
+        ConfidenceBreakdown: {
+            /** High */
+            high: number;
+            /** Low */
+            low: number;
+            /** Moderate */
+            moderate: number;
         };
         /**
          * ConfirmedReference
@@ -1982,6 +2247,111 @@ export interface components {
              * @description Must also appear in reference_terms.
              */
             term: string;
+        };
+        /**
+         * Conflict
+         * @description Two claims about the same subject, attribute and scope with different values. Both are kept and shown.
+         */
+        Conflict: {
+            claim_a: components["schemas"]["ClaimView"];
+            claim_b: components["schemas"]["ClaimView"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Current Selection
+             * @description Which value is used while the conflict stands, and after a decision.
+             * @enum {string}
+             */
+            current_selection: "a" | "b";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Reason */
+            reason: string;
+            /** Region Code */
+            region_code: string | null;
+            /**
+             * Resolutions
+             * @description Decisions so far, oldest first.
+             */
+            resolutions: components["schemas"]["ConflictResolutionView"][];
+            /**
+             * Selection Reason
+             * @description Why that value is used.
+             */
+            selection_reason: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "review_requested" | "resolved";
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /** ConflictPage */
+        ConflictPage: {
+            /** Items */
+            items: components["schemas"]["Conflict"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** ConflictResolutionView */
+        ConflictResolutionView: {
+            /**
+             * Decided At
+             * Format: date-time
+             */
+            decided_at: string;
+            /**
+             * Decided By
+             * Format: uuid
+             */
+            decided_by: string;
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "accept" | "switch" | "request_review";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Note */
+            note: string | null;
+            /**
+             * Selection After
+             * @enum {string}
+             */
+            selection_after: "a" | "b";
+        };
+        /** ConflictResolveRequest */
+        ConflictResolveRequest: {
+            /**
+             * Decision
+             * @description accept: keep the value in use; switch: use the other value; request_review: ask for a native review.
+             * @enum {string}
+             */
+            decision: "accept" | "switch" | "request_review";
+            /** Note */
+            note?: string | null;
         };
         /** ContentChange */
         ContentChange: {
@@ -2595,6 +2965,68 @@ export interface components {
             project_id: string;
             /** Truncated */
             truncated: boolean;
+        };
+        /**
+         * EvidenceMeter
+         * @description How well-evidenced a region is. A weak region is reported as weak, whatever the profile looks like.
+         */
+        EvidenceMeter: {
+            /**
+             * Categories Covered
+             * @description Categories with at least one supported claim.
+             */
+            categories_covered: number;
+            /** Categories Total */
+            categories_total: number;
+            /** Claims */
+            claims: number;
+            confidence: components["schemas"]["ConfidenceBreakdown"];
+            /** Coverage */
+            coverage: components["schemas"]["CategoryCoverage"][];
+            freshness: components["schemas"]["SourceFreshness"];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /**
+             * Needs Review Claims
+             * @description Claims flagged for review, model interpretations and unverified statements, and claims in a conflict marked for review.
+             */
+            needs_review_claims: number;
+            /** Open Conflicts */
+            open_conflicts: number;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Sources
+             * @description Distinct sources across the region's claims.
+             */
+            sources: number;
+            /** Stale Claims */
+            stale_claims: number;
+            /**
+             * Strength
+             * @enum {string}
+             */
+            strength: "weak" | "partial" | "solid";
+            /**
+             * Strength Reasons
+             * @description Why the region is not rated solid; empty only for solid.
+             */
+            strength_reasons: string[];
+            /**
+             * Supported Claims
+             * @description Observed or calculated claims backed by at least one observed source.
+             */
+            supported_claims: number;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
         };
         /** EvidencePage */
         EvidencePage: {
@@ -3358,6 +3790,22 @@ export interface components {
              */
             status: "queued" | "running" | "completed" | "partial" | "failed" | "cancelled";
         };
+        /** Me */
+        Me: {
+            /** Display Name */
+            display_name: string | null;
+            /** Email */
+            email: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Is Anonymous */
+            is_anonymous: boolean;
+            /** Workspaces */
+            workspaces: components["schemas"]["Workspace"][];
+        };
         /** MemoryItem */
         MemoryItem: {
             /**
@@ -3938,6 +4386,11 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+            /**
+             * Workspace Id
+             * @description The workspace (tenant) the project belongs to.
+             */
+            workspace_id: string | null;
         };
         /**
          * ProjectCreate
@@ -3982,6 +4435,11 @@ export interface components {
              * @default []
              */
             target_markets: components["schemas"]["Market"][];
+            /**
+             * Workspace Id
+             * @description Workspace to create the project in (owner or editor role needed). Omitted: the caller's personal workspace.
+             */
+            workspace_id?: string | null;
         };
         /** ProjectPage */
         ProjectPage: {
@@ -4150,6 +4608,88 @@ export interface components {
              * @description The deterministic rule that produced the decision, e.g. R3_small_margin.
              */
             rule_id: string;
+        };
+        /** Region */
+        Region: {
+            /**
+             * Code
+             * @description ISO 3166-2, for example IN-TN.
+             */
+            code: string;
+            /** Country Code */
+            country_code: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "state" | "union_territory";
+            /** Languages */
+            languages: components["schemas"]["RegionLanguage"][];
+            /** Name */
+            name: string;
+            /**
+             * Primary Language
+             * @description Language code of the principal official language.
+             */
+            primary_language: string | null;
+            /** Primary Script */
+            primary_script: string | null;
+        };
+        /** RegionLanguage */
+        RegionLanguage: {
+            /**
+             * Code
+             * @description ISO 639-1; ISO 639-3 where no two-letter code exists.
+             */
+            code: string;
+            /** Name */
+            name: string;
+            /** Native Name */
+            native_name: string | null;
+            /**
+             * Role
+             * @description primary: principal official language; secondary: additional official or widely used. Not a speaker share.
+             * @enum {string}
+             */
+            role: "primary" | "secondary" | "code_mixed";
+            /**
+             * Script
+             * @description ISO 15924.
+             */
+            script: string;
+        };
+        /** RegionPage */
+        RegionPage: {
+            /** Items */
+            items: components["schemas"]["Region"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** RegionProfile */
+        RegionProfile: {
+            /** Categories */
+            categories: components["schemas"]["CategoryClaims"][];
+            meter: components["schemas"]["EvidenceMeter"];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            region: components["schemas"]["Region"];
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
         };
         /** RegionResult */
         RegionResult: {
@@ -5290,6 +5830,49 @@ export interface components {
             /** Value */
             value: string | number | boolean | null;
         };
+        /** SourceFreshness */
+        SourceFreshness: {
+            /**
+             * Fresh Source Share
+             * @description Share of sources under two years old (0 to 1); null without sources.
+             */
+            fresh_source_share: number | null;
+            /** Median Age Days */
+            median_age_days: number | null;
+            /** Newest Source Date */
+            newest_source_date: string | null;
+            /** Oldest Source Date */
+            oldest_source_date: string | null;
+        };
+        /** SourceView */
+        SourceView: {
+            /** Excerpt */
+            excerpt: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Independence Group */
+            independence_group: string;
+            /** Published At */
+            published_at: string | null;
+            /** Publisher */
+            publisher: string | null;
+            /**
+             * Retrieved At
+             * Format: date-time
+             */
+            retrieved_at: string;
+            /** Source Identifier */
+            source_identifier: string;
+            /** Source Type */
+            source_type: string;
+            /** Title */
+            title: string | null;
+            /** Url */
+            url: string | null;
+        };
         /**
          * StepTrace
          * @description One executed workflow stage; the provenance Proof displays.
@@ -5728,6 +6311,31 @@ export interface components {
              * @description Approximate position such as top-left; null when not reported.
              */
             location: string | null;
+        };
+        /** Workspace */
+        Workspace: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "personal" | "team";
+            /** Name */
+            name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "owner" | "editor" | "reviewer" | "viewer";
         };
     };
     responses: never;
@@ -8228,6 +8836,125 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MarketComparison"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_me: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Me"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -13711,6 +14438,253 @@ export interface operations {
             };
         };
     };
+    list_regions: {
+        parameters: {
+            query?: {
+                country_code?: string;
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RegionPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_region: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description ISO 3166-2 code, for example IN-TN. */
+                region_code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Region"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     get_report: {
         parameters: {
             query?: never;
@@ -15822,6 +16796,513 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TrendComparison"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_conflicts: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+                region_code?: string | null;
+                status?: ("open" | "review_requested" | "resolved") | null;
+                mode?: "live" | "demo";
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConflictPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    resolve_conflict: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+                conflict_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConflictResolveRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Conflict"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_evidence_meter: {
+        parameters: {
+            query?: {
+                /** @description live claims, or labeled demo fixtures; the two are never mixed. */
+                mode?: "live" | "demo";
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+                /** @description ISO 3166-2 code, for example IN-TN. */
+                region_code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvidenceMeter"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_region_profile: {
+        parameters: {
+            query?: {
+                /** @description live claims, or labeled demo fixtures; the two are never mixed. */
+                mode?: "live" | "demo";
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+                /** @description ISO 3166-2 code, for example IN-TN. */
+                region_code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RegionProfile"];
                 };
             };
             /** @description UNAUTHENTICATED */

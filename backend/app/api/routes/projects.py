@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, status
 
-from app.api.deps import CurrentUser, Limit, Offset
+from app.api.deps import CurrentUser, Limit, Offset, RegisteredUser
 from app.schemas.projects import Project, ProjectCreate, ProjectPage, ProjectUpdate
 from app.services import projects
 
@@ -10,8 +10,8 @@ router = APIRouter(tags=["projects"])
 
 
 @router.post("/projects", status_code=status.HTTP_201_CREATED, response_model=Project)
-async def create_project(body: ProjectCreate, user: CurrentUser) -> Project:
-    """Create a live-mode project and its brand kit in one operation."""
+async def create_project(body: ProjectCreate, user: RegisteredUser) -> Project:
+    """Create a live-mode project and its brand kit in one operation. Anonymous users get 403: they may only explore the demo."""
     return await projects.create_project(user.id, body)
 
 
