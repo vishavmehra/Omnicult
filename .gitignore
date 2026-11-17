@@ -43,3 +43,12 @@ qloo_live_smoke_report*.md
 demo/raw/
 demo/build/
 demo/build-old-*/
+
+# Publish only the root README. Internal docs, notes, plans, screenshots and scratch files stay local
+# (they live in ../omnicult-docs, outside this repository).
+*.md
+!/README.md
+docs/
+scratch/
+*.scratch.*
+
