@@ -846,3 +846,5 @@ from app.db.models_audience import AudienceRun, PanelAnswer, PanelParticipant, P
 from app.db.models_launch import Approval, ReadinessVerdict  # noqa: E402,F401  (Launch Room tables, migration 0016)
 from app.db.models_pulse import MetricSeries, PlatformConnection  # noqa: E402,F401  (Live Pulse tables)
 from app.db.models_media import CreativeAsset, CreativeScene  # noqa: E402,F401  (media stream tables)
+
+from app.db.models_proof import ProofReport, ProofReportExport  # noqa: E402,F401  (Proof Vault tables, migration 0017)

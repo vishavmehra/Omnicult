@@ -26,6 +26,7 @@ from app.api.routes import (
     profiles,
     projects,
     pulse,
+    proof,
     regions,
     reports,
     risk,
@@ -70,6 +71,7 @@ ROUTERS = (
     assets,
     media,
     reports,
+    proof,
     runs,
     studio,
 )

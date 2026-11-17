@@ -29,6 +29,8 @@ class IndexedChunk(BaseModel):
     claim_type: ClaimType | None = None
     retrieval_mode: RetrievalMode | None = None
     created_at: datetime | None = None
+    region_code: str | None = None
+    note: str | None = None  # facts shown in the hit's explanation (kind, confidence, ...)
     # Null until embedded. `space` is EmbeddingSpace.key: provider, model, dimensions, config version.
     space: str | None = None
     vector: list[float] | None = None

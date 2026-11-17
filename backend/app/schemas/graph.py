@@ -6,6 +6,7 @@ from uuid import UUID
 
 from pydantic import Field
 
+from app.schemas.claims import ConfidenceLevel
 from app.schemas.common import ApiModel, ConfidenceLabel
 from app.schemas.evidence import ClaimType, EvidenceType, RetrievalMode
 
@@ -30,10 +31,15 @@ GraphNodeKind = Literal[
     "audience_group",
     "interview_theme",
     "social_simulation",
+    "claim",
+    "claim_source",
+    "conflict",
+    "region",
 ]
 GraphRelation = Literal[
     "supports", "derived_from", "generated_by", "evaluates", "recommends", "flags", "variant_of", "references", "produced",
     "informs", "reacted_to", "motivates",
+    "supported_by", "applies_to", "conflicts_with",
 ]
 
 
@@ -52,6 +58,7 @@ class GraphNode(ApiModel):
     retrieval_mode: RetrievalMode | None
     is_demo: bool
     confidence_label: ConfidenceLabel | None
+    confidence: ConfidenceLevel | None = Field(description="Computed confidence of a claim node; null for other nodes.")
     created_at: datetime | None
     limitations: list[str]
     ref: GraphRef

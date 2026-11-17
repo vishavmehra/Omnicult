@@ -91,6 +91,9 @@ class Settings(BaseSettings):
     # Both optional: the adapters that need them are reported as not configured, never faked.
     data_gov_in_api_key: SecretStr | None = None
     youtube_api_key: SecretStr | None = None
+    # --- proof stream (Phase 2 contract) ---
+    # How long a report export's download link works. The link carries a random token (only its hash is stored).
+    proof_export_url_ttl_seconds: int = Field(default=300, ge=30, le=3600)
 
     @field_validator(
         "supabase_url",

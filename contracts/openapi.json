@@ -1074,6 +1074,93 @@
         "title": "ApprovalCreate",
         "type": "object"
       },
+      "ApprovalItem": {
+        "additionalProperties": false,
+        "properties": {
+          "approver_user_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approver User Id"
+          },
+          "decided_at": {
+            "format": "date-time",
+            "title": "Decided At",
+            "type": "string"
+          },
+          "decision": {
+            "enum": [
+              "approved",
+              "changes_requested",
+              "rejected"
+            ],
+            "title": "Decision",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "observed",
+            "default": "observed",
+            "title": "Kind",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role"
+          },
+          "version_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version Id"
+          }
+        },
+        "required": [
+          "id",
+          "version_id",
+          "approver_user_id",
+          "role",
+          "decision",
+          "note",
+          "decided_at",
+          "kind"
+        ],
+        "title": "ApprovalItem",
+        "type": "object"
+      },
       "ApprovalPage": {
         "additionalProperties": false,
         "properties": {
@@ -1104,6 +1191,85 @@
           "total"
         ],
         "title": "ApprovalPage",
+        "type": "object"
+      },
+      "ApprovalsContent": {
+        "additionalProperties": false,
+        "properties": {
+          "approvals": {
+            "items": {
+              "$ref": "#/components/schemas/ApprovalItem"
+            },
+            "title": "Approvals",
+            "type": "array"
+          }
+        },
+        "required": [
+          "approvals"
+        ],
+        "title": "ApprovalsContent",
+        "type": "object"
+      },
+      "ApprovalsSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ApprovalsContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "approvals",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "ApprovalsSection",
         "type": "object"
       },
       "ArenaCreate": {
@@ -1697,6 +1863,42 @@
         "title": "AskPanelCreate",
         "type": "object"
       },
+      "AssemblyInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "method": {
+            "const": "deterministic",
+            "title": "Method",
+            "type": "string"
+          },
+          "model_called": {
+            "const": false,
+            "description": "No model is called to assemble a report; sections read stored records.",
+            "title": "Model Called",
+            "type": "boolean"
+          },
+          "registry_version": {
+            "title": "Registry Version",
+            "type": "string"
+          },
+          "section_ids": {
+            "description": "Sections in report order.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Section Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "method",
+          "model_called",
+          "registry_version",
+          "section_ids"
+        ],
+        "title": "AssemblyInfo",
+        "type": "object"
+      },
       "Asset": {
         "additionalProperties": false,
         "properties": {
@@ -2052,6 +2254,158 @@
           "expires_at"
         ],
         "title": "AssetUrl",
+        "type": "object"
+      },
+      "AudienceResultItem": {
+        "additionalProperties": false,
+        "properties": {
+          "disagreement": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disagreement"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "const": "synthetic",
+            "default": "synthetic",
+            "title": "Kind",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "method": {
+            "enum": [
+              "quick_read",
+              "ask_the_panel"
+            ],
+            "title": "Method",
+            "type": "string"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Code"
+          },
+          "respondent_count": {
+            "description": "Synthetic respondents; never independent human observations.",
+            "title": "Respondent Count",
+            "type": "integer"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "region_code",
+          "respondent_count",
+          "summary",
+          "disagreement",
+          "limitations",
+          "kind"
+        ],
+        "title": "AudienceResultItem",
+        "type": "object"
+      },
+      "AudienceResultsContent": {
+        "additionalProperties": false,
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/AudienceResultItem"
+            },
+            "title": "Results",
+            "type": "array"
+          }
+        },
+        "required": [
+          "results"
+        ],
+        "title": "AudienceResultsContent",
+        "type": "object"
+      },
+      "AudienceResultsSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AudienceResultsContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "audience_results",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "AudienceResultsSection",
         "type": "object"
       },
       "AudienceRunAccepted": {
@@ -2868,6 +3222,76 @@
         "title": "BrandExample",
         "type": "object"
       },
+      "BrandSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "preferred_terms": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Preferred Terms",
+            "type": "array"
+          },
+          "prohibited_terms": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prohibited Terms",
+            "type": "array"
+          },
+          "protected_terms": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Protected Terms",
+            "type": "array"
+          },
+          "target_audience": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Audience"
+          },
+          "voice": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Voice",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "voice",
+          "target_audience",
+          "preferred_terms",
+          "prohibited_terms",
+          "protected_terms"
+        ],
+        "title": "BrandSummary",
+        "type": "object"
+      },
       "BrandUpdate": {
         "additionalProperties": false,
         "description": "Brand Memory, replaced as a whole. Only people write it; model output never becomes a preference.",
@@ -3080,6 +3504,42 @@
         "title": "BriefFinding",
         "type": "object"
       },
+      "BriefMarket": {
+        "additionalProperties": false,
+        "properties": {
+          "country_code": {
+            "description": "ISO 3166-1 alpha-2 code, uppercase.",
+            "pattern": "^[A-Z]{2}$",
+            "title": "Country Code",
+            "type": "string"
+          },
+          "display_name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Display Name",
+            "type": "string"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "ISO 3166-2 region, when the campaign targets one.",
+            "title": "Region Code"
+          }
+        },
+        "required": [
+          "country_code",
+          "display_name",
+          "region_code"
+        ],
+        "title": "BriefMarket",
+        "type": "object"
+      },
       "Campaign": {
         "additionalProperties": false,
         "properties": {
@@ -3165,6 +3625,137 @@
           "updated_at"
         ],
         "title": "Campaign",
+        "type": "object"
+      },
+      "CampaignBriefContent": {
+        "additionalProperties": false,
+        "properties": {
+          "brand": {
+            "$ref": "#/components/schemas/BrandSummary"
+          },
+          "campaign_id": {
+            "format": "uuid",
+            "title": "Campaign Id",
+            "type": "string"
+          },
+          "campaign_type": {
+            "enum": [
+              "advertisement",
+              "landing_page",
+              "product_description",
+              "slogan",
+              "social_post"
+            ],
+            "title": "Campaign Type",
+            "type": "string"
+          },
+          "current_version": {
+            "$ref": "#/components/schemas/CampaignVersionRef"
+          },
+          "evaluation_weights": {
+            "$ref": "#/components/schemas/EvaluationCriteria"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "objective": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Objective"
+          },
+          "target_markets": {
+            "items": {
+              "$ref": "#/components/schemas/BriefMarket"
+            },
+            "title": "Target Markets",
+            "type": "array"
+          },
+          "version_count": {
+            "title": "Version Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "campaign_id",
+          "name",
+          "campaign_type",
+          "objective",
+          "target_markets",
+          "evaluation_weights",
+          "current_version",
+          "version_count",
+          "brand"
+        ],
+        "title": "CampaignBriefContent",
+        "type": "object"
+      },
+      "CampaignBriefSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CampaignBriefContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "campaign_brief",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "CampaignBriefSection",
         "type": "object"
       },
       "CampaignComparison": {
@@ -3508,6 +4099,36 @@
           }
         },
         "title": "CampaignUpdate",
+        "type": "object"
+      },
+      "CampaignVersionRef": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "$ref": "#/components/schemas/CampaignContent-Output"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "version_number": {
+            "title": "Version Number",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "version_number",
+          "content",
+          "created_at"
+        ],
+        "title": "CampaignVersionRef",
         "type": "object"
       },
       "CandidateResult": {
@@ -4722,6 +5343,100 @@
         "title": "ConflictResolveRequest",
         "type": "object"
       },
+      "ConflictsContent": {
+        "additionalProperties": false,
+        "properties": {
+          "open": {
+            "description": "Open, or waiting for a native review.",
+            "items": {
+              "$ref": "#/components/schemas/ReportConflict"
+            },
+            "title": "Open",
+            "type": "array"
+          },
+          "resolved": {
+            "items": {
+              "$ref": "#/components/schemas/ReportConflict"
+            },
+            "title": "Resolved",
+            "type": "array"
+          },
+          "truncated": {
+            "description": "True when a region had more conflicts than the report carries.",
+            "title": "Truncated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "open",
+          "resolved",
+          "truncated"
+        ],
+        "title": "ConflictsContent",
+        "type": "object"
+      },
+      "ConflictsSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConflictsContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "conflicts",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "ConflictsSection",
+        "type": "object"
+      },
       "ContentChange": {
         "additionalProperties": false,
         "properties": {
@@ -5874,6 +6589,197 @@
         "title": "CreativeSummaryPage",
         "type": "object"
       },
+      "CreativeVersionItem": {
+        "additionalProperties": false,
+        "properties": {
+          "actor": {
+            "anyOf": [
+              {
+                "enum": [
+                  "user",
+                  "ai"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor"
+          },
+          "claim_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Claim Ids",
+            "type": "array"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "kind": {
+            "enum": [
+              "observed",
+              "calculated",
+              "synthetic",
+              "interpretation",
+              "unverified"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "operation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operation"
+          },
+          "parent_version_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Version Id"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "version_id": {
+            "format": "uuid",
+            "title": "Version Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version_id",
+          "label",
+          "parent_version_id",
+          "operation",
+          "actor",
+          "created_at",
+          "summary",
+          "claim_ids",
+          "kind"
+        ],
+        "title": "CreativeVersionItem",
+        "type": "object"
+      },
+      "CreativeVersionsContent": {
+        "additionalProperties": false,
+        "properties": {
+          "comparison_summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comparison Summary"
+          },
+          "versions": {
+            "items": {
+              "$ref": "#/components/schemas/CreativeVersionItem"
+            },
+            "title": "Versions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "versions",
+          "comparison_summary"
+        ],
+        "title": "CreativeVersionsContent",
+        "type": "object"
+      },
+      "CreativeVersionsSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CreativeVersionsContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "creative_versions",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "CreativeVersionsSection",
+        "type": "object"
+      },
       "CulturalProfile": {
         "additionalProperties": false,
         "properties": {
@@ -6443,6 +7349,64 @@
           "limitations"
         ],
         "title": "CulturalReference",
+        "type": "object"
+      },
+      "DataHealth": {
+        "additionalProperties": false,
+        "properties": {
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "mode": {
+            "enum": [
+              "live",
+              "demo"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/RegionCoverage"
+            },
+            "title": "Regions",
+            "type": "array"
+          },
+          "rules": {
+            "$ref": "#/components/schemas/FreshnessRules"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceHealth"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "workspace_id": {
+            "format": "uuid",
+            "title": "Workspace Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "workspace_id",
+          "mode",
+          "generated_at",
+          "sources",
+          "regions",
+          "rules",
+          "limitations"
+        ],
+        "title": "DataHealth",
         "type": "object"
       },
       "DatasetStatus": {
@@ -8090,6 +9054,23 @@
         "title": "EvidenceMeter",
         "type": "object"
       },
+      "EvidenceMeterContent": {
+        "additionalProperties": false,
+        "properties": {
+          "meters": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceMeter"
+            },
+            "title": "Meters",
+            "type": "array"
+          }
+        },
+        "required": [
+          "meters"
+        ],
+        "title": "EvidenceMeterContent",
+        "type": "object"
+      },
       "EvidenceMeterObservation": {
         "additionalProperties": false,
         "description": "The Evidence Meter reading for the region (see GET /workspaces/{id}/regions/{code}/evidence-meter).",
@@ -8132,6 +9113,68 @@
           "supported_claims"
         ],
         "title": "EvidenceMeterObservation",
+        "type": "object"
+      },
+      "EvidenceMeterSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EvidenceMeterContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "evidence_meter",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "EvidenceMeterSection",
         "type": "object"
       },
       "EvidencePage": {
@@ -8969,6 +10012,33 @@
         "title": "Freshness",
         "type": "object"
       },
+      "FreshnessRules": {
+        "additionalProperties": false,
+        "properties": {
+          "expired_share_for_expired": {
+            "title": "Expired Share For Expired",
+            "type": "number"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "stale_window_years": {
+            "title": "Stale Window Years",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "expired_share_for_expired",
+          "stale_window_years",
+          "notes"
+        ],
+        "title": "FreshnessRules",
+        "type": "object"
+      },
       "GlossaryTerm": {
         "additionalProperties": false,
         "properties": {
@@ -9390,7 +10460,10 @@
               "produced",
               "informs",
               "reacted_to",
-              "motivates"
+              "motivates",
+              "supported_by",
+              "applies_to",
+              "conflicts_with"
             ],
             "title": "Relation",
             "type": "string"
@@ -9435,6 +10508,23 @@
               }
             ],
             "title": "Claim Type"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "moderate",
+                  "high"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Computed confidence of a claim node; null for other nodes.",
+            "title": "Confidence"
           },
           "confidence_label": {
             "anyOf": [
@@ -9513,7 +10603,11 @@
               "population",
               "audience_group",
               "interview_theme",
-              "social_simulation"
+              "social_simulation",
+              "claim",
+              "claim_source",
+              "conflict",
+              "region"
             ],
             "title": "Kind",
             "type": "string"
@@ -9560,6 +10654,7 @@
           "retrieval_mode",
           "is_demo",
           "confidence_label",
+          "confidence",
           "created_at",
           "limitations",
           "ref"
@@ -10450,6 +11545,33 @@
         "title": "InterviewPage",
         "type": "object"
       },
+      "KindLabel": {
+        "additionalProperties": false,
+        "properties": {
+          "applies_to": {
+            "description": "What in this section has this kind, in plain words.",
+            "title": "Applies To",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "observed",
+              "calculated",
+              "synthetic",
+              "interpretation",
+              "unverified"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "applies_to"
+        ],
+        "title": "KindLabel",
+        "type": "object"
+      },
       "LegendItem": {
         "additionalProperties": false,
         "properties": {
@@ -10485,6 +11607,250 @@
           "description"
         ],
         "title": "LegendItem",
+        "type": "object"
+      },
+      "LimitationsContent": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "not_legal_clearance": {
+            "title": "Not Legal Clearance",
+            "type": "string"
+          }
+        },
+        "required": [
+          "items",
+          "not_legal_clearance"
+        ],
+        "title": "LimitationsContent",
+        "type": "object"
+      },
+      "LimitationsSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LimitationsContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "limitations",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "LimitationsSection",
+        "type": "object"
+      },
+      "LivePerformanceContent": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/LivePerformanceItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "sample_data": {
+            "description": "True when the figures are a labelled sample, not a connected account.",
+            "title": "Sample Data",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "sample_data"
+        ],
+        "title": "LivePerformanceContent",
+        "type": "object"
+      },
+      "LivePerformanceItem": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "observed",
+              "calculated",
+              "synthetic",
+              "interpretation",
+              "unverified"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "period": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period"
+          },
+          "provisional": {
+            "title": "Provisional",
+            "type": "boolean"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Code"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "region_code",
+          "metric",
+          "value",
+          "period",
+          "provisional",
+          "source",
+          "kind"
+        ],
+        "title": "LivePerformanceItem",
+        "type": "object"
+      },
+      "LivePerformanceSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LivePerformanceContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "live_performance",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "LivePerformanceSection",
         "type": "object"
       },
       "Lock": {
@@ -11796,6 +13162,47 @@
           "last_updated_at"
         ],
         "title": "MetricValue",
+        "type": "object"
+      },
+      "MissingSection": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "enum": [
+              "campaign_brief",
+              "target_regions",
+              "region_claims",
+              "evidence_meter",
+              "conflicts",
+              "creative_versions",
+              "xray_findings",
+              "risk_findings",
+              "transcreation",
+              "audience_results",
+              "readiness",
+              "approvals",
+              "live_performance",
+              "limitations",
+              "run_history"
+            ],
+            "title": "Id",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "reason"
+        ],
+        "title": "MissingSection",
         "type": "object"
       },
       "NetworkDefinition": {
@@ -14701,6 +16108,551 @@
         "title": "ProjectUpdate",
         "type": "object"
       },
+      "ProofExport": {
+        "additionalProperties": false,
+        "properties": {
+          "byte_size": {
+            "title": "Byte Size",
+            "type": "integer"
+          },
+          "content_type": {
+            "title": "Content Type",
+            "type": "string"
+          },
+          "download_url": {
+            "description": "API path with a one-time-use-style token; works without a bearer token until expires_at.",
+            "title": "Download Url",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "format": {
+            "enum": [
+              "json",
+              "markdown",
+              "pdf"
+            ],
+            "title": "Format",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "notices": {
+            "description": "For example, that Indic text is shown transliterated in the PDF.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Notices",
+            "type": "array"
+          },
+          "report_id": {
+            "format": "uuid",
+            "title": "Report Id",
+            "type": "string"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "report_id",
+          "format",
+          "filename",
+          "content_type",
+          "byte_size",
+          "sha256",
+          "download_url",
+          "expires_at",
+          "notices"
+        ],
+        "title": "ProofExport",
+        "type": "object"
+      },
+      "ProofExportCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "format": {
+            "enum": [
+              "json",
+              "markdown",
+              "pdf"
+            ],
+            "title": "Format",
+            "type": "string"
+          }
+        },
+        "required": [
+          "format"
+        ],
+        "title": "ProofExportCreate",
+        "type": "object"
+      },
+      "ProofReport": {
+        "additionalProperties": false,
+        "properties": {
+          "assembly": {
+            "$ref": "#/components/schemas/AssemblyInfo"
+          },
+          "campaign_id": {
+            "format": "uuid",
+            "title": "Campaign Id",
+            "type": "string"
+          },
+          "campaign_version_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The campaign content version the report describes.",
+            "title": "Campaign Version Id"
+          },
+          "content_sha256": {
+            "description": "Hash of the report's sections: equal inputs give an equal hash.",
+            "title": "Content Sha256",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "generated_by": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Generated By"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_legend": {
+            "description": "What each of the five content kinds means.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Legend",
+            "type": "array"
+          },
+          "legal_notice": {
+            "title": "Legal Notice",
+            "type": "string"
+          },
+          "missing_sections": {
+            "items": {
+              "$ref": "#/components/schemas/MissingSection"
+            },
+            "title": "Missing Sections",
+            "type": "array"
+          },
+          "mode": {
+            "enum": [
+              "live",
+              "demo"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "project_id": {
+            "format": "uuid",
+            "title": "Project Id",
+            "type": "string"
+          },
+          "referenced_claim_ids": {
+            "description": "Every claim the report shows; each is fetchable and linkable.",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Referenced Claim Ids",
+            "type": "array"
+          },
+          "referenced_conflict_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Referenced Conflict Ids",
+            "type": "array"
+          },
+          "schema_version": {
+            "const": "proof-report-v2",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "sections": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "approvals": "#/components/schemas/ApprovalsSection",
+                  "audience_results": "#/components/schemas/AudienceResultsSection",
+                  "campaign_brief": "#/components/schemas/CampaignBriefSection",
+                  "conflicts": "#/components/schemas/ConflictsSection",
+                  "creative_versions": "#/components/schemas/CreativeVersionsSection",
+                  "evidence_meter": "#/components/schemas/EvidenceMeterSection",
+                  "limitations": "#/components/schemas/LimitationsSection",
+                  "live_performance": "#/components/schemas/LivePerformanceSection",
+                  "readiness": "#/components/schemas/ReadinessSection",
+                  "region_claims": "#/components/schemas/RegionClaimsSection",
+                  "risk_findings": "#/components/schemas/RiskFindingsSection",
+                  "run_history": "#/components/schemas/RunHistorySection",
+                  "target_regions": "#/components/schemas/TargetRegionsSection",
+                  "transcreation": "#/components/schemas/TranscreationSection",
+                  "xray_findings": "#/components/schemas/XRaySection"
+                },
+                "propertyName": "id"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CampaignBriefSection"
+                },
+                {
+                  "$ref": "#/components/schemas/TargetRegionsSection"
+                },
+                {
+                  "$ref": "#/components/schemas/RegionClaimsSection"
+                },
+                {
+                  "$ref": "#/components/schemas/EvidenceMeterSection"
+                },
+                {
+                  "$ref": "#/components/schemas/ConflictsSection"
+                },
+                {
+                  "$ref": "#/components/schemas/CreativeVersionsSection"
+                },
+                {
+                  "$ref": "#/components/schemas/XRaySection"
+                },
+                {
+                  "$ref": "#/components/schemas/RiskFindingsSection"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscreationSection"
+                },
+                {
+                  "$ref": "#/components/schemas/AudienceResultsSection"
+                },
+                {
+                  "$ref": "#/components/schemas/ReadinessSection"
+                },
+                {
+                  "$ref": "#/components/schemas/ApprovalsSection"
+                },
+                {
+                  "$ref": "#/components/schemas/LivePerformanceSection"
+                },
+                {
+                  "$ref": "#/components/schemas/LimitationsSection"
+                },
+                {
+                  "$ref": "#/components/schemas/RunHistorySection"
+                }
+              ]
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "status": {
+            "description": "partial when any section is missing.",
+            "enum": [
+              "complete",
+              "partial"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "target_region_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Target Region Codes",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "version_number": {
+            "description": "Snapshot number for the campaign; a snapshot is never changed.",
+            "title": "Version Number",
+            "type": "integer"
+          },
+          "workspace_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workspace Id"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "campaign_id",
+          "workspace_id",
+          "campaign_version_id",
+          "version_number",
+          "title",
+          "status",
+          "mode",
+          "content_sha256",
+          "created_at",
+          "schema_version",
+          "generated_by",
+          "target_region_codes",
+          "sections",
+          "missing_sections",
+          "referenced_claim_ids",
+          "referenced_conflict_ids",
+          "kind_legend",
+          "legal_notice",
+          "assembly"
+        ],
+        "title": "ProofReport",
+        "type": "object"
+      },
+      "ProofReportCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "region_codes": {
+            "anyOf": [
+              {
+                "items": {
+                  "pattern": "^[A-Z]{2}-[A-Z0-9]{1,3}$",
+                  "type": "string"
+                },
+                "maxItems": 10,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Regions to report on. Omitted: the regions the campaign targets. A campaign with none gives a report whose region sections are missing.",
+            "title": "Region Codes"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "ProofReportCreate",
+        "type": "object"
+      },
+      "ProofReportPage": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ProofReportSummary"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "limit",
+          "offset",
+          "total"
+        ],
+        "title": "ProofReportPage",
+        "type": "object"
+      },
+      "ProofReportSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "campaign_id": {
+            "format": "uuid",
+            "title": "Campaign Id",
+            "type": "string"
+          },
+          "campaign_version_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The campaign content version the report describes.",
+            "title": "Campaign Version Id"
+          },
+          "content_sha256": {
+            "description": "Hash of the report's sections: equal inputs give an equal hash.",
+            "title": "Content Sha256",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "live",
+              "demo"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "project_id": {
+            "format": "uuid",
+            "title": "Project Id",
+            "type": "string"
+          },
+          "status": {
+            "description": "partial when any section is missing.",
+            "enum": [
+              "complete",
+              "partial"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "version_number": {
+            "description": "Snapshot number for the campaign; a snapshot is never changed.",
+            "title": "Version Number",
+            "type": "integer"
+          },
+          "workspace_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workspace Id"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "campaign_id",
+          "workspace_id",
+          "campaign_version_id",
+          "version_number",
+          "title",
+          "status",
+          "mode",
+          "content_sha256",
+          "created_at"
+        ],
+        "title": "ProofReportSummary",
+        "type": "object"
+      },
+      "ProofSectionInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "enum": [
+              "campaign_brief",
+              "target_regions",
+              "region_claims",
+              "evidence_meter",
+              "conflicts",
+              "creative_versions",
+              "xray_findings",
+              "risk_findings",
+              "transcreation",
+              "audience_results",
+              "readiness",
+              "approvals",
+              "live_performance",
+              "limitations",
+              "run_history"
+            ],
+            "title": "Id",
+            "type": "string"
+          },
+          "order": {
+            "title": "Order",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "wired": {
+            "description": "False while only the placeholder provider is registered (the section reports missing).",
+            "title": "Wired",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "order",
+          "wired"
+        ],
+        "title": "ProofSectionInfo",
+        "type": "object"
+      },
       "Provenance-Input": {
         "additionalProperties": false,
         "description": "Where the observations came from. Differences between versions are disclosed, never hidden.",
@@ -15731,6 +17683,72 @@
         "title": "ReadinessCapabilities",
         "type": "object"
       },
+      "ReadinessContent": {
+        "additionalProperties": false,
+        "properties": {
+          "confidence_limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Confidence Limitations",
+            "type": "array"
+          },
+          "highest_priority_issue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Highest Priority Issue"
+          },
+          "kind": {
+            "const": "calculated",
+            "default": "calculated",
+            "title": "Kind",
+            "type": "string"
+          },
+          "main_reason": {
+            "title": "Main Reason",
+            "type": "string"
+          },
+          "next_action": {
+            "title": "Next Action",
+            "type": "string"
+          },
+          "open_conflicts": {
+            "title": "Open Conflicts",
+            "type": "integer"
+          },
+          "rule_version": {
+            "title": "Rule Version",
+            "type": "string"
+          },
+          "verdict": {
+            "enum": [
+              "go",
+              "fix",
+              "rethink"
+            ],
+            "title": "Verdict",
+            "type": "string"
+          }
+        },
+        "required": [
+          "verdict",
+          "main_reason",
+          "highest_priority_issue",
+          "next_action",
+          "open_conflicts",
+          "confidence_limitations",
+          "rule_version",
+          "kind"
+        ],
+        "title": "ReadinessContent",
+        "type": "object"
+      },
       "ReadinessDependencies": {
         "additionalProperties": false,
         "properties": {
@@ -15978,6 +17996,68 @@
           "notes"
         ],
         "title": "ReadinessRules",
+        "type": "object"
+      },
+      "ReadinessSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReadinessContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "readiness",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "ReadinessSection",
         "type": "object"
       },
       "ReadinessVerdict": {
@@ -16337,6 +18417,131 @@
         "title": "RegionCard",
         "type": "object"
       },
+      "RegionClaimsBlock": {
+        "additionalProperties": false,
+        "properties": {
+          "categories": {
+            "description": "Every category; an empty one is a visible gap.",
+            "items": {
+              "$ref": "#/components/schemas/CategoryClaims"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "claim_count": {
+            "title": "Claim Count",
+            "type": "integer"
+          },
+          "region_code": {
+            "title": "Region Code",
+            "type": "string"
+          },
+          "region_name": {
+            "title": "Region Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "region_code",
+          "region_name",
+          "claim_count",
+          "categories"
+        ],
+        "title": "RegionClaimsBlock",
+        "type": "object"
+      },
+      "RegionClaimsContent": {
+        "additionalProperties": false,
+        "properties": {
+          "claim_count": {
+            "title": "Claim Count",
+            "type": "integer"
+          },
+          "kind_counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Kind Counts",
+            "type": "object"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/RegionClaimsBlock"
+            },
+            "title": "Regions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "regions",
+          "claim_count",
+          "kind_counts"
+        ],
+        "title": "RegionClaimsContent",
+        "type": "object"
+      },
+      "RegionClaimsSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RegionClaimsContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "region_claims",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "RegionClaimsSection",
+        "type": "object"
+      },
       "RegionComparison": {
         "additionalProperties": false,
         "properties": {
@@ -16367,6 +18572,123 @@
           "versions"
         ],
         "title": "RegionComparison",
+        "type": "object"
+      },
+      "RegionCoverage": {
+        "additionalProperties": false,
+        "properties": {
+          "categories_covered": {
+            "title": "Categories Covered",
+            "type": "integer"
+          },
+          "categories_total": {
+            "title": "Categories Total",
+            "type": "integer"
+          },
+          "claims": {
+            "title": "Claims",
+            "type": "integer"
+          },
+          "missing_categories": {
+            "items": {
+              "enum": [
+                "language",
+                "script",
+                "festival",
+                "moment",
+                "food",
+                "colour",
+                "symbol",
+                "humour",
+                "family",
+                "custom",
+                "sensitivity",
+                "trend",
+                "demographic",
+                "media"
+              ],
+              "type": "string"
+            },
+            "title": "Missing Categories",
+            "type": "array"
+          },
+          "newest_source_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Newest Source Date"
+          },
+          "open_conflicts": {
+            "title": "Open Conflicts",
+            "type": "integer"
+          },
+          "region_code": {
+            "title": "Region Code",
+            "type": "string"
+          },
+          "region_name": {
+            "title": "Region Name",
+            "type": "string"
+          },
+          "source_types": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Source Types",
+            "type": "array"
+          },
+          "sources": {
+            "title": "Sources",
+            "type": "integer"
+          },
+          "stale_claims": {
+            "title": "Stale Claims",
+            "type": "integer"
+          },
+          "strength": {
+            "enum": [
+              "weak",
+              "partial",
+              "solid"
+            ],
+            "title": "Strength",
+            "type": "string"
+          },
+          "strength_reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Strength Reasons",
+            "type": "array"
+          },
+          "supported_claims": {
+            "title": "Supported Claims",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "region_code",
+          "region_name",
+          "strength",
+          "strength_reasons",
+          "claims",
+          "supported_claims",
+          "categories_covered",
+          "categories_total",
+          "missing_categories",
+          "sources",
+          "source_types",
+          "newest_source_date",
+          "open_conflicts",
+          "stale_claims"
+        ],
+        "title": "RegionCoverage",
         "type": "object"
       },
       "RegionLanguage": {
@@ -17181,6 +19503,138 @@
           "content"
         ],
         "title": "ReportCampaignSnapshot",
+        "type": "object"
+      },
+      "ReportConflict": {
+        "additionalProperties": false,
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "current_selection": {
+            "enum": [
+              "a",
+              "b"
+            ],
+            "title": "Current Selection",
+            "type": "string"
+          },
+          "decisions": {
+            "description": "Reviewer decisions, oldest first.",
+            "items": {
+              "$ref": "#/components/schemas/ConflictResolutionView"
+            },
+            "title": "Decisions",
+            "type": "array"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Code"
+          },
+          "selection_reason": {
+            "title": "Selection Reason",
+            "type": "string"
+          },
+          "side_a": {
+            "$ref": "#/components/schemas/ReportConflictSide"
+          },
+          "side_b": {
+            "$ref": "#/components/schemas/ReportConflictSide"
+          },
+          "status": {
+            "enum": [
+              "open",
+              "review_requested",
+              "resolved"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "region_code",
+          "status",
+          "reason",
+          "current_selection",
+          "selection_reason",
+          "side_a",
+          "side_b",
+          "decisions",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ReportConflict",
+        "type": "object"
+      },
+      "ReportConflictSide": {
+        "additionalProperties": false,
+        "properties": {
+          "claim_id": {
+            "format": "uuid",
+            "title": "Claim Id",
+            "type": "string"
+          },
+          "confidence": {
+            "enum": [
+              "low",
+              "moderate",
+              "high"
+            ],
+            "title": "Confidence",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "observed",
+              "calculated",
+              "synthetic",
+              "interpretation",
+              "unverified"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "source_count": {
+            "title": "Source Count",
+            "type": "integer"
+          },
+          "value_text": {
+            "title": "Value Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_id",
+          "value_text",
+          "kind",
+          "confidence",
+          "source_count"
+        ],
+        "title": "ReportConflictSide",
         "type": "object"
       },
       "ReportCreate": {
@@ -18416,6 +20870,87 @@
         "title": "RiskFindingInput",
         "type": "object"
       },
+      "RiskFindingItem": {
+        "additionalProperties": false,
+        "properties": {
+          "ad_code_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ad Code Ref"
+          },
+          "anchor": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Anchor-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "observed",
+              "calculated",
+              "synthetic",
+              "interpretation",
+              "unverified"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "required": [
+          "id",
+          "severity",
+          "category",
+          "description",
+          "anchor",
+          "ad_code_ref",
+          "status",
+          "kind"
+        ],
+        "title": "RiskFindingItem",
+        "type": "object"
+      },
       "RiskFindingUpdate": {
         "additionalProperties": false,
         "properties": {
@@ -18446,6 +20981,91 @@
           "status"
         ],
         "title": "RiskFindingUpdate",
+        "type": "object"
+      },
+      "RiskFindingsContent": {
+        "additionalProperties": false,
+        "properties": {
+          "disclaimer": {
+            "description": "A Risk Check is an aid to human review, not legal advice.",
+            "title": "Disclaimer",
+            "type": "string"
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/RiskFindingItem"
+            },
+            "title": "Findings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "findings",
+          "disclaimer"
+        ],
+        "title": "RiskFindingsContent",
+        "type": "object"
+      },
+      "RiskFindingsSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskFindingsContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "risk_findings",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "RiskFindingsSection",
         "type": "object"
       },
       "RiskFlag": {
@@ -19147,6 +21767,857 @@
           "retryable"
         ],
         "title": "RunError",
+        "type": "object"
+      },
+      "RunHistoryContent": {
+        "additionalProperties": false,
+        "properties": {
+          "runs": {
+            "items": {
+              "$ref": "#/components/schemas/RunHistoryItem"
+            },
+            "title": "Runs",
+            "type": "array"
+          },
+          "totals": {
+            "$ref": "#/components/schemas/RunHistoryTotals"
+          },
+          "truncated": {
+            "title": "Truncated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "totals",
+          "runs",
+          "truncated"
+        ],
+        "title": "RunHistoryContent",
+        "type": "object"
+      },
+      "RunHistoryDetail": {
+        "additionalProperties": false,
+        "properties": {
+          "actual_cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Always null: provider invoices are not read by this application.",
+            "title": "Actual Cost Usd"
+          },
+          "ai_calls": {
+            "title": "Ai Calls",
+            "type": "integer"
+          },
+          "attempt": {
+            "title": "Attempt",
+            "type": "integer"
+          },
+          "campaign_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Campaign Id"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "cost_basis": {
+            "description": "usage_events: metered per call; run_steps: summed from the run's stage traces; none: nothing recorded.",
+            "enum": [
+              "usage_events",
+              "run_steps",
+              "none"
+            ],
+            "title": "Cost Basis",
+            "type": "string"
+          },
+          "cost_is_estimate": {
+            "const": true,
+            "description": "Costs are estimates from a price table, never provider invoices.",
+            "title": "Cost Is Estimate",
+            "type": "boolean"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "completed_at minus started_at; null until both exist.",
+            "title": "Duration Ms"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "estimated_cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Estimate; null when no cost was recorded for the run.",
+            "title": "Estimated Cost Usd"
+          },
+          "failed_ai_calls": {
+            "title": "Failed Ai Calls",
+            "type": "integer"
+          },
+          "failed_stages": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Failed Stages",
+            "type": "array"
+          },
+          "input_ref": {
+            "$ref": "#/components/schemas/RunInputRef"
+          },
+          "input_tokens": {
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "mode": {
+            "enum": [
+              "live",
+              "demo"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "models": {
+            "description": "Models that served the run's calls (usage events and recorded stages).",
+            "items": {
+              "type": "string"
+            },
+            "title": "Models",
+            "type": "array"
+          },
+          "operation": {
+            "description": "Plain-language name of the run type.",
+            "title": "Operation",
+            "type": "string"
+          },
+          "output_ref": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunResultRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "output_tokens": {
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "progress": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunProgress"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "project_id": {
+            "format": "uuid",
+            "title": "Project Id",
+            "type": "string"
+          },
+          "prompt_versions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prompt Versions",
+            "type": "array"
+          },
+          "providers": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Providers",
+            "type": "array"
+          },
+          "resumable": {
+            "description": "True when the run saved a checkpoint that POST /runs/{id}/resume can continue from.",
+            "title": "Resumable",
+            "type": "boolean"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "run_type": {
+            "enum": [
+              "market_discovery",
+              "campaign_rehearsal",
+              "campaign_adaptation",
+              "campaign_evaluation",
+              "cultural_profile",
+              "campaign_arena",
+              "risk_scan",
+              "market_comparison",
+              "population_study",
+              "social_simulation",
+              "transcreate",
+              "creative_xray"
+            ],
+            "title": "Run Type",
+            "type": "string"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started At"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "partial",
+              "failed",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/StepTrace"
+            },
+            "title": "Steps",
+            "type": "array"
+          },
+          "study_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Study Id"
+          },
+          "thinking_tokens": {
+            "title": "Thinking Tokens",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "title": "Total Tokens",
+            "type": "integer"
+          },
+          "usage_events": {
+            "items": {
+              "$ref": "#/components/schemas/UsageEventView"
+            },
+            "title": "Usage Events",
+            "type": "array"
+          },
+          "workspace_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workspace Id"
+          }
+        },
+        "required": [
+          "run_id",
+          "workspace_id",
+          "project_id",
+          "campaign_id",
+          "study_id",
+          "run_type",
+          "operation",
+          "status",
+          "mode",
+          "models",
+          "providers",
+          "prompt_versions",
+          "created_at",
+          "started_at",
+          "completed_at",
+          "duration_ms",
+          "input_tokens",
+          "output_tokens",
+          "thinking_tokens",
+          "total_tokens",
+          "estimated_cost_usd",
+          "cost_basis",
+          "cost_is_estimate",
+          "actual_cost_usd",
+          "ai_calls",
+          "failed_ai_calls",
+          "error",
+          "failed_stages",
+          "resumable",
+          "attempt",
+          "progress",
+          "steps",
+          "usage_events",
+          "input_ref",
+          "output_ref"
+        ],
+        "title": "RunHistoryDetail",
+        "type": "object"
+      },
+      "RunHistoryItem": {
+        "additionalProperties": false,
+        "properties": {
+          "actual_cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Always null: provider invoices are not read by this application.",
+            "title": "Actual Cost Usd"
+          },
+          "ai_calls": {
+            "title": "Ai Calls",
+            "type": "integer"
+          },
+          "attempt": {
+            "title": "Attempt",
+            "type": "integer"
+          },
+          "campaign_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Campaign Id"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "cost_basis": {
+            "description": "usage_events: metered per call; run_steps: summed from the run's stage traces; none: nothing recorded.",
+            "enum": [
+              "usage_events",
+              "run_steps",
+              "none"
+            ],
+            "title": "Cost Basis",
+            "type": "string"
+          },
+          "cost_is_estimate": {
+            "const": true,
+            "description": "Costs are estimates from a price table, never provider invoices.",
+            "title": "Cost Is Estimate",
+            "type": "boolean"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "completed_at minus started_at; null until both exist.",
+            "title": "Duration Ms"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "estimated_cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Estimate; null when no cost was recorded for the run.",
+            "title": "Estimated Cost Usd"
+          },
+          "failed_ai_calls": {
+            "title": "Failed Ai Calls",
+            "type": "integer"
+          },
+          "failed_stages": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Failed Stages",
+            "type": "array"
+          },
+          "input_tokens": {
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "mode": {
+            "enum": [
+              "live",
+              "demo"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "models": {
+            "description": "Models that served the run's calls (usage events and recorded stages).",
+            "items": {
+              "type": "string"
+            },
+            "title": "Models",
+            "type": "array"
+          },
+          "operation": {
+            "description": "Plain-language name of the run type.",
+            "title": "Operation",
+            "type": "string"
+          },
+          "output_tokens": {
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "project_id": {
+            "format": "uuid",
+            "title": "Project Id",
+            "type": "string"
+          },
+          "prompt_versions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prompt Versions",
+            "type": "array"
+          },
+          "providers": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Providers",
+            "type": "array"
+          },
+          "resumable": {
+            "description": "True when the run saved a checkpoint that POST /runs/{id}/resume can continue from.",
+            "title": "Resumable",
+            "type": "boolean"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "run_type": {
+            "enum": [
+              "market_discovery",
+              "campaign_rehearsal",
+              "campaign_adaptation",
+              "campaign_evaluation",
+              "cultural_profile",
+              "campaign_arena",
+              "risk_scan",
+              "market_comparison",
+              "population_study",
+              "social_simulation",
+              "transcreate",
+              "creative_xray"
+            ],
+            "title": "Run Type",
+            "type": "string"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started At"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "partial",
+              "failed",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "study_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Study Id"
+          },
+          "thinking_tokens": {
+            "title": "Thinking Tokens",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "title": "Total Tokens",
+            "type": "integer"
+          },
+          "workspace_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workspace Id"
+          }
+        },
+        "required": [
+          "run_id",
+          "workspace_id",
+          "project_id",
+          "campaign_id",
+          "study_id",
+          "run_type",
+          "operation",
+          "status",
+          "mode",
+          "models",
+          "providers",
+          "prompt_versions",
+          "created_at",
+          "started_at",
+          "completed_at",
+          "duration_ms",
+          "input_tokens",
+          "output_tokens",
+          "thinking_tokens",
+          "total_tokens",
+          "estimated_cost_usd",
+          "cost_basis",
+          "cost_is_estimate",
+          "actual_cost_usd",
+          "ai_calls",
+          "failed_ai_calls",
+          "error",
+          "failed_stages",
+          "resumable",
+          "attempt"
+        ],
+        "title": "RunHistoryItem",
+        "type": "object"
+      },
+      "RunHistoryPage": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RunHistoryItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "totals": {
+            "$ref": "#/components/schemas/RunHistoryTotals"
+          }
+        },
+        "required": [
+          "items",
+          "limit",
+          "offset",
+          "total",
+          "totals"
+        ],
+        "title": "RunHistoryPage",
+        "type": "object"
+      },
+      "RunHistorySection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunHistoryContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "run_history",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "RunHistorySection",
+        "type": "object"
+      },
+      "RunHistoryTotals": {
+        "additionalProperties": false,
+        "description": "Over every run that matches the filters, not only the page.",
+        "properties": {
+          "by_status": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "By Status",
+            "type": "object"
+          },
+          "cost_is_estimate": {
+            "const": true,
+            "title": "Cost Is Estimate",
+            "type": "boolean"
+          },
+          "estimated_cost_usd": {
+            "title": "Estimated Cost Usd",
+            "type": "number"
+          },
+          "input_tokens": {
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "output_tokens": {
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "runs": {
+            "title": "Runs",
+            "type": "integer"
+          },
+          "runs_without_cost": {
+            "description": "Runs with no recorded cost; the total is therefore a lower bound when above 0.",
+            "title": "Runs Without Cost",
+            "type": "integer"
+          },
+          "thinking_tokens": {
+            "title": "Thinking Tokens",
+            "type": "integer"
+          },
+          "unattributed_cost_usd": {
+            "title": "Unattributed Cost Usd",
+            "type": "number"
+          },
+          "unattributed_events": {
+            "description": "Usage events of the campaign that belong to no run (for example search embeddings).",
+            "title": "Unattributed Events",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "runs",
+          "by_status",
+          "input_tokens",
+          "output_tokens",
+          "thinking_tokens",
+          "estimated_cost_usd",
+          "runs_without_cost",
+          "unattributed_events",
+          "unattributed_cost_usd",
+          "cost_is_estimate"
+        ],
+        "title": "RunHistoryTotals",
+        "type": "object"
+      },
+      "RunInputRef": {
+        "additionalProperties": false,
+        "description": "Where a run's inputs are stored. The inputs themselves are not repeated here.",
+        "properties": {
+          "content_version_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content Version Id"
+          },
+          "fields": {
+            "description": "Names of the stored input fields.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Fields",
+            "type": "array"
+          },
+          "kind": {
+            "const": "stored_run_inputs",
+            "title": "Kind",
+            "type": "string"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "study_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Study Id"
+          }
+        },
+        "required": [
+          "kind",
+          "run_id",
+          "content_version_id",
+          "study_id",
+          "fields"
+        ],
+        "title": "RunInputRef",
         "type": "object"
       },
       "RunMetadata": {
@@ -20371,6 +23842,11 @@
             ],
             "title": "Evidence Type"
           },
+          "explanation": {
+            "description": "Why this hit was returned, in plain words.",
+            "title": "Explanation",
+            "type": "string"
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -20381,13 +23857,30 @@
               "brand_example",
               "risk_finding",
               "profile_item",
-              "adaptation"
+              "adaptation",
+              "claim",
+              "claim_source",
+              "scene",
+              "finding",
+              "version"
             ],
             "title": "Kind",
             "type": "string"
           },
           "ref": {
             "$ref": "#/components/schemas/GraphRef"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "ISO 3166-2 region the hit is about, when it has one.",
+            "title": "Region Code"
           },
           "retrieval_mode": {
             "anyOf": [
@@ -20431,7 +23924,9 @@
           "evidence_type",
           "claim_type",
           "retrieval_mode",
-          "created_at"
+          "created_at",
+          "region_code",
+          "explanation"
         ],
         "title": "SearchHit",
         "type": "object"
@@ -21640,6 +25135,33 @@
         "title": "SourceAttribute",
         "type": "object"
       },
+      "SourceCallError": {
+        "additionalProperties": false,
+        "properties": {
+          "at": {
+            "format": "date-time",
+            "title": "At",
+            "type": "string"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          }
+        },
+        "required": [
+          "at",
+          "code"
+        ],
+        "title": "SourceCallError",
+        "type": "object"
+      },
       "SourceFreshness": {
         "additionalProperties": false,
         "properties": {
@@ -21698,6 +25220,178 @@
           "fresh_source_share"
         ],
         "title": "SourceFreshness",
+        "type": "object"
+      },
+      "SourceHealth": {
+        "additionalProperties": false,
+        "properties": {
+          "aging_claims": {
+            "description": "Not expired, but no observed source is under two years old.",
+            "title": "Aging Claims",
+            "type": "integer"
+          },
+          "attempts": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Recorded retrieval attempts; null when this source's attempts are not logged.",
+            "title": "Attempts"
+          },
+          "attempts_logged": {
+            "title": "Attempts Logged",
+            "type": "boolean"
+          },
+          "cache_state": {
+            "description": "fixture: demo fixtures only; stored_live: stored copies of live retrievals; mixed: both. Data Health reads stored copies; it never calls a source.",
+            "enum": [
+              "fixture",
+              "stored_live",
+              "mixed",
+              "none"
+            ],
+            "title": "Cache State",
+            "type": "string"
+          },
+          "claims": {
+            "title": "Claims",
+            "type": "integer"
+          },
+          "errors": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Errors"
+          },
+          "expired_claims": {
+            "description": "Past their stated expiry; a refresh is due.",
+            "title": "Expired Claims",
+            "type": "integer"
+          },
+          "fixture_claims": {
+            "title": "Fixture Claims",
+            "type": "integer"
+          },
+          "fresh_claims": {
+            "title": "Fresh Claims",
+            "type": "integer"
+          },
+          "freshness": {
+            "enum": [
+              "fresh",
+              "aging",
+              "expired",
+              "unknown"
+            ],
+            "title": "Freshness",
+            "type": "string"
+          },
+          "last_attempt_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Attempt At"
+          },
+          "last_error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SourceCallError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_retrieved_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Newest successful retrieval stored.",
+            "title": "Last Retrieved At"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "live_claims": {
+            "title": "Live Claims",
+            "type": "integer"
+          },
+          "oldest_retrieved_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Oldest Retrieved At"
+          },
+          "region_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Region Codes",
+            "type": "array"
+          },
+          "source_type": {
+            "title": "Source Type",
+            "type": "string"
+          },
+          "sources": {
+            "description": "Distinct source records behind the workspace's visible claims.",
+            "title": "Sources",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "source_type",
+          "sources",
+          "claims",
+          "live_claims",
+          "fixture_claims",
+          "cache_state",
+          "last_retrieved_at",
+          "oldest_retrieved_at",
+          "freshness",
+          "fresh_claims",
+          "aging_claims",
+          "expired_claims",
+          "attempts",
+          "errors",
+          "last_attempt_at",
+          "last_error",
+          "attempts_logged",
+          "region_codes",
+          "limitations"
+        ],
+        "title": "SourceHealth",
         "type": "object"
       },
       "SourceView": {
@@ -22637,6 +26331,104 @@
         "title": "SyntheticReaction",
         "type": "object"
       },
+      "TargetRegionsContent": {
+        "additionalProperties": false,
+        "properties": {
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/Region"
+            },
+            "title": "Regions",
+            "type": "array"
+          },
+          "source": {
+            "description": "Where the region codes came from.",
+            "enum": [
+              "campaign",
+              "request"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "unknown_codes": {
+            "description": "Requested codes that match no active region; they are not reported on.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Unknown Codes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "source",
+          "regions",
+          "unknown_codes"
+        ],
+        "title": "TargetRegionsContent",
+        "type": "object"
+      },
+      "TargetRegionsSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TargetRegionsContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "target_regions",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "TargetRegionsSection",
+        "type": "object"
+      },
       "TextBox": {
         "additionalProperties": false,
         "properties": {
@@ -23186,6 +26978,126 @@
         "title": "TranscreateRequest",
         "type": "object"
       },
+      "TranscreationContent": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TranscreationItem"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "TranscreationContent",
+        "type": "object"
+      },
+      "TranscreationItem": {
+        "additionalProperties": false,
+        "properties": {
+          "back_translation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Back Translation"
+          },
+          "claim_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Claim Ids",
+            "type": "array"
+          },
+          "glossary_issues": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Glossary Issues",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "observed",
+              "calculated",
+              "synthetic",
+              "interpretation",
+              "unverified"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "region_code": {
+            "title": "Region Code",
+            "type": "string"
+          },
+          "result_version_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Version Id"
+          },
+          "source_version_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Version Id"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "region_code",
+          "language",
+          "source_version_id",
+          "result_version_id",
+          "summary",
+          "back_translation",
+          "glossary_issues",
+          "claim_ids",
+          "kind"
+        ],
+        "title": "TranscreationItem",
+        "type": "object"
+      },
       "TranscreationObservation": {
         "additionalProperties": false,
         "description": "Code-checked results for the regional copy: Brand Glossary compliance, back-translation and script.",
@@ -23234,6 +27146,68 @@
           "glossary_violation_lines"
         ],
         "title": "TranscreationObservation",
+        "type": "object"
+      },
+      "TranscreationSection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TranscreationContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "transcreation",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "TranscreationSection",
         "type": "object"
       },
       "TranscribeStatus": {
@@ -23620,6 +27594,104 @@
           "estimated_cost_usd"
         ],
         "title": "Usage",
+        "type": "object"
+      },
+      "UsageEventView": {
+        "additionalProperties": false,
+        "properties": {
+          "capability": {
+            "title": "Capability",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "estimated_cost_usd": {
+            "description": "Estimate from the registry price table; not a provider invoice.",
+            "title": "Estimated Cost Usd",
+            "type": "number"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "input_tokens": {
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latency Ms"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "output_tokens": {
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "prompt_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Version"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "thinking_tokens": {
+            "title": "Thinking Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "capability",
+          "provider",
+          "model",
+          "prompt_version",
+          "input_tokens",
+          "output_tokens",
+          "thinking_tokens",
+          "estimated_cost_usd",
+          "latency_ms",
+          "status",
+          "error_code",
+          "created_at"
+        ],
+        "title": "UsageEventView",
         "type": "object"
       },
       "UsageTotals": {
@@ -24773,6 +28845,23 @@
         "title": "Workspace",
         "type": "object"
       },
+      "XRayContent": {
+        "additionalProperties": false,
+        "properties": {
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/XRayFinding"
+            },
+            "title": "Findings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "findings"
+        ],
+        "title": "XRayContent",
+        "type": "object"
+      },
       "XRayCreate": {
         "additionalProperties": false,
         "description": "Start Creative X-Ray on an uploaded asset (run_type creative_xray).",
@@ -24826,6 +28915,136 @@
           "asset_id"
         ],
         "title": "XRayCreate",
+        "type": "object"
+      },
+      "XRayFinding": {
+        "additionalProperties": false,
+        "properties": {
+          "anchor": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Anchor-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "claim_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Claim Ids",
+            "type": "array"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "moderate",
+                  "high"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "observed",
+              "calculated",
+              "synthetic",
+              "interpretation",
+              "unverified"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "observation": {
+            "title": "Observation",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "observation",
+          "anchor",
+          "claim_ids",
+          "confidence",
+          "kind"
+        ],
+        "title": "XRayFinding",
+        "type": "object"
+      },
+      "XRaySection": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/XRayContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "const": "xray_findings",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind_labels": {
+            "description": "Empty only for a missing section.",
+            "items": {
+              "$ref": "#/components/schemas/KindLabel"
+            },
+            "title": "Kind Labels",
+            "type": "array"
+          },
+          "missing_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when status is missing.",
+            "title": "Missing Reason"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "missing_reason",
+          "kind_labels",
+          "id",
+          "content"
+        ],
+        "title": "XRaySection",
         "type": "object"
       }
     },
@@ -32135,6 +36354,339 @@
         ]
       }
     },
+    "/api/v1/campaigns/{campaign_id}/proof-reports": {
+      "get": {
+        "description": "Snapshots, newest first.",
+        "operationId": "list_proof_reports",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Maximum records returned.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "description": "Maximum records returned.",
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Number of records skipped.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "description": "Number of records skipped.",
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProofReportPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Proof Reports",
+        "tags": [
+          "proof"
+        ]
+      },
+      "post": {
+        "description": "Assemble and store the campaign's next Proof Report snapshot. Deterministic: no model is called. Sections whose\nprovider is not wired, or whose data is missing, are listed as missing and make the report partial. Needs the\nowner or editor role.",
+        "operationId": "create_proof_report",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProofReportCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProofReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Proof Report",
+        "tags": [
+          "proof"
+        ]
+      }
+    },
     "/api/v1/campaigns/{campaign_id}/pulse/alerts": {
       "get": {
         "description": "Deterministic alert rules over the sample dataset, labelled as a sample preview of Alerts (roadmap). Nothing is saved.",
@@ -36458,6 +41010,236 @@
         "summary": "Start Risk Scan",
         "tags": [
           "risk-radar"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/run-history": {
+      "get": {
+        "description": "Runs of the campaign, newest first: status, models, prompt versions, tokens, estimated cost, errors. Totals cover\nevery matching run, not just the page. Costs are estimates, never invoices.",
+        "operationId": "get_campaign_run_history",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Maximum records returned.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "description": "Maximum records returned.",
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Number of records skipped.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "description": "Number of records skipped.",
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "run_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "market_discovery",
+                    "campaign_rehearsal",
+                    "campaign_adaptation",
+                    "campaign_evaluation",
+                    "cultural_profile",
+                    "campaign_arena",
+                    "risk_scan",
+                    "market_comparison",
+                    "population_study",
+                    "social_simulation",
+                    "transcreate",
+                    "creative_xray"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Run Type"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "queued",
+                    "running",
+                    "completed",
+                    "partial",
+                    "failed",
+                    "cancelled"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunHistoryPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Campaign Run History",
+        "tags": [
+          "proof"
         ]
       }
     },
@@ -44022,6 +48804,25 @@
             }
           },
           {
+            "description": "Draw this region's claims, sources and conflicts.",
+            "in": "query",
+            "name": "region_code",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^[A-Z]{2}-[A-Z0-9]{1,3}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Draw this region's claims, sources and conflicts.",
+              "title": "Region Code"
+            }
+          },
+          {
             "description": "Maximum nodes; truncated=true when exceeded.",
             "in": "query",
             "name": "limit",
@@ -45446,7 +50247,7 @@
     },
     "/api/v1/projects/{project_id}/search": {
       "get": {
-        "description": "Semantic search with stored embeddings. status=unavailable (never fabricated hits) when not configured.",
+        "description": "Semantic search with stored embeddings over evidence, brand examples, claims and their sources, and results.\nSearches only what the project's workspace can see. status=unavailable (never fabricated hits) when not configured.",
         "operationId": "search_project",
         "parameters": [
           {
@@ -45483,7 +50284,12 @@
                       "brand_example",
                       "risk_finding",
                       "profile_item",
-                      "adaptation"
+                      "adaptation",
+                      "claim",
+                      "claim_source",
+                      "scene",
+                      "finding",
+                      "version"
                     ],
                     "type": "string"
                   },
@@ -45506,6 +50312,25 @@
               "minimum": 1,
               "title": "Limit",
               "type": "integer"
+            }
+          },
+          {
+            "description": "Only hits about this region.",
+            "in": "query",
+            "name": "region_code",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^[A-Z]{2}-[A-Z0-9]{1,3}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only hits about this region.",
+              "title": "Region Code"
             }
           }
         ],
@@ -46667,6 +51492,777 @@
         "summary": "Create Trend Comparison",
         "tags": [
           "trend-watch"
+        ]
+      }
+    },
+    "/api/v1/proof-exports/{export_id}/download": {
+      "get": {
+        "description": "Download with the link's token instead of a bearer token. 404 for an unknown export, a wrong token, or an expired link.",
+        "operationId": "download_proof_export",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "export_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Export Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 20,
+              "title": "Token",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The stored export."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "summary": "Download Proof Export",
+        "tags": [
+          "proof"
+        ]
+      }
+    },
+    "/api/v1/proof-report-sections": {
+      "get": {
+        "description": "The sections a Proof Report is made of, in order, and whether each has a provider wired in this build.",
+        "operationId": "list_proof_report_sections",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ProofSectionInfo"
+                  },
+                  "title": "Response List Proof Report Sections",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Proof Report Sections",
+        "tags": [
+          "proof"
+        ]
+      }
+    },
+    "/api/v1/proof-reports/{report_id}": {
+      "get": {
+        "operationId": "get_proof_report",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "report_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Report Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProofReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Proof Report",
+        "tags": [
+          "proof"
+        ]
+      }
+    },
+    "/api/v1/proof-reports/{report_id}/export": {
+      "get": {
+        "description": "Download a snapshot now. The PDF shows Indic text as a Latin transliteration and says so; JSON and Markdown keep\nthe original text.",
+        "operationId": "export_proof_report",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "report_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Report Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "default": "pdf",
+              "enum": [
+                "json",
+                "markdown",
+                "pdf"
+              ],
+              "title": "Format",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProofReport"
+                }
+              },
+              "application/pdf": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "text/markdown": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Report download (Content-Disposition: attachment)."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Export Proof Report",
+        "tags": [
+          "proof"
+        ]
+      }
+    },
+    "/api/v1/proof-reports/{report_id}/exports": {
+      "post": {
+        "description": "Store an export through the blob store and return a short-lived download link (see `expires_at`).",
+        "operationId": "create_proof_export",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "report_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Report Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProofExportCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProofExport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Proof Export",
+        "tags": [
+          "proof"
         ]
       }
     },
@@ -48083,6 +53679,155 @@
         "summary": "Cancel Run",
         "tags": [
           "runs"
+        ]
+      }
+    },
+    "/api/v1/runs/{run_id}/history": {
+      "get": {
+        "description": "One run with its stage traces, every metered call, and references to its inputs and result.",
+        "operationId": "get_run_history_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunHistoryDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Run History Detail",
+        "tags": [
+          "proof"
         ]
       }
     },
@@ -49865,6 +55610,165 @@
         ]
       }
     },
+    "/api/v1/workspaces/{workspace_id}/claims/{claim_id}": {
+      "get": {
+        "description": "One claim with its five tags and sources: the target of every claim link in a report, search hit, or graph.",
+        "operationId": "get_workspace_claim",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "claim_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Claim Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Workspace Claim",
+        "tags": [
+          "proof"
+        ]
+      }
+    },
     "/api/v1/workspaces/{workspace_id}/conflicts": {
       "get": {
         "description": "Disagreements between claims, unresolved first. Both claims, their sources, dates and scope are included.",
@@ -50259,6 +56163,171 @@
         "summary": "Resolve Conflict",
         "tags": [
           "conflicts"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/data-health": {
+      "get": {
+        "description": "Per source type: last stored retrieval, freshness, cache state, logged attempts and errors. Per region: coverage.\nReads stored data only; it never calls a source.",
+        "operationId": "get_workspace_data_health",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "live claims, or labeled demo fixtures.",
+            "in": "query",
+            "name": "mode",
+            "required": false,
+            "schema": {
+              "default": "live",
+              "description": "live claims, or labeled demo fixtures.",
+              "enum": [
+                "live",
+                "demo"
+              ],
+              "title": "Mode",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataHealth"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Workspace Data Health",
+        "tags": [
+          "proof"
         ]
       }
     },

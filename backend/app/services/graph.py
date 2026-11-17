@@ -6,19 +6,25 @@ Every edge names the stored field that establishes it (`provenance`). Nothing is
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 
 from app.db import models as m
 from app.db.base import utcnow
 from app.db.session import read_session
+from app.retrieval.service import CLAIM_EVIDENCE
 from app.schemas.graph import EvidenceGraph, GraphEdge, GraphNode, GraphRef
+from app.services.campaign_regions import campaign_region_codes
+from app.services.claims import LIVE_STATUSES
 from app.services.common import conflict, get_owned, get_project
 
 API = "/api/v1"
 LIMITATIONS = [
     "Only persisted links are drawn; links the system did not record are never inferred.",
     "Discovery references and rehearsal findings appear through their runs and evidence records, not as separate nodes.",
+    "Claim, source, conflict and region nodes appear when a region_code is given, or a campaign with target regions is "
+    "selected. A conflict is drawn only when it is stored; two claims that disagree but have no stored conflict get no link.",
 ]
+MAX_GRAPH_CLAIMS = 150
 
 
 def _markets(request: dict) -> set:
@@ -47,7 +53,7 @@ class _Builder:
         self.nodes.setdefault(node_id, GraphNode(
             id=node_id, kind=kind, label=label[:160], evidence_type=extra.get("evidence_type"),  # type: ignore[arg-type]
             claim_type=extra.get("claim_type"), retrieval_mode=extra.get("retrieval_mode"), is_demo=self.demo,
-            confidence_label=extra.get("confidence_label"), created_at=created_at,
+            confidence_label=extra.get("confidence_label"), confidence=extra.get("confidence"), created_at=created_at,
             limitations=extra.get("limitations", []), ref=GraphRef(resource=resource, id=str(rid), url=url),
         ))
 
@@ -55,9 +61,57 @@ class _Builder:
         self.edges.append((source, target, relation, provenance))
 
 
+async def _claim_rows(s: Any, project: m.Project, codes: list[str]) -> tuple[Any, ...] | None:
+    """Claims the project's workspace can see for the regions (own and shared), their sources, and stored conflicts."""
+    if project.workspace_id is None:
+        return None
+    regions = {r.id: r for r in (await s.execute(select(m.Region).where(m.Region.code.in_(codes), m.Region.is_active))).scalars()}
+    if not regions:
+        return None
+    claims = list((await s.execute(
+        select(m.Claim).where(
+            or_(m.Claim.workspace_id == project.workspace_id, m.Claim.workspace_id.is_(None)),
+            m.Claim.mode == project.mode, m.Claim.status.in_(LIVE_STATUSES), m.Claim.region_id.in_(list(regions)),
+        ).order_by(m.Claim.category, m.Claim.attribute, m.Claim.id).limit(MAX_GRAPH_CLAIMS)
+    )).scalars())
+    ids = [c.id for c in claims]
+    sources = list((await s.execute(select(m.ClaimSource).where(m.ClaimSource.claim_id.in_(ids)))).scalars()) if ids else []
+    conflicts = list((await s.execute(
+        select(m.Conflict).where(
+            m.Conflict.workspace_id == project.workspace_id, or_(m.Conflict.claim_a_id.in_(ids), m.Conflict.claim_b_id.in_(ids)))
+        .order_by(m.Conflict.created_at, m.Conflict.id)
+    )).scalars()) if ids else []
+    return claims, sources, conflicts, regions
+
+
+def _add_claims(g: "_Builder", project: m.Project, claims: list[m.Claim], sources: list[m.ClaimSource],
+                conflicts: list[m.Conflict], regions: dict[Any, m.Region]) -> None:
+    """Every edge below is a stored foreign key; the claim, source, conflict and region rows are the only inputs."""
+    ws = project.workspace_id
+    for region in regions.values():
+        g.node(f"region:{region.code}", "region", f"{region.name} ({region.code})", "region", region.code, f"{API}/regions/{region.code}", None)
+    for c in claims:
+        link = f"{API}/workspaces/{ws}/claims/{c.id}"
+        g.node(f"claim:{c.id}", "claim", c.value_text, "claim", c.id, link, c.created_at,
+               claim_type=CLAIM_EVIDENCE[c.kind][1], retrieval_mode="fixture" if c.mode == "demo" else "cached",
+               confidence=c.confidence)
+        if c.region_id in regions:
+            g.edge(f"claim:{c.id}", f"region:{regions[c.region_id].code}", "applies_to", "claims.region_id")
+    for src in sources:
+        g.node(f"source:{src.id}", "claim_source", src.title or src.publisher or src.source_type, "claim_source", src.id,
+               f"{API}/workspaces/{ws}/claims/{src.claim_id}", src.retrieved_at)
+        g.edge(f"claim:{src.claim_id}", f"source:{src.id}", "supported_by", "claim_sources.claim_id")
+    for k in conflicts:
+        g.node(f"conflict:{k.id}", "conflict", f"Conflict ({k.status}): {k.reason}", "conflict", k.id, None, k.created_at)
+        g.edge(f"conflict:{k.id}", f"claim:{k.claim_a_id}", "conflicts_with", "conflicts.claim_a_id")
+        g.edge(f"conflict:{k.id}", f"claim:{k.claim_b_id}", "conflicts_with", "conflicts.claim_b_id")
+        if k.region_id in regions:
+            g.edge(f"conflict:{k.id}", f"region:{regions[k.region_id].code}", "applies_to", "conflicts.region_id")
+
+
 async def evidence_graph(
     user_id: UUID, project_id: UUID, campaign_id: UUID | None, limit: int, *, region: str | None = None,
-    evidence_type: str | None = None, population_study_id: UUID | None = None,
+    evidence_type: str | None = None, population_study_id: UUID | None = None, region_code: str | None = None,
 ) -> EvidenceGraph:
     async with read_session() as s:
         project = await get_project(s, user_id, project_id)
@@ -84,6 +138,7 @@ async def evidence_graph(
         arenas = await rows(m.Arena, *scoped(m.Arena))
         comparisons = await rows(m.MarketComparison, *scoped(m.MarketComparison))
         reports = await rows(m.Report, *scoped(m.Report))
+        proof_reports = await rows(m.ProofReport, *scoped(m.ProofReport))
         studies = await rows(m.Study) if region is not None else []
         run_ids = {r.id for r in runs}
         referenced = {
@@ -96,6 +151,9 @@ async def evidence_graph(
         evidence = await rows(m.EvidenceRecord) if campaign_id is None else [
             e for e in await rows(m.EvidenceRecord) if e.source_run_id in run_ids or e.id in referenced
         ]
+        codes = [region_code] if region_code else (
+            campaign_region_codes(campaigns[0].target_markets, None)[0] if campaign_id and campaigns else [])
+        claim_data = await _claim_rows(s, project, codes) if codes else None
 
     g = _Builder(project.mode == "demo")
     for c in campaigns:
@@ -190,6 +248,16 @@ async def evidence_graph(
         if e.source_run_id:
             g.edge(f"run:{e.source_run_id}", node, "produced", "evidence_records.source_run_id")
 
+    for r in proof_reports:
+        node = f"report:{r.id}"
+        g.node(node, "report", f"{r.title} v{r.version_number}", "proof_report", r.id, f"{API}/proof-reports/{r.id}", r.created_at)
+        for claim_id in r.content.get("referenced_claim_ids", []):
+            g.edge(node, f"claim:{claim_id}", "references", "proof_reports.content.referenced_claim_ids")
+        for conflict_id in r.content.get("referenced_conflict_ids", []):
+            g.edge(node, f"conflict:{conflict_id}", "references", "proof_reports.content.referenced_conflict_ids")
+    if claim_data is not None:
+        _add_claims(g, project, *claim_data)
+
     filters: list[str] = []
     if region is not None:
         study_market = {st.id: st.market.get("country_code") for st in studies}
@@ -227,6 +295,8 @@ async def evidence_graph(
     truncated = len(kept) < len(g.nodes) or len(edges) < len(links)
     note = (f"Capped at {limit} nodes: showing {len(kept)} of {len(g.nodes)} nodes and {len(edges)} of "
             f"{len(links)} links. Raise the limit to see the rest.")
+    if region_code is not None:
+        filters.append(f"Claims shown for region {region_code} only.")
     return EvidenceGraph(
         project_id=project_id, campaign_id=campaign_id, nodes=list(kept.values()), edges=edges, truncated=truncated,
         limitations=LIMITATIONS + filters + ([note] if truncated else []), generated_at=utcnow(),

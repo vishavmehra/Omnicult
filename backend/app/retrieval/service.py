@@ -61,6 +61,8 @@ class SearchDocument(BaseModel):
     claim_type: ClaimType | None = None
     retrieval_mode: RetrievalMode | None = None
     created_at: datetime | None = None
+    region_code: str | None = None
+    note: str | None = None
 
 
 @dataclass(frozen=True)
@@ -114,7 +116,8 @@ def rank_chunks(
 
 
 def _digest(document: SearchDocument) -> str:
-    return hashlib.sha256(f"{document.kind}\n{document.title}\n{document.text}".encode()).hexdigest()
+    extra = f"\n{document.region_code}\n{document.note}" if document.region_code or document.note else ""  # keeps old hashes
+    return hashlib.sha256(f"{document.kind}\n{document.title}\n{document.text}{extra}".encode()).hexdigest()
 
 
 def _embedding_input(chunk: IndexedChunk) -> str:
@@ -183,6 +186,48 @@ def adaptation_document(adaptation: Adaptation) -> SearchDocument:
     )
 
 
+CLAIM_EVIDENCE: dict[str, tuple[EvidenceType, ClaimType]] = {
+    "observed": ("provider_result", "observed"),
+    "calculated": ("deterministic_calculation", "derived"),
+    "synthetic": ("synthetic_response", "synthetic"),
+    "interpretation": ("model_interpretation", "interpreted"),
+    "unverified": ("model_interpretation", "hypothesis"),
+}
+
+
+def claim_document(
+    *, claim_id: UUID, workspace_id: UUID, region_code: str | None, attribute: str, value_text: str, kind: str,
+    confidence: str, source_count: int, mode: str, created_at: datetime | None,
+) -> SearchDocument:
+    """A claim is searched by its statement; its kind and computed confidence travel with the hit."""
+    evidence_type, claim_type = CLAIM_EVIDENCE[kind]
+    return SearchDocument(
+        kind="claim", source_id=str(claim_id), title=f"{attribute.replace('_', ' ').capitalize()} ({region_code or 'no region'})",
+        text=value_text, ref=GraphRef(resource="claim", id=str(claim_id), url=f"{API}/workspaces/{workspace_id}/claims/{claim_id}"),
+        evidence_type=evidence_type, claim_type=claim_type, retrieval_mode="fixture" if mode == "demo" else "cached",
+        created_at=created_at, region_code=region_code,
+        note=f"A claim of kind {kind} with {confidence} confidence and {source_count} source{'s' if source_count != 1 else ''}.",
+    )
+
+
+def claim_source_document(
+    *, source_id: UUID, claim_id: UUID, workspace_id: UUID, region_code: str | None, source_type: str, title: str | None,
+    publisher: str | None, excerpt: str | None, claim_text: str, claim_kind: str, mode: str, created_at: datetime | None,
+) -> SearchDocument:
+    """A source is searched by its quoted text (or, without one, by what it is cited for)."""
+    evidence_type, claim_type = CLAIM_EVIDENCE[claim_kind]
+    label = title or publisher or source_type
+    return SearchDocument(
+        kind="claim_source", source_id=str(source_id), title=label,
+        text=excerpt or f"{label} is cited for: {claim_text}",
+        ref=GraphRef(resource="claim_source", id=str(source_id), url=f"{API}/workspaces/{workspace_id}/claims/{claim_id}"),
+        evidence_type=evidence_type, claim_type=claim_type, retrieval_mode="fixture" if mode == "demo" else "cached",
+        created_at=created_at, region_code=region_code,
+        note=f"A {source_type} source" + (" with its quoted text" if excerpt else " (no quoted text)")
+        + f", cited for a {claim_kind} claim: {claim_text[:120]}",
+    )
+
+
 class RetrievalService:
     def __init__(
         self, embedder: EmbeddingClient | None, store: RetrievalStore, *, unavailable_message: str | None = None
@@ -213,6 +258,7 @@ class RetrievalService:
                     title=document.title, text=piece, content_hash=digest, ref=document.ref,
                     evidence_type=document.evidence_type, claim_type=document.claim_type,
                     retrieval_mode=document.retrieval_mode, created_at=document.created_at,
+                    region_code=document.region_code, note=document.note,
                 )
                 for index, piece in enumerate(chunk_text(document.text) or [document.title])
             ]
@@ -298,7 +344,8 @@ class RetrievalService:
     # --- Search ---
 
     async def search(
-        self, project_id: UUID, query: str, kinds: Sequence[SearchKind] | None = None, limit: int = 10
+        self, project_id: UUID, query: str, kinds: Sequence[SearchKind] | None = None, limit: int = 10,
+        region_code: str | None = None,
     ) -> SearchResults:
         text = " ".join(query.split())
         if not self.is_configured():
@@ -315,6 +362,8 @@ class RetrievalService:
             return SearchResults(query=text, status="unavailable", message=f"Semantic search is unavailable: {exc.message}",
                                  embedding_model=space.model, hits=[])
         chunks = await self._store.list_chunks(project_id, kinds)
+        if region_code is not None:
+            chunks = [chunk for chunk in chunks if chunk.region_code == region_code]
         floor = MIN_SIMILARITY.get((space.model, space.config_version), -1.0)
         ranked = [
             (score, chunk)
@@ -327,6 +376,9 @@ class RetrievalService:
                 snippet=chunk.text if len(chunk.text) <= SNIPPET_CHARS else chunk.text[: SNIPPET_CHARS - 1] + "…",
                 similarity=round(score, 4), ref=chunk.ref, evidence_type=chunk.evidence_type,
                 claim_type=chunk.claim_type, retrieval_mode=chunk.retrieval_mode, created_at=chunk.created_at,
+                region_code=chunk.region_code,
+                explanation=f"Semantic match, similarity {score:.2f} (a ranking signal, not a probability)."
+                + (f" {chunk.note}" if chunk.note else ""),
             )
             for score, chunk in ranked
         ]

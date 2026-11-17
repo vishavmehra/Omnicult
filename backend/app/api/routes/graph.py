@@ -20,9 +20,10 @@ async def get_evidence_graph(
     region: CountryCode | None = None,
     evidence_type: EvidenceType | None = None,
     population_study_id: UUID | None = None,
+    region_code: Annotated[str | None, Query(pattern=r"^[A-Z]{2}-[A-Z0-9]{1,3}$", description="Draw this region's claims, sources and conflicts.")] = None,
     limit: Annotated[int, Query(ge=10, le=500, description="Maximum nodes; truncated=true when exceeded.")] = 200,
 ) -> EvidenceGraph:
     return await graph.evidence_graph(
         user.id, project_id, campaign_id, limit, region=region, evidence_type=evidence_type,
-        population_study_id=population_study_id,
+        population_study_id=population_study_id, region_code=region_code,
     )

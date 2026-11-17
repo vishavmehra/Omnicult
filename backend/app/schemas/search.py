@@ -9,7 +9,11 @@ from app.schemas.common import ApiModel
 from app.schemas.evidence import ClaimType, EvidenceType, RetrievalMode
 from app.schemas.graph import GraphRef
 
-SearchKind = Literal["evidence", "brand_example", "risk_finding", "profile_item", "adaptation"]
+SearchKind = Literal[
+    "evidence", "brand_example", "risk_finding", "profile_item", "adaptation",
+    "claim", "claim_source",
+    "scene", "finding", "version",  # indexed by the streams that own them, through `register_document_source`
+]
 
 
 class SearchHit(ApiModel):
@@ -23,6 +27,8 @@ class SearchHit(ApiModel):
     claim_type: ClaimType | None
     retrieval_mode: RetrievalMode | None
     created_at: datetime | None
+    region_code: str | None = Field(description="ISO 3166-2 region the hit is about, when it has one.")
+    explanation: str = Field(description="Why this hit was returned, in plain words.")
 
 
 class SearchResults(ApiModel):
