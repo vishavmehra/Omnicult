@@ -637,6 +637,32 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/proof-reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Proof Reports
+         * @description Snapshots, newest first.
+         */
+        get: operations["list_proof_reports"];
+        put?: never;
+        /**
+         * Create Proof Report
+         * @description Assemble and store the campaign's next Proof Report snapshot. Deterministic: no model is called. Sections whose
+         *     provider is not wired, or whose data is missing, are listed as missing and make the report partial. Needs the
+         *     owner or editor role.
+         */
+        post: operations["create_proof_report"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/pulse/alerts": {
         parameters: {
             query?: never;
@@ -1013,6 +1039,27 @@ export interface paths {
          * @description Scan text and optional images (run_type risk_scan).
          */
         post: operations["start_risk_scan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/run-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Campaign Run History
+         * @description Runs of the campaign, newest first: status, models, prompt versions, tokens, estimated cost, errors. Totals cover
+         *     every matching run, not just the page. Costs are estimates, never invoices.
+         */
+        get: operations["get_campaign_run_history"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1817,7 +1864,8 @@ export interface paths {
         };
         /**
          * Search Project
-         * @description Semantic search with stored embeddings. status=unavailable (never fabricated hits) when not configured.
+         * @description Semantic search with stored embeddings over evidence, brand examples, claims and their sources, and results.
+         *     Searches only what the project's workspace can see. status=unavailable (never fabricated hits) when not configured.
          */
         get: operations["search_project"];
         put?: never;
@@ -1879,6 +1927,104 @@ export interface paths {
          * @description Deterministic, synchronous diff of two snapshots of the same project.
          */
         post: operations["create_trend_comparison"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/proof-exports/{export_id}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download Proof Export
+         * @description Download with the link's token instead of a bearer token. 404 for an unknown export, a wrong token, or an expired link.
+         */
+        get: operations["download_proof_export"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/proof-report-sections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Proof Report Sections
+         * @description The sections a Proof Report is made of, in order, and whether each has a provider wired in this build.
+         */
+        get: operations["list_proof_report_sections"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/proof-reports/{report_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Proof Report */
+        get: operations["get_proof_report"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/proof-reports/{report_id}/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Export Proof Report
+         * @description Download a snapshot now. The PDF shows Indic text as a Latin transliteration and says so; JSON and Markdown keep
+         *     the original text.
+         */
+        get: operations["export_proof_report"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/proof-reports/{report_id}/exports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Proof Export
+         * @description Store an export through the blob store and return a short-lived download link (see `expires_at`).
+         */
+        post: operations["create_proof_export"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2049,6 +2195,26 @@ export interface paths {
          * @description Cooperative cancel: stops at the next checkpoint; saved partial work stays (README §14.5). 409 if terminal.
          */
         post: operations["cancel_run"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/runs/{run_id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Run History Detail
+         * @description One run with its stage traces, every metered call, and references to its inputs and result.
+         */
+        get: operations["get_run_history_detail"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2242,6 +2408,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/workspaces/{workspace_id}/claims/{claim_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Workspace Claim
+         * @description One claim with its five tags and sources: the target of every claim link in a report, search hit, or graph.
+         */
+        get: operations["get_workspace_claim"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/workspaces/{workspace_id}/conflicts": {
         parameters: {
             query?: never;
@@ -2277,6 +2463,27 @@ export interface paths {
          *     Needs the owner, editor or reviewer role (403 otherwise); anonymous users get 403.
          */
         post: operations["resolve_conflict"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/data-health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Workspace Data Health
+         * @description Per source type: last stored retrieval, freshness, cache state, logged attempts and errors. Per region: coverage.
+         *     Reads stored data only; it never calls a source.
+         */
+        get: operations["get_workspace_data_health"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2796,6 +3003,35 @@ export interface components {
              */
             version_id: string;
         };
+        /** ApprovalItem */
+        ApprovalItem: {
+            /** Approver User Id */
+            approver_user_id: string | null;
+            /**
+             * Decided At
+             * Format: date-time
+             */
+            decided_at: string;
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "approved" | "changes_requested" | "rejected";
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @default observed
+             * @constant
+             */
+            kind: "observed";
+            /** Note */
+            note: string | null;
+            /** Role */
+            role: string | null;
+            /** Version Id */
+            version_id: string | null;
+        };
         /** ApprovalPage */
         ApprovalPage: {
             /** Items */
@@ -2806,6 +3042,37 @@ export interface components {
             offset: number;
             /** Total */
             total: number;
+        };
+        /** ApprovalsContent */
+        ApprovalsContent: {
+            /** Approvals */
+            approvals: components["schemas"]["ApprovalItem"][];
+        };
+        /** ApprovalsSection */
+        ApprovalsSection: {
+            content: components["schemas"]["ApprovalsContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "approvals";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
         };
         /**
          * ArenaCreate
@@ -3027,6 +3294,27 @@ export interface components {
             /** Target */
             target: components["schemas"]["ParticipantTarget"] | components["schemas"]["SubgroupTarget"] | components["schemas"]["PanelTarget"];
         };
+        /** AssemblyInfo */
+        AssemblyInfo: {
+            /**
+             * Method
+             * @constant
+             */
+            method: "deterministic";
+            /**
+             * Model Called
+             * @description No model is called to assemble a report; sections read stored records.
+             * @constant
+             */
+            model_called: false;
+            /** Registry Version */
+            registry_version: string;
+            /**
+             * Section Ids
+             * @description Sections in report order.
+             */
+            section_ids: string[];
+        };
         /** Asset */
         Asset: {
             /** Content Type */
@@ -3177,6 +3465,66 @@ export interface components {
             kind: "signed" | "stream";
             /** Url */
             url: string;
+        };
+        /** AudienceResultItem */
+        AudienceResultItem: {
+            /** Disagreement */
+            disagreement: string | null;
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @default synthetic
+             * @constant
+             */
+            kind: "synthetic";
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Method
+             * @enum {string}
+             */
+            method: "quick_read" | "ask_the_panel";
+            /** Region Code */
+            region_code: string | null;
+            /**
+             * Respondent Count
+             * @description Synthetic respondents; never independent human observations.
+             */
+            respondent_count: number;
+            /** Summary */
+            summary: string;
+        };
+        /** AudienceResultsContent */
+        AudienceResultsContent: {
+            /** Results */
+            results: components["schemas"]["AudienceResultItem"][];
+        };
+        /** AudienceResultsSection */
+        AudienceResultsSection: {
+            content: components["schemas"]["AudienceResultsContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "audience_results";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
         };
         /** AudienceRunAccepted */
         AudienceRunAccepted: {
@@ -3473,6 +3821,23 @@ export interface components {
             /** Text */
             text: string;
         };
+        /** BrandSummary */
+        BrandSummary: {
+            /** Description */
+            description: string | null;
+            /** Name */
+            name: string;
+            /** Preferred Terms */
+            preferred_terms: string[];
+            /** Prohibited Terms */
+            prohibited_terms: string[];
+            /** Protected Terms */
+            protected_terms: string[];
+            /** Target Audience */
+            target_audience: string | null;
+            /** Voice */
+            voice: string[];
+        };
         /**
          * BrandUpdate
          * @description Brand Memory, replaced as a whole. Only people write it; model output never becomes a preference.
@@ -3545,6 +3910,21 @@ export interface components {
             /** Validation Question */
             validation_question: string | null;
         };
+        /** BriefMarket */
+        BriefMarket: {
+            /**
+             * Country Code
+             * @description ISO 3166-1 alpha-2 code, uppercase.
+             */
+            country_code: string;
+            /** Display Name */
+            display_name: string;
+            /**
+             * Region Code
+             * @description ISO 3166-2 region, when the campaign targets one.
+             */
+            region_code: string | null;
+        };
         /** Campaign */
         Campaign: {
             /**
@@ -3585,6 +3965,56 @@ export interface components {
              * @description Every content version, newest first.
              */
             versions: components["schemas"]["ContentVersion"][];
+        };
+        /** CampaignBriefContent */
+        CampaignBriefContent: {
+            brand: components["schemas"]["BrandSummary"];
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Campaign Type
+             * @enum {string}
+             */
+            campaign_type: "advertisement" | "landing_page" | "product_description" | "slogan" | "social_post";
+            current_version: components["schemas"]["CampaignVersionRef"];
+            evaluation_weights: components["schemas"]["EvaluationCriteria"];
+            /** Name */
+            name: string;
+            /** Objective */
+            objective: string | null;
+            /** Target Markets */
+            target_markets: components["schemas"]["BriefMarket"][];
+            /** Version Count */
+            version_count: number;
+        };
+        /** CampaignBriefSection */
+        CampaignBriefSection: {
+            content: components["schemas"]["CampaignBriefContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "campaign_brief";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
         };
         /** CampaignComparison */
         CampaignComparison: {
@@ -3696,6 +4126,22 @@ export interface components {
             original_content?: components["schemas"]["CampaignContent-Input"] | null;
             /** Target Markets */
             target_markets?: components["schemas"]["Market"][] | null;
+        };
+        /** CampaignVersionRef */
+        CampaignVersionRef: {
+            content: components["schemas"]["CampaignContent-Output"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Version Number */
+            version_number: number;
         };
         /** CandidateResult */
         CandidateResult: {
@@ -4172,6 +4618,47 @@ export interface components {
             /** Note */
             note?: string | null;
         };
+        /** ConflictsContent */
+        ConflictsContent: {
+            /**
+             * Open
+             * @description Open, or waiting for a native review.
+             */
+            open: components["schemas"]["ReportConflict"][];
+            /** Resolved */
+            resolved: components["schemas"]["ReportConflict"][];
+            /**
+             * Truncated
+             * @description True when a region had more conflicts than the report carries.
+             */
+            truncated: boolean;
+        };
+        /** ConflictsSection */
+        ConflictsSection: {
+            content: components["schemas"]["ConflictsContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "conflicts";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
+        };
         /** ContentChange */
         ContentChange: {
             /** Adapted */
@@ -4549,6 +5036,66 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** CreativeVersionItem */
+        CreativeVersionItem: {
+            /** Actor */
+            actor: ("user" | "ai") | null;
+            /** Claim Ids */
+            claim_ids: string[];
+            /** Created At */
+            created_at: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "observed" | "calculated" | "synthetic" | "interpretation" | "unverified";
+            /** Label */
+            label: string;
+            /** Operation */
+            operation: string | null;
+            /** Parent Version Id */
+            parent_version_id: string | null;
+            /** Summary */
+            summary: string;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** CreativeVersionsContent */
+        CreativeVersionsContent: {
+            /** Comparison Summary */
+            comparison_summary: string | null;
+            /** Versions */
+            versions: components["schemas"]["CreativeVersionItem"][];
+        };
+        /** CreativeVersionsSection */
+        CreativeVersionsSection: {
+            content: components["schemas"]["CreativeVersionsContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "creative_versions";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
+        };
         /** CulturalProfile */
         CulturalProfile: {
             /** Brand Name */
@@ -4758,6 +5305,31 @@ export interface components {
              * @description Model interpretation of why this may matter.
              */
             relevance_explanation: string | null;
+        };
+        /** DataHealth */
+        DataHealth: {
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Regions */
+            regions: components["schemas"]["RegionCoverage"][];
+            rules: components["schemas"]["FreshnessRules"];
+            /** Sources */
+            sources: components["schemas"]["SourceHealth"][];
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
         };
         /** DatasetStatus */
         DatasetStatus: {
@@ -5364,6 +5936,11 @@ export interface components {
              */
             workspace_id: string;
         };
+        /** EvidenceMeterContent */
+        EvidenceMeterContent: {
+            /** Meters */
+            meters: components["schemas"]["EvidenceMeter"][];
+        };
         /**
          * EvidenceMeterObservation
          * @description The Evidence Meter reading for the region (see GET /workspaces/{id}/regions/{code}/evidence-meter).
@@ -5388,6 +5965,32 @@ export interface components {
             strength: "weak" | "partial" | "solid";
             /** Supported Claims */
             supported_claims: number;
+        };
+        /** EvidenceMeterSection */
+        EvidenceMeterSection: {
+            content: components["schemas"]["EvidenceMeterContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "evidence_meter";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
         };
         /** EvidencePage */
         EvidencePage: {
@@ -5708,6 +6311,15 @@ export interface components {
              */
             source_kind: "sample";
         };
+        /** FreshnessRules */
+        FreshnessRules: {
+            /** Expired Share For Expired */
+            expired_share_for_expired: number;
+            /** Notes */
+            notes: string[];
+            /** Stale Window Years */
+            stale_window_years: number;
+        };
         /** GlossaryTerm */
         GlossaryTerm: {
             /**
@@ -5868,7 +6480,7 @@ export interface components {
              * Relation
              * @enum {string}
              */
-            relation: "supports" | "derived_from" | "generated_by" | "evaluates" | "recommends" | "flags" | "variant_of" | "references" | "produced" | "informs" | "reacted_to" | "motivates";
+            relation: "supports" | "derived_from" | "generated_by" | "evaluates" | "recommends" | "flags" | "variant_of" | "references" | "produced" | "informs" | "reacted_to" | "motivates" | "supported_by" | "applies_to" | "conflicts_with";
             /** Source */
             source: string;
             /** Target */
@@ -5878,6 +6490,11 @@ export interface components {
         GraphNode: {
             /** Claim Type */
             claim_type: ("observed" | "derived" | "interpreted" | "hypothesis" | "synthetic" | "external_observation") | null;
+            /**
+             * Confidence
+             * @description Computed confidence of a claim node; null for other nodes.
+             */
+            confidence: ("low" | "moderate" | "high") | null;
             /** Confidence Label */
             confidence_label: ("insufficient" | "limited" | "moderate") | null;
             /** Created At */
@@ -5892,7 +6509,7 @@ export interface components {
              * Kind
              * @enum {string}
              */
-            kind: "campaign" | "content_version" | "source_signal" | "evidence" | "interpretation" | "hypothesis" | "synthetic_result" | "risk_finding" | "recommendation" | "adaptation" | "evaluation" | "cultural_profile" | "arena" | "market_comparison" | "report" | "run" | "population" | "audience_group" | "interview_theme" | "social_simulation";
+            kind: "campaign" | "content_version" | "source_signal" | "evidence" | "interpretation" | "hypothesis" | "synthetic_result" | "risk_finding" | "recommendation" | "adaptation" | "evaluation" | "cultural_profile" | "arena" | "market_comparison" | "report" | "run" | "population" | "audience_group" | "interview_theme" | "social_simulation" | "claim" | "claim_source" | "conflict" | "region";
             /** Label */
             label: string;
             /** Limitations */
@@ -6253,6 +6870,19 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** KindLabel */
+        KindLabel: {
+            /**
+             * Applies To
+             * @description What in this section has this kind, in plain words.
+             */
+            applies_to: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "observed" | "calculated" | "synthetic" | "interpretation" | "unverified";
+        };
         /** LegendItem */
         LegendItem: {
             /** Description */
@@ -6264,6 +6894,95 @@ export interface components {
             kind: "audience_group" | "region" | "interest" | "evidence" | "campaign_element" | "theme" | "reaction" | "recommendation" | "campaign_version" | "participant" | "post";
             /** Label */
             label: string;
+        };
+        /** LimitationsContent */
+        LimitationsContent: {
+            /** Items */
+            items: string[];
+            /** Not Legal Clearance */
+            not_legal_clearance: string;
+        };
+        /** LimitationsSection */
+        LimitationsSection: {
+            content: components["schemas"]["LimitationsContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "limitations";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
+        };
+        /** LivePerformanceContent */
+        LivePerformanceContent: {
+            /** Items */
+            items: components["schemas"]["LivePerformanceItem"][];
+            /**
+             * Sample Data
+             * @description True when the figures are a labelled sample, not a connected account.
+             */
+            sample_data: boolean;
+        };
+        /** LivePerformanceItem */
+        LivePerformanceItem: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "observed" | "calculated" | "synthetic" | "interpretation" | "unverified";
+            /** Metric */
+            metric: string;
+            /** Period */
+            period: string | null;
+            /** Provisional */
+            provisional: boolean;
+            /** Region Code */
+            region_code: string | null;
+            /** Source */
+            source: string;
+            /** Value */
+            value: number | string | null;
+        };
+        /** LivePerformanceSection */
+        LivePerformanceSection: {
+            content: components["schemas"]["LivePerformanceContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "live_performance";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
         };
         /** Lock */
         Lock: {
@@ -6763,6 +7482,18 @@ export interface components {
             value: number | null;
             /** Version Label */
             version_label: string | null;
+        };
+        /** MissingSection */
+        MissingSection: {
+            /**
+             * Id
+             * @enum {string}
+             */
+            id: "campaign_brief" | "target_regions" | "region_claims" | "evidence_meter" | "conflicts" | "creative_versions" | "xray_findings" | "risk_findings" | "transcreation" | "audience_results" | "readiness" | "approvals" | "live_performance" | "limitations" | "run_history";
+            /** Reason */
+            reason: string;
+            /** Title */
+            title: string;
         };
         /** NetworkDefinition */
         NetworkDefinition: {
@@ -7967,6 +8698,227 @@ export interface components {
             /** Target Markets */
             target_markets?: components["schemas"]["Market"][] | null;
         };
+        /** ProofExport */
+        ProofExport: {
+            /** Byte Size */
+            byte_size: number;
+            /** Content Type */
+            content_type: string;
+            /**
+             * Download Url
+             * @description API path with a one-time-use-style token; works without a bearer token until expires_at.
+             */
+            download_url: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** Filename */
+            filename: string;
+            /**
+             * Format
+             * @enum {string}
+             */
+            format: "json" | "markdown" | "pdf";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Notices
+             * @description For example, that Indic text is shown transliterated in the PDF.
+             */
+            notices: string[];
+            /**
+             * Report Id
+             * Format: uuid
+             */
+            report_id: string;
+            /** Sha256 */
+            sha256: string;
+        };
+        /** ProofExportCreate */
+        ProofExportCreate: {
+            /**
+             * Format
+             * @enum {string}
+             */
+            format: "json" | "markdown" | "pdf";
+        };
+        /** ProofReport */
+        ProofReport: {
+            assembly: components["schemas"]["AssemblyInfo"];
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Campaign Version Id
+             * @description The campaign content version the report describes.
+             */
+            campaign_version_id: string | null;
+            /**
+             * Content Sha256
+             * @description Hash of the report's sections: equal inputs give an equal hash.
+             */
+            content_sha256: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Generated By */
+            generated_by: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind Legend
+             * @description What each of the five content kinds means.
+             */
+            kind_legend: components["schemas"]["KindLabel"][];
+            /** Legal Notice */
+            legal_notice: string;
+            /** Missing Sections */
+            missing_sections: components["schemas"]["MissingSection"][];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /**
+             * Referenced Claim Ids
+             * @description Every claim the report shows; each is fetchable and linkable.
+             */
+            referenced_claim_ids: string[];
+            /** Referenced Conflict Ids */
+            referenced_conflict_ids: string[];
+            /**
+             * Schema Version
+             * @constant
+             */
+            schema_version: "proof-report-v2";
+            /** Sections */
+            sections: (components["schemas"]["CampaignBriefSection"] | components["schemas"]["TargetRegionsSection"] | components["schemas"]["RegionClaimsSection"] | components["schemas"]["EvidenceMeterSection"] | components["schemas"]["ConflictsSection"] | components["schemas"]["CreativeVersionsSection"] | components["schemas"]["XRaySection"] | components["schemas"]["RiskFindingsSection"] | components["schemas"]["TranscreationSection"] | components["schemas"]["AudienceResultsSection"] | components["schemas"]["ReadinessSection"] | components["schemas"]["ApprovalsSection"] | components["schemas"]["LivePerformanceSection"] | components["schemas"]["LimitationsSection"] | components["schemas"]["RunHistorySection"])[];
+            /**
+             * Status
+             * @description partial when any section is missing.
+             * @enum {string}
+             */
+            status: "complete" | "partial";
+            /** Target Region Codes */
+            target_region_codes: string[];
+            /** Title */
+            title: string;
+            /**
+             * Version Number
+             * @description Snapshot number for the campaign; a snapshot is never changed.
+             */
+            version_number: number;
+            /** Workspace Id */
+            workspace_id: string | null;
+        };
+        /** ProofReportCreate */
+        ProofReportCreate: {
+            /**
+             * Region Codes
+             * @description Regions to report on. Omitted: the regions the campaign targets. A campaign with none gives a report whose region sections are missing.
+             */
+            region_codes?: string[] | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** ProofReportPage */
+        ProofReportPage: {
+            /** Items */
+            items: components["schemas"]["ProofReportSummary"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** ProofReportSummary */
+        ProofReportSummary: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Campaign Version Id
+             * @description The campaign content version the report describes.
+             */
+            campaign_version_id: string | null;
+            /**
+             * Content Sha256
+             * @description Hash of the report's sections: equal inputs give an equal hash.
+             */
+            content_sha256: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /**
+             * Status
+             * @description partial when any section is missing.
+             * @enum {string}
+             */
+            status: "complete" | "partial";
+            /** Title */
+            title: string;
+            /**
+             * Version Number
+             * @description Snapshot number for the campaign; a snapshot is never changed.
+             */
+            version_number: number;
+            /** Workspace Id */
+            workspace_id: string | null;
+        };
+        /** ProofSectionInfo */
+        ProofSectionInfo: {
+            /**
+             * Id
+             * @enum {string}
+             */
+            id: "campaign_brief" | "target_regions" | "region_claims" | "evidence_meter" | "conflicts" | "creative_versions" | "xray_findings" | "risk_findings" | "transcreation" | "audience_results" | "readiness" | "approvals" | "live_performance" | "limitations" | "run_history";
+            /** Order */
+            order: number;
+            /** Title */
+            title: string;
+            /**
+             * Wired
+             * @description False while only the placeholder provider is registered (the section reports missing).
+             */
+            wired: boolean;
+        };
         /**
          * Provenance
          * @description Where the observations came from. Differences between versions are disclosed, never hidden.
@@ -8398,6 +9350,32 @@ export interface components {
              */
             vision: "configured" | "not_configured" | "available" | "unavailable" | "not_required";
         };
+        /** ReadinessContent */
+        ReadinessContent: {
+            /** Confidence Limitations */
+            confidence_limitations: string[];
+            /** Highest Priority Issue */
+            highest_priority_issue: string | null;
+            /**
+             * Kind
+             * @default calculated
+             * @constant
+             */
+            kind: "calculated";
+            /** Main Reason */
+            main_reason: string;
+            /** Next Action */
+            next_action: string;
+            /** Open Conflicts */
+            open_conflicts: number;
+            /** Rule Version */
+            rule_version: string;
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "go" | "fix" | "rethink";
+        };
         /** ReadinessDependencies */
         ReadinessDependencies: {
             /**
@@ -8505,6 +9483,32 @@ export interface components {
             verdict_meanings: {
                 [key: string]: string;
             };
+        };
+        /** ReadinessSection */
+        ReadinessSection: {
+            content: components["schemas"]["ReadinessContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "readiness";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
         };
         /** ReadinessVerdict */
         ReadinessVerdict: {
@@ -8655,6 +9659,57 @@ export interface components {
             /** Versions */
             versions: string[];
         };
+        /** RegionClaimsBlock */
+        RegionClaimsBlock: {
+            /**
+             * Categories
+             * @description Every category; an empty one is a visible gap.
+             */
+            categories: components["schemas"]["CategoryClaims"][];
+            /** Claim Count */
+            claim_count: number;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+        };
+        /** RegionClaimsContent */
+        RegionClaimsContent: {
+            /** Claim Count */
+            claim_count: number;
+            /** Kind Counts */
+            kind_counts: {
+                [key: string]: number;
+            };
+            /** Regions */
+            regions: components["schemas"]["RegionClaimsBlock"][];
+        };
+        /** RegionClaimsSection */
+        RegionClaimsSection: {
+            content: components["schemas"]["RegionClaimsContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "region_claims";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
+        };
         /** RegionComparison */
         RegionComparison: {
             /** Baseline Version */
@@ -8665,6 +9720,40 @@ export interface components {
             region_name: string;
             /** Versions */
             versions: components["schemas"]["VersionColumn"][];
+        };
+        /** RegionCoverage */
+        RegionCoverage: {
+            /** Categories Covered */
+            categories_covered: number;
+            /** Categories Total */
+            categories_total: number;
+            /** Claims */
+            claims: number;
+            /** Missing Categories */
+            missing_categories: ("language" | "script" | "festival" | "moment" | "food" | "colour" | "symbol" | "humour" | "family" | "custom" | "sensitivity" | "trend" | "demographic" | "media")[];
+            /** Newest Source Date */
+            newest_source_date: string | null;
+            /** Open Conflicts */
+            open_conflicts: number;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Source Types */
+            source_types: string[];
+            /** Sources */
+            sources: number;
+            /** Stale Claims */
+            stale_claims: number;
+            /**
+             * Strength
+             * @enum {string}
+             */
+            strength: "weak" | "partial" | "solid";
+            /** Strength Reasons */
+            strength_reasons: string[];
+            /** Supported Claims */
+            supported_claims: number;
         };
         /** RegionLanguage */
         RegionLanguage: {
@@ -8981,6 +10070,69 @@ export interface components {
             content_version_id: string;
             /** Name */
             name: string;
+        };
+        /** ReportConflict */
+        ReportConflict: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Current Selection
+             * @enum {string}
+             */
+            current_selection: "a" | "b";
+            /**
+             * Decisions
+             * @description Reviewer decisions, oldest first.
+             */
+            decisions: components["schemas"]["ConflictResolutionView"][];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Reason */
+            reason: string;
+            /** Region Code */
+            region_code: string | null;
+            /** Selection Reason */
+            selection_reason: string;
+            side_a: components["schemas"]["ReportConflictSide"];
+            side_b: components["schemas"]["ReportConflictSide"];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "review_requested" | "resolved";
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** ReportConflictSide */
+        ReportConflictSide: {
+            /**
+             * Claim Id
+             * Format: uuid
+             */
+            claim_id: string;
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "low" | "moderate" | "high";
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "observed" | "calculated" | "synthetic" | "interpretation" | "unverified";
+            /** Source Count */
+            source_count: number;
+            /** Value Text */
+            value_text: string;
         };
         /**
          * ReportCreate
@@ -9462,6 +10614,30 @@ export interface components {
             /** Summary */
             summary: string;
         };
+        /** RiskFindingItem */
+        RiskFindingItem: {
+            /** Ad Code Ref */
+            ad_code_ref: string | null;
+            anchor: components["schemas"]["Anchor-Output"] | null;
+            /** Category */
+            category: string;
+            /** Description */
+            description: string;
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "observed" | "calculated" | "synthetic" | "interpretation" | "unverified";
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "low" | "medium" | "high";
+            /** Status */
+            status: string | null;
+        };
         /** RiskFindingUpdate */
         RiskFindingUpdate: {
             /** Note */
@@ -9471,6 +10647,42 @@ export interface components {
              * @enum {string}
              */
             status: "open" | "dismissed" | "resolved";
+        };
+        /** RiskFindingsContent */
+        RiskFindingsContent: {
+            /**
+             * Disclaimer
+             * @description A Risk Check is an aid to human review, not legal advice.
+             */
+            disclaimer: string;
+            /** Findings */
+            findings: components["schemas"]["RiskFindingItem"][];
+        };
+        /** RiskFindingsSection */
+        RiskFindingsSection: {
+            content: components["schemas"]["RiskFindingsContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "risk_findings";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
         };
         /** RiskFlag */
         RiskFlag: {
@@ -9733,6 +10945,333 @@ export interface components {
             retryable: boolean;
             /** Stage */
             stage: string | null;
+        };
+        /** RunHistoryContent */
+        RunHistoryContent: {
+            /** Runs */
+            runs: components["schemas"]["RunHistoryItem"][];
+            totals: components["schemas"]["RunHistoryTotals"];
+            /** Truncated */
+            truncated: boolean;
+        };
+        /** RunHistoryDetail */
+        RunHistoryDetail: {
+            /**
+             * Actual Cost Usd
+             * @description Always null: provider invoices are not read by this application.
+             */
+            actual_cost_usd: number | null;
+            /** Ai Calls */
+            ai_calls: number;
+            /** Attempt */
+            attempt: number;
+            /** Campaign Id */
+            campaign_id: string | null;
+            /** Completed At */
+            completed_at: string | null;
+            /**
+             * Cost Basis
+             * @description usage_events: metered per call; run_steps: summed from the run's stage traces; none: nothing recorded.
+             * @enum {string}
+             */
+            cost_basis: "usage_events" | "run_steps" | "none";
+            /**
+             * Cost Is Estimate
+             * @description Costs are estimates from a price table, never provider invoices.
+             * @constant
+             */
+            cost_is_estimate: true;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Duration Ms
+             * @description completed_at minus started_at; null until both exist.
+             */
+            duration_ms: number | null;
+            error: components["schemas"]["RunError"] | null;
+            /**
+             * Estimated Cost Usd
+             * @description Estimate; null when no cost was recorded for the run.
+             */
+            estimated_cost_usd: number | null;
+            /** Failed Ai Calls */
+            failed_ai_calls: number;
+            /** Failed Stages */
+            failed_stages: string[];
+            input_ref: components["schemas"]["RunInputRef"];
+            /** Input Tokens */
+            input_tokens: number;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /**
+             * Models
+             * @description Models that served the run's calls (usage events and recorded stages).
+             */
+            models: string[];
+            /**
+             * Operation
+             * @description Plain-language name of the run type.
+             */
+            operation: string;
+            output_ref: components["schemas"]["RunResultRef"] | null;
+            /** Output Tokens */
+            output_tokens: number;
+            progress: components["schemas"]["RunProgress"] | null;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Prompt Versions */
+            prompt_versions: string[];
+            /** Providers */
+            providers: string[];
+            /**
+             * Resumable
+             * @description True when the run saved a checkpoint that POST /runs/{id}/resume can continue from.
+             */
+            resumable: boolean;
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /**
+             * Run Type
+             * @enum {string}
+             */
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray";
+            /** Started At */
+            started_at: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "completed" | "partial" | "failed" | "cancelled";
+            /** Steps */
+            steps: components["schemas"]["StepTrace"][];
+            /** Study Id */
+            study_id: string | null;
+            /** Thinking Tokens */
+            thinking_tokens: number;
+            /** Total Tokens */
+            total_tokens: number;
+            /** Usage Events */
+            usage_events: components["schemas"]["UsageEventView"][];
+            /** Workspace Id */
+            workspace_id: string | null;
+        };
+        /** RunHistoryItem */
+        RunHistoryItem: {
+            /**
+             * Actual Cost Usd
+             * @description Always null: provider invoices are not read by this application.
+             */
+            actual_cost_usd: number | null;
+            /** Ai Calls */
+            ai_calls: number;
+            /** Attempt */
+            attempt: number;
+            /** Campaign Id */
+            campaign_id: string | null;
+            /** Completed At */
+            completed_at: string | null;
+            /**
+             * Cost Basis
+             * @description usage_events: metered per call; run_steps: summed from the run's stage traces; none: nothing recorded.
+             * @enum {string}
+             */
+            cost_basis: "usage_events" | "run_steps" | "none";
+            /**
+             * Cost Is Estimate
+             * @description Costs are estimates from a price table, never provider invoices.
+             * @constant
+             */
+            cost_is_estimate: true;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Duration Ms
+             * @description completed_at minus started_at; null until both exist.
+             */
+            duration_ms: number | null;
+            error: components["schemas"]["RunError"] | null;
+            /**
+             * Estimated Cost Usd
+             * @description Estimate; null when no cost was recorded for the run.
+             */
+            estimated_cost_usd: number | null;
+            /** Failed Ai Calls */
+            failed_ai_calls: number;
+            /** Failed Stages */
+            failed_stages: string[];
+            /** Input Tokens */
+            input_tokens: number;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /**
+             * Models
+             * @description Models that served the run's calls (usage events and recorded stages).
+             */
+            models: string[];
+            /**
+             * Operation
+             * @description Plain-language name of the run type.
+             */
+            operation: string;
+            /** Output Tokens */
+            output_tokens: number;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Prompt Versions */
+            prompt_versions: string[];
+            /** Providers */
+            providers: string[];
+            /**
+             * Resumable
+             * @description True when the run saved a checkpoint that POST /runs/{id}/resume can continue from.
+             */
+            resumable: boolean;
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /**
+             * Run Type
+             * @enum {string}
+             */
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray";
+            /** Started At */
+            started_at: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "completed" | "partial" | "failed" | "cancelled";
+            /** Study Id */
+            study_id: string | null;
+            /** Thinking Tokens */
+            thinking_tokens: number;
+            /** Total Tokens */
+            total_tokens: number;
+            /** Workspace Id */
+            workspace_id: string | null;
+        };
+        /** RunHistoryPage */
+        RunHistoryPage: {
+            /** Items */
+            items: components["schemas"]["RunHistoryItem"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+            totals: components["schemas"]["RunHistoryTotals"];
+        };
+        /** RunHistorySection */
+        RunHistorySection: {
+            content: components["schemas"]["RunHistoryContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "run_history";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
+        };
+        /**
+         * RunHistoryTotals
+         * @description Over every run that matches the filters, not only the page.
+         */
+        RunHistoryTotals: {
+            /** By Status */
+            by_status: {
+                [key: string]: number;
+            };
+            /**
+             * Cost Is Estimate
+             * @constant
+             */
+            cost_is_estimate: true;
+            /** Estimated Cost Usd */
+            estimated_cost_usd: number;
+            /** Input Tokens */
+            input_tokens: number;
+            /** Output Tokens */
+            output_tokens: number;
+            /** Runs */
+            runs: number;
+            /**
+             * Runs Without Cost
+             * @description Runs with no recorded cost; the total is therefore a lower bound when above 0.
+             */
+            runs_without_cost: number;
+            /** Thinking Tokens */
+            thinking_tokens: number;
+            /** Unattributed Cost Usd */
+            unattributed_cost_usd: number;
+            /**
+             * Unattributed Events
+             * @description Usage events of the campaign that belong to no run (for example search embeddings).
+             */
+            unattributed_events: number;
+        };
+        /**
+         * RunInputRef
+         * @description Where a run's inputs are stored. The inputs themselves are not repeated here.
+         */
+        RunInputRef: {
+            /** Content Version Id */
+            content_version_id: string | null;
+            /**
+             * Fields
+             * @description Names of the stored input fields.
+             */
+            fields: string[];
+            /**
+             * Kind
+             * @constant
+             */
+            kind: "stored_run_inputs";
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /** Study Id */
+            study_id: string | null;
         };
         /** RunMetadata */
         RunMetadata: {
@@ -10158,14 +11697,24 @@ export interface components {
             created_at: string | null;
             /** Evidence Type */
             evidence_type: ("qloo_source" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input") | null;
+            /**
+             * Explanation
+             * @description Why this hit was returned, in plain words.
+             */
+            explanation: string;
             /** Id */
             id: string;
             /**
              * Kind
              * @enum {string}
              */
-            kind: "evidence" | "brand_example" | "risk_finding" | "profile_item" | "adaptation";
+            kind: "evidence" | "brand_example" | "risk_finding" | "profile_item" | "adaptation" | "claim" | "claim_source" | "scene" | "finding" | "version";
             ref: components["schemas"]["GraphRef"];
+            /**
+             * Region Code
+             * @description ISO 3166-2 region the hit is about, when it has one.
+             */
+            region_code: string | null;
             /** Retrieval Mode */
             retrieval_mode: ("live" | "cached" | "fixture" | "generated" | "user_input") | null;
             /**
@@ -10702,6 +12251,16 @@ export interface components {
             /** Value */
             value: string | number | boolean | null;
         };
+        /** SourceCallError */
+        SourceCallError: {
+            /**
+             * At
+             * Format: date-time
+             */
+            at: string;
+            /** Code */
+            code: string | null;
+        };
         /** SourceFreshness */
         SourceFreshness: {
             /**
@@ -10715,6 +12274,68 @@ export interface components {
             newest_source_date: string | null;
             /** Oldest Source Date */
             oldest_source_date: string | null;
+        };
+        /** SourceHealth */
+        SourceHealth: {
+            /**
+             * Aging Claims
+             * @description Not expired, but no observed source is under two years old.
+             */
+            aging_claims: number;
+            /**
+             * Attempts
+             * @description Recorded retrieval attempts; null when this source's attempts are not logged.
+             */
+            attempts: number | null;
+            /** Attempts Logged */
+            attempts_logged: boolean;
+            /**
+             * Cache State
+             * @description fixture: demo fixtures only; stored_live: stored copies of live retrievals; mixed: both. Data Health reads stored copies; it never calls a source.
+             * @enum {string}
+             */
+            cache_state: "fixture" | "stored_live" | "mixed" | "none";
+            /** Claims */
+            claims: number;
+            /** Errors */
+            errors: number | null;
+            /**
+             * Expired Claims
+             * @description Past their stated expiry; a refresh is due.
+             */
+            expired_claims: number;
+            /** Fixture Claims */
+            fixture_claims: number;
+            /** Fresh Claims */
+            fresh_claims: number;
+            /**
+             * Freshness
+             * @enum {string}
+             */
+            freshness: "fresh" | "aging" | "expired" | "unknown";
+            /** Last Attempt At */
+            last_attempt_at: string | null;
+            last_error: components["schemas"]["SourceCallError"] | null;
+            /**
+             * Last Retrieved At
+             * @description Newest successful retrieval stored.
+             */
+            last_retrieved_at: string | null;
+            /** Limitations */
+            limitations: string[];
+            /** Live Claims */
+            live_claims: number;
+            /** Oldest Retrieved At */
+            oldest_retrieved_at: string | null;
+            /** Region Codes */
+            region_codes: string[];
+            /** Source Type */
+            source_type: string;
+            /**
+             * Sources
+             * @description Distinct source records behind the workspace's visible claims.
+             */
+            sources: number;
         };
         /** SourceView */
         SourceView: {
@@ -11052,6 +12673,48 @@ export interface components {
              */
             sentiment: "positive" | "neutral" | "negative" | "mixed";
         };
+        /** TargetRegionsContent */
+        TargetRegionsContent: {
+            /** Regions */
+            regions: components["schemas"]["Region"][];
+            /**
+             * Source
+             * @description Where the region codes came from.
+             * @enum {string}
+             */
+            source: "campaign" | "request";
+            /**
+             * Unknown Codes
+             * @description Requested codes that match no active region; they are not reported on.
+             */
+            unknown_codes: string[];
+        };
+        /** TargetRegionsSection */
+        TargetRegionsSection: {
+            content: components["schemas"]["TargetRegionsContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "target_regions";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
+        };
         /** TextBox */
         TextBox: {
             /**
@@ -11331,6 +12994,37 @@ export interface components {
              */
             version_id?: string | null;
         };
+        /** TranscreationContent */
+        TranscreationContent: {
+            /** Items */
+            items: components["schemas"]["TranscreationItem"][];
+        };
+        /** TranscreationItem */
+        TranscreationItem: {
+            /** Back Translation */
+            back_translation: string | null;
+            /** Claim Ids */
+            claim_ids: string[];
+            /** Glossary Issues */
+            glossary_issues: string[];
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "observed" | "calculated" | "synthetic" | "interpretation" | "unverified";
+            /** Language */
+            language: string | null;
+            /** Region Code */
+            region_code: string;
+            /** Result Version Id */
+            result_version_id: string | null;
+            /** Source Version Id */
+            source_version_id: string | null;
+            /** Summary */
+            summary: string;
+        };
         /**
          * TranscreationObservation
          * @description Code-checked results for the regional copy: Brand Glossary compliance, back-translation and script.
@@ -11359,6 +13053,32 @@ export interface components {
              * @default 0
              */
             script_error_lines: number;
+        };
+        /** TranscreationSection */
+        TranscreationSection: {
+            content: components["schemas"]["TranscreationContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "transcreation";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
         };
         /** TranscribeStatus */
         TranscribeStatus: {
@@ -11517,6 +13237,44 @@ export interface components {
             thinking_tokens: number | null;
             /** Total Tokens */
             total_tokens: number | null;
+        };
+        /** UsageEventView */
+        UsageEventView: {
+            /** Capability */
+            capability: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Error Code */
+            error_code: string | null;
+            /**
+             * Estimated Cost Usd
+             * @description Estimate from the registry price table; not a provider invoice.
+             */
+            estimated_cost_usd: number;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Input Tokens */
+            input_tokens: number;
+            /** Latency Ms */
+            latency_ms: number | null;
+            /** Model */
+            model: string;
+            /** Output Tokens */
+            output_tokens: number;
+            /** Prompt Version */
+            prompt_version: string | null;
+            /** Provider */
+            provider: string;
+            /** Status */
+            status: string;
+            /** Thinking Tokens */
+            thinking_tokens: number;
         };
         /** UsageTotals */
         UsageTotals: {
@@ -11941,6 +13699,11 @@ export interface components {
              */
             role: "owner" | "editor" | "reviewer" | "viewer";
         };
+        /** XRayContent */
+        XRayContent: {
+            /** Findings */
+            findings: components["schemas"]["XRayFinding"][];
+        };
         /**
          * XRayCreate
          * @description Start Creative X-Ray on an uploaded asset (run_type creative_xray).
@@ -11963,6 +13726,49 @@ export interface components {
              * @description Market the creative is read for; optional.
              */
             region_code?: string | null;
+        };
+        /** XRayFinding */
+        XRayFinding: {
+            anchor: components["schemas"]["Anchor-Output"] | null;
+            /** Claim Ids */
+            claim_ids: string[];
+            /** Confidence */
+            confidence: ("low" | "moderate" | "high") | null;
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "observed" | "calculated" | "synthetic" | "interpretation" | "unverified";
+            /** Observation */
+            observation: string;
+        };
+        /** XRaySection */
+        XRaySection: {
+            content: components["schemas"]["XRayContent"] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            id: "xray_findings";
+            /**
+             * Kind Labels
+             * @description Empty only for a missing section.
+             */
+            kind_labels: components["schemas"]["KindLabel"][];
+            /**
+             * Missing Reason
+             * @description Set exactly when status is missing.
+             */
+            missing_reason: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "missing";
+            /** Title */
+            title: string;
         };
     };
     responses: never;
@@ -17441,6 +19247,257 @@ export interface operations {
             };
         };
     };
+    list_proof_reports: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProofReportPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_proof_report: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProofReportCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProofReport"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     get_alert_preview: {
         parameters: {
             query?: {
@@ -20350,6 +22407,134 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RunAccepted"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_campaign_run_history: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray") | null;
+                status?: ("queued" | "running" | "completed" | "partial" | "failed" | "cancelled") | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunHistoryPage"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -26042,6 +28227,8 @@ export interface operations {
                 region?: string | null;
                 evidence_type?: ("qloo_source" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input") | null;
                 population_study_id?: string | null;
+                /** @description Draw this region's claims, sources and conflicts. */
+                region_code?: string | null;
                 /** @description Maximum nodes; truncated=true when exceeded. */
                 limit?: number;
             };
@@ -27051,8 +29238,10 @@ export interface operations {
         parameters: {
             query: {
                 q: string;
-                kinds?: ("evidence" | "brand_example" | "risk_finding" | "profile_item" | "adaptation")[] | null;
+                kinds?: ("evidence" | "brand_example" | "risk_finding" | "profile_item" | "adaptation" | "claim" | "claim_source" | "scene" | "finding" | "version")[] | null;
                 limit?: number;
+                /** @description Only hits about this region. */
+                region_code?: string | null;
             };
             header?: never;
             path: {
@@ -27824,6 +30013,617 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TrendComparison"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    download_proof_export: {
+        parameters: {
+            query: {
+                token: string;
+            };
+            header?: never;
+            path: {
+                export_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The stored export. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_proof_report_sections: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProofSectionInfo"][];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_proof_report: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                report_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProofReport"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    export_proof_report: {
+        parameters: {
+            query?: {
+                format?: "json" | "markdown" | "pdf";
+            };
+            header?: never;
+            path: {
+                report_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Report download (Content-Disposition: attachment). */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProofReport"];
+                    "application/pdf": string;
+                    "text/markdown": string;
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_proof_export: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                report_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProofExportCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProofExport"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -28927,6 +31727,127 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Run"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_run_history_detail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunHistoryDetail"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -30388,6 +33309,128 @@ export interface operations {
             };
         };
     };
+    get_workspace_claim: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+                claim_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClaimView"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_conflicts: {
         parameters: {
             query?: {
@@ -30540,6 +33583,130 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Conflict"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_workspace_data_health: {
+        parameters: {
+            query?: {
+                /** @description live claims, or labeled demo fixtures. */
+                mode?: "live" | "demo";
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataHealth"];
                 };
             };
             /** @description UNAUTHENTICATED */
