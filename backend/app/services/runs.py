@@ -60,6 +60,8 @@ STAGES: dict[str, tuple[str, ...]] = {
     "social_simulation": ("building_network", "simulating_rounds", "analysing_dynamics", "summarizing"),
     "transcreate": ("loading_context", "transcreating_lines", "checking_terms", "checking_script"),
     "creative_xray": ("probing_media", "extracting_media", "transcribing", "observing_frames", "structuring_scenes"),
+    "remake_visual": ("loading_context", "generating_scene", "rendering_text", "checking_locked_regions"),
+    "remake_sound": ("loading_context", "speaking_lines", "making_jingle", "assembling_track"),
 }
 LABELS = {
     "market_discovery": "discovery",
@@ -74,6 +76,8 @@ LABELS = {
     "social_simulation": "social simulation",
     "transcreate": "transcreation",
     "creative_xray": "Creative X-Ray",
+    "remake_visual": "Remake: Visuals",
+    "remake_sound": "Remake: Sound",
 }
 ENTRY_POINTS = {
     "market_discovery": "run_discovery",
@@ -88,6 +92,8 @@ ENTRY_POINTS = {
     "social_simulation": "run_social_simulation",
     "transcreate": "run_transcreate",
     "creative_xray": "run_creative_xray",
+    "remake_visual": "run_remake_visual",
+    "remake_sound": "run_remake_sound",
 }
 V3_RUNS = {"population_study", "social_simulation"}  # checkpointed: cancel at a checkpoint, resume from it
 V3_TIMEOUT_SECONDS = 3600
@@ -559,6 +565,10 @@ async def _build_input(run_id: UUID) -> tuple[Any, Any]:
             from app.services import xray
 
             workflow_input = await xray.build_input(s, run, types, context, grounding)
+        elif run.run_type in ("remake_visual", "remake_sound"):
+            from app.services import remake
+
+            workflow_input = await remake.build_input(s, run, types, context, grounding)
         else:
             from app.services import insights  # v2 run types
 
@@ -717,6 +727,11 @@ async def _persist(run_id: UUID, outcome: Any) -> None:
             from app.services import xray
 
             payload, ref = await xray.persist(s, run, outcome, new_ids, now)
+        elif run.run_type in ("remake_visual", "remake_sound"):
+            from app.services import remake
+
+            payload, ref = await remake.persist(s, run, outcome, new_ids, now)
+            status = payload.pop("_status", status)  # a refused operation (a lock set meanwhile) is a failed run
         else:
             from app.services import insights  # v2 run types
 

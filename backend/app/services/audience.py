@@ -14,8 +14,9 @@ read but do not start runs; reviewers may set finding statuses.
 import asyncio
 import logging
 from collections import Counter, defaultdict
-from collections.abc import Sequence
-from datetime import timedelta
+from collections.abc import Awaitable, Callable, Sequence
+from dataclasses import dataclass
+from datetime import datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -277,7 +278,7 @@ async def _create_run(
 
 
 def _url(campaign_id: UUID, kind: str, run_id: UUID) -> str:
-    path = {"quick_read": "quick-reads", "audience_study": "audience-studies", "risk_check": "risk-checks"}[kind]
+    path = KIND_HOOKS[kind].url_path if kind in KIND_HOOKS else {"quick_read": "quick-reads", "audience_study": "audience-studies", "risk_check": "risk-checks"}[kind]
     return f"{API}/campaigns/{campaign_id}/{path}/{run_id}"
 
 
@@ -409,7 +410,9 @@ async def _execute(run_id: UUID) -> None:
                 kind, workflow_input, mode = await _build_input(run_id)
                 llm, progress = make_llm(mode), _progress_callback(run_id)
                 with usage_scope(await _usage_context(run_id)):  # its model calls become ai_usage_events rows (campaign, no run_id)
-                    if kind == "quick_read":
+                    if kind in KIND_HOOKS:
+                        outcome = await KIND_HOOKS[kind].run(workflow_input, llm, progress)
+                    elif kind == "quick_read":
                         outcome = await run_quick_read(workflow_input, llm, progress)
                     elif kind == "audience_study":
                         outcome = await run_audience_study(workflow_input, llm, progress)
@@ -441,6 +444,28 @@ STAGE_COUNT = {"quick_read": 3, "audience_study": 4, "risk_check": 3}
 FIRST_STAGE = {"quick_read": "loading_context", "audience_study": "loading_context", "risk_check": "loading_inputs"}
 
 
+@dataclass(frozen=True)
+class KindHooks:
+    """How a session kind added next to Quick Read (Live Focus Group, Buzz Simulator, Message Check) plugs into this module's
+    start, execute and read path. The run lifecycle, idempotency, usage scope and failure handling stay here; the kind owns what is
+    specific to it: how its input is built from the stored run, the workflow, what it persists, and its result view."""
+
+    url_path: str
+    stages: tuple[str, ...]
+    build_input: Callable[[AsyncSession, m.AudienceRun], Awaitable[Any]]
+    run: Callable[[Any, LLMGateway, Any], Awaitable[Any]]
+    persist: Callable[[AsyncSession, m.AudienceRun, Any, datetime], Awaitable[None]]
+    result: Callable[[AsyncSession, m.AudienceRun], Awaitable[Any]]
+
+
+KIND_HOOKS: dict[str, KindHooks] = {}
+
+
+def register_kind(kind: str, hooks: KindHooks) -> None:
+    KIND_HOOKS[kind] = hooks
+    STAGE_COUNT[kind], FIRST_STAGE[kind] = len(hooks.stages), hooks.stages[0]
+
+
 async def _mark_running(run_id: UUID) -> bool:
     async with session() as s, s.begin():
         run = await s.get(m.AudienceRun, run_id)
@@ -470,6 +495,8 @@ async def _build_input(run_id: UUID) -> tuple[str, Any, str]:
         run = await s.get(m.AudienceRun, run_id)
         assert run is not None
         inputs = run.inputs
+        if run.kind in KIND_HOOKS:
+            return run.kind, await KIND_HOOKS[run.kind].build_input(s, run), run.mode
         context = WorkflowContext(run_id=run.id, project_id=run.project_id, campaign_id=run.campaign_id, mode=run.mode,
                                   brand=BrandContext.model_validate(inputs["brand"]))
         claims = [v.GroundingClaim.model_validate(c) for c in inputs["claims"]]
@@ -517,7 +544,9 @@ async def _persist(run_id: UUID, kind: str, outcome: Any) -> None:
         run = await s.get(m.AudienceRun, run_id)
         if run is None or run.status != "running":
             return
-        if kind == "quick_read":
+        if kind in KIND_HOOKS:
+            await KIND_HOOKS[kind].persist(s, run, outcome, now)
+        elif kind == "quick_read":
             rows = {p.id: p for p in (await s.execute(select(m.PanelParticipant).where(m.PanelParticipant.run_id == run_id))).scalars()}
             for pid, response in outcome.responses.items():
                 rows[pid].response = response.model_dump(mode="json")
@@ -706,6 +735,8 @@ async def risk_check_result(s: AsyncSession, run: m.AudienceRun) -> v.RiskCheckR
 async def get_result(user_id: UUID, campaign_id: UUID, run_id: UUID, kind: str) -> Any:
     async with read_session() as s:
         run, _ = await _run_in(s, user_id, campaign_id, run_id, (kind,))
+        if kind in KIND_HOOKS:
+            return await KIND_HOOKS[kind].result(s, run)
         return await {"quick_read": quick_read_result, "audience_study": audience_study_result, "risk_check": risk_check_result}[kind](s, run)
 
 
@@ -726,7 +757,8 @@ async def list_runs(user_id: UUID, campaign_id: UUID, kind: str, limit: int, off
             findings = {}
     return v.AudienceRunPage(items=[v.AudienceRunSummary(
         id=r.id, campaign_id=r.campaign_id, kind=r.kind, status=r.status, mode=r.mode,  # type: ignore[arg-type]
-        region_codes=list(r.region_codes), participant_count=sizes[r.id], finding_count=findings.get(r.id, 0),
+        region_codes=list(r.region_codes), participant_count=sizes[r.id] or len(r.inputs.get("speakers", ())),
+        finding_count=findings.get(r.id, 0),
         progress=_progress(r), created_at=r.created_at, completed_at=r.completed_at) for r in rows],
         limit=limit, offset=offset, total=total)
 

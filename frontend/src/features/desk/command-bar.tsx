@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Coins, CornerDownLeft, FlaskConical, Layers, LayoutList, Palette, PencilLine, Plus, Search, Signpost, Vault, Wand2 } from "lucide-react";
+import { Coins, CornerDownLeft, FlaskConical, Layers, LayoutList, Palette, PencilLine, Plus, Search, Vault, Wand2 } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 
@@ -222,10 +222,10 @@ function BarContent({ close }: { close(): void }) {
             Usage and credits
             <span className="ml-auto text-xs text-ink-muted">Spend, budget, failed calls</span>
           </CommandItem>
-          <CommandItem value="roadmap planned features not built share of search video push connect accounts" onSelect={() => go("/app/roadmap")}>
-            <Signpost aria-hidden />
-            Roadmap
-            <span className="ml-auto text-xs text-ink-muted">Planned, not built</span>
+          <CommandItem value="team settings members roles invites country pack" onSelect={() => go("/app/settings")}>
+            <LayoutList aria-hidden />
+            Team and settings
+            <span className="ml-auto text-xs text-ink-muted">Members, roles, Country Pack</span>
           </CommandItem>
         </CommandGroup>
 

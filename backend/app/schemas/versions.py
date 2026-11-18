@@ -20,7 +20,8 @@ ElementKind = Literal[
 ]
 TEXT_KINDS: frozenset[str] = frozenset({"headline", "body", "cta", "tagline", "voiceover", "caption"})
 OperationKind = Literal[
-    "manual_edit", "replace_text", "transcreate", "apply_chip", "swap_reference", "change_setting", "tone_shift", "restore"
+    "manual_edit", "replace_text", "transcreate", "apply_chip", "swap_reference", "change_setting", "tone_shift", "restore",
+    "remake",
 ]
 Actor = Literal["user", "ai"]
 OperationStatus = Literal["applied", "rejected"]

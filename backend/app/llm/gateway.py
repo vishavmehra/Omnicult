@@ -56,6 +56,7 @@ CAPABILITY_LIMITS: dict[str, tuple[float, float]] = {  # name -> (per request, d
     "tts": (60.0, 90.0),
     "grounded_research": (60.0, 90.0),
     "transcribe": (60.0, 120.0),  # up to about 61 s of audio per call; one request, so no per-batch scaling
+    "music": (120.0, 150.0),  # Lyria measured 26 s for a 30 s clip
 }
 CAPABILITY_ADAPTERS: dict[str, tuple[str, str]] = {  # name -> (module, class)
     "embeddings": ("app.llm.embeddings", "EmbeddingClient"),
@@ -64,6 +65,7 @@ CAPABILITY_ADAPTERS: dict[str, tuple[str, str]] = {  # name -> (module, class)
     "tts": ("app.llm.media", "TTSClient"),
     "grounded_research": ("app.llm.grounding", "GroundedResearchClient"),
     "transcribe": ("app.llm.transcribe", "TranscribeClient"),
+    "music": ("app.llm.media", "MusicClient"),
 }
 # Pre-call input estimate for budgeting: a deliberately low chars-per-token figure (Indic scripts), so it over-estimates.
 CHARS_PER_TOKEN_FLOOR = 2

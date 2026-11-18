@@ -31,7 +31,8 @@ RUN_META: dict[str, tuple[str, str]] = {
     "voice_direct": ("studio", "Voice Director"),
     "campaign_evaluation": ("launch", "Campaign evaluation"), "campaign_arena": ("launch", "Campaign arena"),
 }
-AUDIENCE_LABEL = {"quick_read": "Quick Read", "audience_study": "Audience Study", "risk_check": "Risk Check"}
+AUDIENCE_LABEL = {"quick_read": "Quick Read", "audience_study": "Audience Study", "risk_check": "Risk Check", "focus_group": "Focus Group",
+                  "buzz_sim": "Buzz Simulator", "message_check": "Message Check"}
 OPERATION_LABEL = {
     "manual_edit": "Manual edit", "replace_text": "Text replacement", "transcreate": "Transcreation", "apply_chip": "Tweak Chip",
     "swap_reference": "Reference swap", "change_setting": "Setting change", "tone_shift": "Tone shift", "restore": "Restore",

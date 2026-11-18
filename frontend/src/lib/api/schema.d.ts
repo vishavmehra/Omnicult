@@ -93,6 +93,46 @@ export interface paths {
         patch: operations["update_arena"];
         trace?: never;
     };
+    "/api/v1/asset-packs/{pack_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Asset Pack
+         * @description One pack with its manifest (provenance and checksums).
+         */
+        get: operations["get_asset_pack"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/asset-packs/{pack_id}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download Asset Pack
+         * @description Download with the link's token instead of a bearer token. 404 for an unknown pack, a wrong token or an expired link.
+         */
+        get: operations["download_asset_pack"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/assets/{asset_id}": {
         parameters: {
             query?: never;
@@ -273,6 +313,51 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/asset-packs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Asset Packs
+         * @description Packs built for the campaign, newest first, with whether each link is still active.
+         */
+        get: operations["list_asset_packs"];
+        put?: never;
+        /**
+         * Create Asset Pack
+         * @description Build the ZIP on the server for a region's approved version and return a short-lived download link. Needs the owner or
+         *     editor role; 409 when the region has no standing approval. Only rights-confirmed files go in.
+         */
+        post: operations["create_asset_pack"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/asset-packs/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Preview Asset Pack
+         * @description What a pack for the region would hold: the approved version, the files that go in and the files left out with the reason.
+         */
+        get: operations["preview_asset_pack"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/audience-studies": {
         parameters: {
             query?: never;
@@ -361,6 +446,44 @@ export interface paths {
         };
         /** Get Brief Version */
         get: operations["get_brief_version"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/buzz-simulations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Buzz Simulations */
+        get: operations["list_buzz_simulations"];
+        put?: never;
+        /**
+         * Start Buzz Simulation
+         * @description Synthetic posts, replies and reshares in response to a creative, per state and language. An illustration, not a forecast.
+         */
+        post: operations["start_buzz_simulation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/buzz-simulations/{run_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Buzz Simulation */
+        get: operations["get_buzz_simulation"];
         put?: never;
         post?: never;
         delete?: never;
@@ -591,6 +714,68 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/focus-groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Focus Groups */
+        get: operations["list_focus_groups"];
+        put?: never;
+        /**
+         * Start Focus Group
+         * @description A moderated text discussion among participants of a finished Quick Read or Audience Study. The moderator asks the guide's
+         *     questions in turn and the participants reply to the question and to each other.
+         */
+        post: operations["start_focus_group"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/focus-groups/{run_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Focus Group
+         * @description The transcript so far, with themes, splits and position changes counted from it. Poll while status is queued or running.
+         */
+        get: operations["get_focus_group"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/focus-groups/{run_id}/interjections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Interject In Focus Group
+         * @description Ask the group something while it runs. The moderator relays it at the next turn boundary. 409 once the session has finished.
+         */
+        post: operations["interject_in_focus_group"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/glossary": {
         parameters: {
             query?: never;
@@ -626,6 +811,27 @@ export interface paths {
         head?: never;
         /** Update Glossary Term */
         patch: operations["update_glossary_term"];
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lab-session-defaults": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Lab Session Defaults
+         * @description What the Focus Group, Buzz and Message Check forms start from: the default guide, platforms, the brief's primary message and its
+         *     key points, and the server limits.
+         */
+        get: operations["get_lab_session_defaults"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/campaigns/{campaign_id}/lens/atlas": {
@@ -672,6 +878,50 @@ export interface paths {
          *     reported in the build's `gaps`, `calls` and `status` (partial), never hidden.
          */
         post: operations["build_profiles"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lens/category-shelf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Category Shelf
+         * @description Category Shelf: the brands and products Wikidata records in the campaign's category, by the state it links them to, with
+         *     public signals. Unknown fields stay unknown; nothing about price, sales or share is ever shown.
+         */
+        get: operations["get_category_shelf"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lens/category-shelf/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh Category Shelf
+         * @description Discover the category again and keep the result as a new version. Owner or editor role.
+         *
+         *     Demo campaigns read the recording. Live campaigns make about a dozen free Wikidata requests, then read pageviews for the
+         *     best-referenced items; the same category is not read again within LENS_SHELF_MIN_INTERVAL_SECONDS (429).
+         */
+        post: operations["refresh_category_shelf"];
         delete?: never;
         options?: never;
         head?: never;
@@ -782,6 +1032,51 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/lens/trend-radar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Trend Radar
+         * @description Trend Radar: for each state, which public attention is rising or falling, computed from stored Wikipedia pageviews with
+         *     the window and method stated, plus the moments in the campaign's dates. Attention, never search volume or demand. Reads
+         *     never call a source; they show what a refresh stored.
+         */
+        get: operations["get_trend_radar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lens/trend-radar/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh Trend Radar
+         * @description Read the pageviews again and keep the new readings next to the old ones. Owner or editor role.
+         *
+         *     Demo campaigns read the recording and make no network call. Live campaigns call free public APIs: a state refreshed less
+         *     than LENS_TREND_MIN_INTERVAL_SECONDS ago answers 429, and a source that fails is reported in that state's `gaps`.
+         */
+        post: operations["refresh_trend_radar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/locks": {
         parameters: {
             query?: never;
@@ -821,6 +1116,45 @@ export interface paths {
          * @description Release the active lock (kept in the history). 404 when the element is not locked.
          */
         delete: operations["unset_lock"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/message-checks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Message Checks */
+        get: operations["list_message_checks"];
+        put?: never;
+        /**
+         * Start Message Check
+         * @description Check whether the intended message (default: the brief's primary message) lands in each region: comprehension, recall and
+         *     misreadings, from synthetic participants who read only the regional copy.
+         */
+        post: operations["start_message_check"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/message-checks/{run_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Message Check */
+        get: operations["get_message_check"];
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -959,6 +1293,128 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/pulse/alert-inbox": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Alert Inbox
+         * @description The campaign's alerts with their history, open first, and the latest evaluations.
+         */
+        get: operations["get_alert_inbox"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/alert-inbox/evaluate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Evaluate Alert Rules
+         * @description Evaluate the saved rules now over the Pulse series (owner or editor).
+         */
+        post: operations["evaluate_alert_rules"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/alert-inbox/{alert_id}/transition": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Transition Alert
+         * @description Acknowledge, resolve or reopen one alert, with an optional note (owner or editor).
+         */
+        post: operations["transition_alert"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/alert-rules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Alert Rules */
+        get: operations["list_alert_rules"];
+        put?: never;
+        /**
+         * Create Alert Rule
+         * @description Save a rule (owner or editor). Thresholds have the bounds of the alert preview; missing ones take its defaults.
+         */
+        post: operations["create_alert_rule"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/alert-rules/defaults": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Default Alert Rules
+         * @description The four rules at their default thresholds, for a campaign with no rules (409 otherwise).
+         */
+        post: operations["create_default_alert_rules"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/alert-rules/{rule_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete Alert Rule
+         * @description Delete a rule. Its alerts are resolved and stay in the history.
+         */
+        delete: operations["delete_alert_rule"];
+        options?: never;
+        head?: never;
+        /** Update Alert Rule */
+        patch: operations["update_alert_rule"];
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/pulse/alerts": {
         parameters: {
             query?: never;
@@ -979,6 +1435,126 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/pulse/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Comments
+         * @description Comments with their language, version anchor, watch-term matches and, when read, the model's sentiment and themes.
+         */
+        get: operations["list_comments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/comments/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read Comments
+         * @description Label sentiment and group themes: one model call in a live project, labelled fixtures in a demo project.
+         *     The newest reading is reused unless `force` is set (owner or editor).
+         */
+        post: operations["read_comments"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/comments/sample": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Load Sample Comments
+         * @description Explicit action: load, or reload, the deterministic sample comments for this campaign (owner or editor).
+         *     Reloading replaces them with identical rows; stored model readings are kept.
+         */
+        post: operations["load_sample_comments"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/comments/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Comment Status */
+        get: operations["get_comment_status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/comments/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Comment Summary
+         * @description Counts, language mix, daily and weekly trends and per region-and-version slices, all computed by code.
+         *     Sentiment shares come from the newest model reading, when one exists.
+         */
+        get: operations["get_comment_summary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/comments/themes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Comment Themes
+         * @description The model's themes with counts and verbatim example comments, both chosen by code. Empty until a reading exists.
+         */
+        get: operations["get_comment_themes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/pulse/connections": {
         parameters: {
             query?: never;
@@ -991,6 +1567,109 @@ export interface paths {
          * @description Read-only. Every platform is `not_connected`: connecting accounts is roadmap.
          */
         get: operations["list_platform_connections"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/digests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Digests
+         * @description Stored digests, newest week first.
+         */
+        get: operations["list_digests"];
+        put?: never;
+        /**
+         * Create Digest
+         * @description Generate the digest of a week from stored records (owner or editor). A week that already has one returns it
+         *     unchanged (`created` false); `regenerate` replaces it. No model is called.
+         */
+        post: operations["create_digest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/digests/{digest_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Digest */
+        get: operations["get_digest"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/digests/{digest_id}/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Export Digest
+         * @description Download the digest as Markdown or PDF, rendered by the Proof Report exporters. Nothing is sent anywhere.
+         */
+        get: operations["export_digest"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/digests/{digest_id}/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add Digest Summary
+         * @description Ask a model for a short summary of the stored digest (live projects only; 409 in a demo project). Code rejects the
+         *     summary when it contains a number the digest does not hold.
+         */
+        post: operations["add_digest_summary"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/fatigue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Fatigue
+         * @description Per version and region: CTR and view-rate decay, frequency and repeated exposure, with a computed reason and a suggested refresh.
+         */
+        get: operations["get_fatigue"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1033,6 +1712,71 @@ export interface paths {
         get: operations["get_metric_catalogue"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/predicted-actual": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Predicted Actual
+         * @description Stored predictions (Launch Room verdicts and the Quick Read they read) against settled Pulse results, as rankings.
+         */
+        get: operations["get_predicted_actual"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/predicted-actual/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Version Links
+         * @description Which Studio version each Pulse version ran as, per region, and the versions a slot can be linked to.
+         */
+        get: operations["get_version_links"];
+        /**
+         * Put Version Link
+         * @description Link, relink or (version_id null) unlink one Pulse version in one region (owner or editor).
+         */
+        put: operations["put_version_link"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/predicted-actual/snapshots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Comparison Snapshots */
+        get: operations["list_comparison_snapshots"];
+        put?: never;
+        /**
+         * Create Comparison Snapshot
+         * @description Store the comparison as it reads now. Identical inputs return the newest snapshot instead of adding one.
+         */
+        post: operations["create_comparison_snapshot"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1237,6 +1981,190 @@ export interface paths {
          * @description The documented verdict rules, thresholds and priorities in force (rule version and scoring version).
          */
         get: operations["get_readiness_rules"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/region-plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Region Plan
+         * @description The launch plan per region, assembled by code from the brief, the Moment Calendar, the readiness verdicts, the approvals
+         *     and the stakeholder feedback. Read fresh; nothing is stored and no model is called.
+         */
+        get: operations["get_region_plan"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/region-plan/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Export Region Plan
+         * @description Download the plan as Markdown or PDF (the Proof export code). The PDF shows Indic text as a Latin transliteration.
+         */
+        get: operations["export_region_plan"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/remakes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Remakes
+         * @description Applied remakes, newest first. `run_id` finds the output of one run.
+         */
+        get: operations["list_remakes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/remakes/capabilities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Remake Capabilities
+         * @description Which models are configured, what one call is estimated to cost, the voices, and the budgets. Makes no call.
+         */
+        get: operations["remake_capabilities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/remakes/sound": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start Remake Sound
+         * @description Speak a version's voiceover or caption lines (run_type remake_sound), optionally with a Lyria jingle.
+         */
+        post: operations["start_remake_sound"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/remakes/visual": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start Remake Visual
+         * @description Regional scene for one scene element (run_type remake_visual). A live project must set `confirm_cost`; 409 when the
+         *     scene element is locked or the version has none; 503 when no image model is configured.
+         */
+        post: operations["start_remake_visual"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/remakes/{operation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Remake */
+        get: operations["get_remake"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/review-links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Review Links
+         * @description Links of the campaign, newest first, with their status and how many decisions each has received.
+         */
+        get: operations["list_review_links"];
+        put?: never;
+        /**
+         * Create Review Link
+         * @description Share chosen versions and regions with someone who has no account. Needs the owner or editor role. The response is the
+         *     only time the secret is shown; only its hash is stored. The link expires (at most 30 days) and can be revoked.
+         */
+        post: operations["create_review_link"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/review-responses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Review Responses
+         * @description Decisions and comments reviewers left through links, newest first. They are advice: only a signed-in member approves.
+         */
+        get: operations["list_review_responses"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1613,6 +2541,26 @@ export interface paths {
         get: operations["get_evidence"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/internal/pulse/evaluate-alerts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Evaluate Alerts For Scheduler
+         * @description Evaluate every campaign's enabled alert rules, once per period. Idempotent: a second call in the same period changes nothing.
+         */
+        post: operations["evaluate_alerts_for_scheduler"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2500,6 +3448,88 @@ export interface paths {
         get: operations["export_report"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Open Review
+         * @description What a review link shows: the chosen versions as plain text, their region and language, and the region's creative files.
+         *     404 for an unknown, expired or revoked link. Rate limited.
+         */
+        get: operations["open_review"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/review-links/{link_id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Revoke Review Link
+         * @description Stop a link now. Needs the owner or editor role. Decisions already left on it are kept.
+         */
+        post: operations["revoke_review_link"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/review/creatives/{creative_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Review Creative
+         * @description One rights-confirmed creative file of a region in the link's scope.
+         */
+        get: operations["get_review_creative"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/review/responses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Submit Review
+         * @description Leave a decision or a comment on one version and region of the link. Recorded against that version, anonymous unless the
+         *     reviewer typed a name (never verified). Rate limited; a link accepts a bounded number of responses.
+         */
+        post: operations["submit_review"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3436,6 +4466,103 @@ export interface components {
             /** Note */
             note?: string | null;
         };
+        /** AlertEvaluateResult */
+        AlertEvaluateResult: {
+            evaluation: components["schemas"]["AlertEvaluationView"];
+            /**
+             * Not Read
+             * @description Version and region pairs a rule could not read, with the reason. Not read as 'no alert'.
+             */
+            not_read: components["schemas"]["AlertNotRead"][];
+        };
+        /** AlertEvaluationView */
+        AlertEvaluationView: {
+            /** Alerts Found */
+            alerts_found: number;
+            /** Dataset Version */
+            dataset_version: string;
+            /**
+             * Evaluated At
+             * Format: date-time
+             */
+            evaluated_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Not Evaluated */
+            not_evaluated: number;
+            /** Opened */
+            opened: number;
+            /** Period Key */
+            period_key: string | null;
+            /** Reopened */
+            reopened: number;
+            /** Resolved */
+            resolved: number;
+            /** Rules Evaluated */
+            rules_evaluated: number;
+            /**
+             * Trigger
+             * @enum {string}
+             */
+            trigger: "refresh" | "manual" | "scheduler";
+        };
+        /** AlertInbox */
+        AlertInbox: {
+            /** Acknowledged */
+            acknowledged: number;
+            /** Dataset Version */
+            dataset_version: string;
+            /**
+             * Evaluations
+             * @description The latest evaluations, newest first.
+             */
+            evaluations: components["schemas"]["AlertEvaluationView"][];
+            /**
+             * Is Sample
+             * @default true
+             * @constant
+             */
+            is_sample: true;
+            /** Items */
+            items: components["schemas"]["AlertRecord"][];
+            /**
+             * Label
+             * @description Always 'Sample data, not from a connected account'.
+             */
+            label: string;
+            /**
+             * Last Updated At
+             * Format: date-time
+             * @description When the sample was generated (a fixed instant), not when it was loaded.
+             */
+            last_updated_at: string;
+            /** Limitations */
+            limitations: string[];
+            /** Open */
+            open: number;
+            /** Resolved */
+            resolved: number;
+            /**
+             * Source Kind
+             * @default sample
+             * @constant
+             */
+            source_kind: "sample";
+        };
+        /** AlertNotRead */
+        AlertNotRead: {
+            /** Reason */
+            reason: string;
+            /** Region Code */
+            region_code: string;
+            /** Rule Name */
+            rule_name: string;
+            /** Version Label */
+            version_label: string;
+        };
         /** AlertPreview */
         AlertPreview: {
             /** Alerts */
@@ -3478,6 +4605,297 @@ export interface components {
             source_kind: "sample";
             thresholds: components["schemas"]["AlertThresholds"];
         };
+        /** AlertRecord */
+        AlertRecord: {
+            /** Acknowledged At */
+            acknowledged_at: string | null;
+            /**
+             * Alert Type
+             * @enum {string}
+             */
+            alert_type: "ctr_drop" | "frequency_fatigue" | "cost_spike" | "prediction_miss";
+            /** Comparison */
+            comparison: string;
+            /** Comparison Value */
+            comparison_value: number;
+            /** Events */
+            events: components["schemas"]["AlertRecordEvent"][];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Last Seen At
+             * Format: date-time
+             */
+            last_seen_at: string;
+            /** Metric */
+            metric: string;
+            /** Observed Value */
+            observed_value: number;
+            /**
+             * Opened At
+             * Format: date-time
+             */
+            opened_at: string;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Resolution */
+            resolution: string | null;
+            /** Resolved At */
+            resolved_at: string | null;
+            /** Rule Id */
+            rule_id: string | null;
+            /** Rule Name */
+            rule_name: string;
+            /**
+             * Source Path
+             * @description API path of the data behind the alert.
+             */
+            source_path: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "acknowledged" | "resolved";
+            /** Suggested Action */
+            suggested_action: string;
+            /** Threshold */
+            threshold: number;
+            /** Version Label */
+            version_label: string;
+            /**
+             * Window From
+             * Format: date
+             */
+            window_from: string;
+            /**
+             * Window To
+             * Format: date
+             */
+            window_to: string;
+        };
+        /** AlertRecordEvent */
+        AlertRecordEvent: {
+            /**
+             * Actor User Id
+             * @description The person who acted or ran the evaluation; null for a refresh or a scheduled evaluation.
+             */
+            actor_user_id: string | null;
+            /**
+             * At
+             * Format: date-time
+             */
+            at: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "opened" | "acknowledged" | "resolved" | "reopened";
+            /** Note */
+            note: string | null;
+            /** Observed Value */
+            observed_value: number | null;
+            /**
+             * Trigger
+             * @enum {string}
+             */
+            trigger: "refresh" | "manual" | "scheduler" | "user";
+        };
+        /** AlertRuleCreate */
+        AlertRuleCreate: {
+            /**
+             * Alert Type
+             * @enum {string}
+             */
+            alert_type: "ctr_drop" | "frequency_fatigue" | "cost_spike" | "prediction_miss";
+            /**
+             * Enabled
+             * @default true
+             */
+            enabled: boolean;
+            /** Name */
+            name: string;
+            params?: components["schemas"]["AlertRuleParams-Input"];
+            /**
+             * Region Code
+             * @description Null: every region.
+             */
+            region_code?: string | null;
+            /**
+             * Version Label
+             * @description Null: every version.
+             */
+            version_label?: string | null;
+        };
+        /** AlertRuleList */
+        AlertRuleList: {
+            /** Items */
+            items: components["schemas"]["AlertRuleView"][];
+        };
+        /**
+         * AlertRuleParams
+         * @description Thresholds, with the bounds of the alert preview. Only the fields an alert type reads may be set.
+         */
+        "AlertRuleParams-Input": {
+            /**
+             * Cost Metric
+             * @description cost_spike: which cost to watch.
+             */
+            cost_metric?: ("cpm" | "cpa" | "both") | null;
+            /**
+             * Cost Spike Pct
+             * @description cost_spike: this far above the region average.
+             */
+            cost_spike_pct?: number | null;
+            /**
+             * Ctr Drop Pct
+             * @description ctr_drop: CTR this far below the version's first week.
+             */
+            ctr_drop_pct?: number | null;
+            /**
+             * Frequency Min Ctr Decline Pct
+             * @description frequency_fatigue: and CTR at least this far below the first week.
+             */
+            frequency_min_ctr_decline_pct?: number | null;
+            /**
+             * Frequency Threshold
+             * @description frequency_fatigue: frequency at or above this.
+             */
+            frequency_threshold?: number | null;
+            /**
+             * Min Conversions
+             * @description cost_spike: conversions CPA needs in the week.
+             */
+            min_conversions?: number | null;
+            /**
+             * Min Rank Gap
+             * @description prediction_miss: ranks between prediction and result.
+             */
+            min_rank_gap?: number | null;
+        };
+        /**
+         * AlertRuleParams
+         * @description Thresholds, with the bounds of the alert preview. Only the fields an alert type reads may be set.
+         */
+        "AlertRuleParams-Output": {
+            /**
+             * Cost Metric
+             * @description cost_spike: which cost to watch.
+             */
+            cost_metric: ("cpm" | "cpa" | "both") | null;
+            /**
+             * Cost Spike Pct
+             * @description cost_spike: this far above the region average.
+             */
+            cost_spike_pct: number | null;
+            /**
+             * Ctr Drop Pct
+             * @description ctr_drop: CTR this far below the version's first week.
+             */
+            ctr_drop_pct: number | null;
+            /**
+             * Frequency Min Ctr Decline Pct
+             * @description frequency_fatigue: and CTR at least this far below the first week.
+             */
+            frequency_min_ctr_decline_pct: number | null;
+            /**
+             * Frequency Threshold
+             * @description frequency_fatigue: frequency at or above this.
+             */
+            frequency_threshold: number | null;
+            /**
+             * Min Conversions
+             * @description cost_spike: conversions CPA needs in the week.
+             */
+            min_conversions: number | null;
+            /**
+             * Min Rank Gap
+             * @description prediction_miss: ranks between prediction and result.
+             */
+            min_rank_gap: number | null;
+        };
+        /** AlertRuleUpdate */
+        AlertRuleUpdate: {
+            /**
+             * Clear Region
+             * @default false
+             */
+            clear_region: boolean;
+            /**
+             * Clear Version
+             * @default false
+             */
+            clear_version: boolean;
+            /** Enabled */
+            enabled?: boolean | null;
+            /** Name */
+            name?: string | null;
+            params?: components["schemas"]["AlertRuleParams-Input"] | null;
+            /** Region Code */
+            region_code?: string | null;
+            /** Version Label */
+            version_label?: string | null;
+        };
+        /** AlertRuleView */
+        AlertRuleView: {
+            /**
+             * Alert Type
+             * @enum {string}
+             */
+            alert_type: "ctr_drop" | "frequency_fatigue" | "cost_spike" | "prediction_miss";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Enabled */
+            enabled: boolean;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Open Alerts */
+            open_alerts: number;
+            params: components["schemas"]["AlertRuleParams-Output"];
+            /** Region Code */
+            region_code: string | null;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Version Label */
+            version_label: string | null;
+        };
+        /**
+         * AlertScheduleSummary
+         * @description The scheduler's call: every campaign with enabled rules, evaluated once per period.
+         */
+        AlertScheduleSummary: {
+            /** Alerts Opened */
+            alerts_opened: number;
+            /** Alerts Resolved */
+            alerts_resolved: number;
+            /** Already Evaluated */
+            already_evaluated: number;
+            /** Campaigns With Rules */
+            campaigns_with_rules: number;
+            /** Evaluated */
+            evaluated: number;
+            /** Failed */
+            failed: number;
+            /** No Data */
+            no_data: number;
+            /** Period Key */
+            period_key: string;
+        };
         /** AlertThresholds */
         AlertThresholds: {
             /** Cost Spike Pct */
@@ -3490,6 +4908,16 @@ export interface components {
             frequency_threshold: number;
             /** Min Conversions */
             min_conversions: number;
+        };
+        /** AlertTransition */
+        AlertTransition: {
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "acknowledge" | "resolve" | "reopen";
+            /** Note */
+            note?: string | null;
         };
         /**
          * Anchor
@@ -4011,6 +5439,264 @@ export interface components {
             /** Width */
             width: number | null;
         };
+        /** AssetPackCreate */
+        AssetPackCreate: {
+            /** Region Code */
+            region_code: string;
+            /**
+             * Version Id
+             * @description An approved version of the region. Omitted: the newest approved one.
+             */
+            version_id?: string | null;
+        };
+        /** AssetPackCreated */
+        AssetPackCreated: {
+            /** Byte Size */
+            byte_size: number;
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By Name */
+            created_by_name: string | null;
+            /**
+             * Download Url
+             * @description Works without sign-in until it expires. Anyone holding it can download the pack.
+             */
+            download_url: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** File Count */
+            file_count: number;
+            /** Filename */
+            filename: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            manifest: components["schemas"]["AssetPackManifest"];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Sha256
+             * @description SHA-256 of the ZIP file.
+             */
+            sha256: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "expired";
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+            /** Version Label */
+            version_label: string;
+        };
+        /** AssetPackDetail */
+        AssetPackDetail: {
+            /** Byte Size */
+            byte_size: number;
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By Name */
+            created_by_name: string | null;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** File Count */
+            file_count: number;
+            /** Filename */
+            filename: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            manifest: components["schemas"]["AssetPackManifest"];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Sha256
+             * @description SHA-256 of the ZIP file.
+             */
+            sha256: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "expired";
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+            /** Version Label */
+            version_label: string;
+        };
+        /** AssetPackManifest */
+        AssetPackManifest: {
+            approval: components["schemas"]["PackApproval"];
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Campaign Name */
+            campaign_name: string;
+            /** Campaign Slug */
+            campaign_slug: string;
+            /** Channels */
+            channels: components["schemas"]["PackChannel"][];
+            /** Excluded */
+            excluded: components["schemas"]["PackExcluded"][];
+            /** Files */
+            files: components["schemas"]["PackFile"][];
+            /**
+             * Generated At
+             * @description Set when the pack is built; null in a preview.
+             */
+            generated_at: string | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Naming */
+            naming: string;
+            /** Notes */
+            notes: string[];
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Schema Version */
+            schema_version: string;
+            version: components["schemas"]["PackVersion"];
+        };
+        /** AssetPackPage */
+        AssetPackPage: {
+            /** Items */
+            items: components["schemas"]["AssetPackSummary"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** AssetPackPreview */
+        AssetPackPreview: {
+            /**
+             * Approved Versions
+             * @description Versions with a standing approval for this region, newest decision first.
+             */
+            approved_versions: components["schemas"]["PackVersion"][];
+            /** Blocked Reason */
+            blocked_reason: string | null;
+            /** Can Build */
+            can_build: boolean;
+            manifest: components["schemas"]["AssetPackManifest"] | null;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Url Ttl Seconds */
+            url_ttl_seconds: number;
+        };
+        /** AssetPackSummary */
+        AssetPackSummary: {
+            /** Byte Size */
+            byte_size: number;
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By Name */
+            created_by_name: string | null;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** File Count */
+            file_count: number;
+            /** Filename */
+            filename: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Sha256
+             * @description SHA-256 of the ZIP file.
+             */
+            sha256: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "expired";
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+            /** Version Label */
+            version_label: string;
+        };
         /** AssetPage */
         AssetPage: {
             /** Items */
@@ -4175,7 +5861,7 @@ export interface components {
              * Kind
              * @enum {string}
              */
-            kind: "quick_read" | "audience_study" | "risk_check";
+            kind: "quick_read" | "audience_study" | "risk_check" | "focus_group" | "buzz_sim" | "message_check";
             /**
              * Run Id
              * Format: uuid
@@ -4197,7 +5883,7 @@ export interface components {
              * Kind
              * @enum {string}
              */
-            kind: "quick_read" | "audience_study" | "risk_check";
+            kind: "quick_read" | "audience_study" | "risk_check" | "focus_group" | "buzz_sim" | "message_check";
             /**
              * Mode
              * @enum {string}
@@ -4261,7 +5947,7 @@ export interface components {
              * Kind
              * @enum {string}
              */
-            kind: "quick_read" | "audience_study" | "risk_check";
+            kind: "quick_read" | "audience_study" | "risk_check" | "focus_group" | "buzz_sim" | "message_check";
             /**
              * Mode
              * @enum {string}
@@ -5207,6 +6893,387 @@ export interface components {
             /** Version */
             version: number;
         };
+        /** BuzzActView */
+        BuzzActView: {
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "post" | "reply" | "share" | "ignore";
+            /**
+             * Changed Message
+             * @description True when the shared message shares few words with the reference message.
+             */
+            changed_message: boolean | null;
+            /**
+             * Exposed By Participant Id
+             * @description The account whose post showed it the creative; null for the seed audience.
+             */
+            exposed_by_participant_id: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Language */
+            language: string;
+            /** Language Name */
+            language_name: string;
+            /**
+             * Message Gloss
+             * @description In English: the message this account passes on, as it states it.
+             */
+            message_gloss: string | null;
+            /** Ordinal */
+            ordinal: number;
+            /**
+             * Parent Act Id
+             * @description The post this replies to or reshares; null when it answers the brand's creative itself.
+             */
+            parent_act_id: string | null;
+            /**
+             * Participant Id
+             * Format: uuid
+             */
+            participant_id: string;
+            /** Round Index */
+            round_index: number;
+            /**
+             * Stance
+             * @enum {string}
+             */
+            stance: "positive" | "mixed" | "neutral" | "negative" | "confused";
+            /** State Code */
+            state_code: string;
+            /**
+             * Text
+             * @description What the account wrote, in its own language (it may mix English).
+             */
+            text: string | null;
+            /**
+             * Text En
+             * @description An English gloss of the text, written by the same model.
+             */
+            text_en: string | null;
+            /** Topics */
+            topics: string[];
+            /**
+             * Wording Overlap
+             * @description Share of words held in common with the message, 0 to 1. A wording measure, not understanding.
+             */
+            wording_overlap: number | null;
+        };
+        /** BuzzAmplifier */
+        BuzzAmplifier: {
+            /** Exposed Others */
+            exposed_others: number;
+            /** Language Name */
+            language_name: string;
+            /** Ordinal */
+            ordinal: number;
+            /**
+             * Participant Id
+             * Format: uuid
+             */
+            participant_id: string;
+            /** State Code */
+            state_code: string;
+        };
+        /** BuzzCohortRow */
+        BuzzCohortRow: {
+            /**
+             * Dimension
+             * @enum {string}
+             */
+            dimension: "state" | "language";
+            /** Exposed */
+            exposed: number;
+            /**
+             * Expressed
+             * @description Accounts that posted, replied or reshared.
+             */
+            expressed: number;
+            /** Label */
+            label: string;
+            /** Participants */
+            participants: number;
+            /** Posts */
+            posts: number;
+            /** Replies */
+            replies: number;
+            sentiment: components["schemas"]["ReactionDistribution"];
+            /** Shares */
+            shares: number;
+            /** Value */
+            value: string;
+        };
+        /** BuzzConfusion */
+        BuzzConfusion: {
+            /** Act Ids */
+            act_ids: string[];
+            /** Count */
+            count: number;
+        };
+        /**
+         * BuzzCreate
+         * @description Simulate how a creative passes through a synthetic population.
+         */
+        BuzzCreate: {
+            /**
+             * Content Version Id
+             * @description Defaults to the campaign's current version.
+             */
+            content_version_id?: string | null;
+            /** @description Copy to simulate instead of a stored version (for example a Studio version). */
+            creative?: components["schemas"]["CampaignContent-Input"] | null;
+            /**
+             * Degree
+             * @description How many other accounts each account sees posts from.
+             * @default 4
+             */
+            degree: number;
+            /**
+             * Initial Exposure
+             * @description Share of the population that sees the creative in round 1. A setting, not a forecast.
+             * @default 0.25
+             */
+            initial_exposure: number;
+            /**
+             * Intended Message
+             * @description The message the creative should carry; used to see how it changes as it is passed on.
+             */
+            intended_message?: string | null;
+            /**
+             * Platform
+             * @description Sets the voice and format of the posts only; no platform data is used.
+             * @default instagram
+             * @enum {string}
+             */
+            platform: "instagram" | "facebook" | "youtube" | "x" | "whatsapp";
+            /**
+             * Rounds
+             * @description Rounds of seeing and acting. Each account acts once, in the round after it first sees the creative.
+             * @default 3
+             */
+            rounds: number;
+            /** @description Name at least one state. Languages, city tiers and age bands default to the states' own. */
+            sampling: components["schemas"]["SamplingPlan"];
+            /**
+             * Seed
+             * @default 42
+             */
+            seed: number;
+            /**
+             * Size
+             * @description Simulated accounts. The upper bound is a server setting; larger requests get 422.
+             * @default 24
+             */
+            size: number;
+            /**
+             * Version Ref
+             * @description Opaque reference to a version node; stored, not joined.
+             */
+            version_ref?: string | null;
+        };
+        /** BuzzInfluenceEdge */
+        BuzzInfluenceEdge: {
+            /**
+             * From Participant Id
+             * Format: uuid
+             */
+            from_participant_id: string;
+            /** Round Index */
+            round_index: number;
+            /**
+             * To Participant Id
+             * Format: uuid
+             */
+            to_participant_id: string;
+        };
+        /** BuzzMutation */
+        BuzzMutation: {
+            /** Changed */
+            changed: number;
+            /** Compared */
+            compared: number;
+            /** Examples */
+            examples: components["schemas"]["BuzzMutationExample"][];
+            /** Note */
+            note: string;
+            /** Reference */
+            reference: string;
+            /**
+             * Reference Source
+             * @enum {string}
+             */
+            reference_source: "intended_message" | "creative";
+            /** Threshold */
+            threshold: number;
+        };
+        /** BuzzMutationExample */
+        BuzzMutationExample: {
+            /**
+             * Act Id
+             * Format: uuid
+             */
+            act_id: string;
+            /** Message Gloss */
+            message_gloss: string;
+            /** Ordinal */
+            ordinal: number;
+            /** Overlap */
+            overlap: number;
+        };
+        /** BuzzReach */
+        BuzzReach: {
+            /** Acted */
+            acted: number;
+            /**
+             * Cascade Depth
+             * @description Longest chain of reshares: 0 when nobody reshared.
+             */
+            cascade_depth: number;
+            /**
+             * Ended
+             * @enum {string}
+             */
+            ended: "rounds_used" | "no_new_exposure" | "stopped_early";
+            /**
+             * Exposed
+             * @description Accounts that saw the creative at least once, including the last round's reshares.
+             */
+            exposed: number;
+            /** Exposed Share */
+            exposed_share: number;
+            /** Population */
+            population: number;
+            /** Resharers */
+            resharers: number;
+            /** Rounds Run */
+            rounds_run: number;
+            /** Seed Exposed */
+            seed_exposed: number;
+        };
+        /** BuzzResult */
+        BuzzResult: {
+            /** Acts */
+            acts: components["schemas"]["BuzzActView"][];
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            creative: components["schemas"]["CreativeCopy"];
+            /** Degree */
+            degree: number;
+            disclosure: components["schemas"]["PanelDisclosure"];
+            error: components["schemas"]["RunError"] | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Initial Exposure */
+            initial_exposure: number;
+            /** Intended Message */
+            intended_message: string | null;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            panel: components["schemas"]["PanelDescription"];
+            /** Participants */
+            participants: components["schemas"]["PanelParticipant"][];
+            /**
+             * Platform
+             * @enum {string}
+             */
+            platform: "instagram" | "facebook" | "youtube" | "x" | "whatsapp";
+            progress: components["schemas"]["RunProgress"] | null;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Regions */
+            regions: components["schemas"]["RegionRef"][];
+            /** Rounds Requested */
+            rounds_requested: number;
+            run_metadata: components["schemas"]["AudienceRunMetadata"];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "completed" | "partial" | "failed" | "cancelled";
+            summary: components["schemas"]["BuzzSummary"] | null;
+        };
+        /** BuzzRoundRow */
+        BuzzRoundRow: {
+            /**
+             * Exposed
+             * @description Accounts that saw the creative this round and acted.
+             */
+            exposed: number;
+            /** Ignored */
+            ignored: number;
+            /**
+             * Newly Exposed
+             * @description Accounts shown the creative for the first time by this round's posts and reshares.
+             */
+            newly_exposed: number;
+            /** Posts */
+            posts: number;
+            /** Replies */
+            replies: number;
+            /** Round Index */
+            round_index: number;
+            /** @description Stance of this round's posts, replies and reshares. */
+            sentiment: components["schemas"]["ReactionDistribution"];
+            /** Shares */
+            shares: number;
+        };
+        /** BuzzSummary */
+        BuzzSummary: {
+            /** Amplifiers */
+            amplifiers: components["schemas"]["BuzzAmplifier"][];
+            /** By Language */
+            by_language: components["schemas"]["BuzzCohortRow"][];
+            /** By State */
+            by_state: components["schemas"]["BuzzCohortRow"][];
+            confusion: components["schemas"]["BuzzConfusion"];
+            /** Influence */
+            influence: components["schemas"]["BuzzInfluenceEdge"][];
+            mutation: components["schemas"]["BuzzMutation"];
+            /** Network Method */
+            network_method: string;
+            reach: components["schemas"]["BuzzReach"];
+            /** Rounds */
+            rounds: components["schemas"]["BuzzRoundRow"][];
+            sentiment: components["schemas"]["ReactionDistribution"];
+            /** Themes */
+            themes: components["schemas"]["BuzzTheme"][];
+        };
+        /** BuzzTheme */
+        BuzzTheme: {
+            /**
+             * Basis
+             * @default interpretation
+             * @constant
+             */
+            basis: "interpretation";
+            /** Label */
+            label: string;
+            /** Participants */
+            participants: number;
+        };
         /** Campaign */
         Campaign: {
             /**
@@ -5520,6 +7587,22 @@ export interface components {
             /** Last Success At */
             last_success_at: string | null;
         };
+        /** CapabilityStatus */
+        CapabilityStatus: {
+            /** Configured */
+            configured: boolean;
+            /**
+             * Estimated Cost Usd
+             * @description Price-table estimate for one call; not a billed amount.
+             */
+            estimated_cost_usd: number | null;
+            /** Location */
+            location: string | null;
+            /** Model */
+            model: string | null;
+            /** Note */
+            note: string | null;
+        };
         /** CategoryClaims */
         CategoryClaims: {
             /**
@@ -5781,6 +7864,457 @@ export interface components {
             value: unknown;
             /** Value Text */
             value_text: string;
+        };
+        /**
+         * CommentAnalysisInfo
+         * @description The model reading behind sentiment and themes: who made it, with which prompt, and what code removed.
+         */
+        CommentAnalysisInfo: {
+            /**
+             * Comment Count
+             * @description Comments sent to the reader.
+             */
+            comment_count: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Dropped
+             * @description What the code checks removed from the output, by reason.
+             */
+            dropped: {
+                [key: string]: number;
+            };
+            /** Estimated Cost Usd */
+            estimated_cost_usd: number | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Is Fixture
+             * @description True for a demo project: the reading comes from labelled fixtures, not a model.
+             */
+            is_fixture: boolean;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Model Id */
+            model_id: string | null;
+            /** Notes */
+            notes: string[];
+            /** Prompt Version */
+            prompt_version: string;
+            /** Provider */
+            provider: string;
+            /**
+             * Read Count
+             * @description Comments with a valid label after the code checks.
+             */
+            read_count: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "completed" | "partial";
+        };
+        /** CommentCoverage */
+        CommentCoverage: {
+            /** Comments In Dataset */
+            comments_in_dataset: number;
+            /** Comments In View */
+            comments_in_view: number;
+            /** Languages In View */
+            languages_in_view: number;
+            /** Read In View */
+            read_in_view: number;
+            /**
+             * Read Share
+             * @description Share of the comments in view that carry a model label; null with no reading.
+             */
+            read_share: number | null;
+        };
+        /** CommentDatasetStatus */
+        CommentDatasetStatus: {
+            /** @description The newest reading of this dataset, or null when none was made. */
+            analysis: components["schemas"]["CommentAnalysisInfo"] | null;
+            /** Comment Count */
+            comment_count: number;
+            /** Dataset Version */
+            dataset_version: string;
+            /** Date From */
+            date_from: string | null;
+            /** Date To */
+            date_to: string | null;
+            /**
+             * Is Sample
+             * @default true
+             * @constant
+             */
+            is_sample: true;
+            /** Label */
+            label: string;
+            /** Languages */
+            languages: string[];
+            /** Last Updated At */
+            last_updated_at: string | null;
+            /** Loaded */
+            loaded: boolean;
+            /** Note */
+            note: string;
+            /** Regions */
+            regions: string[];
+            /**
+             * Source Kind
+             * @default sample
+             * @constant
+             */
+            source_kind: "sample";
+            /** Versions */
+            versions: string[];
+        };
+        /** CommentFilters */
+        CommentFilters: {
+            /** Date From */
+            date_from: string | null;
+            /** Date To */
+            date_to: string | null;
+            /** Language */
+            language: string | null;
+            /** Region */
+            region: string | null;
+            /** Version */
+            version: string | null;
+        };
+        /**
+         * CommentFlag
+         * @description A watch-term match, found by code in the comment text. The match is observed; what it means is the note.
+         */
+        CommentFlag: {
+            /**
+             * Evidence
+             * @default observed
+             * @constant
+             */
+            evidence: "observed";
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "planted_claim" | "cultural_misstep";
+            /** Label */
+            label: string;
+            /** Matched Term */
+            matched_term: string;
+            /** Note */
+            note: string;
+            /** Watch Id */
+            watch_id: string;
+        };
+        /**
+         * CommentInterpretation
+         * @description The model reading of one comment.
+         */
+        CommentInterpretation: {
+            /**
+             * Sentiment
+             * @enum {string}
+             */
+            sentiment: "positive" | "neutral" | "negative" | "mixed";
+            /** Themes */
+            themes: components["schemas"]["CommentThemeRef"][];
+        };
+        /** CommentItem */
+        CommentItem: {
+            anchor: components["schemas"]["VersionAnchor"];
+            /** Code Mixed */
+            code_mixed: boolean;
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Flags */
+            flags: components["schemas"]["CommentFlag"][];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            interpretation: components["schemas"]["CommentInterpretation"] | null;
+            /** Language */
+            language: string;
+            /** Language Name */
+            language_name: string;
+            /** Likes */
+            likes: number;
+            /** Platform */
+            platform: string;
+            /** Ref */
+            ref: string;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Script */
+            script: string;
+            /** Text */
+            text: string;
+            /** Version Label */
+            version_label: string;
+        };
+        /** CommentPage */
+        CommentPage: {
+            /** Dataset Version */
+            dataset_version: string;
+            /**
+             * Is Sample
+             * @default true
+             * @constant
+             */
+            is_sample: true;
+            /** Items */
+            items: components["schemas"]["CommentItem"][];
+            /**
+             * Label
+             * @description Always 'Sample comments, not from a connected channel'.
+             */
+            label: string;
+            /**
+             * Last Updated At
+             * Format: date-time
+             * @description When the sample was written (a fixed instant), not when it was loaded.
+             */
+            last_updated_at: string;
+            /** Limit */
+            limit: number;
+            /** Limitations */
+            limitations: string[];
+            /** Offset */
+            offset: number;
+            /**
+             * Source Kind
+             * @default sample
+             * @constant
+             */
+            source_kind: "sample";
+            /** Total */
+            total: number;
+        };
+        /**
+         * CommentQuote
+         * @description A stored comment, verbatim. Code picks it (most liked first); a model never writes a quote.
+         */
+        CommentQuote: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Language */
+            language: string;
+            /** Likes */
+            likes: number;
+            /** Ref */
+            ref: string;
+            /** Region Code */
+            region_code: string;
+            /** Sentiment */
+            sentiment: ("positive" | "neutral" | "negative" | "mixed") | null;
+            /** Text */
+            text: string;
+            /** Version Label */
+            version_label: string;
+        };
+        /** CommentReadRequest */
+        CommentReadRequest: {
+            /**
+             * Force
+             * @description Read again even when the newest reading already covers this dataset.
+             * @default false
+             */
+            force: boolean;
+        };
+        /** CommentReadResult */
+        CommentReadResult: {
+            analysis: components["schemas"]["CommentAnalysisInfo"];
+            /**
+             * Reused
+             * @description True when the newest reading already covered this dataset and no model was called.
+             */
+            reused: boolean;
+        };
+        /**
+         * CommentSlice
+         * @description One region and version: the unit a reader compares.
+         */
+        CommentSlice: {
+            /** Claim Mentions */
+            claim_mentions: number;
+            /** Comments */
+            comments: number;
+            /**
+             * Confidence
+             * @description By code: Low under 8 comments read or no reading, else Moderate. Never above Moderate: sample comments.
+             * @enum {string}
+             */
+            confidence: "low" | "moderate";
+            /** Confidence Rule */
+            confidence_rule: string;
+            /** Cultural Mentions */
+            cultural_mentions: number;
+            /** Likes */
+            likes: number;
+            /** Negative Share */
+            negative_share: number | null;
+            /**
+             * Positive Share
+             * @description Of the comments read, from the model labels. Null with no reading.
+             */
+            positive_share: number | null;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            sentiment: components["schemas"]["SentimentCounts"] | null;
+            /** Version Label */
+            version_label: string;
+        };
+        /** CommentSummary */
+        CommentSummary: {
+            analysis: components["schemas"]["CommentAnalysisInfo"] | null;
+            coverage: components["schemas"]["CommentCoverage"];
+            /** Daily */
+            daily: components["schemas"]["DayCount"][];
+            /** Dataset Version */
+            dataset_version: string;
+            filters: components["schemas"]["CommentFilters"];
+            /**
+             * Is Sample
+             * @default true
+             * @constant
+             */
+            is_sample: true;
+            /**
+             * Label
+             * @description Always 'Sample comments, not from a connected channel'.
+             */
+            label: string;
+            /** Languages */
+            languages: components["schemas"]["LanguageCount"][];
+            /**
+             * Last Updated At
+             * Format: date-time
+             * @description When the sample was written (a fixed instant), not when it was loaded.
+             */
+            last_updated_at: string;
+            /** Limitations */
+            limitations: string[];
+            sentiment: components["schemas"]["SentimentCounts"] | null;
+            /** Slices */
+            slices: components["schemas"]["CommentSlice"][];
+            /**
+             * Source Kind
+             * @default sample
+             * @constant
+             */
+            source_kind: "sample";
+            totals: components["schemas"]["CommentTotals"];
+            /** Weekly */
+            weekly: components["schemas"]["WeekTrend"][];
+        };
+        /** CommentTheme */
+        CommentTheme: {
+            /**
+             * Comments
+             * @description Comments carrying this theme in view, counted by code from the labels.
+             */
+            comments: number;
+            /** Id */
+            id: string;
+            /**
+             * Label
+             * @description Model interpretation.
+             */
+            label: string;
+            /** Quotes */
+            quotes: components["schemas"]["CommentQuote"][];
+            /** Regions */
+            regions: components["schemas"]["ThemeBreakdown"][];
+            sentiment: components["schemas"]["SentimentCounts"];
+            /** Share Of Read */
+            share_of_read: number;
+            /**
+             * Summary
+             * @description Model interpretation.
+             */
+            summary: string;
+            /** Versions */
+            versions: components["schemas"]["ThemeBreakdown"][];
+        };
+        /** CommentThemeRef */
+        CommentThemeRef: {
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+        };
+        /** CommentThemes */
+        CommentThemes: {
+            analysis: components["schemas"]["CommentAnalysisInfo"] | null;
+            /** Dataset Version */
+            dataset_version: string;
+            filters: components["schemas"]["CommentFilters"];
+            /**
+             * Is Sample
+             * @default true
+             * @constant
+             */
+            is_sample: true;
+            /**
+             * Label
+             * @description Always 'Sample comments, not from a connected channel'.
+             */
+            label: string;
+            /**
+             * Last Updated At
+             * Format: date-time
+             * @description When the sample was written (a fixed instant), not when it was loaded.
+             */
+            last_updated_at: string;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Source Kind
+             * @default sample
+             * @constant
+             */
+            source_kind: "sample";
+            /** Themes */
+            themes: components["schemas"]["CommentTheme"][];
+            /**
+             * Unthemed
+             * @description Read comments in view that carry no theme.
+             */
+            unthemed: number;
+        };
+        /** CommentTotals */
+        CommentTotals: {
+            /** Claim Mentions */
+            claim_mentions: number;
+            /** Comments */
+            comments: number;
+            /** Cultural Mentions */
+            cultural_mentions: number;
+            /** Flagged Comments */
+            flagged_comments: number;
+            /** Likes */
+            likes: number;
         };
         /** Comparability */
         Comparability: {
@@ -6761,6 +9295,16 @@ export interface components {
             /** Versions */
             versions: string[];
         };
+        /** DayCount */
+        DayCount: {
+            /** Comments */
+            comments: number;
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+        };
         /** DerivedAsset */
         DerivedAsset: {
             /** Content Type */
@@ -6802,6 +9346,585 @@ export interface components {
              * @enum {string}
              */
             source: "user" | "demo_fixture";
+        };
+        /** Digest */
+        Digest: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            content: components["schemas"]["DigestContent"];
+            /**
+             * Content Sha256
+             * @description Hash of `content`: equal records give an equal hash.
+             */
+            content_sha256: string;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            narrative: components["schemas"]["DigestNarrative"] | null;
+            /**
+             * Revision
+             * @description 1 on first generation; each regeneration of the same week adds one.
+             */
+            revision: number;
+            /**
+             * Trigger
+             * @enum {string}
+             */
+            trigger: "manual" | "scheduler";
+        };
+        /** DigestAction */
+        DigestAction: {
+            /**
+             * Priority
+             * @enum {integer}
+             */
+            priority: 1 | 2 | 3;
+            /**
+             * Rule
+             * @description The fixed rule that produced this action.
+             */
+            rule: string;
+            source: components["schemas"]["DigestSource"];
+            /** Text */
+            text: string;
+            /** Why */
+            why: string;
+        };
+        /** DigestAlertLine */
+        DigestAlertLine: {
+            /**
+             * Alert Type
+             * @enum {string}
+             */
+            alert_type: "ctr_drop" | "frequency_fatigue" | "cost_spike";
+            /** Headline */
+            headline: string;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Source Path
+             * @description API path of the time series behind the alert.
+             */
+            source_path: string;
+            /** Suggested Action */
+            suggested_action: string;
+            /** Version Label */
+            version_label: string;
+        };
+        /** DigestChangeCounts */
+        DigestChangeCounts: {
+            /** Agent Runs */
+            agent_runs: number;
+            /** Approvals */
+            approvals: number;
+            /** Audience Runs */
+            audience_runs: number;
+            /** Conflicts Opened */
+            conflicts_opened: number;
+            /** Conflicts Resolved */
+            conflicts_resolved: number;
+            /** Content Versions */
+            content_versions: number;
+            /** Creative Versions */
+            creative_versions: number;
+            /** Risk Findings */
+            risk_findings: number;
+            /** Verdicts */
+            verdicts: number;
+        };
+        /** DigestComments */
+        DigestComments: {
+            /** Available */
+            available: boolean;
+            /** Claim Mentions In Window */
+            claim_mentions_in_window: number;
+            /** Comments In Window */
+            comments_in_window: number;
+            /** Comments Total */
+            comments_total: number;
+            /** Cultural Mentions In Window */
+            cultural_mentions_in_window: number;
+            /** Flagged */
+            flagged: components["schemas"]["DigestFlagged"][];
+            /** Reason */
+            reason: string | null;
+            /** @description Model labels of the comments in the window. Null without a reading. */
+            sentiment: components["schemas"]["SentimentCounts"] | null;
+            /** Source */
+            source: string;
+            /** Themes */
+            themes: components["schemas"]["DigestThemeLine"][];
+            /** Window From */
+            window_from: string | null;
+            /** Window To */
+            window_to: string | null;
+        };
+        /** DigestConflictItem */
+        DigestConflictItem: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Reason */
+            reason: string;
+            /** Region Code */
+            region_code: string | null;
+            /** Region Name */
+            region_name: string | null;
+            source: components["schemas"]["DigestSource"];
+            /** Status */
+            status: string;
+        };
+        /** DigestContent */
+        DigestContent: {
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            /** Campaign Name */
+            campaign_name: string;
+            comments: components["schemas"]["DigestComments"];
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Next Actions */
+            next_actions: components["schemas"]["DigestAction"][];
+            open_items: components["schemas"]["DigestOpenItems"];
+            pulse: components["schemas"]["DigestPulse"];
+            /**
+             * Schema Version
+             * @default digest-v1
+             * @constant
+             */
+            schema_version: "digest-v1";
+            week: components["schemas"]["DigestWeek"];
+            what_changed: components["schemas"]["DigestWhatChanged"];
+        };
+        /** DigestCounts */
+        DigestCounts: {
+            /** Actions */
+            actions: number;
+            /** Alerts */
+            alerts: number;
+            /** Changes */
+            changes: number;
+            /** Open Items */
+            open_items: number;
+        };
+        /** DigestCreate */
+        DigestCreate: {
+            /**
+             * Regenerate
+             * @description Replace the stored digest of that week with a fresh one (revision + 1).
+             * @default false
+             */
+            regenerate: boolean;
+            /**
+             * Week Of
+             * @description Any date inside the week to summarise. Default: the week in progress.
+             */
+            week_of?: string | null;
+        };
+        /** DigestCreated */
+        DigestCreated: {
+            /**
+             * Created
+             * @description False when the week already had a digest and it was returned unchanged.
+             */
+            created: boolean;
+            digest: components["schemas"]["Digest"];
+        };
+        /** DigestFlagged */
+        DigestFlagged: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "planted_claim" | "cultural_misstep";
+            /** Label */
+            label: string;
+            /** Language */
+            language: string;
+            /** Likes */
+            likes: number;
+            /** Ref */
+            ref: string;
+            /** Region Code */
+            region_code: string;
+            source: components["schemas"]["DigestSource"];
+            /** Text */
+            text: string;
+            /** Version Label */
+            version_label: string;
+        };
+        /** DigestList */
+        DigestList: {
+            /** @description The ISO week in progress today (India Standard Time). */
+            current_week: components["schemas"]["DigestWeek"];
+            /** Items */
+            items: components["schemas"]["DigestSummary"][];
+            /**
+             * Narrative Available
+             * @description False in a demo project: the model summary is for live projects only.
+             */
+            narrative_available: boolean;
+        };
+        /** DigestMetricMove */
+        DigestMetricMove: {
+            /** Current */
+            current: number | null;
+            /** Delta */
+            delta: number | null;
+            /** Delta Pct */
+            delta_pct: number | null;
+            /** Label */
+            label: string;
+            /** Metric */
+            metric: string;
+            /** Previous */
+            previous: number | null;
+            /**
+             * Unit
+             * @enum {string}
+             */
+            unit: "count" | "inr" | "ratio" | "multiple";
+        };
+        /**
+         * DigestNarrative
+         * @description The optional short summary a model wrote from the digest's own numbers. A model interpretation, not a record.
+         */
+        DigestNarrative: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Estimated Cost Usd */
+            estimated_cost_usd: number | null;
+            /**
+             * Label
+             * @default Model interpretation
+             * @constant
+             */
+            label: "Model interpretation";
+            /** Model Id */
+            model_id: string | null;
+            /** Prompt Version */
+            prompt_version: string;
+            /** Provider */
+            provider: string;
+            /** Text */
+            text: string;
+        };
+        /** DigestNotReady */
+        DigestNotReady: {
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Main Reason */
+            main_reason: string;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            source: components["schemas"]["DigestSource"];
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "go" | "fix" | "rethink";
+            /** Version Label */
+            version_label: string;
+        };
+        /** DigestOpenItems */
+        DigestOpenItems: {
+            /**
+             * As Of
+             * Format: date-time
+             * @description Open items are read when the digest is generated, not as they stood on the week's last day.
+             */
+            as_of: string;
+            /** Conflicts */
+            conflicts: components["schemas"]["DigestConflictItem"][];
+            /** Conflicts Total */
+            conflicts_total: number;
+            /** Not Ready */
+            not_ready: components["schemas"]["DigestNotReady"][];
+            /** Risk Findings */
+            risk_findings: components["schemas"]["DigestRiskItem"][];
+            /** Risk Findings Total */
+            risk_findings_total: number;
+        };
+        /** DigestPulse */
+        DigestPulse: {
+            /** Alerts */
+            alerts: components["schemas"]["DigestAlertLine"][];
+            /** Alerts Evaluated */
+            alerts_evaluated: number;
+            /** Alerts Skipped */
+            alerts_skipped: number;
+            /** Available */
+            available: boolean;
+            /** Previous From */
+            previous_from: string | null;
+            /** Previous To */
+            previous_to: string | null;
+            /** Provisional Days Excluded */
+            provisional_days_excluded: number;
+            /**
+             * Reason
+             * @description Why there is no movement to show, when `available` is false.
+             */
+            reason: string | null;
+            /**
+             * Settled Through
+             * @description The last settled day on or before the end of the week.
+             */
+            settled_through: string | null;
+            /** Slices */
+            slices: components["schemas"]["DigestSliceMove"][];
+            /**
+             * Source
+             * @description One quiet line naming where the figures come from.
+             */
+            source: string;
+            /**
+             * Window From
+             * @description First day of the 7 settled days compared.
+             */
+            window_from: string | null;
+            /** Window To */
+            window_to: string | null;
+        };
+        /** DigestRiskItem */
+        DigestRiskItem: {
+            /** Blocks Go */
+            blocks_go: boolean;
+            /** Category */
+            category: string;
+            /** Element Id */
+            element_id: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Observation */
+            observation: string;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "low" | "medium" | "high";
+            source: components["schemas"]["DigestSource"];
+        };
+        /** DigestRunLine */
+        DigestRunLine: {
+            /** Count */
+            count: number;
+            /** Kind */
+            kind: string;
+            /** Status */
+            status: string;
+        };
+        /** DigestSliceMove */
+        DigestSliceMove: {
+            /** Metrics */
+            metrics: components["schemas"]["DigestMetricMove"][];
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Version Label */
+            version_label: string;
+        };
+        /**
+         * DigestSource
+         * @description Where a line comes from, so a reader can open the record behind it.
+         */
+        DigestSource: {
+            /**
+             * Ref
+             * @description An id inside the workspace, for example a version id.
+             */
+            ref: string | null;
+            /**
+             * View
+             * @description A view inside the workspace, for example comments.
+             */
+            view: string | null;
+            /**
+             * Workspace
+             * @enum {string}
+             */
+            workspace: "desk" | "lens" | "studio" | "lab" | "launch" | "pulse" | "proof";
+        };
+        /** DigestSummary */
+        DigestSummary: {
+            counts: components["schemas"]["DigestCounts"];
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Has Narrative */
+            has_narrative: boolean;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Revision */
+            revision: number;
+            /**
+             * Trigger
+             * @enum {string}
+             */
+            trigger: "manual" | "scheduler";
+            week: components["schemas"]["DigestWeek"];
+        };
+        /** DigestThemeLine */
+        DigestThemeLine: {
+            /** Comments */
+            comments: number;
+            /** Id */
+            id: string;
+            /**
+             * Label
+             * @description Model interpretation.
+             */
+            label: string;
+            quote: components["schemas"]["CommentQuote"] | null;
+            /**
+             * Summary
+             * @description Model interpretation.
+             */
+            summary: string;
+        };
+        /** DigestVerdictChange */
+        DigestVerdictChange: {
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Main Reason */
+            main_reason: string;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            source: components["schemas"]["DigestSource"];
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "go" | "fix" | "rethink";
+            /** Version Label */
+            version_label: string;
+        };
+        /** DigestVersionChange */
+        DigestVersionChange: {
+            /**
+             * Actor
+             * @enum {string}
+             */
+            actor: "user" | "ai";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Label */
+            label: string;
+            /** Region Code */
+            region_code: string | null;
+            source: components["schemas"]["DigestSource"];
+        };
+        /** DigestWeek */
+        DigestWeek: {
+            /**
+             * End
+             * Format: date
+             * @description Sunday, India Standard Time.
+             */
+            end: string;
+            /** Iso Week */
+            iso_week: number;
+            /** Iso Year */
+            iso_year: number;
+            /**
+             * Label
+             * @description For example 2026-W46.
+             */
+            label: string;
+            /**
+             * Start
+             * Format: date
+             * @description Monday, India Standard Time.
+             */
+            start: string;
+            /**
+             * Timezone
+             * @default Asia/Kolkata
+             * @constant
+             */
+            timezone: "Asia/Kolkata";
+        };
+        /** DigestWhatChanged */
+        DigestWhatChanged: {
+            counts: components["schemas"]["DigestChangeCounts"];
+            /** Runs */
+            runs: components["schemas"]["DigestRunLine"][];
+            /**
+             * Truncated
+             * @description True when a list holds only the newest records of the week.
+             */
+            truncated: boolean;
+            /** Verdicts */
+            verdicts: components["schemas"]["DigestVerdictChange"][];
+            /** Versions */
+            versions: components["schemas"]["DigestVersionChange"][];
         };
         /** DimensionDefinition */
         DimensionDefinition: {
@@ -7788,6 +10911,173 @@ export interface components {
             /** Uncertainties */
             uncertainties: string[];
         };
+        /** FatiguePoint */
+        FatiguePoint: {
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Provisional */
+            provisional: boolean;
+            /** Value */
+            value: number | null;
+        };
+        /** FatigueRefresh */
+        FatigueRefresh: {
+            /** Detail */
+            detail: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "studio_version" | "pulse_version" | "new_variant";
+            /** Label */
+            label: string;
+            /** Overall Score */
+            overall_score: number | null;
+            /** Verdict */
+            verdict: ("go" | "fix" | "rethink") | null;
+            /**
+             * Version Id
+             * @description The Creative Studio version, when the suggestion is one.
+             */
+            version_id: string | null;
+        };
+        /** FatigueRegion */
+        FatigueRegion: {
+            /** Fatigued */
+            fatigued: number;
+            /** Healthy */
+            healthy: number;
+            /** Not Enough Data */
+            not_enough_data: number;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Rows */
+            rows: components["schemas"]["FatigueRow"][];
+            /** Watch */
+            watch: number;
+        };
+        /** FatigueReport */
+        FatigueReport: {
+            /** Dataset Version */
+            dataset_version: string;
+            /**
+             * Is Sample
+             * @default true
+             * @constant
+             */
+            is_sample: true;
+            /**
+             * Label
+             * @description Always 'Sample data, not from a connected account'.
+             */
+            label: string;
+            /**
+             * Last Updated At
+             * Format: date-time
+             * @description When the sample was generated (a fixed instant), not when it was loaded.
+             */
+            last_updated_at: string;
+            /** Limitations */
+            limitations: string[];
+            /** Method */
+            method: string[];
+            /** Regions */
+            regions: components["schemas"]["FatigueRegion"][];
+            /**
+             * Source Kind
+             * @default sample
+             * @constant
+             */
+            source_kind: "sample";
+            thresholds: components["schemas"]["FatigueThresholds"];
+        };
+        /** FatigueRow */
+        FatigueRow: {
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "Low" | "Moderate" | "High";
+            /** Ctr */
+            ctr: components["schemas"]["FatiguePoint"][];
+            /** Frequency */
+            frequency: components["schemas"]["FatiguePoint"][];
+            /**
+             * Pattern
+             * @enum {string}
+             */
+            pattern: "wearing_out" | "static_low" | "steady" | "unknown";
+            /**
+             * Reason
+             * @description Computed from the signals: what fell, what rose, and why that does or does not read as wear-out.
+             */
+            reason: string;
+            /** Refresh */
+            refresh: components["schemas"]["FatigueRefresh"][];
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Signals */
+            signals: components["schemas"]["FatigueSignal"][];
+            /** Signals Triggered */
+            signals_triggered: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "fatigued" | "watch" | "healthy" | "not_enough_data";
+            /** Version Label */
+            version_label: string;
+            /** Window From */
+            window_from: string | null;
+            /** Window To */
+            window_to: string | null;
+        };
+        /** FatigueSignal */
+        FatigueSignal: {
+            /** Available */
+            available: boolean;
+            /** Detail */
+            detail: string;
+            /**
+             * Family
+             * @enum {string}
+             */
+            family: "response" | "exposure";
+            /** Label */
+            label: string;
+            /**
+             * Name
+             * @enum {string}
+             */
+            name: "ctr_decay" | "view_rate_decay" | "frequency" | "repeated_exposure";
+            /** Observed */
+            observed: number | null;
+            /** Threshold */
+            threshold: number | null;
+            /** Triggered */
+            triggered: boolean;
+            /**
+             * Unit
+             * @enum {string}
+             */
+            unit: "count" | "inr" | "ratio" | "multiple";
+        };
+        /** FatigueThresholds */
+        FatigueThresholds: {
+            /** Ctr Decline Pct */
+            ctr_decline_pct: number;
+            /** Frequency Threshold */
+            frequency_threshold: number;
+            /** View Rate Decline Pct */
+            view_rate_decline_pct: number;
+        };
         /** FieldChange */
         FieldChange: {
             /** After */
@@ -7848,6 +11138,368 @@ export interface components {
             open: number;
             /** Resolved */
             resolved: number;
+        };
+        /**
+         * FocusGroupCreate
+         * @description Start a session on a finished Quick Read or Audience Study panel.
+         */
+        FocusGroupCreate: {
+            /**
+             * Guide
+             * @description The moderator's questions, in order. Leave out for the default guide.
+             */
+            guide?: string[] | null;
+            /**
+             * Panel Run Id
+             * Format: uuid
+             * @description A completed Quick Read or Audience Study of this campaign; its participants speak.
+             */
+            panel_run_id: string;
+            /**
+             * Participant Ids
+             * @description Speakers, from that panel. Leave out to let the server pick a seeded spread across the panel.
+             */
+            participant_ids?: string[] | null;
+            /**
+             * Seed
+             * @default 42
+             */
+            seed: number;
+            /**
+             * Speakers
+             * @description How many speakers when participant_ids is left out.
+             * @default 6
+             */
+            speakers: number;
+        };
+        /** FocusGroupDisagreement */
+        FocusGroupDisagreement: {
+            /** Description */
+            description: string;
+            /** From Turn Index */
+            from_turn_index: number | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "stance_split" | "direct_challenge";
+            /** Positions */
+            positions: components["schemas"]["FocusGroupPosition"][];
+            /** Question */
+            question: string;
+            /** Round Index */
+            round_index: number;
+            /** To Turn Index */
+            to_turn_index: number | null;
+        };
+        /** FocusGroupInterjectionCreate */
+        FocusGroupInterjectionCreate: {
+            /**
+             * Text
+             * @description A question or prompt from you. The moderator relays it at the next turn boundary.
+             */
+            text: string;
+        };
+        /** FocusGroupInterjectionView */
+        FocusGroupInterjectionView: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "taken" | "dropped";
+            /** Taken At */
+            taken_at: string | null;
+            /** Text */
+            text: string;
+        };
+        /** FocusGroupPosition */
+        FocusGroupPosition: {
+            /** Ordinals */
+            ordinals: number[];
+            /**
+             * Stance
+             * @enum {string}
+             */
+            stance: "positive" | "mixed" | "neutral" | "negative" | "confused";
+            /** Turn Indices */
+            turn_indices: number[];
+        };
+        /** FocusGroupResult */
+        FocusGroupResult: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            creative: components["schemas"]["CreativeCopy"];
+            disclosure: components["schemas"]["PanelDisclosure"];
+            error: components["schemas"]["RunError"] | null;
+            grounding: components["schemas"]["GroundingSummary"];
+            /** Guide */
+            guide: string[];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Intended Message */
+            intended_message: string | null;
+            /** Interjections */
+            interjections: components["schemas"]["FocusGroupInterjectionView"][];
+            /**
+             * Interjections Open
+             * @description True while the session is still running and can relay a question.
+             */
+            interjections_open: boolean;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /**
+             * Panel Kind
+             * @enum {string}
+             */
+            panel_kind: "quick_read" | "audience_study";
+            /**
+             * Panel Run Id
+             * Format: uuid
+             */
+            panel_run_id: string;
+            progress: components["schemas"]["RunProgress"] | null;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Regions */
+            regions: components["schemas"]["RegionRef"][];
+            run_metadata: components["schemas"]["AudienceRunMetadata"];
+            /** Speakers */
+            speakers: components["schemas"]["FocusGroupSpeaker"][];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "completed" | "partial" | "failed" | "cancelled";
+            summary: components["schemas"]["FocusGroupSummary"];
+            /** Turns */
+            turns: components["schemas"]["FocusGroupTurnView"][];
+        };
+        /** FocusGroupRound */
+        FocusGroupRound: {
+            /**
+             * Answered
+             * @description Participant turns in this round.
+             */
+            answered: number;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "guide" | "interjection";
+            /** Question */
+            question: string;
+            /** Round Index */
+            round_index: number;
+            /** @description Stances of this round's participant turns, counted by code. */
+            stance: components["schemas"]["ReactionDistribution"];
+        };
+        /** FocusGroupShift */
+        FocusGroupShift: {
+            /**
+             * From Stance
+             * @enum {string}
+             */
+            from_stance: "positive" | "mixed" | "neutral" | "negative" | "confused";
+            /** From Turn Index */
+            from_turn_index: number;
+            /** Ordinal */
+            ordinal: number;
+            /**
+             * Participant Id
+             * Format: uuid
+             */
+            participant_id: string;
+            /**
+             * To Stance
+             * @enum {string}
+             */
+            to_stance: "positive" | "mixed" | "neutral" | "negative" | "confused";
+            /** To Turn Index */
+            to_turn_index: number;
+        };
+        /**
+         * FocusGroupSpeaker
+         * @description A panel participant chosen to speak, with what their stored response says (the memory the session voices them from).
+         */
+        FocusGroupSpeaker: {
+            /**
+             * Age Band
+             * @enum {string}
+             */
+            age_band: "18-24" | "25-34" | "35-44" | "45-54" | "55+";
+            /**
+             * City Tier
+             * @enum {string}
+             */
+            city_tier: "tier1" | "tier2" | "tier3" | "rural";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Is Synthetic
+             * @default true
+             * @constant
+             */
+            is_synthetic: true;
+            /** Language */
+            language: string;
+            /** Language Name */
+            language_name: string;
+            /** Ordinal */
+            ordinal: number;
+            /**
+             * Persona
+             * @description The sampling dimensions in words. Nothing else is assumed about this participant.
+             */
+            persona: string;
+            /** State Code */
+            state_code: string;
+            /** State Name */
+            state_name: string;
+            /**
+             * Stored Reaction
+             * @description Their first reaction in the panel run, as stored.
+             */
+            stored_reaction: string | null;
+            /**
+             * Stored Stance
+             * @description Their sentiment in the panel run's stored response.
+             */
+            stored_stance: ("positive" | "mixed" | "neutral" | "negative" | "confused") | null;
+            /**
+             * Traits
+             * @description Seeded style knobs (never demographics).
+             */
+            traits: {
+                [key: string]: string;
+            };
+        };
+        /** FocusGroupSummary */
+        FocusGroupSummary: {
+            /** Disagreements */
+            disagreements: components["schemas"]["FocusGroupDisagreement"][];
+            /** Method */
+            method: string;
+            /** Participant Turns */
+            participant_turns: number;
+            /** Rounds */
+            rounds: components["schemas"]["FocusGroupRound"][];
+            /** Shifts */
+            shifts: components["schemas"]["FocusGroupShift"][];
+            /** Speakers Heard */
+            speakers_heard: number;
+            /** Themes */
+            themes: components["schemas"]["FocusGroupTheme"][];
+            /** Turn Count */
+            turn_count: number;
+        };
+        /** FocusGroupTheme */
+        FocusGroupTheme: {
+            /**
+             * Basis
+             * @default interpretation
+             * @constant
+             */
+            basis: "interpretation";
+            /** Label */
+            label: string;
+            /**
+             * Participants
+             * @description Distinct speakers who raised it.
+             */
+            participants: number;
+            /** Turn Indices */
+            turn_indices: number[];
+        };
+        /** FocusGroupTurnView */
+        FocusGroupTurnView: {
+            /**
+             * Basis
+             * @description claim_supported only when the turn cites an observed or calculated region claim; null for moderator and researcher turns.
+             */
+            basis: ("claim_supported" | "interpretation") | null;
+            /** Claim Ids */
+            claim_ids: string[];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Interjection Id */
+            interjection_id: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "moderator" | "participant" | "researcher";
+            /** Ordinal */
+            ordinal: number | null;
+            /** Participant Id */
+            participant_id: string | null;
+            /** Relation */
+            relation: ("agrees" | "disagrees" | "builds_on" | "new_point") | null;
+            /**
+             * Reply To Turn Index
+             * @description The earlier turn this one answers, when the reference checked out.
+             */
+            reply_to_turn_index: number | null;
+            /** Round Index */
+            round_index: number;
+            /**
+             * Stance
+             * @description The participant's own label for where they stand after this turn.
+             */
+            stance: ("positive" | "mixed" | "neutral" | "negative" | "confused") | null;
+            /** Text */
+            text: string;
+            /** Themes */
+            themes: string[];
+            /**
+             * Turn Index
+             * @description 0-based position in the transcript; the T number a reply points at is turn_index + 1.
+             */
+            turn_index: number;
         };
         /** FollowUpAnswer */
         FollowUpAnswer: {
@@ -8603,6 +12255,24 @@ export interface components {
             /** Workspace Name */
             workspace_name: string;
         };
+        /** JingleResult */
+        JingleResult: {
+            /**
+             * Asset Id
+             * Format: uuid
+             */
+            asset_id: string;
+            /** Duration Ms */
+            duration_ms: number;
+            /** Location */
+            location: string;
+            /** Model */
+            model: string;
+            /** Prompt */
+            prompt: string;
+            /** Url */
+            url: string;
+        };
         /** KindLabel */
         KindLabel: {
             /**
@@ -9241,6 +12911,68 @@ export interface components {
              */
             expected_revision?: number | null;
         };
+        /** LabPlatformOption */
+        LabPlatformOption: {
+            /** Label */
+            label: string;
+            /**
+             * Value
+             * @enum {string}
+             */
+            value: "instagram" | "facebook" | "youtube" | "x" | "whatsapp";
+        };
+        /** LabSessionDefaults */
+        LabSessionDefaults: {
+            /** Guide */
+            guide: string[];
+            /** Key Points */
+            key_points: string[];
+            limits: components["schemas"]["LabSessionLimits"];
+            /** Platforms */
+            platforms: components["schemas"]["LabPlatformOption"][];
+            /** Primary Message */
+            primary_message: string | null;
+            /** Primary Message Source */
+            primary_message_source: "brief" | null;
+        };
+        /** LabSessionLimits */
+        LabSessionLimits: {
+            /** Buzz Max Participants */
+            buzz_max_participants: number;
+            /** Buzz Max Rounds */
+            buzz_max_rounds: number;
+            /** Buzz Min Participants */
+            buzz_min_participants: number;
+            /** Focus Max Guide Questions */
+            focus_max_guide_questions: number;
+            /** Focus Max Interjections */
+            focus_max_interjections: number;
+            /** Focus Max Speakers */
+            focus_max_speakers: number;
+            /** Focus Min Speakers */
+            focus_min_speakers: number;
+            /** Message Check Max Key Points */
+            message_check_max_key_points: number;
+            /** Message Check Max Per Region */
+            message_check_max_per_region: number;
+            /** Message Check Max Regions */
+            message_check_max_regions: number;
+            /** Message Check Min Per Region */
+            message_check_min_per_region: number;
+        };
+        /** LanguageCount */
+        LanguageCount: {
+            /** Code Mixed Comments */
+            code_mixed_comments: number;
+            /** Comments */
+            comments: number;
+            /** Language */
+            language: string;
+            /** Language Name */
+            language_name: string;
+            /** Script */
+            script: string;
+        };
         /** LegendItem */
         LegendItem: {
             /** Description */
@@ -9568,6 +13300,38 @@ export interface components {
              */
             status: "ok" | "empty" | "error";
         };
+        /** LensCategoryPackOption */
+        LensCategoryPackOption: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /**
+             * Topics
+             * @description The articles read for attention to the category itself.
+             */
+            topics: string[];
+        };
+        /** LensCategoryRef */
+        LensCategoryRef: {
+            /** Note */
+            note: string | null;
+            /** Pack Key */
+            pack_key: string | null;
+            /** Pack Label */
+            pack_label: string | null;
+            /**
+             * Status
+             * @description matched: the text names a category pack; chosen: the request named the pack; unmatched: the text names none (nothing is guessed); no_category: the brand kit states no category.
+             * @enum {string}
+             */
+            status: "matched" | "chosen" | "unmatched" | "no_category";
+            /**
+             * Text
+             * @description The category as the brand kit or the request states it; null when none is stated.
+             */
+            text: string | null;
+        };
         /** LensCodeMixing */
         LensCodeMixing: {
             /** Note */
@@ -9849,6 +13613,26 @@ export interface components {
             /** Region Name */
             region_name: string;
         };
+        /** LensMonth */
+        LensMonth: {
+            /**
+             * Edition Views
+             * @description All views of the whole edition that month, when they were read.
+             */
+            edition_views: number | null;
+            /**
+             * Month
+             * @description YYYY-MM.
+             */
+            month: string;
+            /**
+             * Per Million
+             * @description Views of the article per million views of the edition: attention as a share of readership.
+             */
+            per_million: number | null;
+            /** Views */
+            views: number;
+        };
         /** LensProfileSection */
         LensProfileSection: {
             /** Categories */
@@ -9883,6 +13667,240 @@ export interface components {
             percent: number;
             /** Speakers */
             speakers: number | null;
+        };
+        /** LensShelf */
+        LensShelf: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Can Refresh */
+            can_refresh: boolean;
+            category: components["schemas"]["LensCategoryRef"];
+            /**
+             * Excluded
+             * @description Candidates read and left out, each with the rule that left it out.
+             */
+            excluded: components["schemas"]["LensShelfExcluded"][];
+            /** Gaps */
+            gaps: string[];
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** History */
+            history: components["schemas"]["LensShelfSnapshotView"][];
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Packs */
+            packs: components["schemas"]["LensCategoryPackOption"][];
+            /** Ranking */
+            ranking: string;
+            /** Regions */
+            regions: components["schemas"]["LensShelfRegion"][];
+            /** Relevance Rule */
+            relevance_rule: string;
+            snapshot: components["schemas"]["LensShelfSnapshotView"] | null;
+            /** Source Line */
+            source_line: string;
+            /**
+             * Unplaced
+             * @description Brands and products in the category that Wikidata links to no state this product maps, or to a different one.
+             */
+            unplaced: components["schemas"]["LensShelfEntity"][];
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /**
+         * LensShelfAttention
+         * @description Attention to the entity's Wikipedia article, read the same way as a Trend Radar item.
+         */
+        LensShelfAttention: {
+            /** Article */
+            article: string;
+            /** Article Url */
+            article_url: string;
+            /** Change */
+            change: number | null;
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "low" | "moderate" | "high";
+            /** Confidence Reasons */
+            confidence_reasons: string[];
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "rising" | "falling" | "steady" | "mixed" | "insufficient";
+            /** Is Regional */
+            is_regional: boolean;
+            /** Language */
+            language: string;
+            /** Language Name */
+            language_name: string;
+            /** Months */
+            months: number;
+            /** Normalised */
+            normalised: boolean;
+            /** Quarter Change */
+            quarter_change: number | null;
+            /** Recent Mean */
+            recent_mean: number | null;
+            /** Series */
+            series: components["schemas"]["LensMonth"][];
+            source: components["schemas"]["LensSourceLink"];
+            /** Total Views */
+            total_views: number;
+        };
+        /** LensShelfEntity */
+        LensShelfEntity: {
+            attention: components["schemas"]["LensShelfAttention"] | null;
+            /**
+             * Attention Note
+             * @description Why attention is not shown, when it is not.
+             */
+            attention_note: string | null;
+            /**
+             * Basis
+             * @description How the item was placed in this state, in Wikidata's terms.
+             */
+            basis: string | null;
+            /**
+             * Classes
+             * @description Wikidata's own words for what the item is an instance of.
+             */
+            classes: string[];
+            /** Description */
+            description: string | null;
+            /** Entity Id */
+            entity_id: string;
+            /** Founded Year */
+            founded_year: number | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "brand" | "product";
+            /** Label */
+            label: string;
+            /**
+             * Places
+             * @description Headquarters (brand) or place of location and origin (product), as recorded.
+             */
+            places: components["schemas"]["LensShelfPlace"][];
+            /** Sources */
+            sources: components["schemas"]["LensSourceLink"][];
+            /**
+             * Unknown
+             * @description What Wikidata does not record for this item. Never filled in.
+             */
+            unknown: string[];
+            /**
+             * Website
+             * @description The official website Wikidata lists. It is a link, never read or scraped.
+             */
+            website: string | null;
+            /** Wikidata Url */
+            wikidata_url: string;
+            /**
+             * Wikipedia Languages
+             * @description Wikipedia language editions with an article about it: public reference, not sales.
+             */
+            wikipedia_languages: number;
+        };
+        /** LensShelfExcluded */
+        LensShelfExcluded: {
+            /** Entity Id */
+            entity_id: string;
+            /** Label */
+            label: string;
+            /** Reason */
+            reason: string;
+            /** Url */
+            url: string;
+        };
+        /** LensShelfPlace */
+        LensShelfPlace: {
+            /** Entity Id */
+            entity_id: string;
+            /** Label */
+            label: string;
+        };
+        /** LensShelfRefreshRequest */
+        LensShelfRefreshRequest: {
+            /**
+             * Pack Key
+             * @description Choose a category pack when the brand kit's category names none.
+             */
+            pack_key?: string | null;
+            /** Region Codes */
+            region_codes?: string[] | null;
+        };
+        /** LensShelfRegion */
+        LensShelfRegion: {
+            /** Entities */
+            entities: components["schemas"]["LensShelfEntity"][];
+            /** Gaps */
+            gaps: string[];
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Supported */
+            supported: boolean;
+        };
+        /** LensShelfSnapshotView */
+        LensShelfSnapshotView: {
+            /** Entities */
+            entities: number;
+            /** Excluded */
+            excluded: number;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Taken At
+             * Format: date-time
+             */
+            taken_at: string;
+            /** Version */
+            version: number;
+        };
+        /**
+         * LensSourceLink
+         * @description Where a number came from. `kind` says how: observed (a count or statement as the source gives it) or calculated.
+         */
+        LensSourceLink: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "observed" | "calculated";
+            /** Label */
+            label: string;
+            /** Publisher */
+            publisher: string;
+            /**
+             * Retrieved At
+             * Format: date-time
+             */
+            retrieved_at: string;
+            /** Url */
+            url: string | null;
         };
         /**
          * LensSourceSummary
@@ -9986,6 +14004,364 @@ export interface components {
              * @description The timing exactly as the source states it.
              */
             text: string;
+        };
+        /** LensTrendEdition */
+        LensTrendEdition: {
+            /** Article */
+            article: string;
+            /** Article Url */
+            article_url: string;
+            /**
+             * Change
+             * @description Last 12 months against the 12 before, on the share of readership (raw views when not normalised).
+             */
+            change: number | null;
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "rising" | "falling" | "steady" | "mixed" | "insufficient";
+            /**
+             * Edition Change
+             * @description The whole edition's views, last 12 months against the 12 before.
+             */
+            edition_change: number | null;
+            /**
+             * Is Regional
+             * @description The state's own language edition. The English edition is read worldwide, not only in the state.
+             */
+            is_regional: boolean;
+            /** Language */
+            language: string;
+            /** Language Name */
+            language_name: string;
+            /** Months */
+            months: number;
+            /**
+             * Normalised
+             * @description The direction reads attention as a share of the edition's readership. False when its totals were not read.
+             */
+            normalised: boolean;
+            /**
+             * Prior Mean
+             * @description Mean views a month over the 12 months before.
+             */
+            prior_mean: number | null;
+            /** Prior Per Million */
+            prior_per_million: number | null;
+            /** Project */
+            project: string;
+            /**
+             * Quarter Change
+             * @description Last 3 months against the same 3 months a year earlier.
+             */
+            quarter_change: number | null;
+            /**
+             * Raw Change
+             * @description The same comparison on raw views.
+             */
+            raw_change: number | null;
+            /**
+             * Recent Mean
+             * @description Mean views a month over the last 12 months.
+             */
+            recent_mean: number | null;
+            /** Recent Per Million */
+            recent_per_million: number | null;
+            /** Series */
+            series: components["schemas"]["LensMonth"][];
+            /**
+             * Slope Per Month
+             * @description Least-squares slope through the series, as a share of its mean per month.
+             */
+            slope_per_month: number | null;
+            /** Total Views */
+            total_views: number;
+        };
+        /** LensTrendHistoryEntry */
+        LensTrendHistoryEntry: {
+            /** Change */
+            change: number | null;
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "rising" | "falling" | "steady" | "mixed" | "insufficient";
+            /** Last Month */
+            last_month: string | null;
+            /**
+             * Taken At
+             * Format: date-time
+             */
+            taken_at: string;
+        };
+        /** LensTrendItem */
+        LensTrendItem: {
+            /**
+             * Basis
+             * @enum {string}
+             */
+            basis: "regional_edition" | "english_only";
+            /** Change */
+            change: number | null;
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "low" | "moderate" | "high";
+            /** Confidence Reasons */
+            confidence_reasons: string[];
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "rising" | "falling" | "steady" | "mixed" | "insufficient";
+            /** Festival Subject */
+            festival_subject: string | null;
+            /**
+             * History
+             * @description Earlier retrievals, newest first, read with the same method.
+             */
+            history: components["schemas"]["LensTrendHistoryEntry"][];
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            primary: components["schemas"]["LensTrendEdition"];
+            /** Quarter Change */
+            quarter_change: number | null;
+            /**
+             * Reasons
+             * @description Why the direction is what it is, including why none could be read.
+             */
+            reasons: string[];
+            /** @description The English edition, shown beside a regional one for context. */
+            reference: components["schemas"]["LensTrendEdition"] | null;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Snapshots
+             * @description How many retrievals of this article for this state are kept.
+             */
+            snapshots: number;
+            source: components["schemas"]["LensSourceLink"];
+            /**
+             * Taken At
+             * Format: date-time
+             */
+            taken_at: string;
+            /** Term */
+            term: string;
+            /**
+             * Term Kind
+             * @enum {string}
+             */
+            term_kind: "festival" | "category";
+            windows: components["schemas"]["LensTrendWindows"] | null;
+        };
+        /** LensTrendMethod */
+        LensTrendMethod: {
+            /**
+             * Change Threshold
+             * @description A change of at least this share, up or down, is called rising or falling.
+             */
+            change_threshold: number;
+            /** Description */
+            description: string;
+            /**
+             * Granularity
+             * @constant
+             */
+            granularity: "monthly";
+            /**
+             * Measure
+             * @description What is counted: Wikipedia pageviews, which is attention to an article.
+             */
+            measure: string;
+            /** Min Months */
+            min_months: number;
+            /** Min Views Per Month */
+            min_views_per_month: number;
+            /**
+             * Quarter Months
+             * @description Length of the window read beside the label, against the same months a year earlier.
+             */
+            quarter_months: number;
+            /**
+             * Series Months
+             * @description Months requested, ending with the last complete month.
+             */
+            series_months: number;
+            /** Version */
+            version: string;
+            /**
+             * Year Months
+             * @description Length of the two windows compared: the last year and the year before it.
+             */
+            year_months: number;
+        };
+        /** LensTrendMoment */
+        LensTrendMoment: {
+            /**
+             * Claim Id
+             * Format: uuid
+             */
+            claim_id: string;
+            /**
+             * Date
+             * @description The exact day; null for a festival the sources date only in words (see timing_text).
+             */
+            date: string | null;
+            /**
+             * Date Basis
+             * @enum {string}
+             */
+            date_basis: "public_holiday_list" | "source_text" | "timing_text";
+            /** Days Until */
+            days_until: number | null;
+            /** Festival Subject */
+            festival_subject: string | null;
+            /** Name */
+            name: string;
+            /** Source Label */
+            source_label: string;
+            /**
+             * Term Key
+             * @description The radar item reading attention to this moment's festival, when there is one.
+             */
+            term_key: string | null;
+            /**
+             * Timing Text
+             * @description The source's own wording of when, for a moment with no exact date.
+             */
+            timing_text: string | null;
+        };
+        /** LensTrendRadar */
+        LensTrendRadar: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Can Refresh */
+            can_refresh: boolean;
+            category: components["schemas"]["LensCategoryRef"];
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Limitations */
+            limitations: string[];
+            method: components["schemas"]["LensTrendMethod"];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            moments_window: components["schemas"]["LensWindow"];
+            /**
+             * Moments Window Basis
+             * @enum {string}
+             */
+            moments_window_basis: "campaign_dates" | "next_120_days";
+            /** Refreshed At */
+            refreshed_at: string | null;
+            /** Regions */
+            regions: components["schemas"]["LensTrendRegion"][];
+            /** Source Line */
+            source_line: string;
+            summary: components["schemas"]["LensTrendSummary"];
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /** LensTrendRefreshRequest */
+        LensTrendRefreshRequest: {
+            /**
+             * Max Terms
+             * @description Festival articles per state; the category topics are added. Default from settings.
+             */
+            max_terms?: number | null;
+            /**
+             * Region Codes
+             * @description States to refresh (ISO 3166-2:IN). Default: the campaign's states. Live: at most 3 per request.
+             */
+            region_codes?: string[] | null;
+        };
+        /** LensTrendRegion */
+        LensTrendRegion: {
+            /** Edition Language */
+            edition_language: string | null;
+            /** Edition Name */
+            edition_name: string | null;
+            /** Gaps */
+            gaps: string[];
+            /** Items */
+            items: components["schemas"]["LensTrendItem"][];
+            /** Moments */
+            moments: components["schemas"]["LensTrendMoment"][];
+            /** Refreshed At */
+            refreshed_at: string | null;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Supported
+             * @description A regional-language Wikipedia edition is mapped for this state.
+             */
+            supported: boolean;
+        };
+        /** LensTrendSummary */
+        LensTrendSummary: {
+            /** Falling */
+            falling: number;
+            /** Insufficient */
+            insufficient: number;
+            /** Items */
+            items: number;
+            /** Mixed */
+            mixed: number;
+            /** Rising */
+            rising: number;
+            /** Steady */
+            steady: number;
+        };
+        /** LensTrendWindows */
+        LensTrendWindows: {
+            /**
+             * Prior From
+             * @description The 12 months before them.
+             */
+            prior_from: string;
+            /** Prior To */
+            prior_to: string;
+            /**
+             * Quarter Ago From
+             * @description The same 3 months a year earlier.
+             */
+            quarter_ago_from: string;
+            /** Quarter Ago To */
+            quarter_ago_to: string;
+            /**
+             * Quarter From
+             * @description The last 3 months.
+             */
+            quarter_from: string;
+            /** Quarter To */
+            quarter_to: string;
+            /**
+             * Recent From
+             * @description YYYY-MM. The last 12 months.
+             */
+            recent_from: string;
+            /** Recent To */
+            recent_to: string;
         };
         /** LensWindow */
         LensWindow: {
@@ -10157,6 +14533,27 @@ export interface components {
             bbox: number[];
             /** Label */
             label: string;
+        };
+        /** LockedRegionResult */
+        LockedRegionResult: {
+            /** Bbox */
+            bbox: number[];
+            /** Element Id */
+            element_id: string;
+            /**
+             * Identical
+             * @description Computed in code: the stored image holds exactly the original's pixels here.
+             */
+            identical: boolean;
+            /** Kind */
+            kind: string;
+            /** Label */
+            label: string;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "lock" | "brand_kit_never_change";
         };
         /** ManualEdit */
         ManualEdit: {
@@ -10474,6 +14871,338 @@ export interface components {
              * @description Quoted or shortened from the stored record; never invented.
              */
             summary: string;
+        };
+        /**
+         * MessageCheckCreate
+         * @description Check whether the intended message survives in each target region.
+         */
+        MessageCheckCreate: {
+            /**
+             * Intended Message
+             * @description Defaults to the primary message of the campaign brief.
+             */
+            intended_message?: string | null;
+            /**
+             * Key Points
+             * @description The parts of the message a reader must carry away. Defaults to the message split by code.
+             */
+            key_points?: string[] | null;
+            /**
+             * @description Languages, city tiers and age bands. States come from the targets; do not list them here.
+             * @default {}
+             */
+            sampling: components["schemas"]["SamplingPlan"];
+            /**
+             * Seed
+             * @default 42
+             */
+            seed: number;
+            /**
+             * Size Per Region
+             * @description Synthetic participants per region. The upper bound is a server setting.
+             * @default 8
+             */
+            size_per_region: number;
+            /** Targets */
+            targets: components["schemas"]["MessageCheckTarget"][];
+        };
+        /** MessageCheckExample */
+        MessageCheckExample: {
+            /** Language Name */
+            language_name: string;
+            /** Ordinal */
+            ordinal: number;
+            /**
+             * Participant Id
+             * Format: uuid
+             */
+            participant_id: string;
+            /** Restated */
+            restated: string;
+            /** Restated En */
+            restated_en: string;
+        };
+        /** MessageCheckLanguageRow */
+        MessageCheckLanguageRow: {
+            /** Language */
+            language: string;
+            /** Language Name */
+            language_name: string;
+            rates: components["schemas"]["MessageCheckRates"];
+        };
+        /** MessageCheckMisreading */
+        MessageCheckMisreading: {
+            /** Label */
+            label: string;
+            /** Why */
+            why: string;
+        };
+        /** MessageCheckMisreadingGroup */
+        MessageCheckMisreadingGroup: {
+            /** Examples */
+            examples: components["schemas"]["MessageCheckExample"][];
+            /** Label */
+            label: string;
+            /** Participants */
+            participants: number;
+        };
+        /** MessageCheckParticipant */
+        MessageCheckParticipant: {
+            /**
+             * Age Band
+             * @enum {string}
+             */
+            age_band: "18-24" | "25-34" | "35-44" | "45-54" | "55+";
+            /**
+             * City Tier
+             * @enum {string}
+             */
+            city_tier: "tier1" | "tier2" | "tier3" | "rural";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Is Synthetic
+             * @default true
+             * @constant
+             */
+            is_synthetic: true;
+            /** Language */
+            language: string;
+            /** Language Name */
+            language_name: string;
+            /** Ordinal */
+            ordinal: number;
+            /**
+             * Persona
+             * @description The sampling dimensions in words. Nothing else is assumed about this participant.
+             */
+            persona: string;
+            response: components["schemas"]["MessageCheckResponse"] | null;
+            /** State Code */
+            state_code: string;
+            /** State Name */
+            state_name: string;
+            /**
+             * Traits
+             * @description Seeded style knobs (never demographics).
+             */
+            traits: {
+                [key: string]: string;
+            };
+        };
+        /** MessageCheckPoint */
+        MessageCheckPoint: {
+            /**
+             * Id
+             * @description K1, K2, ...
+             */
+            id: string;
+            /** Text */
+            text: string;
+        };
+        /** MessageCheckPointJudgement */
+        MessageCheckPointJudgement: {
+            /** Point Id */
+            point_id: string;
+            /**
+             * Recalled
+             * @description Did the participant's unprompted recall include it?
+             */
+            recalled: boolean;
+            /**
+             * Restated
+             * @description The comparison step's label: did the restatement carry this point?
+             * @enum {string}
+             */
+            restated: "yes" | "partly" | "no";
+        };
+        /** MessageCheckPointRate */
+        MessageCheckPointRate: {
+            /** Denominator */
+            denominator: number;
+            /** Point Id */
+            point_id: string;
+            /** Recalled */
+            recalled: number;
+            /** Restated No */
+            restated_no: number;
+            /** Restated Partly */
+            restated_partly: number;
+            /** Restated Yes */
+            restated_yes: number;
+            /** Text */
+            text: string;
+        };
+        /** MessageCheckRates */
+        MessageCheckRates: {
+            /**
+             * Denominator
+             * @description Participants whose restatement was compared. Rates are counts over this number.
+             */
+            denominator: number;
+            /**
+             * Failed
+             * @description Participants left out because the model returned nothing usable for them.
+             */
+            failed: number;
+            /** Misread */
+            misread: number;
+            /** Missed */
+            missed: number;
+            /** Partly */
+            partly: number;
+            /** Understood */
+            understood: number;
+            /** Understood Rate */
+            understood_rate: number | null;
+        };
+        /** MessageCheckRegion */
+        MessageCheckRegion: {
+            /** By Language */
+            by_language: components["schemas"]["MessageCheckLanguageRow"][];
+            creative: components["schemas"]["CreativeCopy"];
+            /** Misreadings */
+            misreadings: components["schemas"]["MessageCheckMisreadingGroup"][];
+            /** Points */
+            points: components["schemas"]["MessageCheckPointRate"][];
+            rates: components["schemas"]["MessageCheckRates"];
+            /**
+             * Recommendations
+             * @description Written by code from the counts above; each names the numbers it rests on.
+             */
+            recommendations: string[];
+            region: components["schemas"]["RegionRef"];
+            /** Version Ref */
+            version_ref: string | null;
+        };
+        /** MessageCheckResponse */
+        MessageCheckResponse: {
+            /**
+             * Is Synthetic
+             * @default true
+             * @constant
+             */
+            is_synthetic: true;
+            misreading: components["schemas"]["MessageCheckMisreading"] | null;
+            /** Points */
+            points: components["schemas"]["MessageCheckPointJudgement"][];
+            /** Recall */
+            recall: string[];
+            /**
+             * Restated
+             * @description The message in the participant's own words (may be in their language).
+             */
+            restated: string;
+            /**
+             * Restated En
+             * @description An English gloss, written by the same model, used for the comparison and the wording measure.
+             */
+            restated_en: string;
+            /**
+             * Score
+             * @description Mean over key points: yes 1, partly 0.5, no 0. Null when the comparison did not cover the participant.
+             */
+            score: number | null;
+            /**
+             * Verdict
+             * @description From the published rules over the points and the misreading; computed by code.
+             */
+            verdict: ("understood" | "partly" | "missed" | "misread") | null;
+            /**
+             * Wording Overlap
+             * @description Share of words held in common with the intended message, 0 to 1. A wording measure only.
+             */
+            wording_overlap: number | null;
+        };
+        /** MessageCheckResult */
+        MessageCheckResult: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            disclosure: components["schemas"]["PanelDisclosure"];
+            error: components["schemas"]["RunError"] | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Intended Message */
+            intended_message: string;
+            /**
+             * Intended Message Source
+             * @enum {string}
+             */
+            intended_message_source: "request" | "brief";
+            /** Key Points */
+            key_points: components["schemas"]["MessageCheckPoint"][];
+            /**
+             * Key Points Source
+             * @enum {string}
+             */
+            key_points_source: "request" | "split_by_code";
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            panel: components["schemas"]["PanelDescription"];
+            /** Participants */
+            participants: components["schemas"]["MessageCheckParticipant"][];
+            progress: components["schemas"]["RunProgress"] | null;
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            run_metadata: components["schemas"]["AudienceRunMetadata"];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "completed" | "partial" | "failed" | "cancelled";
+            summary: components["schemas"]["MessageCheckSummary"] | null;
+        };
+        /** MessageCheckSummary */
+        MessageCheckSummary: {
+            overall: components["schemas"]["MessageCheckRates"];
+            /** Regions */
+            regions: components["schemas"]["MessageCheckRegion"][];
+            /** Rules */
+            rules: string[];
+            /** Rules Version */
+            rules_version: string;
+        };
+        /**
+         * MessageCheckTarget
+         * @description One region to check and the copy that region is shown.
+         */
+        MessageCheckTarget: {
+            /**
+             * Content Version Id
+             * @description A stored content version. Defaults to the campaign's current version.
+             */
+            content_version_id?: string | null;
+            /** @description Regional copy to test instead of a stored version (for example a Studio version). */
+            creative?: components["schemas"]["CampaignContent-Input"] | null;
+            /** Region Code */
+            region_code: string;
+            /**
+             * Version Ref
+             * @description Opaque reference to a version node; stored, not joined.
+             */
+            version_ref?: string | null;
         };
         /** MessageSurvival */
         MessageSurvival: {
@@ -10814,7 +15543,7 @@ export interface components {
              * Kind
              * @enum {string}
              */
-            kind: "manual_edit" | "replace_text" | "transcreate" | "apply_chip" | "swap_reference" | "change_setting" | "tone_shift" | "restore";
+            kind: "manual_edit" | "replace_text" | "transcreate" | "apply_chip" | "swap_reference" | "change_setting" | "tone_shift" | "restore" | "remake";
             /** Params */
             params: {
                 [key: string]: unknown;
@@ -10903,6 +15632,32 @@ export interface components {
             /** Version */
             version: string;
         };
+        /** PackApproval */
+        PackApproval: {
+            /**
+             * Decided At
+             * Format: date-time
+             */
+            decided_at: string;
+            /** Decided By Name */
+            decided_by_name: string | null;
+            /**
+             * Decision
+             * @constant
+             */
+            decision: "approve";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Overrides Recommendation */
+            overrides_recommendation: boolean;
+            /** Reason */
+            reason: string;
+            /** Verdict At Decision */
+            verdict_at_decision: ("go" | "fix" | "rethink") | null;
+        };
         /** PackCalendarSource */
         PackCalendarSource: {
             /**
@@ -10927,6 +15682,17 @@ export interface components {
              * @description Package or dataset version, where one exists.
              */
             version: string | null;
+        };
+        /** PackChannel */
+        PackChannel: {
+            /** Files */
+            files: number;
+            /** Format */
+            format: string | null;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
         };
         /** PackDataSource */
         PackDataSource: {
@@ -10963,6 +15729,58 @@ export interface components {
             name: string;
             /** Values */
             values: string[];
+        };
+        /** PackExcluded */
+        PackExcluded: {
+            /** Kind */
+            kind: string;
+            /** Label */
+            label: string;
+            /** Reason */
+            reason: string;
+        };
+        /** PackFile */
+        PackFile: {
+            /**
+             * Also Channels
+             * @description Other brief channels this one file serves; it is stored once.
+             */
+            also_channels: string[];
+            /** Asset Id */
+            asset_id: string | null;
+            /**
+             * Channel
+             * @description The brief channel id the file is named for, or all.
+             */
+            channel: string;
+            /**
+             * Channel Match
+             * @description How the channel was found: the brief points at the creative, the channel's format names its kind, or neither.
+             * @enum {string}
+             */
+            channel_match: "creative_ref" | "format" | "none";
+            /** Height */
+            height: number | null;
+            /** Path */
+            path: string;
+            /** Rights Confirmed At */
+            rights_confirmed_at: string | null;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "copy_json" | "copy_text" | "captions" | "creative" | "brand_kit_file" | "brand_kit_data" | "checksums" | "manifest";
+            /** Sha256 */
+            sha256: string;
+            /** Size */
+            size: number;
+            /**
+             * Source
+             * @description Where the file comes from, in words and ids (an uploaded asset, the version copy, the Brand Kit).
+             */
+            source: string;
+            /** Width */
+            width: number | null;
         };
         /** PackLanguage */
         PackLanguage: {
@@ -11051,6 +15869,30 @@ export interface components {
             regions_expected: number;
             /** Regions In Database */
             regions_in_database: number;
+        };
+        /** PackVersion */
+        PackVersion: {
+            /**
+             * Actor
+             * @enum {string}
+             */
+            actor: "user" | "ai";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Label */
+            label: string;
+            /** Language */
+            language: string | null;
+            /** Region Code */
+            region_code: string | null;
         };
         /** PanelAnswer */
         PanelAnswer: {
@@ -11428,6 +16270,180 @@ export interface components {
              * Format: uuid
              */
             participant_id: string;
+        };
+        /** PlanApproval */
+        PlanApproval: {
+            /**
+             * Decided At
+             * Format: date-time
+             */
+            decided_at: string;
+            /** Decided By Name */
+            decided_by_name: string | null;
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "approve" | "reject" | "request_changes";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Overrides Recommendation */
+            overrides_recommendation: boolean;
+            /** Reason */
+            reason: string;
+            /** Verdict At Decision */
+            verdict_at_decision: ("go" | "fix" | "rethink") | null;
+        };
+        /** PlanBudget */
+        PlanBudget: {
+            /** Amount */
+            amount: number;
+            /** Currency */
+            currency: string;
+            /**
+             * Sample
+             * @description The brief marks these numbers as sample placeholders.
+             */
+            sample: boolean;
+            /**
+             * Share Of Total
+             * @description Fraction of the brief's total (0-1); null when the brief has no total.
+             */
+            share_of_total: number | null;
+        };
+        /** PlanChannel */
+        PlanChannel: {
+            /** Format */
+            format: string | null;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+        };
+        /** PlanCheck */
+        PlanCheck: {
+            /** Detail */
+            detail: string;
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "done" | "todo" | "warning" | "blocked";
+        };
+        /** PlanEvent */
+        PlanEvent: {
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "campaign_start" | "campaign_end" | "key_moment" | "calendar_moment";
+            /**
+             * Source
+             * @description Where the date comes from: the brief, or the Moment Calendar claim's source.
+             */
+            source: string | null;
+            /** Title */
+            title: string;
+            /** Warning */
+            warning: string | null;
+        };
+        /** PlanFeedback */
+        PlanFeedback: {
+            counts: components["schemas"]["ReviewDecisionCounts"];
+            /** Latest At */
+            latest_at: string | null;
+        };
+        /** PlanIssue */
+        PlanIssue: {
+            /** Action */
+            action: string;
+            /**
+             * Effect
+             * @enum {string}
+             */
+            effect: "fix" | "rethink";
+            /** Priority */
+            priority: number;
+            /** Rule Id */
+            rule_id: string;
+            /** Summary */
+            summary: string;
+        };
+        /** PlanReadiness */
+        PlanReadiness: {
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Issues */
+            issues: components["schemas"]["PlanIssue"][];
+            /** Main Reason */
+            main_reason: string;
+            /** Next Action */
+            next_action: string;
+            /** Rule Version */
+            rule_version: string;
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "go" | "fix" | "rethink";
+        };
+        /** PlanReady */
+        PlanReady: {
+            /** Reasons */
+            reasons: string[];
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "ready" | "ready_with_override" | "not_ready";
+        };
+        /** PlanVersion */
+        PlanVersion: {
+            /** Label */
+            label: string;
+            /** Language */
+            language: string | null;
+            /**
+             * State
+             * @description approved: a person approved it for this region. candidate: the newest version prepared for the region.
+             * @enum {string}
+             */
+            state: "approved" | "candidate";
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** PlanWindow */
+        PlanWindow: {
+            /**
+             * End
+             * Format: date
+             */
+            end: string;
+            /**
+             * Start
+             * Format: date
+             */
+            start: string;
+            /** Timezone */
+            timezone: string;
         };
         /** PlatformConnectionList */
         PlatformConnectionList: {
@@ -12362,6 +17378,343 @@ export interface components {
              */
             window_to: string;
         };
+        /** PvaActual */
+        PvaActual: {
+            /** Impressions */
+            impressions: number;
+            /**
+             * Metric
+             * @enum {string}
+             */
+            metric: "ctr" | "view_rate" | "completion_100" | "roas";
+            /** Settled Days */
+            settled_days: number;
+            /** Value */
+            value: number;
+            /**
+             * Window From
+             * Format: date
+             */
+            window_from: string;
+            /**
+             * Window To
+             * Format: date
+             * @description The last settled day: provisional days are never used.
+             */
+            window_to: string;
+        };
+        /** PvaCandidate */
+        PvaCandidate: {
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Overall Score */
+            overall_score: number | null;
+            /** Region Code */
+            region_code: string;
+            /** Studio Label */
+            studio_label: string;
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "go" | "fix" | "rethink";
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /**
+         * PvaCheck
+         * @description One predictor against the actual metric for one pair. Ranks run from 1 (highest); ties share an average rank.
+         */
+        PvaCheck: {
+            /** Actual Rank */
+            actual_rank: number;
+            /**
+             * Agreement
+             * @description agree: same rank. near: within one rank. differ: two or more ranks apart.
+             * @enum {string}
+             */
+            agreement: "agree" | "near" | "differ";
+            /** Predicted Rank */
+            predicted_rank: number;
+            /** Predicted Value */
+            predicted_value: number;
+            /** Rank Gap */
+            rank_gap: number;
+        };
+        /** PvaExcluded */
+        PvaExcluded: {
+            /** Pulse Version */
+            pulse_version: string;
+            /** Reason */
+            reason: string;
+            /** Region Code */
+            region_code: string;
+        };
+        /** PvaLinkBoard */
+        PvaLinkBoard: {
+            /**
+             * Candidates
+             * @description Studio versions with a stored verdict, by region: what a slot can be linked to.
+             */
+            candidates: components["schemas"]["PvaCandidate"][];
+            /** Slots */
+            slots: components["schemas"]["PvaLinkSlot"][];
+        };
+        /** PvaLinkSet */
+        PvaLinkSet: {
+            /** Pulse Version */
+            pulse_version: string;
+            /** Region Code */
+            region_code: string;
+            /**
+             * Version Id
+             * @description Null removes the link.
+             */
+            version_id: string | null;
+        };
+        /** PvaLinkSlot */
+        PvaLinkSlot: {
+            /** Overall Score */
+            overall_score: number | null;
+            /** Pulse Version */
+            pulse_version: string;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Studio Label */
+            studio_label: string | null;
+            /** Verdict */
+            verdict: ("go" | "fix" | "rethink") | null;
+            /** Version Id */
+            version_id: string | null;
+        };
+        /** PvaMethod */
+        PvaMethod: {
+            /** Assumptions */
+            assumptions: string[];
+            /** Steps */
+            steps: string[];
+            /** Version */
+            version: string;
+        };
+        /** PvaPair */
+        PvaPair: {
+            actual: components["schemas"]["PvaActual"];
+            /** @description Null when the verdict has no overall score. */
+            launch_score: components["schemas"]["PvaCheck"] | null;
+            predicted: components["schemas"]["PvaPredicted"];
+            /** Pulse Version */
+            pulse_version: string;
+            /** @description Null when the pair has no Quick Read counts. */
+            quick_read_favourable: components["schemas"]["PvaCheck"] | null;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Studio Label */
+            studio_label: string;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /**
+         * PvaPredicted
+         * @description What was stored before the results: the Launch Room verdict and score, and the Quick Read counts it read.
+         */
+        PvaPredicted: {
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Overall Score */
+            overall_score: number | null;
+            /** @description Null when the verdict was computed without a Quick Read. */
+            quick_read: components["schemas"]["PvaQuickRead"] | null;
+            /** Rule Version */
+            rule_version: string;
+            /** Scoring Version */
+            scoring_version: string;
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "go" | "fix" | "rethink";
+            /**
+             * Verdict Id
+             * Format: uuid
+             */
+            verdict_id: string;
+        };
+        /** PvaQuickRead */
+        PvaQuickRead: {
+            /**
+             * Favourable Share
+             * @description positive / respondents, from a simulated panel.
+             */
+            favourable_share: number;
+            /** Negative */
+            negative: number;
+            /** Positive */
+            positive: number;
+            /** Relevant */
+            relevant: number;
+            /** Respondents */
+            respondents: number;
+            /** Understood */
+            understood: number;
+        };
+        /** PvaResult */
+        PvaResult: {
+            /** Dataset Version */
+            dataset_version: string;
+            /** Excluded */
+            excluded: components["schemas"]["PvaExcluded"][];
+            /**
+             * Fingerprint
+             * @description SHA-256 of the inputs and the method version: the same inputs give the same fingerprint.
+             */
+            fingerprint: string;
+            /**
+             * Is Sample
+             * @default true
+             * @constant
+             */
+            is_sample: true;
+            /**
+             * Label
+             * @description Always 'Sample data, not from a connected account'.
+             */
+            label: string;
+            /**
+             * Last Updated At
+             * Format: date-time
+             * @description When the sample was generated (a fixed instant), not when it was loaded.
+             */
+            last_updated_at: string;
+            /** Limitations */
+            limitations: string[];
+            method: components["schemas"]["PvaMethod"];
+            /**
+             * Metric
+             * @enum {string}
+             */
+            metric: "ctr" | "view_rate" | "completion_100" | "roas";
+            /** Metric Label */
+            metric_label: string;
+            /** Pairs */
+            pairs: components["schemas"]["PvaPair"][];
+            /**
+             * Source Kind
+             * @default sample
+             * @constant
+             */
+            source_kind: "sample";
+            /** Summaries */
+            summaries: components["schemas"]["PvaSummary"][];
+            /**
+             * Unit
+             * @enum {string}
+             */
+            unit: "count" | "inr" | "ratio" | "multiple";
+            /**
+             * Unlinked
+             * @description Version and region slots in the series with no Creative Studio link: never compared.
+             */
+            unlinked: number;
+        };
+        /** PvaSnapshot */
+        PvaSnapshot: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Dataset Version */
+            dataset_version: string;
+            /** Fingerprint */
+            fingerprint: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Matches Current
+             * @description True when recomputing today gives the same fingerprint: the stored comparison reproduces.
+             */
+            matches_current: boolean;
+            /** Method Version */
+            method_version: string;
+            /**
+             * Metric
+             * @enum {string}
+             */
+            metric: "ctr" | "view_rate" | "completion_100" | "roas";
+            /** Pair Count */
+            pair_count: number;
+            result: components["schemas"]["PvaResult"];
+        };
+        /** PvaSnapshotCreate */
+        PvaSnapshotCreate: {
+            /**
+             * Metric
+             * @default ctr
+             * @enum {string}
+             */
+            metric: "ctr" | "view_rate" | "completion_100" | "roas";
+        };
+        /** PvaSnapshotList */
+        PvaSnapshotList: {
+            /** Items */
+            items: components["schemas"]["PvaSnapshot"][];
+        };
+        /** PvaSummary */
+        PvaSummary: {
+            /** Agree */
+            agree: number;
+            /**
+             * Concordant
+             * @description Pairs of pairs ordered the same way by the prediction and by the result.
+             */
+            concordant: number;
+            /** Differ */
+            differ: number;
+            /** Discordant */
+            discordant: number;
+            /**
+             * Kendall Tau B
+             * @description Rank correlation of the two orderings, computed in code; null below 3 pairs.
+             */
+            kendall_tau_b: number | null;
+            /** Label */
+            label: string;
+            /** Near */
+            near: number;
+            /** Pairs */
+            pairs: number;
+            /**
+             * Predictor
+             * @enum {string}
+             */
+            predictor: "launch_score" | "quick_read_favourable";
+            /**
+             * Reading
+             * @enum {string}
+             */
+            reading: "mostly_agrees" | "mixed" | "mostly_disagrees" | "too_few_pairs";
+            /** Tied */
+            tied: number;
+        };
         /**
          * QuickReadCreate
          * @description Run a fast synthetic panel on one creative version for one region.
@@ -13172,6 +18525,92 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** RegionPlan */
+        RegionPlan: {
+            /** Brief Version */
+            brief_version: number;
+            /** Budget Sample */
+            budget_sample: boolean;
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Campaign Name */
+            campaign_name: string;
+            /** Currency */
+            currency: string | null;
+            /** Gaps */
+            gaps: string[];
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Notes */
+            notes: string[];
+            /** Regions */
+            regions: components["schemas"]["RegionPlanEntry"][];
+            /** Rule Version */
+            rule_version: string;
+            /** Source Line */
+            source_line: string;
+            /** Total Budget */
+            total_budget: number | null;
+            /** Unallocated Budget */
+            unallocated_budget: number | null;
+            window: components["schemas"]["PlanWindow"] | null;
+        };
+        /** RegionPlanEntry */
+        RegionPlanEntry: {
+            approval: components["schemas"]["PlanApproval"] | null;
+            budget: components["schemas"]["PlanBudget"] | null;
+            /** Channels */
+            channels: components["schemas"]["PlanChannel"][];
+            /** Checklist */
+            checklist: components["schemas"]["PlanCheck"][];
+            feedback: components["schemas"]["PlanFeedback"];
+            /**
+             * Info
+             * @description Facts worth knowing that are not problems, such as festivals the sources place in the campaign's months without an exact date.
+             */
+            info: string[];
+            /** Languages */
+            languages: string[];
+            /**
+             * Pack Available
+             * @description An Asset Pack can be built for this region now.
+             */
+            pack_available: boolean;
+            /** Progress Done */
+            progress_done: number;
+            /** Progress Total */
+            progress_total: number;
+            readiness: components["schemas"]["PlanReadiness"] | null;
+            ready: components["schemas"]["PlanReady"];
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "origin" | "target";
+            /** Timeline */
+            timeline: components["schemas"]["PlanEvent"][];
+            version: components["schemas"]["PlanVersion"] | null;
+            /**
+             * Warnings
+             * @description Date problems, disagreeing sources and stakeholder objections: things to look at before launch.
+             */
+            warnings: string[];
+        };
         /** RegionProfile */
         RegionProfile: {
             /** Categories */
@@ -13346,6 +18785,188 @@ export interface components {
             element_ids: string[];
             /** Message */
             message: string;
+        };
+        /** RemakeCapabilities */
+        RemakeCapabilities: {
+            /** Daily Budget Usd */
+            daily_budget_usd: number;
+            /**
+             * Demo Regions
+             * @description Regions the demonstration fixtures cover (demo projects only).
+             */
+            demo_regions: string[];
+            image: components["schemas"]["CapabilityStatus"];
+            /** Max Voice Lines */
+            max_voice_lines: number;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            music: components["schemas"]["CapabilityStatus"];
+            /** Run Budget Usd */
+            run_budget_usd: number;
+            speech: components["schemas"]["CapabilityStatus"];
+            /**
+             * Text Shaping
+             * @enum {string}
+             */
+            text_shaping: "raqm" | "basic";
+            /** Voices */
+            voices: string[];
+        };
+        /**
+         * RemakeOutput
+         * @description One applied remake, read back from its operation. `passed` is false when any code check found a problem.
+         */
+        RemakeOutput: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Estimated Cost Usd */
+            estimated_cost_usd: number | null;
+            /**
+             * Id
+             * Format: uuid
+             * @description The operation id.
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "visual" | "sound";
+            /** Language */
+            language: string;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Passed */
+            passed: boolean;
+            /** Prompt Version */
+            prompt_version: string | null;
+            /** Region Code */
+            region_code: string;
+            /**
+             * Result Version Id
+             * Format: uuid
+             */
+            result_version_id: string;
+            /** Run Id */
+            run_id: string | null;
+            sound: components["schemas"]["SoundRemake"] | null;
+            /**
+             * Source Version Id
+             * Format: uuid
+             */
+            source_version_id: string;
+            visual: components["schemas"]["VisualRemake"] | null;
+        };
+        /** RemakePage */
+        RemakePage: {
+            /** Items */
+            items: components["schemas"]["RemakeOutput"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** RemakeSoundRequest */
+        RemakeSoundRequest: {
+            /**
+             * Confirm Cost
+             * @default false
+             */
+            confirm_cost: boolean;
+            /**
+             * Element Ids
+             * @description Text elements to speak, in this order. Default: the version's voiceover and caption lines.
+             */
+            element_ids?: string[] | null;
+            /**
+             * Jingle
+             * @description Also make a short instrumental jingle with Lyria (Vertex AI only).
+             * @default false
+             */
+            jingle: boolean;
+            /** Jingle Prompt */
+            jingle_prompt?: string | null;
+            /** Language */
+            language: string;
+            /** Region Code */
+            region_code: string;
+            /** Version Id */
+            version_id?: string | null;
+            /**
+             * Voice
+             * @default Sulafat
+             */
+            voice: string;
+        };
+        /**
+         * RemakeVisualRequest
+         * @description Regional scene for one `scene` element. `confirm_cost` must be true for a live project: the image call costs money
+         *     (the estimate is on GET /campaigns/{id}/remakes/capabilities) and is made once, never retried by the app.
+         */
+        RemakeVisualRequest: {
+            /**
+             * Confirm Cost
+             * @default false
+             */
+            confirm_cost: boolean;
+            /**
+             * Direction
+             * @description Art direction written by the person, shown to the model as theirs.
+             */
+            direction?: string | null;
+            /** Language */
+            language: string;
+            /**
+             * Original Asset Id
+             * @description The finished source creative (an image asset). Locked regions are restored from it. Required for a live project; a demo project falls back to the committed demonstration key visual.
+             */
+            original_asset_id?: string | null;
+            /**
+             * Plate Asset Id
+             * @description The clean plate: the same image without text or product.
+             */
+            plate_asset_id?: string | null;
+            /**
+             * Plate Element Id
+             * @description The unlocked `scene` element to replace. Default: the first unlocked scene element.
+             */
+            plate_element_id?: string | null;
+            /**
+             * Reference Asset Id
+             * @description The product reference image shown to the model.
+             */
+            reference_asset_id?: string | null;
+            /** Region Code */
+            region_code: string;
+            /**
+             * Use Region Claims
+             * @description Give the model a few of the region's sourced claims as direction.
+             * @default true
+             */
+            use_region_claims: boolean;
+            /**
+             * Version Id
+             * @description The version to remake from. Default: the newest.
+             */
+            version_id?: string | null;
         };
         /**
          * RenderTextRequest
@@ -13645,6 +19266,391 @@ export interface components {
              * @default Restored an earlier version.
              */
             reason: string;
+        };
+        /** ReviewCreative */
+        ReviewCreative: {
+            /** Content Type */
+            content_type: string;
+            /** Height */
+            height: number | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "image" | "video" | "audio";
+            /** Label */
+            label: string;
+            /** Width */
+            width: number | null;
+        };
+        /** ReviewDecisionCounts */
+        ReviewDecisionCounts: {
+            /** Approve */
+            approve: number;
+            /** Comment */
+            comment: number;
+            /** Reject */
+            reject: number;
+            /** Request Changes */
+            request_changes: number;
+        };
+        /** ReviewElement */
+        ReviewElement: {
+            /** Id */
+            id: string;
+            /** Kind */
+            kind: string;
+            /** Language */
+            language: string | null;
+            /**
+             * Text
+             * @description Plain text. Rendered as text, never as markup.
+             */
+            text: string;
+        };
+        /**
+         * ReviewItem
+         * @description One thing a reviewer may see and decide on: a Creative Studio version of the campaign, for one region.
+         */
+        ReviewItem: {
+            /** Region Code */
+            region_code: string;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** ReviewItemInfo */
+        ReviewItemInfo: {
+            /** Language */
+            language: string | null;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+            /** Version Label */
+            version_label: string;
+        };
+        /** ReviewItemView */
+        ReviewItemView: {
+            /** Creatives */
+            creatives: components["schemas"]["ReviewCreative"][];
+            /** Elements */
+            elements: components["schemas"]["ReviewElement"][];
+            /** Language */
+            language: string | null;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+            /** Version Label */
+            version_label: string;
+        };
+        /** ReviewLinkCreate */
+        ReviewLinkCreate: {
+            /**
+             * Expires In Days
+             * @default 7
+             */
+            expires_in_days: number;
+            /** Items */
+            items: components["schemas"]["ReviewItem"][];
+            /**
+             * Label
+             * @description Names the link in the list (for example the reviewer or the agency).
+             */
+            label: string;
+            /**
+             * Note
+             * @description A message from you, shown to the reviewer above the creative.
+             */
+            note?: string | null;
+        };
+        /** ReviewLinkCreated */
+        ReviewLinkCreated: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By Name */
+            created_by_name: string | null;
+            decisions: components["schemas"]["ReviewDecisionCounts"];
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Items */
+            items: components["schemas"]["ReviewItemInfo"][];
+            /** Label */
+            label: string;
+            /** Last Response At */
+            last_response_at: string | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Note */
+            note: string | null;
+            /** Response Count */
+            response_count: number;
+            /**
+             * Review Path
+             * @description The page the reviewer opens, relative to the web app: /review/<token>.
+             */
+            review_path: string;
+            /** Revoked At */
+            revoked_at: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "expired" | "revoked";
+            /**
+             * Token
+             * @description The secret. Shown only in this response; keep it with the link.
+             */
+            token: string;
+            /**
+             * Token Hint
+             * @description The last four characters of the secret, to tell links apart. The secret itself is never stored.
+             */
+            token_hint: string;
+        };
+        /** ReviewLinkPage */
+        ReviewLinkPage: {
+            /** Items */
+            items: components["schemas"]["ReviewLinkSummary"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** ReviewLinkSummary */
+        ReviewLinkSummary: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By Name */
+            created_by_name: string | null;
+            decisions: components["schemas"]["ReviewDecisionCounts"];
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Items */
+            items: components["schemas"]["ReviewItemInfo"][];
+            /** Label */
+            label: string;
+            /** Last Response At */
+            last_response_at: string | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Note */
+            note: string | null;
+            /** Response Count */
+            response_count: number;
+            /** Revoked At */
+            revoked_at: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "expired" | "revoked";
+            /**
+             * Token Hint
+             * @description The last four characters of the secret, to tell links apart. The secret itself is never stored.
+             */
+            token_hint: string;
+        };
+        /** ReviewPage */
+        ReviewPage: {
+            /** Brand Name */
+            brand_name: string;
+            /** Campaign Name */
+            campaign_name: string;
+            /** Decisions */
+            decisions: ("approve" | "request_changes" | "reject" | "comment")[];
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Identity Note
+             * @description What the sender will see about the reviewer.
+             */
+            identity_note: string;
+            /** Items */
+            items: components["schemas"]["ReviewItemView"][];
+            /** Link Label */
+            link_label: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Note */
+            note: string | null;
+        };
+        /** ReviewReceipt */
+        ReviewReceipt: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "approve" | "request_changes" | "reject" | "comment";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Recorded At
+             * Format: date-time
+             */
+            recorded_at: string;
+            /** Region Code */
+            region_code: string;
+            /**
+             * Reviewer Kind
+             * @enum {string}
+             */
+            reviewer_kind: "named" | "anonymous";
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** ReviewResponsePage */
+        ReviewResponsePage: {
+            /** Items */
+            items: components["schemas"]["ReviewResponseView"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** ReviewResponseView */
+        ReviewResponseView: {
+            /** Comment */
+            comment: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "approve" | "request_changes" | "reject" | "comment";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Link Id
+             * Format: uuid
+             */
+            link_id: string;
+            /** Link Label */
+            link_label: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Reviewer Kind
+             * @enum {string}
+             */
+            reviewer_kind: "named" | "anonymous";
+            /** Reviewer Name */
+            reviewer_name: string | null;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+            /** Version Label */
+            version_label: string;
+        };
+        /** ReviewSubmit */
+        ReviewSubmit: {
+            /** Comment */
+            comment?: string | null;
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "approve" | "request_changes" | "reject" | "comment";
+            /** Region Code */
+            region_code: string;
+            /**
+             * Reviewer Name
+             * @description Optional. Typed by the reviewer and not verified.
+             */
+            reviewer_name?: string | null;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
         };
         /**
          * RiskCheckCreate
@@ -14309,7 +20315,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound";
             /** Started At */
             started_at: string | null;
             /**
@@ -14331,7 +20337,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound";
             /**
              * Status
              * @enum {string}
@@ -14457,7 +20463,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound";
             /** Started At */
             started_at: string | null;
             /**
@@ -14567,7 +20573,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound";
             /** Started At */
             started_at: string | null;
             /**
@@ -15189,6 +21195,22 @@ export interface components {
              */
             source: "user" | "model";
         };
+        /** SentimentCounts */
+        SentimentCounts: {
+            /** Mixed */
+            mixed: number;
+            /** Negative */
+            negative: number;
+            /** Neutral */
+            neutral: number;
+            /** Positive */
+            positive: number;
+            /**
+             * Unread
+             * @description Comments with no model label (no reading yet, or the code removed the label).
+             */
+            unread: number;
+        };
         /** Series */
         Series: {
             /** Label */
@@ -15651,6 +21673,39 @@ export interface components {
              * @enum {string}
              */
             status: "queued" | "running" | "completed" | "partial" | "failed" | "cancelled";
+        };
+        /** SoundRemake */
+        SoundRemake: {
+            jingle: components["schemas"]["JingleResult"] | null;
+            /** Language Code */
+            language_code: string;
+            /** Lines */
+            lines: components["schemas"]["VoiceLineResult"][];
+            /** Location */
+            location: string | null;
+            /** Model */
+            model: string | null;
+            /**
+             * Native Speaker Reviewed
+             * @default false
+             */
+            native_speaker_reviewed: boolean;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "provider" | "demo_fixture";
+            /** Total Duration Ms */
+            total_duration_ms: number;
+            /** Voice */
+            voice: string;
+            /**
+             * Voiceover Asset Id
+             * Format: uuid
+             */
+            voiceover_asset_id: string;
+            /** Voiceover Url */
+            voiceover_url: string;
         };
         /**
          * SourceAttribute
@@ -16383,6 +22438,47 @@ export interface components {
             /** Start */
             start: number | null;
         };
+        /** TextRenderResult */
+        TextRenderResult: {
+            /** Bbox */
+            bbox: number[];
+            /** Color */
+            color: string;
+            /**
+             * Contrast Ratio
+             * @description Estimated from the mean background under the box and the text colour.
+             */
+            contrast_ratio: number;
+            /** Element Id */
+            element_id: string;
+            /** Fits */
+            fits: boolean;
+            /** Font Size */
+            font_size: number;
+            /** Kind */
+            kind: string;
+            /** Language */
+            language: string | null;
+            /** Lines */
+            lines: string[];
+            /** Low Contrast */
+            low_contrast: boolean;
+            /** Overlaps Locked */
+            overlaps_locked: boolean;
+            /** Passed */
+            passed: boolean;
+            /** Problems */
+            problems: string[];
+            /** Script */
+            script: string;
+            /**
+             * Script Ok
+             * @description The letters are in the expected script (or Latin brand words).
+             */
+            script_ok: boolean;
+            /** Text */
+            text: string;
+        };
         /** TextShadow */
         TextShadow: {
             /**
@@ -16405,6 +22501,13 @@ export interface components {
              * @default 2
              */
             dy: number;
+        };
+        /** ThemeBreakdown */
+        ThemeBreakdown: {
+            /** Comments */
+            comments: number;
+            /** Key */
+            key: string;
         };
         /** ThemeCount */
         ThemeCount: {
@@ -17334,6 +23437,22 @@ export interface components {
             /** Output Tokens */
             output_tokens: number | null;
         };
+        /**
+         * VersionAnchor
+         * @description Where a comment belongs: the Live Pulse version and region it was posted under, and the closest Creative Studio version.
+         */
+        VersionAnchor: {
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Studio Version Id */
+            studio_version_id: string | null;
+            /** Studio Version Label */
+            studio_version_label: string | null;
+            /** Version Label */
+            version_label: string;
+        };
         /** VersionColumn */
         VersionColumn: {
             /**
@@ -17712,6 +23831,110 @@ export interface components {
              * @description Approximate position such as top-left; null when not reported.
              */
             location: string | null;
+        };
+        /** VisualRemake */
+        VisualRemake: {
+            /** Claim Ids */
+            claim_ids: string[];
+            /** Direction */
+            direction: string | null;
+            /** Height */
+            height: number;
+            /** Location */
+            location: string | null;
+            /** Locked Regions */
+            locked_regions: components["schemas"]["LockedRegionResult"][];
+            /** Model */
+            model: string | null;
+            /** Original Asset Id */
+            original_asset_id: string | null;
+            /** Original Url */
+            original_url: string | null;
+            /**
+             * Output Asset Id
+             * Format: uuid
+             */
+            output_asset_id: string;
+            /** Output Url */
+            output_url: string;
+            /**
+             * Plate Asset Id
+             * Format: uuid
+             */
+            plate_asset_id: string;
+            /** Plate Element Id */
+            plate_element_id: string;
+            /** Plate Url */
+            plate_url: string;
+            /** Prompt */
+            prompt: string | null;
+            /** Prompt Version */
+            prompt_version: string;
+            /** Scene Id */
+            scene_id: string | null;
+            /** Shaping Engine */
+            shaping_engine: string;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "provider" | "demo_fixture";
+            /** Texts */
+            texts: components["schemas"]["TextRenderResult"][];
+            /** Width */
+            width: number;
+        };
+        /** VoiceLineResult */
+        VoiceLineResult: {
+            /**
+             * Back Translation
+             * @description English back-translation from the transcreation, when one is recorded.
+             */
+            back_translation: string | null;
+            /** Duration Ms */
+            duration_ms: number;
+            /** Element Id */
+            element_id: string;
+            /** End Ms */
+            end_ms: number;
+            /** Fits Window */
+            fits_window: boolean | null;
+            /** Language */
+            language: string;
+            /** Problems */
+            problems: string[];
+            /** Start Ms */
+            start_ms: number;
+            /** Text */
+            text: string;
+            /**
+             * Window Ms
+             * @description Length of the scene the source line sat in, when known.
+             */
+            window_ms: number | null;
+        };
+        /** WeekTrend */
+        WeekTrend: {
+            /** Claim Mentions */
+            claim_mentions: number;
+            /** Comments */
+            comments: number;
+            /** Cultural Mentions */
+            cultural_mentions: number;
+            /** Negative Share */
+            negative_share: number | null;
+            /** Read */
+            read: number;
+            /**
+             * Week End
+             * Format: date
+             */
+            week_end: string;
+            /**
+             * Week Start
+             * Format: date
+             */
+            week_start: string;
         };
         /** Workspace */
         Workspace: {
@@ -18591,6 +24814,250 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ArenaResult"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_asset_pack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                pack_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssetPackDetail"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    download_asset_pack: {
+        parameters: {
+            query: {
+                token: string;
+            };
+            header?: never;
+            path: {
+                pack_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The ZIP. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/zip": string;
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -20302,6 +26769,381 @@ export interface operations {
             };
         };
     };
+    list_asset_packs: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssetPackPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_asset_pack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssetPackCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssetPackCreated"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    preview_asset_pack: {
+        parameters: {
+            query: {
+                /** @description ISO 3166-2 region code. */
+                region_code: string;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssetPackPreview"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_audience_studies: {
         parameters: {
             query?: {
@@ -21066,6 +27908,379 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BriefVersion"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_buzz_simulations: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AudienceRunPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_buzz_simulation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BuzzCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AudienceRunAccepted"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_buzz_simulation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BuzzResult"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -22671,6 +29886,505 @@ export interface operations {
             };
         };
     };
+    list_focus_groups: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AudienceRunPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_focus_group: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FocusGroupCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AudienceRunAccepted"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_focus_group: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FocusGroupResult"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    interject_in_focus_group: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FocusGroupInterjectionCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FocusGroupInterjectionView"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_glossary: {
         parameters: {
             query?: {
@@ -23291,6 +31005,127 @@ export interface operations {
             };
         };
     };
+    get_lab_session_defaults: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LabSessionDefaults"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     get_atlas: {
         parameters: {
             query?: never;
@@ -23561,6 +31396,257 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LensBuildBatch"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_category_shelf: {
+        parameters: {
+            query?: {
+                /** @description Repeat for each state (ISO 3166-2:IN). Default: the campaign's states. */
+                region_code?: string[] | null;
+                /** @description Read a category other than the one the brand kit names. */
+                pack_key?: string | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensShelf"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    refresh_category_shelf: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LensShelfRefreshRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensShelf"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -24286,6 +32372,255 @@ export interface operations {
             };
         };
     };
+    get_trend_radar: {
+        parameters: {
+            query?: {
+                /** @description Repeat for each state (ISO 3166-2:IN). Default: the campaign's states. */
+                region_code?: string[] | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensTrendRadar"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    refresh_trend_radar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LensTrendRefreshRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensTrendRadar"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_locks: {
         parameters: {
             query?: {
@@ -24661,6 +32996,379 @@ export interface operations {
             };
         };
     };
+    list_message_checks: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AudienceRunPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_message_check: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MessageCheckCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AudienceRunAccepted"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_message_check: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageCheckResult"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_operations: {
         parameters: {
             query?: {
@@ -24670,7 +33378,7 @@ export interface operations {
                 offset?: number;
                 version_id?: string | null;
                 status?: ("applied" | "rejected") | null;
-                kind?: ("manual_edit" | "replace_text" | "transcreate" | "apply_chip" | "swap_reference" | "change_setting" | "tone_shift" | "restore") | null;
+                kind?: ("manual_edit" | "replace_text" | "transcreate" | "apply_chip" | "swap_reference" | "change_setting" | "tone_shift" | "restore" | "remake") | null;
             };
             header?: never;
             path: {
@@ -25794,6 +34502,989 @@ export interface operations {
             };
         };
     };
+    get_alert_inbox: {
+        parameters: {
+            query?: {
+                status?: ("open" | "acknowledged" | "resolved") | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertInbox"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    evaluate_alert_rules: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertEvaluateResult"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    transition_alert: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                alert_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AlertTransition"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertRecord"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_alert_rules: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertRuleList"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_alert_rule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AlertRuleCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertRuleView"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_default_alert_rules: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertRuleList"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_alert_rule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                rule_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_alert_rule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                rule_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AlertRuleUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertRuleView"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     get_alert_preview: {
         parameters: {
             query?: {
@@ -25921,6 +35612,778 @@ export interface operations {
             };
         };
     };
+    list_comments: {
+        parameters: {
+            query?: {
+                /** @description ISO 3166-2 code, for example IN-TN. */
+                region?: string | null;
+                /** @description A version label exactly as Live Pulse lists it. */
+                version?: string | null;
+                /** @description ISO 639-1 code, for example ta. */
+                language?: string | null;
+                /** @description First day, inclusive. */
+                date_from?: string | null;
+                /** @description Last day, inclusive. */
+                date_to?: string | null;
+                /** @description From the model reading. */
+                sentiment?: ("positive" | "neutral" | "negative" | "mixed") | null;
+                /** @description A theme id from /themes. */
+                theme?: string | null;
+                /** @description Only comments that match a watch term. */
+                flag?: ("any" | "planted_claim" | "cultural_misstep") | null;
+                sort?: "likes" | "recent";
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    read_comments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["CommentReadRequest"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentReadResult"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    load_sample_comments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentDatasetStatus"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_comment_status: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentDatasetStatus"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_comment_summary: {
+        parameters: {
+            query?: {
+                /** @description ISO 3166-2 code, for example IN-TN. */
+                region?: string | null;
+                /** @description A version label exactly as Live Pulse lists it. */
+                version?: string | null;
+                /** @description ISO 639-1 code, for example ta. */
+                language?: string | null;
+                /** @description First day, inclusive. */
+                date_from?: string | null;
+                /** @description Last day, inclusive. */
+                date_to?: string | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentSummary"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_comment_themes: {
+        parameters: {
+            query?: {
+                /** @description ISO 3166-2 code, for example IN-TN. */
+                region?: string | null;
+                /** @description A version label exactly as Live Pulse lists it. */
+                version?: string | null;
+                /** @description ISO 639-1 code, for example ta. */
+                language?: string | null;
+                /** @description First day, inclusive. */
+                date_from?: string | null;
+                /** @description Last day, inclusive. */
+                date_to?: string | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentThemes"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_platform_connections: {
         parameters: {
             query?: never;
@@ -25939,6 +36402,745 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PlatformConnectionList"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_digests: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DigestList"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_digest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["DigestCreate"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DigestCreated"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_digest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                digest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Digest"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    export_digest: {
+        parameters: {
+            query?: {
+                format?: "md" | "pdf";
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+                digest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The digest as a file. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_digest_summary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                digest_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Digest"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_fatigue: {
+        parameters: {
+            query?: {
+                ctr_decline_pct?: number;
+                view_rate_decline_pct?: number;
+                frequency_threshold?: number;
+                region?: string | null;
+                version?: string | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FatigueReport"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -26181,6 +37383,622 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MetricCatalogue"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_predicted_actual: {
+        parameters: {
+            query?: {
+                /** @description The Pulse metric the predictions are compared with. */
+                metric?: "ctr" | "view_rate" | "completion_100" | "roas";
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PvaResult"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_version_links: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PvaLinkBoard"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    put_version_link: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PvaLinkSet"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PvaLinkBoard"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_comparison_snapshots: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PvaSnapshotList"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_comparison_snapshot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PvaSnapshotCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PvaSnapshot"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -27925,6 +39743,1251 @@ export interface operations {
             };
         };
     };
+    get_region_plan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RegionPlan"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    export_region_plan: {
+        parameters: {
+            query?: {
+                format?: "markdown" | "pdf";
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The plan as a download. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                    "text/markdown": string;
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_remakes: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+                kind?: ("visual" | "sound") | null;
+                run_id?: string | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemakePage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    remake_capabilities: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemakeCapabilities"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_remake_sound: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RemakeSoundRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunAccepted"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_remake_visual: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RemakeVisualRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunAccepted"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_remake: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                operation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemakeOutput"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_review_links: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewLinkPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_review_link: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewLinkCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewLinkCreated"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_review_responses: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+                link_id?: string | null;
+                version_id?: string | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewResponsePage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_risk_checks: {
         parameters: {
             query?: {
@@ -28813,7 +41876,7 @@ export interface operations {
                 limit?: number;
                 /** @description Number of records skipped. */
                 offset?: number;
-                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct") | null;
+                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound") | null;
                 status?: ("queued" | "running" | "completed" | "partial" | "failed" | "cancelled") | null;
             };
             header?: never;
@@ -30686,6 +43749,127 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EvidenceRecord"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    evaluate_alerts_for_scheduler: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertScheduleSummary"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -36145,7 +49329,7 @@ export interface operations {
                 limit?: number;
                 /** @description Number of records skipped. */
                 offset?: number;
-                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct") | null;
+                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound") | null;
                 campaign_id?: string | null;
                 study_id?: string | null;
                 status?: ("queued" | "running" | "completed" | "partial" | "failed" | "cancelled") | null;
@@ -38150,6 +51334,501 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["Report"];
                     "text/markdown": string;
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    open_review: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description `Review <secret>`: the secret of the review link, as sent to the reviewer. */
+                Authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    revoke_review_link: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                link_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewLinkSummary"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_review_creative: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description `Review <secret>`: the secret of the review link, as sent to the reviewer. */
+                Authorization?: string | null;
+            };
+            path: {
+                creative_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The creative file, inline, with a sandboxing Content-Security-Policy. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "audio/*": unknown;
+                    "image/*": unknown;
+                    "video/*": unknown;
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    submit_review: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description `Review <secret>`: the secret of the review link, as sent to the reviewer. */
+                Authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewSubmit"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewReceipt"];
                 };
             };
             /** @description UNAUTHENTICATED */

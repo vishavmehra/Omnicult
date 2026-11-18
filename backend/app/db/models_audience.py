@@ -14,7 +14,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base, utcnow
 
-RUN_KINDS = "'quick_read', 'audience_study', 'risk_check'"
+RUN_KINDS = "'quick_read', 'audience_study', 'risk_check', 'focus_group', 'buzz_sim', 'message_check'"  # the last three: lab-t3 (0027)
 RUN_STATUSES = "'queued', 'running', 'completed', 'partial', 'failed', 'cancelled'"
 FINDING_STATUSES = "'open', 'accepted', 'dismissed', 'fixed'"
 

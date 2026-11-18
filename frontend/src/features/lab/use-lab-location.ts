@@ -3,8 +3,8 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
-export type LabTab = "quick" | "study" | "ask" | "risk";
-export const LAB_TABS: LabTab[] = ["quick", "study", "ask", "risk"];
+export type LabTab = "quick" | "study" | "ask" | "risk" | "focus" | "buzz" | "check";
+export const LAB_TABS: LabTab[] = ["quick", "study", "ask", "risk", "focus", "buzz", "check"];
 
 /**
  * The tab and the selected run live in the URL (`?tab=risk&run=<id>`), so a refresh keeps the place and Launch Room or

@@ -30,10 +30,11 @@ def names(text: str) -> set[str]:
     return {a or b for a, b in re.findall(r"'([a-z_]+)'|\"([a-z_]+)\"", text)}
 
 
-def test_the_list_is_ten_types_plus_transcreate_creative_xray_and_voice_direct() -> None:
-    assert len(RUN_TYPES) == 13
-    assert RUN_TYPES >= {"transcreate", "creative_xray", "voice_direct"}
-    assert len(RUN_TYPES - {"transcreate", "creative_xray", "voice_direct"}) == 10
+def test_the_list_is_ten_types_plus_transcreate_creative_xray_voice_direct_and_remakes() -> None:
+    added = {"transcreate", "creative_xray", "voice_direct", "remake_visual", "remake_sound"}
+    assert len(RUN_TYPES) == 15
+    assert RUN_TYPES >= added
+    assert len(RUN_TYPES - added) == 10
 
 
 def test_the_model_check_constraint_lists_the_same_types() -> None:

@@ -1,0 +1,67 @@
+{
+ "version": 1,
+ "label": "Demonstration fixtures for Remake (fictional brand Aamod): model output generated once on Vertex AI and committed. Not a live result.",
+ "visual": {
+  "IN-TN": {
+   "file": "tn_scene.jpg",
+   "mime_type": "image/jpeg",
+   "model": "gemini-3.1-flash-image",
+   "location": "global",
+   "prompt_version": "remake-visual-v1",
+   "generated_at": "2026-11-18",
+   "direction": "Tamil Nadu Deepavali evening. Replace the star-shaped paper lantern with a traditional brass standing lamp (kuthuvilakku) glowing warmly, and hang strings of jasmine. Show adhirasam and murukku on the brass plates in place of the chakli and karanji. Keep the dark teal wooden table, the camera angle and the clean empty areas.",
+   "note": "The model's PNG, re-encoded to JPEG quality 88 to keep the repository small. Layout reference: the key visual plate with the logo, tin and tagline pasted in.",
+   "sha256": "b3c7880b52d6d73b64edef5df1340cd35720dd2f705fe06c16fb085454490dac"
+  }
+ },
+ "speech": [
+  {
+   "language": "ta",
+   "voice": "Sulafat",
+   "text": "தீபாவளி வந்தால் வீடு முழுக்க பலகார மணம் வீசும்.",
+   "file": "ta_1.wav",
+   "model": "gemini-3.8-flash-tts",
+   "location": "global",
+   "language_code": "ta-IN",
+   "duration_ms": 4681,
+   "element_id_when_recorded": "mh-vid-cap-1",
+   "sha256": "0afa395a54b6fd31349e69937acf2a5defd813b52a09723656f7e935f9874c7e"
+  },
+  {
+   "language": "ta",
+   "voice": "Sulafat",
+   "text": "பாட்டி கையால் செய்த அதிரசம், உக்காரை, லட்டு…",
+   "file": "ta_2.wav",
+   "model": "gemini-3.8-flash-tts",
+   "location": "global",
+   "language_code": "ta-IN",
+   "duration_ms": 4721,
+   "element_id_when_recorded": "mh-vid-cap-2",
+   "sha256": "9e81ec2fb41c716222876b0fdf12c26173df3f07914dc077c5ff23bbcde5af57"
+  },
+  {
+   "language": "ta",
+   "voice": "Sulafat",
+   "text": "அதே வீட்டுச் சுவை, இப்போது ஆமோத் ஃபெஸ்டிவ் டின்னில்.",
+   "file": "ta_3.wav",
+   "model": "gemini-3.8-flash-tts",
+   "location": "global",
+   "language_code": "ta-IN",
+   "duration_ms": 4241,
+   "element_id_when_recorded": "mh-vid-cap-3",
+   "sha256": "a7478a11908d5dd8667ae1b2ae7c1b3eba668ad826b781f1eb4b1d09b1e028b9"
+  },
+  {
+   "language": "ta",
+   "voice": "Sulafat",
+   "text": "இந்தப் பண்டிகையில் உங்கள் அன்பானவர்களுக்கு இனிய பரிசைக் கொடுங்கள்.",
+   "file": "ta_4.wav",
+   "model": "gemini-3.8-flash-tts",
+   "location": "global",
+   "language_code": "ta-IN",
+   "duration_ms": 4361,
+   "element_id_when_recorded": "mh-vid-cap-4",
+   "sha256": "88efcd22a6a1b7357ef767e6a164437031ff81d43a4bd9fecf6ad1b1eac59e68"
+  }
+ ]
+}

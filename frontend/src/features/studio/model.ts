@@ -35,6 +35,7 @@ export const OPERATION_LABEL: Record<OperationKind, string> = {
   change_setting: "Setting changed",
   tone_shift: "Tone shifted",
   restore: "Restore",
+  remake: "Remake",
 };
 
 const SCRIPT_NAME: Record<string, string> = {

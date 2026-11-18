@@ -461,3 +461,6 @@ RESPONDERS |= {"xray-scenes-v1": demo_aamod.xray_scenes}  # the Aamod film only;
 from app.fixtures.demo_voice import RESPONDERS as VOICE_RESPONDERS  # noqa: E402
 
 RESPONDERS |= VOICE_RESPONDERS
+from app.fixtures.pulse_comments import RESPONDERS as PULSE_COMMENT_RESPONDERS  # noqa: E402
+
+RESPONDERS |= PULSE_COMMENT_RESPONDERS  # Comment Pulse reading of the sample comments

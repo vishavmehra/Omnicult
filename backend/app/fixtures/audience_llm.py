@@ -183,9 +183,17 @@ AUDIENCE_RESPONDERS = {
 }
 
 
+def _with_sessions() -> None:
+    """The Live Focus Group, Buzz Simulator and Message Check responders (lab-t3) join the Audience Lab ones."""
+    from app.fixtures.lab_t3_llm import RESPONDERS as SESSIONS
+
+    AUDIENCE_RESPONDERS.update(SESSIONS)
+
+
 def fixture_provider() -> Any:
     """The demo provider with the Audience Lab responders added to the existing ones."""
     from app.fixtures.demo_llm import RESPONDERS
     from app.llm.fixture import FixtureLLMProvider
 
+    _with_sessions()
     return FixtureLLMProvider({**RESPONDERS, **AUDIENCE_RESPONDERS})

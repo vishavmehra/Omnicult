@@ -52,7 +52,7 @@ from app.schemas.projects import Project
 from app.schemas.proof import ProofReportCreate
 from app.schemas.runs import RunProgress, RunResultRef
 from app.schemas.xray import MediaProbe, TranscribeStatus, TranscriptSegment
-from app.services import audience, chips, desk, launch, proof_reports, pulse, transcreate, versions, xray
+from app.services import audience, chips, desk, lab_t3, launch, proof_reports, pulse, transcreate, versions, xray
 from app.services import claims as claim_service
 from app.services.audit import record_audit
 from app.services.identity import ensure_personal_workspace
@@ -153,10 +153,22 @@ async def _build(user_id: UUID, project_id: UUID) -> None:
         await _audience_and_readiness(user_id, workspace_id, campaign_id, original, scenes, tree)
     async with _timed("pulse"):
         await pulse.load_sample(user_id, campaign_id)
+    # Tier 3 features, already populated in the demo (each hook is idempotent, offline and refuses live projects).
+    from app.services import delivery_demo, digest_demo, lens_t3, pulse_t3_demo, usage  # noqa: PLC0415  (avoid import cycles)
+
+    async with _timed("launch delivery"):
+        await delivery_demo.seed_launch_delivery(user_id, campaign_id)
+    async with _timed("pulse alerts, fatigue, predicted vs actual"):
+        await pulse_t3_demo.seed_pulse_t3(user_id, campaign_id)
+    async with _timed("comment pulse and weekly digest"):
+        await digest_demo.seed_comment_pulse_and_digests(user_id, campaign_id)
+    async with _timed("trend radar and category shelf"):
+        await lens_t3.seed_lens_t3_demo(user_id, campaign_id)
     async with _timed("proof report"):
         await proof_reports.create_report(user_id, campaign_id, ProofReportCreate(
             title="Aamod Festive Tin, Diwali 2027: Proof Report (demonstration)", region_codes=list(REGIONS)))
     async with session() as s, s.begin():
+        await usage.seed_demo_usage(s, project_id)
         await record_audit(s, action="demo.seed", target_type="project", target_id=str(project_id), workspace_id=workspace_id,
                            actor_user_id=user_id, detail={"journey": "aamod", "fixture": FIXTURE_LABEL})
 
@@ -543,6 +555,7 @@ async def _audience_and_readiness(user_id: UUID, workspace_id: UUID, campaign_id
                  tree["regions"][p.region]["transcreate_run"], p.festival_term) for p in fx.ADAPTATIONS]
     scratch: list[UUID] = []  # content versions made only so Quick Read can read each version's text; removed afterwards
     run_ids: list[UUID] = []
+    sessions: list[lab_t3.DemoVersion] = []
     try:
         for code, node_id, label, cited, transcreate_run, festival in targets:
             async with read_session() as s:
@@ -560,6 +573,7 @@ async def _audience_and_readiness(user_id: UUID, workspace_id: UUID, campaign_id
                 region_code=code, elements=_risk_elements(node, spoken), scenes=scene_rows, version_ref=str(node_id),
                 product_category="packaged festive sweets and snacks"))
             run_ids += [quick.run_id, risk.run_id]
+            sessions.append(lab_t3.DemoVersion(region_code=code, quick_read_run_id=quick.run_id, version_ref=str(node_id), creative=_content_of(node.elements)))
             quick_run = await _wait(m.AudienceRun, quick.run_id, f"{label} Quick Read")
             risk_run = await _wait(m.AudienceRun, risk.run_id, f"{label} Risk Check")
             observations = await _observations(user_id, workspace_id, campaign_id, code, node, quick_run, risk_run, transcreate_run,
@@ -570,6 +584,8 @@ async def _audience_and_readiness(user_id: UUID, workspace_id: UUID, campaign_id
         async with session() as s, s.begin():  # the runs keep `version_ref`; the campaign's content stays the original (v1)
             await s.execute(update(m.AudienceRun).where(m.AudienceRun.id.in_(run_ids)).values(content_version_id=None))
             await s.execute(delete(m.CampaignVersion).where(m.CampaignVersion.id.in_(scratch)))
+    # Live Focus Group, Buzz Simulator and Message Check, from fixtures (lab-t3): one finished session of each kind on these panels.
+    await lab_t3.seed_demo_sessions(user_id, campaign_id, sessions, intended_message=fx.BRIEF_PRIMARY_MESSAGE)
 
 
 async def _observations(user_id: UUID, workspace_id: UUID, campaign_id: UUID, code: str, node: m.VersionNode, quick_run: m.AudienceRun,

@@ -230,6 +230,7 @@ def capability_model(settings: Settings, capability: Capability) -> str | None:
         "image_generation": settings.gemini_model_image,
         "tts": settings.gemini_model_tts,
         "live": settings.gemini_model_live,
+        "music": settings.gemini_model_music,
         "embeddings": settings.gemini_embedding_model,
     }[capability] or None
 

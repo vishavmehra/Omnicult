@@ -294,7 +294,14 @@ export function RunBanner({ run, label, onNewRun }: { run: BannerRun; label: str
 
 // ---------- run list ----------
 
-const KIND_NOUN: Record<RunSummary["kind"], string> = { quick_read: "Quick Read", audience_study: "Audience Study", risk_check: "Risk Check" };
+const KIND_NOUN: Record<RunSummary["kind"], string> = {
+  quick_read: "Quick Read",
+  audience_study: "Audience Study",
+  risk_check: "Risk Check",
+  focus_group: "Focus Group",
+  buzz_sim: "Buzz Simulator",
+  message_check: "Message Check",
+};
 
 /** Earlier runs of one kind as a ruled list: the open one is marked, each shows its state word, so a finished or failed run is visible at a glance. */
 export function RunPicker({

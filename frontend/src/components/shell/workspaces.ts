@@ -41,16 +41,16 @@ export const STAGES: Stage[] = [
   { key: "test", label: "Test", summary: "Rehearse with a labelled synthetic audience before spending on media.", workspaces: ["lab"] },
   { key: "decide", label: "Decide and ship", summary: "Fixed, visible rules turn scores into Go, Fix or Rethink.", workspaces: ["launch"] },
   { key: "track", label: "Track", summary: "What really happened, region by region, with its freshness stated.", workspaces: ["pulse"] },
-  { key: "prove", label: "Prove", summary: "Answer “why did we make this decision?” from the record.", workspaces: ["proof"] },
+  { key: "prove", label: "Prove", summary: "Answer â€œwhy did we make this decision?â€ from the record.", workspaces: ["proof"] },
 ];
 
 // Deep-link builders. `at` appends the query the workspace reads (desk and studio and lab `?tab=`, lens and proof `?view=`).
 const at = (key: WorkspaceKey, query = "") => (campaignId: string) => `${workspaceHref(campaignId, key)}${query}`;
 const TODAY = () => "/app";
 const XRAY = (campaignId: string) => `${workspaceHref(campaignId, "studio")}/xray`;
+const REMAKE = (campaignId: string) => `${workspaceHref(campaignId, "studio")}/remake`;
 const SETTINGS = () => "/app/settings";
 const USAGE = () => "/app/usage";
-const ROADMAP = () => "/app/roadmap";
 
 export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
   desk: {
@@ -80,9 +80,9 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
       { id: 9, name: "Language Map", tier: 2, status: "built", href: at("lens", "?view=language-map"), note: "Language and script mix, state by state." },
       { id: 10, name: "Moment Calendar", tier: 2, status: "built", href: at("lens", "?view=calendar"), note: "Festivals and moments that matter for timing." },
       { id: 11, name: "Market Compare", tier: 1, status: "built", href: at("lens", "?view=compare"), note: "States side by side on the same evidence." },
-      { id: 12, name: "Trend Radar", tier: 3, status: "in_progress", note: "Rising public interest by region." },
-      { id: 13, name: "Share of Search", tier: 3, status: "roadmap", href: ROADMAP, note: "Search interest against competitors." },
-      { id: 14, name: "Category Shelf", tier: 3, status: "in_progress", note: "How the category shows up regionally." },
+      { id: 12, name: "Trend Radar", tier: 3, status: "built", href: at("lens", "?view=trends"), note: "Rising and falling public attention by state, from Wikipedia pageviews." },
+      { id: 13, name: "Share of Search", tier: 3, status: "roadmap", note: "Search interest against competitors." },
+      { id: 14, name: "Category Shelf", tier: 3, status: "built", href: at("lens", "?view=shelf"), note: "Brands and products in the category, by state, with public signals." },
       { id: 15, name: "Evidence Meter", tier: 1, status: "built", href: at("lens", "?view=profile"), note: "How much of a profile is observed, calculated, interpreted or unverified, and from how many independent sources." },
     ],
   },
@@ -98,12 +98,12 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
       { id: 18, name: "Tone Dials", tier: 2, status: "built", href: at("studio", "?tab=transcreate"), note: "Formality, warmth and humour per region, inside the brand voice." },
       { id: 19, name: "Tweak Chips", tier: 1, status: "built", href: at("studio", "?tab=elements"), note: "Small suggested changes, each with its reason, evidence and cost, inspected before you apply them." },
       { id: 20, name: "Lock and Edit", tier: 1, status: "built", href: at("studio", "?tab=elements"), note: "Lock logos, product areas and taglines; every operation respects the locks." },
-      { id: 21, name: "Remake: Visuals", tier: 2, status: "in_progress", note: "A regional key visual from an image model, with Indic text set in code, never drawn by the model." },
-      { id: 22, name: "Remake: Sound", tier: 2, status: "in_progress", note: "A regional voice-over generated with text-to-speech, confirmed before it runs." },
-      { id: 23, name: "Remake: Video", tier: 3, status: "roadmap", href: ROADMAP, note: "Regional video cuts." },
+      { id: 21, name: "Remake: Visuals", tier: 2, status: "built", href: REMAKE, note: "A regional key visual from an image model, with Indic text set in code, never drawn by the model." },
+      { id: 22, name: "Remake: Sound", tier: 2, status: "built", href: REMAKE, note: "A regional voice-over generated with text-to-speech, confirmed before it runs." },
+      { id: 23, name: "Remake: Video", tier: 3, status: "roadmap", note: "Regional video cuts." },
       { id: 24, name: "Format Fit", tier: 3, status: "in_progress", note: "Resize for every placement." },
       { id: 25, name: "Version Tree", tier: 1, status: "built", href: at("studio"), note: "Every operation creates a version; the original is never overwritten." },
-      { id: 26, name: "Voice Director", tier: 2, status: "in_progress", note: "Direct the edit by speaking." },
+      { id: 26, name: "Voice Director", tier: 2, status: "built", href: at("studio", "?tab=direct"), note: "Direct the edit by speaking." },
       { id: 27, name: "Claim Guard", tier: 3, status: "in_progress", note: "Checks product claims against what the brand can substantiate." },
       { id: 28, name: "Script Check", tier: 3, status: "in_progress", note: "Checks rendered Indic script for shaping errors." },
     ],
@@ -118,10 +118,10 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
       { id: 29, name: "Quick Read", tier: 1, status: "built", href: at("lab"), note: "First reactions, message understanding, confusion and regional concerns from a synthetic panel, labelled synthetic throughout." },
       { id: 30, name: "Audience Study", tier: 2, status: "built", href: at("lab", "?tab=study"), note: "A bounded synthetic panel with profiles by state, language, city tier and age band." },
       { id: 31, name: "Ask the Panel", tier: 2, status: "built", href: at("lab", "?tab=ask"), note: "Follow-up questions to the same synthetic participants, with their memory kept." },
-      { id: 32, name: "Live Focus Group", tier: 3, status: "in_progress", note: "A moderated synthetic discussion." },
-      { id: 33, name: "Buzz Simulator", tier: 3, status: "in_progress", note: "How talk about the campaign might spread." },
+      { id: 32, name: "Live Focus Group", tier: 3, status: "built", href: at("lab", "?tab=focus"), note: "A moderated synthetic discussion." },
+      { id: 33, name: "Buzz Simulator", tier: 3, status: "built", href: at("lab", "?tab=buzz"), note: "How talk about the campaign might spread." },
       { id: 34, name: "Risk Check", tier: 1, status: "built", href: at("lab", "?tab=risk"), note: "Risk findings pinned to the image region or video moment they concern, with their evidence." },
-      { id: 35, name: "Message Check", tier: 3, status: "in_progress", note: "Whether the intended message survives adaptation." },
+      { id: 35, name: "Message Check", tier: 3, status: "built", href: at("lab", "?tab=check"), note: "Whether the intended message survives adaptation." },
     ],
   },
   launch: {
@@ -131,12 +131,12 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
     Icon: Stamp,
     purpose: "Compare versions under fixed, visible rules and decide Go, Fix or Rethink.",
     features: [
-      { id: 36, name: "Compare and Score", tier: 1, status: "built", href: at("launch"), note: "Versions scored by fixed, visible rules; the model may observe, it never sets the score." },
+      { id: 36, name: "Compare and Score", tier: 1, status: "built", href: at("launch", "?tab=compare"), note: "Versions scored by fixed, visible rules; the model may observe, it never sets the score." },
       { id: 37, name: "Readiness Board", tier: 1, status: "built", href: at("launch"), note: "Go, Fix or Rethink, each with its main reason and next action." },
-      { id: 38, name: "Review Links", tier: 3, status: "in_progress", note: "Share a version for sign-off." },
-      { id: 39, name: "Region Plan", tier: 3, status: "in_progress", note: "Which version goes to which region, when." },
-      { id: 40, name: "Asset Pack", tier: 3, status: "in_progress", note: "Export everything a region needs." },
-      { id: 41, name: "Push to Platform", tier: 3, status: "roadmap", href: ROADMAP, note: "Send approved versions to ad platforms." },
+      { id: 38, name: "Review Links", tier: 2, status: "built", href: at("launch", "?tab=review-links"), note: "Share a version for sign-off." },
+      { id: 39, name: "Region Plan", tier: 2, status: "built", href: at("launch", "?tab=region-plan"), note: "Which version goes to which region, when." },
+      { id: 40, name: "Asset Pack", tier: 2, status: "built", href: at("launch", "?tab=asset-pack"), note: "Export everything a region needs." },
+      { id: 41, name: "Push to Platform", tier: 3, status: "roadmap", note: "Send approved versions to ad platforms." },
     ],
   },
   pulse: {
@@ -146,13 +146,13 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
     Icon: Activity,
     purpose: "Platform results by region and version, with live, delayed, provisional and sample data told apart.",
     features: [
-      { id: 42, name: "Connect Accounts", tier: 3, status: "roadmap", href: ROADMAP, note: "Google Ads, Meta and GA4 connections." },
-      { id: 43, name: "Regional Dashboard", tier: 2, status: "built", href: at("pulse"), note: "Delivery, cost, response, video and outcome by region and version, on a clearly labelled sample dataset until an account is connected." },
-      { id: 44, name: "Predicted vs Actual", tier: 3, status: "in_progress", note: "Audience Lab predictions against real results." },
-      { id: 45, name: "Alerts", tier: 3, status: "in_progress", note: "Notice when a region moves." },
-      { id: 46, name: "Comment Pulse", tier: 3, status: "in_progress", note: "What people say under the ads." },
-      { id: 47, name: "Fatigue Watch", tier: 3, status: "in_progress", note: "When a creative wears out." },
-      { id: 48, name: "Weekly Digest", tier: 3, status: "in_progress", note: "The week, summarised." },
+      { id: 42, name: "Connect Accounts", tier: 3, status: "roadmap", note: "Google Ads, Meta and GA4 connections." },
+      { id: 43, name: "Regional Dashboard", tier: 2, status: "built", href: at("pulse"), note: "Delivery, cost, response, video and outcome by region and version, on a sample dataset until an account is connected." },
+      { id: 44, name: "Predicted vs Actual", tier: 3, status: "built", href: at("pulse", "?view=predicted"), note: "Audience Lab predictions against real results." },
+      { id: 45, name: "Alerts", tier: 3, status: "built", href: at("pulse", "?view=alerts"), note: "Notice when a region moves." },
+      { id: 46, name: "Comment Pulse", tier: 3, status: "built", href: at("pulse", "?view=comments"), note: "What people say under the ads, by region, language and version." },
+      { id: 47, name: "Fatigue Watch", tier: 3, status: "built", href: at("pulse", "?view=fatigue"), note: "When a creative wears out." },
+      { id: 48, name: "Weekly Digest", tier: 3, status: "built", href: at("pulse", "?view=digest"), note: "The week summarised from stored records, with next actions." },
     ],
   },
   proof: {
@@ -173,11 +173,11 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
 
 /** Platform features that sit under every workspace (the trust layer on the landing page). */
 export const PLATFORM_FEATURES: Feature[] = [
-  { id: 54, name: "Teams and Roles", tier: 1, status: "in_progress", href: SETTINGS, note: "Workspaces, brands and campaigns are private to their team; permissions are enforced on the server." },
+  { id: 54, name: "Teams and Roles", tier: 1, status: "built", href: SETTINGS, note: "Workspaces, brands and campaigns are private to their team; permissions are enforced on the server." },
   { id: 55, name: "Resumable Runs", tier: 1, status: "built", href: at("proof", "?view=history"), note: "Long jobs run in the background with a visible state, and an interrupted run resumes instead of starting over." },
   { id: 56, name: "Model Gateway", tier: 1, status: "built", href: at("proof", "?view=history"), note: "One gateway for every model call: model, prompt version, tokens, cost estimate and latency recorded, with budget limits." },
-  { id: 57, name: "Country Packs: India", tier: 2, status: "in_progress", href: SETTINGS, note: "All 36 states and union territories, their languages and scripts, ready for Market Lens." },
-  { id: 58, name: "Usage and Credits", tier: 3, status: "in_progress", href: USAGE, note: "Spend by workspace and campaign." },
+  { id: 57, name: "Country Packs: India", tier: 2, status: "built", href: SETTINGS, note: "All 36 states and union territories, their languages and scripts, ready for Market Lens." },
+  { id: 58, name: "Usage and Credits", tier: 3, status: "built", href: USAGE, note: "Spend by workspace and campaign." },
 ];
 
 export const WORKSPACE_ORDER: WorkspaceKey[] = ["desk", "lens", "studio", "lab", "launch", "pulse", "proof"];
@@ -195,7 +195,7 @@ export function featureHref(feature: Feature, campaignId: string | null): string
 }
 
 /** Features a person can click: built ones, and roadmap ones that point at the roadmap page. */
-export const isOpenable = (feature: Feature) => feature.status !== "in_progress" && Boolean(feature.href || feature.action);
+export const isOpenable = (feature: Feature) => feature.status === "built" && Boolean(feature.href || feature.action);
 
 export function isWorkspaceKey(value: string | null | undefined): value is WorkspaceKey {
   return Boolean(value && (WORKSPACE_ORDER as string[]).includes(value));

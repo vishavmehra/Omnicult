@@ -18,6 +18,7 @@ const OP_ICON: Record<OperationKind, LucideIcon> = {
   change_setting: Settings2,
   tone_shift: SlidersHorizontal,
   restore: History,
+  remake: Bot,
 };
 
 /**

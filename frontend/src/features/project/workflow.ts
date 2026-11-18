@@ -17,6 +17,9 @@ export const RUN_TYPE_META: Record<RunType, { label: string; segment: string }> 
   transcreate: { label: "Transcreation", segment: "voice" },
   creative_xray: { label: "Creative X-Ray", segment: "voice" },
   voice_direct: { label: "Voice Director", segment: "voice" },
+  // Remake (Phase 3): lives under the Creative Studio route studio/remake; the legacy section map has no such segment.
+  remake_visual: { label: "Remake: Visuals", segment: "voice" },
+  remake_sound: { label: "Remake: Sound", segment: "voice" },
 };
 
 /** Section href that keeps the active campaign in the URL. `segment` null is the Overview. */

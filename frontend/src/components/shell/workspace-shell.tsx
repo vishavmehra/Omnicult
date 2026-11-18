@@ -1,7 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronRight, Coins, LayoutList, LogOut, Menu, PanelRightClose, PanelRightOpen, Settings, Signpost } from "lucide-react";
+import { ChevronRight, Coins, LayoutList, LogOut, Menu, PanelRightClose, PanelRightOpen, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Fragment, createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
@@ -23,7 +23,7 @@ import { FeatureRow, useActiveFeatureIds } from "./feature-links";
 import { arrivedAt, latestFeatureNav } from "./feature-nav";
 import { ThemeToggle } from "./theme-toggle";
 import { Wordmark } from "./wordmark";
-import { PLATFORM_FEATURES, STAGES, WORKSPACES, workspaceHref, type WorkspaceKey } from "./workspaces";
+import { STAGES, WORKSPACES, workspaceHref, type WorkspaceKey } from "./workspaces";
 
 // ---------- context panel slot ----------
 
@@ -67,6 +67,17 @@ function AccountMenu() {
         <DropdownMenuGroup>
           <DropdownMenuLabel>{account.label ?? "Account"}</DropdownMenuLabel>
           {account.status === "dev" && <DropdownMenuItem disabled>Local development token, no sign-in</DropdownMenuItem>}
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => router.push("/app/settings")}>
+            <Settings aria-hidden />
+            Team and settings
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/app/usage")}>
+            <Coins aria-hidden />
+            Usage
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         {env.authMode === "firebase" && account.status !== "signed-out" && (
           <>
@@ -166,7 +177,7 @@ function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; 
                       )}
                       {campaignId && (
                         <ul id={`spine-${key}`} aria-label={`${ws.label} features`} hidden={!open} className={cn(featureList, "ml-[30px]")}>
-                          {ws.features.map((f) => (
+                          {ws.features.filter((f) => f.status === "built").map((f) => (
                             <FeatureRow key={f.id} feature={f} campaignId={campaignId} active={activeIds.has(f.id)} onNavigate={onNavigate} />
                           ))}
                         </ul>
@@ -178,40 +189,7 @@ function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; 
             </li>
           ))}
         </ol>
-        {campaignId && (
-          <div className="mt-4 border-t border-border/70 pt-1.5">
-            <button
-              type="button"
-              onClick={() => toggle("platform", false)}
-              aria-expanded={isOpen("platform", false)}
-              aria-controls="spine-platform"
-              className="flex h-9 w-full items-center gap-1.5 rounded-lg px-3 text-left text-[11px] font-semibold tracking-[0.08em] text-ink-muted uppercase hover:text-ink"
-            >
-              {chevron(isOpen("platform", false))}
-              Platform
-            </button>
-            <ul id="spine-platform" aria-label="Platform features" hidden={!isOpen("platform", false)} className={cn(featureList, "ml-4 border-l border-border pl-1.5")}>
-              {PLATFORM_FEATURES.map((f) => (
-                <FeatureRow key={f.id} feature={f} campaignId={campaignId} active={activeIds.has(f.id)} onNavigate={onNavigate} />
-              ))}
-            </ul>
-          </div>
-        )}
       </nav>
-      <div className="space-y-0.5 border-t border-border px-2.5 py-2.5">
-        <Link href="/app/usage" onClick={onNavigate} aria-current={active === "usage" ? "page" : undefined} className={cn(item, active === "usage" ? on : off)}>
-          <Coins aria-hidden className={cn("size-[18px]", active === "usage" && "text-pop")} />
-          Usage
-        </Link>
-        <Link href="/app/roadmap" onClick={onNavigate} aria-current={active === "roadmap" ? "page" : undefined} className={cn(item, active === "roadmap" ? on : off)}>
-          <Signpost aria-hidden className={cn("size-[18px]", active === "roadmap" && "text-pop")} />
-          Roadmap
-        </Link>
-        <Link href="/app/settings" onClick={onNavigate} aria-current={active === "settings" ? "page" : undefined} className={cn(item, active === "settings" ? on : off)}>
-          <Settings aria-hidden className={cn("size-[18px]", active === "settings" && "text-pop")} />
-          Settings
-        </Link>
-      </div>
     </div>
   );
 }

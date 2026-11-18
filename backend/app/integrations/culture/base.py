@@ -155,6 +155,7 @@ class TrendEdition(BaseModel):
     article: str
     points: list[TrendPoint]
     total: int
+    baseline: list[TrendPoint] | None = None  # the whole edition's views per month, when read (Trend Radar); None otherwise
 
 
 class TrendSeries(BaseModel):

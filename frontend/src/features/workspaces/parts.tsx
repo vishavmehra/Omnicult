@@ -145,27 +145,20 @@ export function EarlierTools({ tools }: { tools: { segment: string; label: strin
   );
 }
 
-/** The workspace's feature list (docs/SCOPE_PLAN.md): product features as text, roadmap features labelled as roadmap. */
+/** The workspace's built features (only what exists is shown). */
 export function FeatureScope({ workspace }: { workspace: WorkspaceKey }) {
   const ws = WORKSPACES[workspace];
-  const product = ws.features.filter((f) => f.tier < 3);
-  const roadmap = ws.features.filter((f) => f.tier === 3);
+  const built = ws.features.filter((f) => f.status === "built");
   return (
     <section aria-label={`${ws.label} features`} className="space-y-2">
       <h3 className="text-[13px] font-semibold text-ink">What {ws.label} covers</h3>
       <ul className="flex flex-wrap gap-1.5">
-        {product.map((f) => (
+        {built.map((f) => (
           <li key={f.id} title={f.note} className="rounded-stamp border border-border px-1.5 py-0.5 text-[12px] text-ink-secondary">
             {f.name}
           </li>
         ))}
       </ul>
-      {roadmap.length > 0 && (
-        <p className="text-[12px] text-ink-muted">
-          <span className="font-medium text-ink-secondary">Roadmap, not built: </span>
-          {roadmap.map((f) => f.name).join(", ")}.
-        </p>
-      )}
     </section>
   );
 }

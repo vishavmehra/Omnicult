@@ -19,6 +19,7 @@ from app.workflows.rehearsal import run_rehearsal
 from app.workflows.risk import run_risk_scan
 from app.workflows.social import run_social_simulation
 from app.workflows.transcreate import run_transcreate
+from app.workflows.remake import run_remake_sound, run_remake_visual
 from app.workflows.xray import run_creative_xray
 from app.workflows.types import (
     AdaptationInput,
@@ -112,6 +113,8 @@ __all__ = [
     "run_social_simulation",
     "run_transcreate",
     "run_creative_xray",
+    "run_remake_visual",
+    "run_remake_sound",
     "answer_followup",
     "answer_group_question",
 ]

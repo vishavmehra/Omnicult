@@ -171,6 +171,55 @@ class Settings(BaseSettings):
     # than this, and one build is cut off after the timeout (its partial result is not stored).
     lens_live_build_min_interval_seconds: int = 300
     lens_build_timeout_seconds: int = 90
+    # --- launch-t3 (Review Links, Region Plan, Asset Pack) ---------------------------------------------------------
+    # Public review endpoints take no sign-in, so they are rate limited: requests per minute per client address, and
+    # per link in total (a forged X-Forwarded-For cannot lift the per-link cap). One link also accepts a bounded
+    # number of reviewer responses. Counters live in process memory (one value per running instance).
+    review_rate_per_minute: int = Field(default=30, ge=1, le=600)
+    review_max_responses_per_link: int = Field(default=200, ge=1, le=5000)
+    # How long an Asset Pack download link works, and the largest ZIP the server will build.
+    asset_pack_url_ttl_seconds: int = Field(default=900, ge=60, le=86400)
+    asset_pack_max_bytes: int = Field(default=64 * 1024 * 1024, ge=1024 * 1024)
+    # --- Remake: Visuals and Sound (Lyria jingle; the image and speech models are the gemini_model_* ids above) ---------
+    gemini_model_music: str = "lyria-002"  # Vertex AI only; reached over REST `predict`, not the Gen AI SDK
+    google_music_location: str = "us-central1"  # Lyria is offered in us-central1 (verified 2026-11-17)
+    remake_max_voice_lines: int = 8  # speech calls one Remake: Sound run may make (one per line), a hard bound
+
+    # --- pulse-t3 (Live Pulse Tier 3: Alerts run by Cloud Scheduler) ---
+    # POST /api/v1/internal/pulse/evaluate-alerts accepts only a Google OIDC ID token minted for this service account and
+    # this audience (the service's own URL). Either one unset: the endpoint is refused. Never open, never a shared secret.
+    scheduler_service_account: str | None = None
+    scheduler_audience: str | None = None
+    # One scheduled evaluation per campaign per period (UTC): 24 is one per day, 1 is one per hour.
+    pulse_alert_period_hours: int = Field(default=24, ge=1, le=24)
+
+    @field_validator("scheduler_service_account", "scheduler_audience", mode="before")
+    @classmethod
+    def _blank_scheduler_is_unset(cls, value: object) -> object:
+        return None if isinstance(value, str) and not value.strip() else value
+
+    # --- digest (Weekly Digest, Cloud Scheduler): POST /api/v1/internal/digest/generate-weekly uses the same
+    # scheduler_service_account and scheduler_audience as the alerts job above; either unset refuses every call.
+    # --- lens tier 3 (Trend Radar, Category Shelf) ---------------------------------------------------------------
+    # Both read free public APIs (Wikimedia pageviews, Wikidata): bounded terms and states per refresh, and a minimum
+    # interval between live refreshes of the same state or category.
+    lens_trend_max_terms: int = 5  # festival articles read per state; the category's own topics are added
+    lens_trend_max_regions_live: int = 3
+    lens_trend_min_interval_seconds: int = 300
+    lens_shelf_max_attention: int = 6  # items whose Wikipedia pageviews are read per shelf refresh
+    lens_shelf_min_interval_seconds: int = 300
+
+    # --- lab-t3 (Audience Lab: Live Focus Group, Buzz Simulator, Message Check) ---------------------------------------
+    # Bounds on what one session may ask of the model. Demo runs replay deterministic fixtures; the pause only paces the
+    # replay so a session streams turn by turn the way a live one does (tests set it to 0).
+    lab_t3_focus_max_speakers: int = Field(default=8, ge=2)
+    lab_t3_focus_max_guide_questions: int = Field(default=6, ge=1)
+    lab_t3_focus_max_interjections: int = Field(default=5, ge=0)
+    lab_t3_demo_turn_delay_seconds: float = Field(default=0.35, ge=0)
+    lab_t3_buzz_max_participants: int = Field(default=40, ge=12)
+    lab_t3_buzz_max_rounds: int = Field(default=4, ge=1)
+    lab_t3_message_check_max_per_region: int = Field(default=12, ge=3)
+    lab_t3_message_check_max_regions: int = Field(default=4, ge=1)
 
     @field_validator("google_cloud_project", "gemini_api_key", mode="before")
     @classmethod

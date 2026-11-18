@@ -16,7 +16,7 @@ from app.db.base import Base, utcnow
 
 OPERATION_KINDS = (
     "'manual_edit', 'replace_text', 'transcreate', 'apply_chip', 'swap_reference', 'change_setting', 'tone_shift', "
-    "'restore'"
+    "'restore', 'remake'"
 )
 CHIP_STATUSES = "'proposed', 'applied'"
 

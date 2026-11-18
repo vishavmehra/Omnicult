@@ -136,7 +136,7 @@ async def list_assets(
         if kind is not None:
             stmt = stmt.where(m.Asset.kind == kind)
         if not include_derived:
-            stmt = stmt.where(m.Asset.parent_asset_id.is_(None))
+            stmt = stmt.where(m.Asset.parent_asset_id.is_(None), m.Asset.derived_role.is_(None))
         rows, total = await paginate(s, stmt.order_by(m.Asset.created_at.desc(), m.Asset.id), limit, offset)
     return AssetPage(items=[to_asset(row) for row in rows], limit=limit, offset=offset, total=total)
 

@@ -175,7 +175,8 @@ async def test_try_the_demo_seeds_the_whole_aamod_journey(aamod: httpx.AsyncClie
     video = next(a for a in assets if a.kind == "video")
     assert video.duration_ms == 29400 and video.rights_confirmed and video.processing_status == "ready"
     assert {a.derived_role for a in assets if a.parent_asset_id == video.id} == {"keyframe", "thumbnail"}
-    assert sum(a.derived_role == "keyframe" for a in assets) == 5 and sum(a.kind == "image" and a.parent_asset_id is None for a in assets) == 6
+    # 6 creative images (key visual, its plate, 4 scene plates) plus the 5 Brand Kit images the Desk Brand Kit links.
+    assert sum(a.derived_role == "keyframe" for a in assets) == 5 and sum(a.kind == "image" and a.parent_asset_id is None for a in assets) == 11
     creatives = (await get(client, f"/campaigns/{cid}/creatives"))["items"]
     assert {c["kind"]: (c["status"], c["scene_count"], c["mode"]) for c in creatives} == {"video": ("completed", 5, "demo"), "image": ("completed", 1, "demo")}
     film = next(c for c in creatives if c["kind"] == "video")
@@ -250,7 +251,10 @@ async def test_try_the_demo_seeds_the_whole_aamod_journey(aamod: httpx.AsyncClie
     assert diff["changed"] and set(diff["preserved"]) >= locked
 
     # -- Audience Lab: the planted risk is found, anchored and cited ---------------------------------------------------------------
-    runs = await rows(m.AudienceRun, m.AudienceRun.project_id == UUID(pid))
+    all_runs = await rows(m.AudienceRun, m.AudienceRun.project_id == UUID(pid))
+    # The Tier 3 Lab sessions (focus group, buzz, message check) are seeded too; the checks below cover Quick Read and Risk Check.
+    assert sum(r.kind in {"focus_group", "buzz_sim", "message_check"} for r in all_runs) == 3
+    runs = [r for r in all_runs if r.kind in {"quick_read", "risk_check"}]
     assert len(runs) == 8 and {r.mode for r in runs} == {"demo"} and {r.status for r in runs} == {"completed"}
     assert all(r.version_ref and r.content_version_id is None and r.usage["model_stages"] == 0 for r in runs)
     risk_runs = {r.region_codes[0]: r for r in runs if r.kind == "risk_check"}
@@ -321,7 +325,8 @@ async def test_try_the_demo_seeds_the_whole_aamod_journey(aamod: httpx.AsyncClie
         "version_id": root["id"], "element_id": "mh-vid-s1-headline", "region_code": "IN-TN"})
     assert chips.status_code == 201 and chips.json()["chips"] == [], chips.text  # nothing evidence-backed to propose: an honest answer
     async with read_session() as s:
-        assert await s.scalar(select(func.count()).select_from(m.AiUsageEvent)) == 0, "no model was called"
+        # The demo seed writes fixture usage rows (provider "fixture", cost 0) for the Usage page; none is a model call.
+        assert await s.scalar(select(func.count()).select_from(m.AiUsageEvent).where(m.AiUsageEvent.provider != "fixture")) == 0, "no model was called"
 
 
 def fx_regions() -> tuple[str, ...]:

@@ -31,7 +31,7 @@ from app.studio.engine import Edit, OperationRejected, OpSpec, Snapshot
 
 DEFAULT_LABELS = {
     "manual_edit": "Manual edit", "replace_text": "Text replaced", "transcreate": "Transcreation", "apply_chip": "Tweak chip",
-    "swap_reference": "Reference swapped", "change_setting": "Setting changed", "tone_shift": "Tone shifted", "restore": "Restored",
+    "swap_reference": "Reference swapped", "change_setting": "Setting changed", "tone_shift": "Tone shifted", "restore": "Restored", "remake": "Remake",
 }
 
 

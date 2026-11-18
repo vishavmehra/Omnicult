@@ -43,6 +43,8 @@ OPERATIONS = {
     "transcreate": "Transcreation",
     "creative_xray": "Creative X-Ray",
     "voice_direct": "Voice Director",
+    "remake_visual": "Remake: Visuals",
+    "remake_sound": "Remake: Sound",
 }
 
 

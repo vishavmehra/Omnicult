@@ -23,7 +23,7 @@ from app.schemas.regions import EvidenceStrength
 from app.schemas.runs import RunError, RunProgress, RunStatus
 from app.schemas.studies import DimensionResults
 
-RunKind = Literal["quick_read", "audience_study", "risk_check"]
+RunKind = Literal["quick_read", "audience_study", "risk_check", "focus_group", "buzz_sim", "message_check"]
 RegionCode = Annotated[str, StringConstraints(pattern=r"^IN-[A-Z]{2}$")]
 LanguageCode = Annotated[str, StringConstraints(pattern=r"^[a-z]{2,3}$")]
 CityTier = Literal["tier1", "tier2", "tier3", "rural"]

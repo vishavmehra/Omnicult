@@ -8,8 +8,10 @@ from fastapi.routing import APIRoute
 from pydantic import ValidationError
 
 from app.core.config import Settings, get_settings
+from app.core.scheduler_auth import require_scheduler
 
 HTTP_METHODS = {"get", "head", "post", "put", "patch", "delete"}
+SCHEDULER_PATH = "/internal/pulse/evaluate-alerts"
 PROD = {
     "APP_ENV": "production",
     "AUTH_MODE": "firebase",
@@ -58,8 +60,11 @@ def test_production_serves_only_contract_routes(production: pytest.MonkeyPatch) 
     assert [r.path for r in app.routes if hasattr(r, "path")] == []  # no docs, redoc, or openapi.json routes
     routes = [route for module in (*ROUTERS, health) for route in module.router.routes]
     assert all(isinstance(route, APIRoute) and route.include_in_schema for route in routes)  # nothing hidden
+    scheduler = [r for r in routes if r.path == SCHEDULER_PATH]  # the one internal route: Cloud Scheduler, behind its OIDC dependency
+    assert len(scheduler) == 1 and any(d.call is require_scheduler for d in scheduler[0].dependant.dependencies)
     for route in routes:
-        assert not any(word in route.path for word in ("debug", "admin", "internal", "test")), route.path
+        if route.path != SCHEDULER_PATH:
+            assert not any(word in route.path for word in ("debug", "admin", "internal", "test")), route.path
     schema_paths = set(app.openapi()["paths"])
     assert all(p in {"/health", "/ready"} or p.startswith("/api/v1/") for p in schema_paths)
     contract = json.loads((Path(__file__).resolve().parents[3] / "contracts" / "openapi.json").read_text(encoding="utf-8"))

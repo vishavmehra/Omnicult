@@ -1,13 +1,17 @@
 "use client";
 
 import { ShieldCheck } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { ContextPanel } from "@/components/shell/workspace-shell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCapabilities } from "@/features/launch/api";
+import { AssetPackTab } from "@/features/launch/asset-pack";
 import { CompareTab } from "@/features/launch/compare";
 import { InputsProvider } from "@/features/launch/inputs-store";
 import { ReadinessTab } from "@/features/launch/readiness-board";
+import { DELIVERY_TABS, RegionPlanTab, type DeliveryTab } from "@/features/launch/region-plan";
+import { ReviewLinksTab } from "@/features/launch/review-links";
 
 import { useCampaign } from "./campaign-context";
 import { CampaignFacts, EarlierTools, FeatureScope, WorkspaceHeader } from "./parts";
@@ -34,26 +38,53 @@ function RoleNote() {
 
 /**
  * Launch Room: Compare and Score under fixed rules (mvp-2) and the Readiness Board by region (ready-1), with the verdict history
- * and human approvals. Scores and verdicts are computed by deterministic code from typed observations; a model never sets them.
+ * and human approvals; then the delivery tabs: the Region Plan, Review Links for people with no account, and the Asset Pack. Scores and verdicts are computed by deterministic code from typed observations; a model never sets them.
  */
 export function LaunchWorkspace() {
   const { campaign } = useCampaign();
+  // The active tab and the region the Asset Pack is open on live in the address (?tab=…&region=…), so a refresh, a shared link or a
+  // sidebar link lands on the same view. The address is read on every render, not only on mount.
+  const params = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const raw = params.get("tab");
+  const tab: DeliveryTab = DELIVERY_TABS.find((t) => t === raw) ?? "readiness";
+  const packRegion = params.get("region");
+  const go = (next: DeliveryTab, region?: string | null) => {
+    const q = new URLSearchParams();
+    if (next !== "readiness") q.set("tab", next);
+    if (region) q.set("region", region);
+    router.replace(q.size ? `${pathname}?${q}` : pathname, { scroll: false });
+  };
+  const open = (next: DeliveryTab, region?: string) => go(next, region);
   return (
     <InputsProvider campaignId={campaign.id}>
       <WorkspaceHeader workspace="launch">
         <CampaignFacts />
       </WorkspaceHeader>
 
-      <Tabs defaultValue="readiness" className="gap-6">
-        <TabsList aria-label="Launch Room" className="h-9 self-start">
+      <Tabs value={tab} onValueChange={(v) => go(v as DeliveryTab)} className="gap-6">
+        <TabsList aria-label="Launch Room" className="h-9 max-w-full self-start overflow-x-auto">
           <TabsTrigger value="readiness" className="px-3">Readiness Board</TabsTrigger>
           <TabsTrigger value="compare" className="px-3">Compare and Score</TabsTrigger>
+          <TabsTrigger value="region-plan" className="px-3">Region Plan</TabsTrigger>
+          <TabsTrigger value="review-links" className="px-3">Review Links</TabsTrigger>
+          <TabsTrigger value="asset-pack" className="px-3">Asset Pack</TabsTrigger>
         </TabsList>
         <TabsContent value="readiness" keepMounted>
           <ReadinessTab />
         </TabsContent>
         <TabsContent value="compare" keepMounted>
           <CompareTab />
+        </TabsContent>
+        <TabsContent value="region-plan">
+          <RegionPlanTab onOpen={open} />
+        </TabsContent>
+        <TabsContent value="review-links">
+          <ReviewLinksTab />
+        </TabsContent>
+        <TabsContent value="asset-pack">
+          <AssetPackTab key={packRegion ?? ""} region={packRegion} onOpen={open} />
         </TabsContent>
       </Tabs>
 

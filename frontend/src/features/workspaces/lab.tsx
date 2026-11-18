@@ -11,13 +11,24 @@ import { AskTab } from "@/features/lab/ask-panel";
 import { QuickReadTab } from "@/features/lab/quick-read";
 import { RiskCheckTab } from "@/features/lab/risk-check";
 import { StudyTab } from "@/features/lab/study";
+import { BuzzTab } from "@/features/lab/t3/buzz";
+import { FocusGroupTab } from "@/features/lab/t3/focus-group";
+import { MessageCheckTab } from "@/features/lab/t3/message-check";
 import { isActive } from "@/features/lab/types";
 import { LAB_TABS, useLabLocation, type LabTab } from "@/features/lab/use-lab-location";
 
 import { useCampaign } from "./campaign-context";
 import { CampaignFacts, CreativeMat, FeatureScope, SectionTitle, WorkspaceHeader } from "./parts";
 
-const TAB_LABEL: Record<LabTab, string> = { quick: "Quick Read", study: "Audience Study", ask: "Ask the Panel", risk: "Risk Check" };
+const TAB_LABEL: Record<LabTab, string> = {
+  quick: "Quick Read",
+  study: "Audience Study",
+  ask: "Ask the Panel",
+  risk: "Risk Check",
+  focus: "Focus Group",
+  buzz: "Buzz Simulator",
+  check: "Message Check",
+};
 
 /**
  * One line that answers "what is going on in this lab": how many runs are moving, finished with gaps, or failed, across
@@ -98,6 +109,15 @@ export function LabWorkspace() {
         </TabsContent>
         <TabsContent value="risk">
           <RiskCheckTab loc={loc} />
+        </TabsContent>
+        <TabsContent value="focus">
+          <FocusGroupTab loc={loc} />
+        </TabsContent>
+        <TabsContent value="buzz">
+          <BuzzTab loc={loc} />
+        </TabsContent>
+        <TabsContent value="check">
+          <MessageCheckTab loc={loc} />
         </TabsContent>
       </Tabs>
 

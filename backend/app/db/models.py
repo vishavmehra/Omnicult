@@ -19,7 +19,10 @@ from app.db.base import Base, utcnow
 RUN_TYPES = (
     "'market_discovery', 'campaign_rehearsal', 'campaign_adaptation', 'campaign_evaluation', "
     "'cultural_profile', 'campaign_arena', 'risk_scan', 'market_comparison', 'population_study', 'social_simulation', "
-    "'transcreate', 'creative_xray', 'voice_direct'"
+    "'transcreate', 'creative_xray', 'voice_direct', 'remake_visual', 'remake_sound'"
+)
+DERIVED_ROLES = (
+    "'keyframe', 'thumbnail', 'audio_track', 'remake_plate', 'remake_visual', 'remake_voiceover', 'remake_music'"
 )
 RUN_STATUSES = "'queued', 'running', 'completed', 'partial', 'failed', 'cancelled'"
 
@@ -567,7 +570,7 @@ class Asset(Base):
         CheckConstraint(
             "processing_status IN ('not_required', 'pending', 'processing', 'ready', 'failed')", name="processing_status"
         ),
-        CheckConstraint("derived_role IN ('keyframe', 'thumbnail', 'audio_track')", name="derived_role"),
+        CheckConstraint(f"derived_role IN ({DERIVED_ROLES})", name="derived_role"),
         Index("ix_assets_project_id_created_at", "project_id", "created_at"),
         Index("ix_assets_parent_asset_id", "parent_asset_id"),
     )
@@ -854,3 +857,12 @@ from app.db.models_lens import CultureCall, LensBuild  # noqa: E402,F401  (Marke
 from app.db.models_settings import WorkspaceInvite, WorkspaceSettings  # noqa: E402,F401  (Settings tables, migration 0022)
 
 from app.db.models_voice import VoicePlan  # noqa: E402,F401  (Voice Director table, migration 0024)
+
+from app.db.models_launch_t3 import AssetPack, ReviewLink, ReviewResponse  # noqa: E402,F401  (Launch Room delivery tables, migration 0028)
+from app.db.models_pulse_t3 import (  # noqa: E402,F401  (Live Pulse Tier 3 tables, migration 0029)
+    PulseAlert, PulseAlertEvaluation, PulseAlertEvent, PulseAlertRule, PulseComparisonSnapshot, PulseVersionLink,
+)
+
+from app.db.models_digest import CommentAnalysis, PulseComment, PulseDigest  # noqa: E402,F401  (Comment Pulse and Weekly Digest tables, migration 0030)
+from app.db.models_lens_t3 import LensShelfSnapshot, LensTrendBatch, LensTrendSnapshot  # noqa: E402,F401  (Market Lens Tier 3 tables, migration 0025)
+from app.db.models_lab_t3 import BuzzAct, FocusGroupInterjection, FocusGroupTurn  # noqa: E402,F401  (Audience Lab session tables, migration 0027)

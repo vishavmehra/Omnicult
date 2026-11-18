@@ -173,6 +173,9 @@ async def load_sample(user_id: UUID, campaign_id: UUID) -> v.DatasetStatus:
             workspace_id=project.workspace_id, actor_user_id=user_id,
             detail={"dataset_version": sample.DATASET_VERSION, "rows": len(rows)},
         )
+    from app.services import pulse_t3_alerts  # local import: that module reads this one
+
+    await pulse_t3_alerts.evaluate_after_refresh(user_id, campaign_id)  # saved alert rules run on every refresh
     return _status(rows, sample.LAST_UPDATED_AT, sample.DATASET_VERSION)
 
 

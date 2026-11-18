@@ -1,11 +1,11 @@
 "use client";
 
-import { CircleOff, CircleSlash, PlugZap } from "lucide-react";
+import { CircleOff, PlugZap } from "lucide-react";
 
 import { Tag } from "@/components/evidence/badges";
 import { ErrorState, LoadingState } from "@/components/states";
 
-import { useConnections, useMetricCatalogue, usePredictedVsActual } from "./api";
+import { useConnections, useMetricCatalogue } from "./api";
 import { platformLabel } from "./logic";
 import { Section } from "./ui";
 
@@ -23,15 +23,14 @@ const GROUP_LABEL: Record<string, string> = {
 const UNIT_LABEL: Record<string, string> = { count: "count", inr: "INR", ratio: "ratio (%)", multiple: "multiple (×)" };
 
 /**
- * Platform connections and Predicted vs Actual, side by side. Both say plainly that they are not available: no connect
- * button exists because none can work in this build, and there is no calibration to show.
+ * Platform connections. They say plainly that they are not available: no connect button exists because none can work in
+ * this build. Predicted vs Actual lives in its own tab (features/pulse-t3).
  */
 export function SourcesAndCalibration({ campaignId }: { campaignId: string }) {
   const connections = useConnections(campaignId);
-  const predicted = usePredictedVsActual(campaignId);
   return (
-    <Section id="sources" title="Sources and calibration" meta={<span>Both are roadmap in this build</span>}>
-      <div className="grid gap-4 lg:grid-cols-2">
+    <Section id="sources" title="Platform connections" meta={<span>Connecting accounts is roadmap in this build</span>}>
+      <div className="max-w-3xl">
         <section aria-labelledby="connections-title" className="rounded-card border border-border bg-surface">
           <div className="border-b border-border px-4 py-3">
             <h3 id="connections-title" className="text-[14px] font-semibold text-ink">
@@ -69,39 +68,6 @@ export function SourcesAndCalibration({ campaignId }: { campaignId: string }) {
           </p>
         </section>
 
-        <section aria-labelledby="pva-title" className="rounded-card border border-border bg-surface">
-          <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
-            <h3 id="pva-title" className="text-[14px] font-semibold text-ink">
-              Predicted vs actual
-            </h3>
-            <Tag className="border-border bg-surface-muted text-ink-secondary">
-              <CircleSlash aria-hidden />
-              Not available
-            </Tag>
-          </div>
-          {predicted.error ? (
-            <div className="p-3">
-              <ErrorState error={predicted.error} onRetry={() => void predicted.refetch()} />
-            </div>
-          ) : !predicted.data ? (
-            <LoadingState label="Checking for real results…" className="px-4" />
-          ) : (
-            <div className="space-y-3 px-4 py-3 text-[13px]">
-              <p className="leading-snug text-ink-body">{predicted.data.reason}</p>
-              <div>
-                <p className="text-[12.5px] font-medium text-ink">What it would need</p>
-                <ul className="mt-1 list-disc space-y-0.5 pl-5 text-[12.5px] text-ink-secondary marker:text-ink-muted">
-                  {predicted.data.requirements.map((r) => (
-                    <li key={r}>{r}</li>
-                  ))}
-                </ul>
-              </div>
-              <p className="type-meta">
-                Real result rows stored for this campaign: {predicted.data.real_result_rows}. No calibration is claimed.
-              </p>
-            </div>
-          )}
-        </section>
       </div>
     </Section>
   );

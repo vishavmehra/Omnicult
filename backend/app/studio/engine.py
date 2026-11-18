@@ -29,7 +29,10 @@ EDIT_RULES: dict[str, tuple[frozenset[str], bool]] = {
     "transcreate": (frozenset({"value", "language", "script"}), True),
     "apply_chip": (frozenset({"value"}), False),
     "swap_reference": (frozenset({"value"}), False),
+    "remake": (frozenset({"value", "language", "script"}), False),  # a generated asset replaces (or is added next to) an element
 }
+ADDABLE_KINDS = frozenset({"remake"})  # operations that may add elements
+_ELEMENT_ID = re.compile(r"^[A-Za-z0-9_.:-]{1,64}$")
 
 
 class OperationRejected(Exception):
@@ -71,6 +74,7 @@ class OpSpec:
     tone: Mapping[str, int] | None = None  # tone_shift; likewise
     restore_to: Snapshot | None = None  # restore: the ancestor to copy
     generation: Mapping[str, Any] | None = None  # model metadata recorded on the new node (transcreate)
+    adds: Sequence[Mapping[str, Any]] = ()  # remake: new elements ({id, kind, value, language?, script?, bbox?, scene_id?})
 
 
 @dataclass
@@ -182,9 +186,31 @@ def apply_operation(source: Snapshot, spec: OpSpec, locked: Iterable[str]) -> Ap
     return _apply_edits(source, result, spec, locked_ids)
 
 
+def _add_elements(result: Snapshot, spec: OpSpec) -> list[str]:
+    """Append the elements a remake adds (never locked: a lock needs an element that already exists)."""
+    if spec.adds and spec.kind not in ADDABLE_KINDS:
+        raise OperationRejected("INVALID", f"{spec.kind} cannot add elements.")
+    existing, added = {e["id"] for e in result.elements}, []
+    for item in spec.adds:
+        element = {"id": item.get("id"), "kind": item.get("kind"), "value": item.get("value"), "language": item.get("language"),
+                   "script": item.get("script"), "bbox": item.get("bbox"), "scene_id": item.get("scene_id"), "locked": False}
+        if not isinstance(element["id"], str) or not _ELEMENT_ID.match(element["id"]) or element["id"] in existing:
+            raise OperationRejected("INVALID", f"Cannot add element {element['id']!r}: its id is invalid or already used.")
+        if element["kind"] not in ("headline", "body", "cta", "tagline", "logo", "product", "packshot", "image_region", "scene",
+                                   "voiceover", "music", "caption"):
+            raise OperationRejected("INVALID", f"Cannot add element {element['id']}: unknown kind {element['kind']!r}.")
+        if len(json.dumps(element["value"], default=str)) > MAX_VALUE_CHARS:
+            raise OperationRejected("INVALID", f"The value for {element['id']} is larger than {MAX_VALUE_CHARS} characters.")
+        result.elements.append(element)
+        existing.add(element["id"])
+        added.append(element["id"])
+    return added
+
+
 def _apply_edits(source: Snapshot, result: Snapshot, spec: OpSpec, locked_ids: set[str]) -> Applied:
-    if not spec.edits:
+    if not spec.edits and not spec.adds:
         raise OperationRejected("INVALID", "The operation has no edits.")
+    added = _add_elements(result, spec) if spec.adds else []
     elements = _by_id(result.elements)
     ids = [edit.element_id for edit in spec.edits]
     unknown = [i for i in ids if i not in elements]
@@ -207,7 +233,7 @@ def _apply_edits(source: Snapshot, result: Snapshot, spec: OpSpec, locked_ids: s
         result.settings["tone"] = {dial: int(spec.tone[dial]) for dial in TONE_DIALS}
     if spec.generation is not None:
         result.settings["generation"] = dict(spec.generation)
-    return Applied(result, ids)
+    return Applied(result, ids + added)
 
 
 def _refuse_locked(target_ids: Iterable[str], locked_ids: set[str]) -> None:
@@ -227,7 +253,7 @@ def _validate_edit(kind: str, element: Mapping[str, Any], changes: dict[str, Any
         raise OperationRejected("INVALID", f"The value for {eid} is larger than {MAX_VALUE_CHARS} characters.", [eid])
     if text_only and element["kind"] not in TEXT_KINDS:
         raise OperationRejected("INVALID", f"{kind} applies to text elements; {eid} is a {element['kind']}.", [eid])
-    if kind != "manual_edit" or ("value" in changes and element["kind"] in TEXT_KINDS):
+    if kind != "remake" and (kind != "manual_edit" or ("value" in changes and element["kind"] in TEXT_KINDS)):
         value = changes.get("value")
         if not isinstance(value, str) or not value.strip():
             raise OperationRejected("INVALID", f"{kind} needs a non-empty text value for {eid}.", [eid])

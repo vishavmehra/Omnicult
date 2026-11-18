@@ -71,6 +71,8 @@ def char_script(ch: str) -> str | None:
     for low, high, script in _BLOCKS:
         if low <= code <= high:
             return script
+    if code > 0x7F and unicodedata.category(ch)[0] in "PS":
+        return "Latn"  # typographic punctuation (middle dot, bullet, dashes, quotes): the Indic fonts lack it, so it is drawn in Latin
     return "Latn" if unicodedata.category(ch).startswith("L") else None
 
 

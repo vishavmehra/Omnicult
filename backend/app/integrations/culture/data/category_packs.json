@@ -1,0 +1,54 @@
+{
+  "_comment": "Category packs for Market Lens (Trend Radar topics and Category Shelf discovery). Lookup data, not evidence: no claim is built from this file. 'topics' are Wikidata items whose Wikipedia articles measure attention to the category itself; 'search_terms' are the words used to find brands and products; 'include_terms' and 'exclude_terms' are the relevance rule applied to an item's label and description. Q-ids were checked against Wikidata labels on 2026-11-18.",
+  "version": 1,
+  "checked_on": "2026-11-18",
+  "packs": [
+    {
+      "key": "festive_sweets_snacks",
+      "label": "Festive sweets and snacks",
+      "keywords": ["sweet", "snack", "mithai", "namkeen", "savour", "confection", "dessert", "farsan", "farāḷ"],
+      "search_terms": ["sweets", "snacks", "mithai", "namkeen", "confectionery", "foodstuff", "food manufacturer"],
+      "include_terms": ["sweet", "snack", "confection", "mithai", "namkeen", "bakery", "biscuit", "dessert", "foodstuff", "food manufactur", "food production", "food company", "savoury"],
+      "exclude_terms": ["film", "television", "tv series", "novel", "politician", "cricketer", "scientific article", "scholarly article", "village", "district", "electoral ward", "song", "single by"],
+      "topics": [
+        {"entity_id": "Q3272159", "label": "Mithai"},
+        {"entity_id": "Q749316", "label": "Snack"}
+      ]
+    },
+    {
+      "key": "tea_coffee",
+      "label": "Tea and coffee",
+      "keywords": ["tea", "chai", "coffee", "beverage", "brew"],
+      "search_terms": ["tea", "coffee", "chai"],
+      "include_terms": ["tea", "coffee", "chai", "beverage", "brew", "plantation"],
+      "exclude_terms": ["film", "television", "tv series", "novel", "politician", "cricketer", "scientific article", "scholarly article", "village", "district", "electoral ward", "song", "single by", "given name", "family name"],
+      "topics": [
+        {"entity_id": "Q6097", "label": "Tea"},
+        {"entity_id": "Q8486", "label": "Coffee"}
+      ]
+    },
+    {
+      "key": "jewellery",
+      "label": "Jewellery",
+      "keywords": ["jewel", "gold", "ornament", "gems"],
+      "search_terms": ["jewellery", "jewelry", "jewellers"],
+      "include_terms": ["jewel", "gold", "diamond", "ornament", "goldsmith", "gems"],
+      "exclude_terms": ["film", "television", "tv series", "novel", "politician", "cricketer", "scientific article", "scholarly article", "village", "district", "electoral ward", "song", "single by", "given name", "family name"],
+      "topics": [
+        {"entity_id": "Q161439", "label": "Jewellery"}
+      ]
+    },
+    {
+      "key": "ethnic_wear",
+      "label": "Ethnic and festive wear",
+      "keywords": ["ethnic", "apparel", "garment", "clothing", "wear", "kurta", "saree", "sari", "lehenga", "textile", "fashion"],
+      "search_terms": ["ethnic wear", "clothing", "apparel", "textiles", "handloom"],
+      "include_terms": ["cloth", "garment", "apparel", "textile", "handloom", "fashion", "ethnic", "saree", "sari", "kurta", "lehenga", "weav"],
+      "exclude_terms": ["film", "television", "tv series", "novel", "politician", "cricketer", "scientific article", "scholarly article", "village", "district", "electoral ward", "song", "single by", "given name", "family name"],
+      "topics": [
+        {"entity_id": "Q855915", "label": "Kurta"},
+        {"entity_id": "Q17050816", "label": "Lehenga"}
+      ]
+    }
+  ]
+}

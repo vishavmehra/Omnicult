@@ -8,17 +8,19 @@ Image generation never asks the model to draw text: Indic scripts (and any lette
 only. Long-running video and music generation are out of scope for this module.
 """
 
+import base64
 import io
 import struct
 import time
 import wave
+from collections.abc import Awaitable, Callable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
 from app.core.config import Settings
 from app.llm import google
-from app.llm.budget import Meter
-from app.llm.gateway import LLMError, ProviderError
+from app.llm.budget import Meter, metered as google_metered
+from app.llm.gateway import LLMError, ProviderError, budget_llm_error, failure_trace, provider_llm_error
 from app.schemas.common import StepTrace, Usage
 from app.llm.registry import capability_model, estimate_cost, spec_for
 
@@ -30,6 +32,7 @@ NO_TEXT_DIRECTIVE = (
 )
 IMAGE_TOKEN_ESTIMATE = 1500  # input side of a reference-image request; budget sizing only
 MAX_REFERENCE_BYTES = 7 * 1024 * 1024
+MAX_EXTRA_REFERENCES = 2  # reference images after the first (a clean plate, then the product)
 MAX_PROMPT_CHARS = 8_000
 
 LANGUAGE_CODES = {"en": "en-IN", "hi": "hi-IN", "mr": "mr-IN", "ta": "ta-IN", "ml": "ml-IN", "bn": "bn-IN"}
@@ -124,7 +127,7 @@ class ImageGenerationClient(_Adapter):
     async def generate(
         self, prompt: str, *, reference_image: bytes | None = None, reference_mime_type: str = "image/png",
         aspect_ratio: str | None = None, allow_text: bool = False, stage: str = "generating_image",
-        agent: str = "image",
+        agent: str = "image", extra_reference_images: Sequence[tuple[bytes, str]] = (),
     ) -> GeneratedImage:
         """One image from `prompt` and an optional reference image (edit or restyle). Returns the bytes the model
         produced (PNG when the API returns PNG) with metadata. Raises LLMError."""
@@ -136,11 +139,19 @@ class ImageGenerationClient(_Adapter):
             raise ValueError(f"Unsupported aspect ratio {aspect_ratio!r}.")
         if reference_image is not None and (not reference_image or len(reference_image) > MAX_REFERENCE_BYTES):
             raise ValueError("The reference image is empty or too large.")
+        if extra_reference_images and reference_image is None:
+            raise ValueError("Extra reference images need a first reference image.")
+        if len(extra_reference_images) > MAX_EXTRA_REFERENCES or any(
+            not data or len(data) > MAX_REFERENCE_BYTES for data, _ in extra_reference_images
+        ):
+            raise ValueError("An extra reference image is empty or too large, or there are too many.")
         from google.genai import types
 
         parts = [types.Part(text=prompt if allow_text else f"{prompt}\n\n{NO_TEXT_DIRECTIVE}")]
         if reference_image is not None:
             parts.append(types.Part.from_bytes(data=reference_image, mime_type=reference_mime_type))
+        for data, mime in extra_reference_images:
+            parts.append(types.Part.from_bytes(data=data, mime_type=mime))
         config = types.GenerateContentConfig(
             response_modalities=["IMAGE"],
             image_config=types.ImageConfig(aspect_ratio=aspect_ratio) if aspect_ratio else None,
@@ -162,7 +173,7 @@ class ImageGenerationClient(_Adapter):
             lambda: self.api, self._settings, meter=self._meter, backoff=self._backoff, capability=self.capability,
             model=model, contents=[types.Content(role="user", parts=parts)], config=config, stage=stage, agent=agent,
             prompt_version="image-generate-v1", extract=extract, warm=self._client is None,
-            estimate_usd=estimate_cost(model, input_tokens=len(prompt) // 3 + (IMAGE_TOKEN_ESTIMATE if reference_image else 0),
+            estimate_usd=estimate_cost(model, input_tokens=len(prompt) // 3 + IMAGE_TOKEN_ESTIMATE * ((reference_image is not None) + len(extra_reference_images)),
                                        images=1).usd,
         )
         cost = estimate_cost(model, input_tokens=usage.input_tokens if usage else None, images=1)
@@ -233,3 +244,124 @@ class TTSClient(_Adapter):
             usage=_with_cost(usage, cost.usd, cost.known),
         )
         return SpeechAudio(pcm_to_wav(pcm, rate), rate, round(seconds, 2), model, voice, code, trace)
+
+
+# --- music (Lyria 2 over REST) -----------------------------------------------------------------------------------
+
+MUSIC_CLIP_SECONDS = 30.0  # lyria-002 returns one clip of about 30 s (the verified clip measured 32.8 s, 48 kHz stereo WAV)
+MAX_MUSIC_PROMPT_CHARS = 600
+Poster = Callable[[str, dict[str, Any], dict[str, str]], Awaitable[dict[str, Any]]]
+
+
+@dataclass(frozen=True)
+class MusicClip:
+    wav: bytes
+    duration_seconds: float
+    sample_rate: int
+    channels: int
+    model: str
+    location: str
+    trace: StepTrace
+
+
+def wav_info(data: bytes) -> tuple[int, int, float]:
+    """(sample rate, channels, seconds) of a PCM WAV. The duration comes from the byte count, not the header: Lyria's
+    header frame count is unreliable."""
+    with wave.open(io.BytesIO(data)) as clip:
+        rate, channels, width = clip.getframerate(), clip.getnchannels(), clip.getsampwidth()
+    return rate, channels, round(max(0, len(data) - 44) / (rate * channels * width), 2)
+
+
+class MusicClient(_Adapter):
+    """Lyria 2 (`lyria-002`) through Vertex AI REST `predict` (the Gen AI SDK has no music call). Metered and
+    budget-checked like every capability; Vertex AI only. `poster` (tests) replaces the HTTP call."""
+
+    capability = "music"
+
+    def __init__(self, settings: Settings, *, client: Any = None, meter: Meter | None = None, backoff_seconds: float = 0.5,
+                 poster: Poster | None = None) -> None:
+        super().__init__(settings, client=client, meter=meter, backoff_seconds=backoff_seconds,
+                         location=settings.google_music_location)
+        self._poster = poster
+        if settings.google_genai_backend != "vertex" or not settings.google_cloud_project:
+            self.model = None  # Lyria is offered on Vertex AI only
+
+    async def _post(self, url: str, body: dict[str, Any], headers: dict[str, str]) -> dict[str, Any]:
+        import httpx
+
+        async with httpx.AsyncClient(timeout=self._settings.llm_request_timeout_seconds) as http:
+            response = await http.post(url, json=body, headers=headers)
+        if response.status_code != 200:
+            raise ProviderError(f"HTTP {response.status_code}", transient=response.status_code in (429, 500, 502, 503, 504),
+                                timeout=response.status_code in (408, 504))
+        return response.json()
+
+    @staticmethod
+    async def _headers() -> dict[str, str]:
+        import asyncio
+
+        import google.auth
+        import google.auth.transport.requests
+
+        def token() -> str:
+            credentials, _ = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+            credentials.refresh(google.auth.transport.requests.Request())
+            return credentials.token
+
+        return {"Authorization": f"Bearer {await asyncio.to_thread(token)}", "Content-Type": "application/json"}
+
+    async def generate(self, prompt: str, *, negative_prompt: str | None = "vocals, speech", seed: int | None = None,
+                       stage: str = "generating_jingle", agent: str = "music") -> MusicClip:
+        """One short instrumental clip. Raises LLMError."""
+        from app.llm.budget import BudgetExceeded
+        from app.llm.google import map_exception, with_retries
+
+        model = self._require(stage, agent)
+        prompt = " ".join(prompt.split())[:MAX_MUSIC_PROMPT_CHARS]
+        if not prompt:
+            raise ValueError("A music prompt is required.")
+        location = self._location or self._settings.google_music_location
+        url = (f"https://{location}-aiplatform.googleapis.com/v1/projects/{self._settings.google_cloud_project}"
+               f"/locations/{location}/publishers/google/models/{model}:predict")
+        instance: dict[str, Any] = {"prompt": prompt}
+        if negative_prompt:
+            instance["negative_prompt"] = negative_prompt
+        if seed is not None:  # a seed and sample_count are mutually exclusive on the API
+            instance["seed"] = seed
+        body = {"instances": [instance], "parameters": {} if seed is not None else {"sample_count": 1}}
+        started = time.perf_counter()
+        estimate = estimate_cost(model, audio_seconds=MUSIC_CLIP_SECONDS).usd
+
+        async def attempt() -> bytes:
+            async with google_metered(self._meter, capability=self.capability, model=model, stage=stage, agent=agent,
+                                      prompt_version="music-jingle-v1", estimate_usd=estimate) as record:
+                try:
+                    headers = {} if self._poster is not None else await self._headers()
+                    payload = await (self._poster or self._post)(url, body, headers)
+                except Exception as exc:
+                    raise map_exception(exc) from exc
+                prediction = (payload.get("predictions") or [{}])[0]
+                field = next((k for k in ("bytesBase64Encoded", "audioContent") if prediction.get(k)), None)
+                if field is None:
+                    raise ProviderError("The model returned no audio.", transient=False)
+                record.audio_seconds = MUSIC_CLIP_SECONDS  # generated (and billed) once the API answered 200
+                return base64.b64decode(prediction[field])
+
+        try:
+            wav, retries = await with_retries(attempt, retries=max(0, self._settings.llm_max_retries), backoff=self._backoff)
+        except BudgetExceeded as exc:
+            raise budget_llm_error(exc, failure_trace(stage, agent, "google", model, started, "BUDGET_EXCEEDED")) from exc
+        except ProviderError as exc:
+            code = "CONTENT_BLOCKED" if exc.blocked else "PROVIDER_TIMEOUT" if exc.timeout else "PROVIDER_ERROR"
+            raise provider_llm_error(exc, failure_trace(stage, agent, "google", model, started, code),
+                                     timeout_seconds=self._settings.llm_request_timeout_seconds) from exc
+        try:
+            rate, channels, seconds = wav_info(wav)
+        except (wave.Error, EOFError):
+            raise LLMError("PROVIDER_ERROR", "The music model returned audio that could not be read.", retryable=False,
+                           trace=failure_trace(stage, agent, "google", model, started, "PROVIDER_ERROR")) from None
+        cost = estimate_cost(model, audio_seconds=MUSIC_CLIP_SECONDS)
+        trace = StepTrace(stage=stage, agent=agent, status="completed", provider="google", model_id=model,
+                          prompt_version="music-jingle-v1", latency_ms=int((time.perf_counter() - started) * 1000),
+                          retries=retries, usage=_with_cost(None, cost.usd, cost.known))
+        return MusicClip(wav, seconds, rate, channels, model, location, trace)
