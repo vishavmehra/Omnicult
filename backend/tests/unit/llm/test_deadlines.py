@@ -73,7 +73,7 @@ def test_capabilities_get_their_own_request_timeout():
     settings = Settings(_env_file=None, google_cloud_project="p", gemini_embedding_dimensions=768)
     wrapper = LLMGateway(settings).capability("embeddings")
     assert isinstance(wrapper, DeadlinedCapability)
-    assert (wrapper.request_timeout, wrapper.deadline) == CAPABILITY_LIMITS["embeddings"] == (30.0, 40.0)
+    assert (wrapper.request_timeout, wrapper.deadline) == CAPABILITY_LIMITS["embeddings"] == (30.0, 60.0)
     assert wrapper.client._settings.llm_request_timeout_seconds == 30.0  # the adapter's SDK timeout
     assert LLMGateway(settings, fixture=True).capability("embeddings") is None  # demo never reaches a provider
     assert LLMGateway(offline_settings()).capability("vision") is None  # not configured: reported, never substituted
@@ -97,3 +97,10 @@ async def test_vision_deadline_fails_vision_but_keeps_the_text_analysis():
     out = await run_risk_scan(inp, deps)
     assert out.vision.status == "failed" and "did not finish" in out.vision.message
     assert out.findings and out.visual_observations == []
+
+
+def test_every_capability_deadline_outlasts_its_request_timeout_so_a_fast_failure_can_be_retried():
+    assert set(CAPABILITY_LIMITS) == {"embeddings", "vision", "image_generation", "tts", "grounded_research", "transcribe"}
+    for name, (request_timeout, deadline) in CAPABILITY_LIMITS.items():
+        assert deadline > request_timeout, name
+    assert CAPABILITY_LIMITS["vision"] == (40.0, 75.0) and CAPABILITY_LIMITS["transcribe"] == (60.0, 120.0)

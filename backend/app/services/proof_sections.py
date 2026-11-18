@@ -28,6 +28,7 @@ from sqlalchemy import select
 from app.db import models as m
 from app.db.base import utcnow
 from app.db.session import read_session
+from app.reference import india
 from app.schemas import regions as v
 from app.schemas.proof import (
     SECTION_MODELS,
@@ -257,7 +258,7 @@ async def target_regions(ctx: SectionContext) -> Provided | Missing:
         return Missing(NO_REGIONS if not ctx.unknown_codes else "None of the requested regions exists: " + ", ".join(ctx.unknown_codes) + ".")
     return Provided(
         TargetRegionsContent(source=ctx.region_source, regions=ctx.regions, unknown_codes=ctx.unknown_codes),  # type: ignore[arg-type]
-        [KindLabel(kind="observed", applies_to="Region names, codes and official languages come from the curated reference table.")],
+        [KindLabel(kind="observed", applies_to=f"Region names, codes and official languages come from the curated reference table (India Country Pack v{india.PACK_VERSION}).")],
     )
 
 

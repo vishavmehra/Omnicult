@@ -51,11 +51,26 @@ async def test_reference_image_is_sent_as_a_second_part_and_text_can_be_allowed(
 
 
 async def test_image_generation_client_is_built_at_global_even_when_text_uses_a_region(monkeypatch):
-    seen = []
+    seen, warmed = [], []
+
+    async def warm(configured):
+        warmed.append(configured.google_cloud_project)
+
+    monkeypatch.setattr(media.google, "warm_credentials", warm)
     monkeypatch.setattr(media.google, "build_client", lambda s, **kw: seen.append(kw) or FakeClient([blob_reply(png(2, 2), "image/png")]))
     client = media.ImageGenerationClient(settings(google_cloud_location="asia-south1"))
     await client.generate("x")
     assert seen[0]["location"] == "global"
+    assert warmed == ["test-project"]  # a client the adapter builds itself waits for the credentials first (off the event loop)
+
+
+async def test_an_injected_client_never_touches_credentials(monkeypatch):
+    async def forbidden(configured):
+        raise AssertionError("credentials must not be loaded for an injected client")
+
+    monkeypatch.setattr(media.google, "warm_credentials", forbidden)
+    client, _ = image_client([blob_reply(png(2, 2), "image/png")])
+    await client.generate("x")
 
 
 async def test_image_generation_failures_are_typed():

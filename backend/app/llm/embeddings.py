@@ -107,6 +107,8 @@ class EmbeddingClient:
                     self._meter, capability="embeddings", model=space.model, stage=stage, agent=agent,
                     estimate_usd=estimate_cost(space.model, input_tokens=estimate_tokens).usd,
                 ) as record:
+                    if self._client is None:  # off the event loop; a credentials failure is mapped like any provider error
+                        await google.warm_credentials(self._settings)
                     response = await self.api.aio.models.embed_content(model=space.model, contents=batch, config=config)
                     counted = [getattr(getattr(e, "statistics", None), "token_count", None) for e in response.embeddings or []]
                     record.usage = Usage(

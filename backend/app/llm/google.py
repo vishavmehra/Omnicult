@@ -8,6 +8,10 @@ request or credential text.
 """
 
 import asyncio
+import json
+import logging
+import os
+import threading
 import time
 from collections.abc import Awaitable, Callable
 from typing import Any
@@ -17,10 +21,14 @@ from app.llm.budget import BudgetExceeded
 from app.llm.gateway import ChatRequest, Completion, ProviderError
 from app.schemas.common import Usage
 
-# JSON Schema keywords Gemini's `response_json_schema` accepts (Gen AI SDK 3.4 reference). Everything else is dropped.
+# JSON Schema keywords sent in `response_json_schema`. Everything else is dropped. `minItems` and `maxItems` are accepted by
+# the API but not sent: Vertex answers a bare 400 INVALID_ARGUMENT ("Request contains an invalid argument.") to schemas whose
+# nested arrays carry bounds (Quick Read: 6 participants x 4 point lists; X-Ray scenes). Reproduced live on gemini-3.8-flash:
+# the request stayed a 400 with refs inlined, Optional unwrapped and integer bounds removed, and succeeded once the array
+# bounds were removed too. Pydantic still enforces every bound on the reply.
 _SCHEMA_KEYS = frozenset({
     "$id", "$defs", "$ref", "$anchor", "type", "format", "title", "description", "enum", "items", "prefixItems",
-    "minItems", "maxItems", "minimum", "maximum", "anyOf", "oneOf", "properties", "additionalProperties", "required",
+    "minimum", "maximum", "anyOf", "oneOf", "properties", "additionalProperties", "required",
 })
 _FORMATS = frozenset({"date-time", "date", "time"})
 _SCHEMA_NODE_MAPS = ("properties", "$defs")  # {name: schema}
@@ -31,7 +39,9 @@ BLOCKING_FINISH_REASONS = frozenset({
     "SAFETY", "RECITATION", "BLOCKLIST", "PROHIBITED_CONTENT", "SPII", "IMAGE_SAFETY", "IMAGE_PROHIBITED_CONTENT",
     "IMAGE_RECITATION",
 })
+log = logging.getLogger(__name__)
 RETRY_AFTER_CAP_SECONDS = 10.0
+INT32_MAX = 2**31 - 1  # Vertex rejects a `seed` outside int32 with a 400
 _TIMEOUT_NAMES = frozenset({"TimeoutException", "ReadTimeout", "ConnectTimeout", "WriteTimeout", "PoolTimeout", "TimeoutError"})
 _CONNECTION_NAMES = frozenset({
     "ConnectError", "NetworkError", "TransportError", "ConnectionError", "RemoteProtocolError", "ReadError", "WriteError",
@@ -50,8 +60,70 @@ def is_configured(settings: Settings) -> bool:
     return bool(settings.gemini_api_key and settings.gemini_api_key.get_secret_value().strip())
 
 
+_CLOUD_PLATFORM_SCOPE = "https://www.googleapis.com/auth/cloud-platform"
+_credentials: Any = None
+_credentials_lock = threading.Lock()
+
+
+def load_credentials() -> Any:
+    """Application Default Credentials, loaded once per process and shared by every client.
+
+    `google.auth.default()` runs the gcloud CLI to look up a project id whenever the credentials file holds none, which
+    took 48 to 200 s on the development machine, and every new `genai.Client` repeated it (one per gateway, one per
+    capability adapter). The project id is configuration (GOOGLE_CLOUD_PROJECT), so a user or service-account file is read
+    directly (milliseconds); `default()` stays as the fallback for the metadata server (Cloud Run), workload identity,
+    other file types and a missing file."""
+    global _credentials
+    with _credentials_lock:
+        if _credentials is None:
+            _credentials = _credentials_from_file() or _default_credentials()
+        return _credentials
+
+
+def _credentials_from_file() -> Any | None:
+    path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") or _well_known_credentials_path()
+    if not path or not os.path.isfile(path):
+        return None
+    with open(path, encoding="utf-8") as handle:
+        kind = json.load(handle).get("type")
+    scopes = [_CLOUD_PLATFORM_SCOPE]
+    if kind == "authorized_user":  # `gcloud auth application-default login`
+        from google.oauth2 import credentials
+
+        return credentials.Credentials.from_authorized_user_file(path, scopes=scopes)
+    if kind == "service_account":
+        from google.oauth2 import service_account
+
+        return service_account.Credentials.from_service_account_file(path, scopes=scopes)
+    return None
+
+
+def _default_credentials() -> Any:
+    import google.auth
+
+    return google.auth.default(scopes=[_CLOUD_PLATFORM_SCOPE])[0]
+
+
+def _well_known_credentials_path() -> str | None:
+    """Where `gcloud auth application-default login` writes the file (honours CLOUDSDK_CONFIG)."""
+    try:
+        from google.auth import _cloud_sdk
+
+        return str(_cloud_sdk.get_application_default_credentials_path())
+    except Exception:  # a private google-auth helper: without it, fall back to google.auth.default()
+        return None
+
+
+async def warm_credentials(settings: Settings) -> None:
+    """Load the credentials in a worker thread, never on the event loop. A no-op once loaded and for the API-key backend.
+    Called from the app lifespan and again before a client is first built, so a request never waits on the lookup."""
+    if settings.google_genai_backend == "vertex" and _credentials is None:
+        await asyncio.to_thread(load_credentials)
+
+
 def build_client(settings: Settings, *, location: str | None = None, timeout_seconds: float | None = None) -> Any:
-    """The one `genai.Client` factory. `location` overrides GOOGLE_CLOUD_LOCATION (image models need `global`)."""
+    """The one `genai.Client` factory. `location` overrides GOOGLE_CLOUD_LOCATION (image models need `global`). Vertex
+    clients receive the shared credentials, so creating a client never repeats the Application Default Credentials lookup."""
     from google import genai
     from google.genai import types
 
@@ -59,7 +131,7 @@ def build_client(settings: Settings, *, location: str | None = None, timeout_sec
     if settings.google_genai_backend == "vertex":
         return genai.Client(
             vertexai=True, project=settings.google_cloud_project, location=location or settings.google_cloud_location,
-            http_options=options,
+            credentials=load_credentials(), http_options=options,
         )
     assert settings.gemini_api_key is not None
     return genai.Client(api_key=settings.gemini_api_key.get_secret_value(), http_options=options)
@@ -69,8 +141,9 @@ def build_client(settings: Settings, *, location: str | None = None, timeout_sec
 
 
 def to_gemini_schema(node: Any) -> Any:
-    """Strip JSON Schema keywords Gemini rejects (lengths, patterns, defaults, ...) and turn `const` into a one-value
-    enum. Property names are never touched. The result is a hint; the gateway validates the reply against Pydantic."""
+    """Strip JSON Schema keywords Gemini rejects (lengths, patterns, defaults, array bounds, ...) and turn `const` into a
+    one-value enum. Property names are never touched. The result is a hint; the gateway validates the reply against
+    Pydantic, so dropping a bound here relaxes no check (the prompt and the schema text it carries still state the limit)."""
     if isinstance(node, list):
         return [to_gemini_schema(item) for item in node]
     if not isinstance(node, dict):
@@ -121,6 +194,11 @@ def to_contents(messages: list[dict[str, Any]]) -> tuple[str | None, list[Any]]:
         parts = [_part(content, types)] if isinstance(content, str) else [_part(p, types) for p in content]
         contents.append(types.Content(role="model" if role == "assistant" else "user", parts=parts))
     return ("\n\n".join(system) or None), contents
+
+
+def to_int32(seed: int | None) -> int | None:
+    """A sampling seed the API accepts: Vertex rejects values outside int32. The mapping is stable, so a seed stays reproducible."""
+    return None if seed is None else seed % (INT32_MAX + 1)
 
 
 def thinking_config(level: str | None) -> Any:
@@ -192,6 +270,20 @@ def _retry_after(exc: Any) -> float | None:
         return None
 
 
+def error_detail(exc: Any) -> str:
+    """The API's own words for a rejection (its message plus any `fieldViolations` / `reason`), whitespace-collapsed and
+    truncated. For logs only: it names a request field or a limit, and is never shown to a user."""
+    parts = [str(getattr(exc, "message", "") or "")]
+    body = getattr(exc, "details", None)
+    error = body.get("error", body) if isinstance(body, dict) else {}
+    for item in (error.get("details") or []) if isinstance(error, dict) else []:
+        if not isinstance(item, dict):
+            continue
+        parts += [f"{v.get('field', '')}: {v.get('description', '')}" for v in item.get("fieldViolations") or [] if isinstance(v, dict)]
+        parts.append(str(item.get("reason") or ""))
+    return " ".join(" | ".join(x for x in parts if x).split())[:400]
+
+
 def map_exception(exc: BaseException) -> ProviderError:
     """Gen AI SDK / transport exception -> ProviderError. The message is a status line, never the request or body."""
     if isinstance(exc, ProviderError):
@@ -199,6 +291,12 @@ def map_exception(exc: BaseException) -> ProviderError:
     names = {cls.__name__ for cls in type(exc).__mro__}
     code = getattr(exc, "code", None)
     if "APIError" in names and isinstance(code, int):
+        # The status line and the API's own error text (a field name, a limit) go to the log only, truncated: the user-facing
+        # message stays "HTTP <code>", and a 400 stays diagnosable without a reproduction.
+        log.warning("provider error", extra={
+            "provider_http": code, "provider_status": str(getattr(exc, "status", "") or "")[:40],
+            "provider_detail": error_detail(exc),
+        })
         if code in (408, 504):
             return ProviderError(f"HTTP {code}", transient=True, timeout=True)
         if code == 429:
@@ -258,13 +356,15 @@ class GoogleGenAIProvider:
 
         system, contents = to_contents(request.messages)
         config = types.GenerateContentConfig(
-            system_instruction=system, temperature=request.temperature, seed=request.seed,
+            system_instruction=system, temperature=request.temperature, seed=to_int32(request.seed),
             max_output_tokens=request.max_tokens,
             response_mime_type="application/json" if request.json_schema else None,
             response_json_schema=to_gemini_schema(request.json_schema) if request.json_schema else None,
             thinking_config=thinking_config(request.thinking_level),
         )
         try:
+            if self._client is None:  # off the event loop; a credentials failure is mapped below like any provider error
+                await warm_credentials(self._settings)
             response = await self.client.aio.models.generate_content(model=request.model, contents=contents, config=config)
         except BudgetExceeded:
             raise
@@ -279,11 +379,12 @@ class GoogleGenAIProvider:
 async def run_generation(
     api: Callable[[], Any], settings: Settings, *, meter: Any, backoff: float, capability: str, model: str, contents: Any,
     config: Any, stage: str, agent: str, prompt_version: str, estimate_usd: float,
-    extract: Callable[[Any, Any], Any],
+    extract: Callable[[Any, Any], Any], warm: bool = False,
 ) -> tuple[Any, int, Usage | None]:
     """One metered, retried `generate_content` call for the non-chat capability adapters (image, speech, grounded
     research). `extract(response, record)` turns the response into the adapter's value and fills the CallRecord (images,
-    audio seconds, grounded requests); a ProviderError it raises is final. Raises LLMError. Returns (value, retries, raw usage)."""
+    audio seconds, grounded requests); a ProviderError it raises is final. `warm` loads the credentials first (set it when
+    the adapter has no injected client). Raises LLMError. Returns (value, retries, raw usage)."""
     from app.llm.budget import metered
     from app.llm.gateway import (
         budget_llm_error, failure_trace, provider_llm_error,
@@ -297,6 +398,8 @@ async def run_generation(
             estimate_usd=estimate_usd,
         ) as record:
             try:
+                if warm:  # the adapter builds its own client: load the credentials off the event loop first
+                    await warm_credentials(settings)
                 response = await api().aio.models.generate_content(model=model, contents=contents, config=config)
             except Exception as exc:
                 raise map_exception(exc) from exc

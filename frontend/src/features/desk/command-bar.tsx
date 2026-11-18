@@ -1,11 +1,12 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { CornerDownLeft, FlaskConical, LayoutList, Palette, PencilLine, Plus, Search, Vault } from "lucide-react";
+import { Coins, CornerDownLeft, FlaskConical, Layers, LayoutList, Palette, PencilLine, Plus, Search, Signpost, Vault, Wand2 } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 
-import { WORKSPACES, WORKSPACE_ORDER, isWorkspaceKey, workspaceHref, type WorkspaceKey } from "@/components/shell/workspaces";
+import { markFeatureNav } from "@/components/shell/feature-nav";
+import { PLATFORM_FEATURES, WORKSPACES, WORKSPACE_ORDER, featureHref, isWorkspaceKey, workspaceHref, type Feature, type WorkspaceKey } from "@/components/shell/workspaces";
 import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
 import { api } from "@/lib/api/client";
 import { unwrap } from "@/lib/api/errors";
@@ -46,6 +47,17 @@ export function CommandBarProvider({ children }: { children: ReactNode }) {
     </CommandBarContext.Provider>
   );
 }
+
+/** Opens the Command Bar from elsewhere (the spine's Command Bar entry). Null outside /app. */
+export function useOpenCommandBar() {
+  return useContext(CommandBarContext)?.setOpen ?? null;
+}
+
+/** Every built feature with a deep link, from the catalogue in components/shell/workspaces.ts, with the place it lives in. */
+const FEATURE_ENTRIES: { feature: Feature; place: string; Icon: typeof Layers }[] = [
+  ...WORKSPACE_ORDER.flatMap((key) => WORKSPACES[key].features.map((feature) => ({ feature, place: WORKSPACES[key].label, Icon: WORKSPACES[key].Icon }))),
+  ...PLATFORM_FEATURES.map((feature) => ({ feature, place: "Platform", Icon: Layers })),
+].filter(({ feature }) => feature.status === "built" && feature.href);
 
 /** A visible way in for pointer and touch users: the keyboard shortcut is named on the button. */
 export function CommandBarButton() {
@@ -92,6 +104,7 @@ function BarContent({ close }: { close(): void }) {
   const go = useCallback(
     (href: string) => {
       close();
+      markFeatureNav(href);
       router.push(href);
     },
     [close, router],
@@ -129,6 +142,21 @@ function BarContent({ close }: { close(): void }) {
             )}
         </CommandGroup>
 
+        {activeId && (
+          <>
+            <CommandSeparator />
+            <CommandGroup heading="Open feature…">
+              {FEATURE_ENTRIES.map(({ feature, place, Icon }) => (
+                <CommandItem key={feature.id} value={`open feature ${feature.name} ${place}`} onSelect={() => go(featureHref(feature, activeId)!)}>
+                  <Icon aria-hidden />
+                  {feature.name}
+                  <span className="ml-auto text-xs text-ink-muted">{place}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </>
+        )}
+
         <CommandSeparator />
         <CommandGroup heading="Actions">
           <CommandItem value="new campaign create brand" onSelect={() => go("/app?new=campaign")}>
@@ -154,6 +182,16 @@ function BarContent({ close }: { close(): void }) {
                   {latestReport.isPending ? "Looking for the latest report…" : "No report yet for this campaign"}
                 </CommandItem>
               )}
+              <CommandItem value="direct this version voice director instruction speak say studio" onSelect={() => {
+                  if (here === "studio") {
+                    close();
+                    window.dispatchEvent(new CustomEvent("omnicult:studio-tab", { detail: "direct" }));
+                  } else go(`${workspaceHref(activeId, "studio")}?tab=direct`);
+                }}>
+                <Wand2 aria-hidden />
+                Direct this version…
+                <span className="ml-auto text-xs text-ink-muted">Creative Studio</span>
+              </CommandItem>
               <CommandItem value="edit brief campaign desk" onSelect={() => go(`${workspaceHref(activeId, "desk")}?edit=brief`)}>
                 <PencilLine aria-hidden />
                 Edit the brief
@@ -174,6 +212,20 @@ function BarContent({ close }: { close(): void }) {
             <FlaskConical aria-hidden />
             Try the demo
             <span className="ml-auto text-xs text-ink-muted">Labelled sample data</span>
+          </CommandItem>
+        </CommandGroup>
+
+        <CommandSeparator />
+        <CommandGroup heading="Platform">
+          <CommandItem value="usage and credits spend cost budget model calls" onSelect={() => go("/app/usage")}>
+            <Coins aria-hidden />
+            Usage and credits
+            <span className="ml-auto text-xs text-ink-muted">Spend, budget, failed calls</span>
+          </CommandItem>
+          <CommandItem value="roadmap planned features not built share of search video push connect accounts" onSelect={() => go("/app/roadmap")}>
+            <Signpost aria-hidden />
+            Roadmap
+            <span className="ml-auto text-xs text-ink-muted">Planned, not built</span>
           </CommandItem>
         </CommandGroup>
 

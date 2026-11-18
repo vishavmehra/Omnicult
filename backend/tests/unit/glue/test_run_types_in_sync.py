@@ -1,8 +1,9 @@
 """One list of run types, kept in step everywhere it is written down.
 
 `schemas.runs.RunType` is the source of truth. The agent_runs CHECK (models and the migrated database), the run engine's
-tables, the Run History labels, the frontend maps and the generated frontend types must all hold exactly the same twelve
-names: today's ten plus `transcreate` and `creative_xray`. A type added in one place and forgotten in another fails here.
+tables, the Run History labels, the frontend maps and the generated frontend types must all hold exactly the same thirteen
+names: today's ten plus `transcreate`, `creative_xray` and `voice_direct`. A type added in one place and forgotten in another
+fails here. `voice_direct` is recorded synchronously (one planning call, no queue), so it has no run-engine tables.
 """
 
 import re
@@ -21,16 +22,18 @@ from app.services import run_history, runs
 BACKEND = Path(__file__).resolve().parents[3]
 FRONTEND = BACKEND.parent / "frontend" / "src"
 RUN_TYPES = set(get_args(RunType))
+SYNCHRONOUS = {"voice_direct"}  # recorded by the service that made the call; never queued, so the run engine has no entry for it
+ENGINE_TYPES = RUN_TYPES - SYNCHRONOUS
 
 
 def names(text: str) -> set[str]:
     return {a or b for a, b in re.findall(r"'([a-z_]+)'|\"([a-z_]+)\"", text)}
 
 
-def test_the_list_is_ten_types_plus_transcreate_and_creative_xray() -> None:
-    assert len(RUN_TYPES) == 12
-    assert RUN_TYPES >= {"transcreate", "creative_xray"}
-    assert len(RUN_TYPES - {"transcreate", "creative_xray"}) == 10
+def test_the_list_is_ten_types_plus_transcreate_creative_xray_and_voice_direct() -> None:
+    assert len(RUN_TYPES) == 13
+    assert RUN_TYPES >= {"transcreate", "creative_xray", "voice_direct"}
+    assert len(RUN_TYPES - {"transcreate", "creative_xray", "voice_direct"}) == 10
 
 
 def test_the_model_check_constraint_lists_the_same_types() -> None:
@@ -49,8 +52,9 @@ def test_the_migrated_database_check_constraint_lists_the_same_types(tmp_path: P
     assert names(listed) == RUN_TYPES
 
 
-def test_the_run_engine_tables_and_run_history_cover_every_type() -> None:
-    assert set(runs.STAGES) == set(runs.LABELS) == set(runs.ENTRY_POINTS) == set(run_history.OPERATIONS) == RUN_TYPES
+def test_the_run_engine_tables_cover_every_queued_type_and_run_history_every_type() -> None:
+    assert set(runs.STAGES) == set(runs.LABELS) == set(runs.ENTRY_POINTS) == ENGINE_TYPES
+    assert set(run_history.OPERATIONS) == RUN_TYPES
     assert all(hasattr(workflows, entry) for entry in runs.ENTRY_POINTS.values())
 
 

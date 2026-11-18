@@ -5,6 +5,7 @@ was not supplied, cannot be applied, breaks a glossary rule or leaves the elemen
 chip is an `apply_chip` operation through the same engine as a hand edit, so locks hold and a new version is created.
 """
 
+from typing import Any
 from uuid import UUID, uuid4
 
 from sqlalchemy import select
@@ -129,8 +130,13 @@ async def list_chips(
     return v.ChipPage(items=[to_chip(r) for r in rows], limit=limit, offset=offset, total=total)
 
 
-async def apply_chip(user_id: UUID, campaign_id: UUID, chip_id: UUID, body: v.ChipApply) -> v.ChipApplied:
-    """Apply a chip as an `apply_chip` operation (actor ai: the change was proposed by a model, applied by this user)."""
+async def apply_chip(
+    user_id: UUID, campaign_id: UUID, chip_id: UUID, body: v.ChipApply, *, reason: str | None = None,
+    extra_params: dict[str, Any] | None = None,
+) -> v.ChipApplied:
+    """Apply a chip as an `apply_chip` operation (actor ai: the change was proposed by a model, applied by this user).
+    `reason` replaces the chip's own reason on the operation (the Voice Director passes the person's instruction; the chip's
+    reason is kept in `params.chip_reason`), and `extra_params` are added to the operation's params."""
     async with session() as s, s.begin():
         campaign, project = await campaign_for(s, user_id, campaign_id, writable=True)
         chip = await s.get(m.Chip, chip_id)
@@ -150,8 +156,9 @@ async def apply_chip(user_id: UUID, campaign_id: UUID, chip_id: UUID, body: v.Ch
             spec = OpSpec("apply_chip", swap=(chip.element_id, change["from_text"], change["to_text"]))
         op, node = await record_operation(
             s, project=project, campaign=campaign, source=source, spec=spec, actor="ai", actor_user_id=user_id,
-            reason=chip.reason, claim_ids=claim_ids,
-            params={"chip_id": str(chip.id), "element_id": chip.element_id, "operation_type": chip.operation_type, "change": change},
+            reason=reason or chip.reason, claim_ids=claim_ids,
+            params={"chip_id": str(chip.id), "element_id": chip.element_id, "operation_type": chip.operation_type, "change": change,
+                    **({"chip_reason": chip.reason, **extra_params} if extra_params or reason else {})},
             label=chip.title[:80], prompt_version=chip.prompt_version, estimated_cost_usd=chip.estimated_cost_usd,
         )
         if node is not None:

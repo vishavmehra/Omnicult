@@ -19,7 +19,7 @@ from app.db.base import Base, utcnow
 RUN_TYPES = (
     "'market_discovery', 'campaign_rehearsal', 'campaign_adaptation', 'campaign_evaluation', "
     "'cultural_profile', 'campaign_arena', 'risk_scan', 'market_comparison', 'population_study', 'social_simulation', "
-    "'transcreate', 'creative_xray'"
+    "'transcreate', 'creative_xray', 'voice_direct'"
 )
 RUN_STATUSES = "'queued', 'running', 'completed', 'partial', 'failed', 'cancelled'"
 
@@ -851,3 +851,6 @@ from app.db.models_proof import ProofReport, ProofReportExport  # noqa: E402,F40
 
 from app.db.models_desk import BrandKitDesignRow, CampaignBriefRow  # noqa: E402,F401  (Campaign Desk tables, migration 0019)
 from app.db.models_lens import CultureCall, LensBuild  # noqa: E402,F401  (Market Lens tables, migration 0020)
+from app.db.models_settings import WorkspaceInvite, WorkspaceSettings  # noqa: E402,F401  (Settings tables, migration 0022)
+
+from app.db.models_voice import VoicePlan  # noqa: E402,F401  (Voice Director table, migration 0024)

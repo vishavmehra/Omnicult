@@ -76,6 +76,10 @@ def merge_steps(stage: str, agent: str, traces: Sequence[StepTrace], started: fl
 
 
 def llm_error(exc: LLMError, stage: str, saved: str) -> RunError:
+    """The RunError of a failed model call. `saved` says what was kept; its "retrying is safe" clause is dropped when the
+    failure is not retryable (a rejected request or a blocked prompt fails the same way again), so message and flag agree."""
+    if not exc.retryable:
+        saved = saved.replace("; retrying is safe", "").replace(" Retrying is safe.", "")
     return RunError(code=exc.code, message=f"{exc.message} {saved}".strip(), stage=stage, retryable=exc.retryable)
 
 

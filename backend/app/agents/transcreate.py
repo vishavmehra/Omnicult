@@ -18,6 +18,7 @@ from app.llm.gateway import LLMGateway, LLMResult
 from app.studio.checks import tone_directives
 
 PROMPT_VERSION = "transcreate-lines-v1"
+LINE_TOKENS = 700  # regional copy, back-translation and explanation per line; Indic scripts cost several tokens per word (more lines than fit the 4096 default scale it up)
 SAME_MODEL_NOTE = (
     "The English back-translation was written by the same model run as the regional copy. It is a consistency aid, "
     "not independent verification, and no native speaker has reviewed it."
@@ -87,7 +88,7 @@ async def generate_lines(
     ])
     result: LLMResult[Any] = await llm.generate_structured(
         task="creative_adaptation", stage=stage, agent="transcreate", system=SYSTEM, user=user, schema=lines_schema(len(lines)),
-        prompt_version=PROMPT_VERSION, temperature=0.5, fixture_context=payload,
+        prompt_version=PROMPT_VERSION, temperature=0.5, max_tokens=max(4096, LINE_TOKENS * len(lines) + 400), fixture_context=payload,
     )
     drafts: list[LineDraft] = []
     notes: list[str] = []

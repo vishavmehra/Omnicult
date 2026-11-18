@@ -161,7 +161,26 @@ async def test_a_failed_batch_leaves_the_other_reactions_and_marks_the_run_parti
 async def test_every_batch_failing_is_a_failed_run_with_nothing_saved():
     outcome = await run_quick_read(quick_input(n=6), gateway({"quick-read-v1": lambda ctx: None}))
     assert outcome.status == "failed" and outcome.responses == {} and outcome.summary is None
-    assert outcome.error is not None and outcome.error.stage == "generating_reactions" and "retrying is safe" in outcome.error.message
+    assert outcome.error is not None and outcome.error.stage == "generating_reactions"
+    assert outcome.error.retryable is False and "retrying is safe" not in outcome.error.message  # the flag and the message agree
+
+
+class Rejecting:
+    """A provider that answers every request with a permanent rejection (HTTP 400)."""
+
+    name = "rejecting"
+
+    async def complete(self, request):
+        from app.llm.gateway import ProviderError
+
+        raise ProviderError("HTTP 400", transient=False)
+
+
+async def test_a_rejected_request_is_final_and_the_message_does_not_promise_a_safe_retry():
+    outcome = await run_quick_read(quick_input(n=6), LLMGateway(offline_settings(), provider=Rejecting(), backoff_seconds=0))
+    assert outcome.status == "failed" and outcome.error is not None
+    assert outcome.error.code == "PROVIDER_ERROR" and outcome.error.retryable is False
+    assert "retrying is safe" not in outcome.error.message and outcome.error.message.endswith("No reactions were saved.")
 
 
 async def test_a_model_that_returns_fewer_reactions_is_reported():
@@ -363,7 +382,8 @@ async def test_a_model_failure_keeps_the_deterministic_findings_as_a_partial_res
     assert ok.status == "partial" and any(f.category == "brand_rule" for f in ok.findings)
     assert ok.error is not None and "Deterministic checks were saved" in ok.error.message
     none = await run_risk_check(risk_input(elements=[NEUTRAL]), scripted(None))
-    assert none.status == "failed" and none.findings == [] and "retrying is safe" in none.error.message
+    assert none.status == "failed" and none.findings == [] and none.error.retryable is False
+    assert "retrying is safe" not in none.error.message and none.error.message.endswith("No findings were saved.")
 
 
 @pytest.mark.parametrize("phrase", [

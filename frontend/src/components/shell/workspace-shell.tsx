@@ -1,10 +1,10 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutList, LogOut, Menu, PanelRightClose, PanelRightOpen } from "lucide-react";
+import { ChevronRight, Coins, LayoutList, LogOut, Menu, PanelRightClose, PanelRightOpen, Settings, Signpost } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Fragment, createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 import { ModeBadge } from "@/components/evidence/badges";
@@ -19,9 +19,11 @@ import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
 
 import { CampaignSelector } from "./campaign-selector";
+import { FeatureRow, useActiveFeatureIds } from "./feature-links";
+import { arrivedAt, latestFeatureNav } from "./feature-nav";
 import { ThemeToggle } from "./theme-toggle";
 import { Wordmark } from "./wordmark";
-import { STAGES, WORKSPACES, workspaceHref, type WorkspaceKey } from "./workspaces";
+import { PLATFORM_FEATURES, STAGES, WORKSPACES, workspaceHref, type WorkspaceKey } from "./workspaces";
 
 // ---------- context panel slot ----------
 
@@ -88,10 +90,21 @@ function AccountMenu() {
 
 // ---------- spine (navigation) ----------
 
-function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; active: WorkspaceKey | "today"; onNavigate?: () => void }) {
+/** Pages that sit beside the seven workspaces rather than inside a campaign. */
+type PlatformPage = "today" | "settings" | "usage" | "roadmap";
+const inCampaign = (active: WorkspaceKey | PlatformPage): active is WorkspaceKey => active in WORKSPACES;
+
+function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; active: WorkspaceKey | PlatformPage; onNavigate?: () => void }) {
   const item = "flex h-10 items-center gap-2.5 rounded-xl px-3 text-[14px] transition-[background-color,color,box-shadow] duration-200";
   const on = "bg-surface-raised font-medium text-ink shadow-clay";
   const off = "text-ink-secondary hover:bg-surface-muted/70 hover:text-ink";
+  const activeIds = useActiveFeatureIds(campaignId);
+  // The open workspace starts expanded and the others collapsed; a person's own choice wins until they leave.
+  const [chosen, setChosen] = useState<Record<string, boolean>>({});
+  const isOpen = (key: string, fallback: boolean) => chosen[key] ?? fallback;
+  const toggle = (key: string, fallback: boolean) => setChosen((c) => ({ ...c, [key]: !(c[key] ?? fallback) }));
+  const chevron = (open: boolean) => <ChevronRight aria-hidden className={cn("size-4 transition-transform duration-200 motion-reduce:transition-none", open && "rotate-90")} />;
+  const featureList = "mt-0.5 mb-1 space-y-px";
   return (
     <div className="flex h-full flex-col">
       <div className="px-4 pt-5 pb-5 text-ink">
@@ -112,6 +125,7 @@ function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; 
                 {stage.workspaces.map((key) => {
                   const ws = WORKSPACES[key];
                   const isActive = active === key;
+                  const open = isOpen(key, isActive);
                   const inner = (
                     <>
                       <span
@@ -130,13 +144,32 @@ function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; 
                   return (
                     <li key={key}>
                       {campaignId ? (
-                        <Link href={workspaceHref(campaignId, key)} onClick={onNavigate} aria-current={isActive ? "page" : undefined} className={cn(item, isActive ? on : off)}>
-                          {inner}
-                        </Link>
+                        <div className="relative">
+                          <Link href={workspaceHref(campaignId, key)} onClick={onNavigate} aria-current={isActive ? "page" : undefined} className={cn(item, "pr-8 max-lg:pr-11", isActive ? on : off)}>
+                            {inner}
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => toggle(key, isActive)}
+                            aria-expanded={open}
+                            aria-controls={`spine-${key}`}
+                            aria-label={`${ws.label} features`}
+                            className="absolute top-1.5 right-1 flex size-7 items-center justify-center rounded-lg text-ink-muted hover:bg-surface-muted hover:text-ink max-lg:top-0.5 max-lg:size-9"
+                          >
+                            {chevron(open)}
+                          </button>
+                        </div>
                       ) : (
                         <span aria-disabled className={cn(item, off, "cursor-not-allowed opacity-60 hover:bg-transparent")} title="Create or open a campaign first">
                           {inner}
                         </span>
+                      )}
+                      {campaignId && (
+                        <ul id={`spine-${key}`} aria-label={`${ws.label} features`} hidden={!open} className={cn(featureList, "ml-[30px]")}>
+                          {ws.features.map((f) => (
+                            <FeatureRow key={f.id} feature={f} campaignId={campaignId} active={activeIds.has(f.id)} onNavigate={onNavigate} />
+                          ))}
+                        </ul>
                       )}
                     </li>
                   );
@@ -145,9 +178,62 @@ function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; 
             </li>
           ))}
         </ol>
+        {campaignId && (
+          <div className="mt-4 border-t border-border/70 pt-1.5">
+            <button
+              type="button"
+              onClick={() => toggle("platform", false)}
+              aria-expanded={isOpen("platform", false)}
+              aria-controls="spine-platform"
+              className="flex h-9 w-full items-center gap-1.5 rounded-lg px-3 text-left text-[11px] font-semibold tracking-[0.08em] text-ink-muted uppercase hover:text-ink"
+            >
+              {chevron(isOpen("platform", false))}
+              Platform
+            </button>
+            <ul id="spine-platform" aria-label="Platform features" hidden={!isOpen("platform", false)} className={cn(featureList, "ml-4 border-l border-border pl-1.5")}>
+              {PLATFORM_FEATURES.map((f) => (
+                <FeatureRow key={f.id} feature={f} campaignId={campaignId} active={activeIds.has(f.id)} onNavigate={onNavigate} />
+              ))}
+            </ul>
+          </div>
+        )}
       </nav>
+      <div className="space-y-0.5 border-t border-border px-2.5 py-2.5">
+        <Link href="/app/usage" onClick={onNavigate} aria-current={active === "usage" ? "page" : undefined} className={cn(item, active === "usage" ? on : off)}>
+          <Coins aria-hidden className={cn("size-[18px]", active === "usage" && "text-pop")} />
+          Usage
+        </Link>
+        <Link href="/app/roadmap" onClick={onNavigate} aria-current={active === "roadmap" ? "page" : undefined} className={cn(item, active === "roadmap" ? on : off)}>
+          <Signpost aria-hidden className={cn("size-[18px]", active === "roadmap" && "text-pop")} />
+          Roadmap
+        </Link>
+        <Link href="/app/settings" onClick={onNavigate} aria-current={active === "settings" ? "page" : undefined} className={cn(item, active === "settings" ? on : off)}>
+          <Settings aria-hidden className={cn("size-[18px]", active === "settings" && "text-pop")} />
+          Settings
+        </Link>
+      </div>
     </div>
   );
+}
+
+/**
+ * Some workspaces read their tab from the address only when they mount, so a jump to another tab of the page you are on
+ * (a spine link, a header chip, the Command Bar) would change the address and leave the tab behind. After such a jump the
+ * page is remounted from the new address. Anything else that changes the address, such as a tab clicked in the page, is left alone.
+ */
+function useRemountOnFeatureNav() {
+  const pathname = usePathname();
+  const search = useSearchParams();
+  const query = search.toString();
+  const [seen, setSeen] = useState(() => ({ pathname, query, count: 0, mark: latestFeatureNav()?.id ?? 0 }));
+  if (seen.pathname !== pathname || seen.query !== query) {
+    // The address changed. A jump marked since the last change is spent now, whether or not this was it.
+    const mark = latestFeatureNav();
+    const fresh = mark !== null && mark.id !== seen.mark;
+    const hit = fresh && seen.pathname === pathname && arrivedAt(mark, pathname, search);
+    setSeen({ pathname, query, count: seen.count + (hit ? 1 : 0), mark: mark?.id ?? seen.mark });
+  }
+  return seen.count;
 }
 
 // ---------- shell ----------
@@ -164,7 +250,7 @@ export function WorkspaceShell({
 }: {
   /** The campaign the workspace links point at (on Today: the most recent one, if any). */
   campaignId: string | null;
-  active: WorkspaceKey | "today";
+  active: WorkspaceKey | PlatformPage;
   mode?: DataMode;
   children: ReactNode;
 }) {
@@ -174,6 +260,7 @@ export function WorkspaceShell({
   const [panelCount, setPanelCount] = useState(0);
   const [panelOpen, setPanelOpen] = useState(false);
   const docked = useMediaQuery("(min-width: 1280px)");
+  const pageKey = useRemountOnFeatureNav();
   const register = useCallback(() => {
     setPanelCount((n) => n + 1);
     return () => setPanelCount((n) => n - 1);
@@ -219,7 +306,7 @@ export function WorkspaceShell({
                 >
                   <Menu aria-hidden className="size-5" />
                 </button>
-                <CampaignSelector campaignId={active === "today" ? null : campaignId} workspace={active === "today" ? null : active} />
+                <CampaignSelector campaignId={inCampaign(active) ? campaignId : null} workspace={inCampaign(active) ? active : null} />
                 {mode && <ModeBadge mode={mode} />}
                 <div className="ml-auto flex items-center gap-1.5">
                   {hasPanel && !docked && (
@@ -243,7 +330,7 @@ export function WorkspaceShell({
 
             <div className={cn("xl:grid xl:items-start", hasPanel && "xl:grid-cols-[minmax(0,1fr)_340px]")}>
               <main id="main" className="arrive-2 min-w-0 px-3 pt-6 pb-16 sm:px-4 lg:pr-4 lg:pl-1">
-                {children}
+                <Fragment key={pageKey}>{children}</Fragment>
               </main>
               {drawerOpen && <div aria-hidden className="fixed inset-0 z-30 bg-black/45 xl:hidden" onClick={() => setPanelOpen(false)} />}
               <aside

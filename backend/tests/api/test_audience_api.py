@@ -252,7 +252,8 @@ async def test_a_failed_live_run_reports_the_error_and_keeps_the_panel_without_r
     _, campaign = await live_campaign(client)
     result = await run_and_read(client, campaign["id"], "quick-reads", {"region_code": "IN-MH", "size": 6})
     assert result["status"] == "failed" and result["error"]["stage"] == "generating_reactions" and result["error"]["code"] == "PROVIDER_ERROR"
-    assert "retrying is safe" in result["error"]["message"] and result["summary"] is None
+    assert result["error"]["retryable"] is False and "retrying is safe" not in result["error"]["message"]  # flag and message agree
+    assert result["summary"] is None
     assert len(result["participants"]) == 6 and all(p["response"] is None for p in result["participants"])
     asked = await client.post(f"{API}/campaigns/{campaign['id']}/panels/{result['id']}/questions",
                               json={"question": "Why?", "target": {"kind": "panel"}})

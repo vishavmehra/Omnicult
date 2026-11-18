@@ -91,12 +91,13 @@ class FakeMedia:
 
     def __init__(self, kind: str = "video", *, audio: bool = True, sidecar_segments: list[dict] | None = None,
                  notes: str | None = None, fail: Exception | None = None, extract_fail: Exception | None = None,
-                 stored_frames: bool = True) -> None:
+                 stored_frames: bool = True, frame_count: int = 3) -> None:
         """`stored_frames=False` gives the frames no asset id: for tests that save scenes, where a made-up keyframe asset
-        would break the database's foreign key (the real pipeline stores real keyframe assets)."""
+        would break the database's foreign key (the real pipeline stores real keyframe assets). `frame_count` is the
+        number of video keyframes (three at 0.3 s, 3.5 s and 6.8 s by default)."""
         self.kind, self.audio, self.sidecar_segments, self.notes = kind, audio, sidecar_segments or [], notes
         self.fail, self.extract_fail = fail, extract_fail
-        self.frame_ids: list[UUID | None] = [uuid4() if stored_frames else None for _ in range(3)]
+        self.frame_ids: list[UUID | None] = [uuid4() if stored_frames else None for _ in range(frame_count)]
         self.calls: list[str] = []
 
     async def probe(self, asset_id: UUID) -> MediaProbe:
@@ -114,8 +115,9 @@ class FakeMedia:
         elif self.kind == "audio":
             frames = []
         else:
+            times = [300, 3500, 6800] if len(self.frame_ids) == 3 else [300 + 700 * k for k in range(len(self.frame_ids))]
             frames = [PreparedFrame(f"f{i}", ms, self.frame_ids[i - 1], "image/jpeg", f"frame-{i}".encode())
-                      for i, ms in ((1, 300), (2, 3500), (3, 6800))]
+                      for i, ms in enumerate(times, 1)]
         audio = PreparedAudio(uuid4(), "audio/wav", b"wav", 9000) if self.audio and self.kind != "image" else None
         return PreparedMedia(probe=media_probe(self.kind, None if self.kind == "image" else 9000), frames=frames, audio=audio,
                              thumbnail_asset_id=None, sidecar_segments=self.sidecar_segments, sidecar_notes=self.notes)

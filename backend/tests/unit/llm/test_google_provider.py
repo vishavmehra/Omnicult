@@ -1,6 +1,7 @@
 """GoogleGenAIProvider: request mapping, schema stripping, usage, blocks and error classification. No network."""
 
 import asyncio
+from types import SimpleNamespace
 
 import httpx
 import pytest
@@ -53,7 +54,8 @@ async def test_json_schema_is_sent_stripped_of_keywords_gemini_rejects():
     flat = repr(sent.response_json_schema)
     for rejected in ("maxLength", "minLength", "'default'", "'pattern'"):
         assert rejected not in flat
-    assert sent.response_json_schema["properties"]["variants"]["maxItems"] == 2  # item bounds are supported and kept
+    assert "maxItems" not in flat and "minItems" not in flat  # Vertex answers 400 to bounded nested arrays; Pydantic enforces them
+    assert sent.response_json_schema["properties"]["variants"]["type"] == "array"
 
 
 def test_schema_stripping_keeps_property_names_and_rewrites_const():
@@ -166,9 +168,12 @@ def test_client_is_built_lazily_and_per_backend(monkeypatch):
     assert built[0][1] == {"timeout_seconds": 5}
 
 
-def test_build_client_selects_vertex_or_the_developer_api():
+def test_build_client_selects_vertex_or_the_developer_api(monkeypatch):
+    shared = object()
+    monkeypatch.setattr(google, "load_credentials", lambda: shared)  # never the real Application Default Credentials
     vertex = google.build_client(settings(google_cloud_location="asia-south1"), timeout_seconds=7)
     assert vertex.vertexai and vertex._api_client.project == "test-project" and vertex._api_client.location == "asia-south1"
+    assert vertex._api_client._credentials is shared  # so the SDK never runs google.auth.default() itself
     keyed = google.build_client(settings(google_genai_backend="gemini_api", gemini_api_key="k", google_cloud_project=None))
     assert not keyed.vertexai
 
@@ -191,3 +196,141 @@ async def test_with_retries_retries_transient_and_passes_budget_errors_through()
 
     with pytest.raises(BudgetExceeded):
         await google.with_retries(over, retries=3, backoff=0)
+
+
+# --- credentials: one lookup per process, off the event loop -----------------------------------------------------
+
+
+@pytest.fixture
+def fresh_credentials(monkeypatch):
+    monkeypatch.setattr(google, "_credentials", None)
+    lookups: list[str] = []
+    monkeypatch.setattr(google, "_credentials_from_file", lambda: lookups.append("file") or None)
+    monkeypatch.setattr(google, "_default_credentials", lambda: lookups.append("default") or object())
+    return lookups
+
+
+def test_credentials_are_looked_up_once_and_shared_by_every_client(fresh_credentials):
+    first = google.load_credentials()
+    assert google.load_credentials() is first and google.load_credentials() is first
+    clients = [google.build_client(settings(), timeout_seconds=5) for _ in range(3)]  # gateways and adapters each build one
+    assert all(c._api_client._credentials is first for c in clients)
+    assert fresh_credentials == ["file", "default"]  # one lookup, however many clients
+
+
+async def test_warm_credentials_runs_in_a_worker_thread_once_and_skips_the_api_key_backend(fresh_credentials, monkeypatch):
+    import threading
+
+    threads: list[int] = []
+    monkeypatch.setattr(google, "_default_credentials", lambda: threads.append(threading.get_ident()) or object())
+    await google.warm_credentials(settings(google_genai_backend="gemini_api", gemini_api_key="k", google_cloud_project=None))
+    assert threads == []  # nothing to load for an API key
+    await asyncio.gather(google.warm_credentials(settings()), google.warm_credentials(settings()))
+    await google.warm_credentials(settings())
+    assert len(threads) == 1 and threads[0] != threading.get_ident()  # one lookup, never on the event loop's thread
+
+
+async def test_the_first_request_warms_credentials_before_it_builds_a_client(monkeypatch):
+    order: list[str] = []
+
+    async def warm(_settings):
+        order.append("warm")
+
+    def build(_settings, **_kw):
+        order.append("build")
+        return FakeClient([reply("ok"), reply("ok")])
+
+    monkeypatch.setattr(google, "warm_credentials", warm)
+    monkeypatch.setattr(google, "build_client", build)
+    p = google.GoogleGenAIProvider(settings())
+    await p.complete(request())
+    await p.complete(request())
+    assert order == ["warm", "build"]  # the client, once built, is reused: no second lookup
+
+
+async def test_missing_credentials_are_a_typed_final_provider_error_not_a_raw_exception(monkeypatch):
+    from google.auth.exceptions import DefaultCredentialsError
+
+    from app.llm.gateway import LLMError, LLMGateway
+
+    async def no_credentials(_settings):
+        raise DefaultCredentialsError("could not find default credentials")
+
+    monkeypatch.setattr(google, "warm_credentials", no_credentials)
+    with pytest.raises(ProviderError) as caught:
+        await google.GoogleGenAIProvider(settings()).complete(request())
+    assert not caught.value.transient and str(caught.value) == "Google credentials are not available"
+
+    from app.llm.smoke import SmokeOut
+
+    with pytest.raises(LLMError) as failed:  # through the gateway: a typed, non-retryable PROVIDER_ERROR (never a 500)
+        await LLMGateway(settings(), backoff_seconds=0).generate_structured(
+            task="extraction", stage="s", agent="a", system="s", user="u", schema=SmokeOut, prompt_version="p")
+    assert failed.value.code == "PROVIDER_ERROR" and failed.value.retryable is False
+
+
+def test_credentials_file_types_are_read_directly(tmp_path, monkeypatch):
+    import json
+
+    path = tmp_path / "adc.json"
+    path.write_text(json.dumps({"type": "authorized_user", "client_id": "i", "client_secret": "s", "refresh_token": "r",
+                                "quota_project_id": "billing-project"}))
+    monkeypatch.setenv("GOOGLE_APPLICATION_CREDENTIALS", str(path))
+    creds = google._credentials_from_file()
+    assert creds.quota_project_id == "billing-project" and "cloud-platform" in creds.scopes[0]
+    path.write_text(json.dumps({"type": "external_account"}))
+    assert google._credentials_from_file() is None  # other types fall back to google.auth.default()
+    monkeypatch.setenv("GOOGLE_APPLICATION_CREDENTIALS", str(tmp_path / "missing.json"))
+    assert google._credentials_from_file() is None
+
+
+# --- request shape and error detail --------------------------------------------------------------------------------
+
+
+def test_seed_is_mapped_into_the_int32_range_vertex_accepts():
+    assert google.to_int32(None) is None and google.to_int32(42) == 42
+    assert 0 <= google.to_int32(2**31) < 2**31 and google.to_int32(2**40 + 7) == google.to_int32(2**40 + 7)  # stable
+
+
+async def test_a_huge_seed_reaches_the_api_as_int32():
+    p, client = provider(reply("ok"))
+    await p.complete(request(seed=2**40 + 7))
+    assert client.calls[0].config.seed == (2**40 + 7) % 2**31
+
+
+def test_a_rejection_logs_the_apis_own_words_but_the_user_message_stays_a_status_line(caplog):
+    body = {"error": {"code": 400, "status": "INVALID_ARGUMENT", "message": "Request contains an invalid argument.",
+                      "details": [{"@type": "type.googleapis.com/google.rpc.BadRequest",
+                                   "fieldViolations": [{"field": "generation_config.response_json_schema", "description": "too many states"}]}]}}
+    error = errors.ClientError(400, body, SimpleNamespace(headers={}))
+    with caplog.at_level("WARNING", logger="app.llm.google"):
+        mapped = google.map_exception(error)
+    assert str(mapped) == "HTTP 400" and not mapped.transient
+    record = next(r for r in caplog.records if getattr(r, "provider_http", None) == 400)
+    assert record.provider_status == "INVALID_ARGUMENT"
+    assert "too many states" in record.provider_detail and "generation_config.response_json_schema" in record.provider_detail
+    assert len(google.error_detail(error)) <= 400
+
+
+async def test_the_app_loads_google_credentials_in_the_background_only_when_google_is_configured(monkeypatch):
+    from app import main
+    from app.llm import google
+
+    loads: list[str] = []
+
+    async def warm(configured):
+        loads.append(configured.google_cloud_project)
+
+    monkeypatch.setattr(google, "warm_credentials", warm)
+    monkeypatch.setattr(main, "get_settings", lambda: settings(google_cloud_project=None))
+    await main.warm_google_credentials()
+    assert loads == []  # no project: nothing to load, no lookup
+    monkeypatch.setattr(main, "get_settings", lambda: settings(google_cloud_project="p"))
+    await main.warm_google_credentials()
+    assert loads == ["p"]
+
+    async def broken(configured):
+        raise RuntimeError("no credentials on this machine")
+
+    monkeypatch.setattr(google, "warm_credentials", broken)
+    await main.warm_google_credentials()  # a startup failure is logged, never raised: the first call reports it

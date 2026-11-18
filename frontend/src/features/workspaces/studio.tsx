@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { BookMarked, Bot, GitCompareArrows, History, Languages, Layers, ScanSearch, User } from "lucide-react";
+import { BookMarked, Bot, GitCompareArrows, History, Languages, Layers, ScanSearch, User, Wand2 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -11,6 +11,7 @@ import { EmptyState, ErrorState, LoadingState } from "@/components/states";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { DirectPanel } from "@/features/direct/direct-panel";
 import { useCreateVersion, useLocks, useOperations, useRegions, useRestoreVersion, useVersion, useVersions } from "@/features/studio/api";
 import { DiffView } from "@/features/studio/diff";
 import { ElementEditor } from "@/features/studio/elements";
@@ -26,8 +27,8 @@ import { cn } from "@/lib/utils";
 import { useCampaign } from "./campaign-context";
 import { WorkspaceHeader } from "./parts";
 
-type TabKey = "elements" | "transcreate" | "compare" | "glossary";
-const TABS: readonly TabKey[] = ["elements", "transcreate", "compare", "glossary"];
+type TabKey = "elements" | "transcreate" | "direct" | "compare" | "glossary";
+const TABS: readonly TabKey[] = ["elements", "transcreate", "direct", "compare", "glossary"];
 const asTab = (value: string | null): TabKey => (TABS as readonly string[]).includes(value ?? "") ? (value as TabKey) : "elements";
 
 /** One link into Creative X-Ray, the other half of the Studio (another stream builds that page). */
@@ -188,6 +189,14 @@ export function StudioWorkspace() {
     [campaignId, project.id, project.workspace_id, project.mode, languages],
   );
 
+  // The Command Bar's "Direct this version" asks an already open Studio for a tab with an event; from any other page it
+  // arrives as ?tab=direct and the state above reads it on mount.
+  useEffect(() => {
+    const onTab = (e: Event) => setTab(asTab((e as CustomEvent<string>).detail));
+    window.addEventListener("omnicult:studio-tab", onTab);
+    return () => window.removeEventListener("omnicult:studio-tab", onTab);
+  }, []);
+
   const currentId = current?.id ?? null;
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
@@ -253,6 +262,10 @@ export function StudioWorkspace() {
             <TabsTrigger value="transcreate" className="h-9 flex-none px-3">
               <Languages aria-hidden />
               Transcreate
+            </TabsTrigger>
+            <TabsTrigger value="direct" className="h-9 flex-none px-3">
+              <Wand2 aria-hidden />
+              Direct
             </TabsTrigger>
             <TabsTrigger value="compare" className="h-9 flex-none px-3">
               <GitCompareArrows aria-hidden />
@@ -326,6 +339,25 @@ export function StudioWorkspace() {
               <TabsContent value="transcreate">
                 {node.data ? (
                   <TranscreatePanel version={node.data} locks={locksQ.data?.items ?? []} operations={operations} runId={runId} onRun={setRunId} onOpenVersion={open} />
+                ) : node.isError ? (
+                  <ErrorState error={node.error} onRetry={() => void node.refetch()} />
+                ) : (
+                  <LoadingState label="Loading the version…" />
+                )}
+              </TabsContent>
+              <TabsContent value="direct">
+                {node.data ? (
+                  <DirectPanel
+                    key={current.id}
+                    version={node.data}
+                    number={numbers.get(current.id) ?? 0}
+                    numbers={numbers}
+                    onOpenVersion={open}
+                    onShowRun={(id) => {
+                      setRunId(id);
+                      setTab("transcreate");
+                    }}
+                  />
                 ) : node.isError ? (
                   <ErrorState error={node.error} onRetry={() => void node.refetch()} />
                 ) : (

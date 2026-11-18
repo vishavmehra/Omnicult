@@ -9,7 +9,7 @@ import pytest
 from app.llm import gateway as gateway_module
 from app.llm.budget import BudgetGuard, InMemoryUsageSink, Meter
 from app.llm.gateway import LLMError, LLMGateway
-from app.llm.transcribe import TranscribeClient, parse_clock
+from app.llm.transcribe import TranscribeClient, complete_segments, output_shape, parse_clock
 from tests.unit.llm.genai_fakes import FakeClient, api_error, blocked_prompt, reply, settings
 
 MODEL = "gemini-3.8-flash"
@@ -50,7 +50,7 @@ async def test_speech_becomes_timed_segments_in_the_spoken_script():
     assert all(s.source == "transcription" for s in result.segments) and result.music_mood == "warm, festive"
     sent = fake.calls[0]
     assert sent.model == MODEL and sent.config.temperature == 1.0 and sent.config.response_mime_type == "application/json"
-    assert sent.config.response_json_schema["properties"]["segments"]["maxItems"] == 80  # a loop cannot run past it
+    assert "maxItems" not in repr(sent.config.response_json_schema)  # a bounded array makes Vertex answer 400; the prompt asks for 80
     text_part, audio_part = sent.contents[0].parts
     assert audio_part.inline_data.mime_type == "audio/wav" and audio_part.inline_data.data == WAV
     assert "ISO 639-1 code mr" in text_part.text
@@ -172,3 +172,35 @@ async def test_an_expired_deadline_is_an_llm_error_the_workflow_handles(monkeypa
 def test_clock_values_parse_to_milliseconds_and_junk_does_not():
     assert [parse_clock(v) for v in ("00:03.5", "1:05", "01:02:03", "7", "7,25", " 0:00 ")] == [3500, 65000, 3_723_000, 7000, 7250, 0]
     assert [parse_clock(v) for v in (None, "", "abc", "-3", "nan", "inf", "1:xx", "99999999")] == [None] * 8
+
+
+async def test_an_answer_cut_off_inside_the_array_keeps_the_complete_segments_before_the_cut():
+    done = [{"start": "00:01.0", "end": "00:03.0", "text": "Every bond, a little sweeter."},
+            {"start": "00:03.0", "end": "00:05.0", "text": "आमोद."}]
+    loop = ", ".join(json.dumps({"start": "00:06.0", "end": "00:07.0", "text": "आमोद."}, ensure_ascii=False) for _ in range(30))
+    cut = '{"segments": [' + ", ".join(json.dumps(x, ensure_ascii=False) for x in done) + ", " + loop + ', {"start": "00:08.0", "end": "00:0'
+    client, _ = client_for([reply(cut, prompt=1255, out=5048)])  # ran to max_output_tokens (3000 + 2048 thinking headroom)
+    result = await run(client)
+    assert result.status.status == "transcribed" and "cut off at its length limit" in result.status.message
+    assert [s.text for s in result.segments] == ["Every bond, a little sweeter.", "आमोद.", "आमोद."]  # the loop is collapsed to two
+    assert result.trace.status == "completed" and result.trace.usage.output_tokens == 5048
+
+
+def test_complete_segments_returns_only_whole_objects_and_rejects_text_without_an_array():
+    text = 'noise {"segments": [{"text": "a"}, {"text": "b"},' + chr(10) + ' {"text": "c", "sta'
+    assert json.loads(complete_segments(text)) == {"segments": [{"text": "a"}, {"text": "b"}]}
+    assert json.loads(complete_segments('{"segments": []}')) == {"segments": []}
+    with pytest.raises(ValueError):
+        complete_segments("I hear music.")
+
+
+async def test_a_rejected_answer_is_logged_by_shape_never_by_content(caplog):
+    cut = '{"segments": [{"start": "0:01", "end": "0:02", "text": ""}, {"start": "0:02", "end": "0:03", "text": "secret words"}, {"sta'
+    assert output_shape(cut) == {"output_chars": len(cut), "complete_segments": 2, "empty_texts": 1, "distinct_texts": 2}
+    assert output_shape("I hear music.")["complete_segments"] == 0
+    client, _ = client_for([reply(cut, prompt=1255, out=5048)])
+    with caplog.at_level("WARNING", logger="app.llm.transcribe"):
+        result = await run(client)
+    assert result.status.status == "transcribed"  # the one complete segment with words is kept
+    record = next(r for r in caplog.records if r.getMessage() == "transcription output rejected")
+    assert record.cut_off is True and record.complete_segments == 2 and "secret words" not in repr(vars(record))

@@ -28,6 +28,7 @@ RUN_META: dict[str, tuple[str, str]] = {
     "risk_scan": ("lab", "Risk scan"), "population_study": ("lab", "Population study"),
     "social_simulation": ("lab", "Social simulation"), "campaign_adaptation": ("studio", "Campaign adaptation"),
     "transcreate": ("studio", "Transcreation"), "creative_xray": ("studio", "Creative X-Ray"),
+    "voice_direct": ("studio", "Voice Director"),
     "campaign_evaluation": ("launch", "Campaign evaluation"), "campaign_arena": ("launch", "Campaign arena"),
 }
 AUDIENCE_LABEL = {"quick_read": "Quick Read", "audience_study": "Audience Study", "risk_check": "Risk Check"}

@@ -7,15 +7,18 @@ a short description of any background music. Timestamps are the model's own esti
 clip; a transcript is model output, never an observed record, and nothing is invented when no speech is heard.
 
 Guards against a runaway answer (the first live call's answer ran to the output-token limit and failed validation): the
-segment array is bounded in the schema (`maxItems`), a run of identical segments (a decoding loop) is cut short, the
-model's default sampling temperature is kept (Gemini 3 models can loop at low temperatures), and a cut-off answer is
-reported as such.
+prompt asks for at most 80 segments (an array bound in the schema is not sent: Vertex answers 400 to bounded nested
+arrays, see app.llm.google), a run of identical segments (a decoding loop) is cut short, the model's default sampling
+temperature is kept (Gemini 3 models can loop at low temperatures), and an answer cut off at the token limit keeps the
+complete segments before the cut instead of failing, reported as such.
 
 Like the vision adapter it never raises for provider, budget or output problems: the result's status is `transcribed`,
 `unavailable` (no audio-capable model or credentials) or `failed`, with a trace. Audio goes only to models the registry
 lists as `transcribe` capable. Usage is metered under capability `transcribe`.
 """
 
+import json
+import logging
 import math
 import re
 import time
@@ -32,6 +35,7 @@ from app.media.types import TranscribeResult
 from app.schemas.common import Sampling, StepTrace, Usage
 from app.schemas.xray import TranscribeStatus, TranscriptSegment
 
+log = logging.getLogger(__name__)
 TRANSCRIBE_PROMPT_VERSION = "transcribe-v1"
 TRANSCRIBE_SCHEMA_VERSION = "transcript-v1"
 SUPPORTED_AUDIO_TYPES = frozenset({"audio/wav", "audio/x-wav", "audio/wave"})
@@ -40,7 +44,6 @@ MAX_AUDIO_BYTES = 3 * 1024 * 1024  # 65 s of 16 kHz mono 16-bit PCM is about 2.1
 AUDIO_TOKENS_PER_SECOND = 32  # Gemini's documented audio tokenisation; only sizes the pre-call budget estimate
 MAX_OUTPUT_TOKENS = 3000
 MAX_SEGMENTS = 300  # what the parser keeps
-REQUESTED_SEGMENTS = 80  # `maxItems` in the schema sent to the model: a loop cannot run past it, and 80 segments fit the token budget
 MAX_REPEATS = 2  # the same text more than this many times in a row is a decoding loop, not speech
 TEMPERATURE = 1.0  # Gemini 3 models are tuned for their default; lower values risk repetition loops
 CUT_OFF_MARGIN = 16  # an answer this close to max_output_tokens was stopped by the limit
@@ -131,6 +134,38 @@ def parse_transcript(
     return segments, mood
 
 
+def complete_segments(text: str) -> str:
+    """The JSON of a transcript answer that was cut off inside the segment array: only the complete leading segment
+    objects, re-serialised. Raises ValueError when no array is found."""
+    marker = text.find('"segments"')
+    start = text.find("[", marker) if marker != -1 else -1
+    if start == -1:
+        raise ValueError("The output has no segment array.")
+    decoder, pos, items = json.JSONDecoder(), start + 1, []
+    while True:
+        while pos < len(text) and (text[pos].isspace() or text[pos] == ","):
+            pos += 1
+        try:
+            item, pos = decoder.raw_decode(text, pos)
+        except json.JSONDecodeError:  # the object the limit cut through, or the end of the text
+            break
+        if not isinstance(item, dict):
+            break
+        items.append(item)
+    return json.dumps({"segments": items})
+
+
+def output_shape(text: str) -> dict[str, int]:
+    """Counts that describe a rejected answer without quoting it (the raw output is never logged): length, how many
+    complete segment objects it holds, how many of them have no text, and how many distinct texts."""
+    try:
+        items = json.loads(complete_segments(text))["segments"]
+    except ValueError:
+        items = []
+    texts = [str(item.get("text") or "").strip() for item in items]
+    return {"output_chars": len(text), "complete_segments": len(items), "empty_texts": texts.count(""), "distinct_texts": len(set(texts))}
+
+
 class TranscribeClient:
     def __init__(self, settings: Settings, *, client: Any = None, meter: Meter | None = None,
                  backoff_seconds: float = 0.5) -> None:
@@ -173,7 +208,6 @@ class TranscribeClient:
         model, provider = self.model, self._provider
         prompt = USER_PROMPT + (f" The speaker is expected to use the language with ISO 639-1 code {hint}." if hint else "")
         schema = _Transcript.model_json_schema()
-        schema["properties"]["segments"]["maxItems"] = REQUESTED_SEGMENTS
         request = ChatRequest(
             model=model,
             messages=[
@@ -234,6 +268,16 @@ class TranscribeClient:
             segments, mood = parse_transcript(completion.text, language=hint, duration_ms=duration_ms)
         except ValueError:  # includes pydantic.ValidationError
             cut = usage is not None and (usage.output_tokens or 0) >= request.max_tokens - CUT_OFF_MARGIN
+            log.warning("transcription output rejected", extra={
+                "cut_off": cut, "output_tokens": usage.output_tokens if usage else None, **output_shape(completion.text)})
+            if cut:  # a loop or a very long clip: what was complete before the cut is still a real transcript
+                try:
+                    segments, mood = parse_transcript(complete_segments(completion.text), language=hint, duration_ms=duration_ms)
+                except ValueError:
+                    segments = []
+                if segments:
+                    note = "The model's answer was cut off at its length limit; the segments before the cut are kept and the rest is missing."
+                    return TranscribeResult(self._status("transcribed", note), segments, mood, trace("completed", retries, usage))
             return failed(
                 "The transcription model's answer was cut off at its length limit; no transcript was saved."
                 if cut else "The transcription model's output did not match the required format; no transcript was saved.",

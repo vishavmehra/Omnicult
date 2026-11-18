@@ -59,6 +59,9 @@ S1, S2, S3, S4, S5 = STAGES
 AGENT = "cultural_xray"
 PROVIDER = "nativeproof"
 VISION_CONCURRENCY = 4
+VISION_GIVE_UP_AFTER = 2  # provider failures before any keyframe succeeded; the rest are skipped instead of each waiting out a deadline
+PROVIDER_DOWN = frozenset({"PROVIDER_TIMEOUT", "PROVIDER_ERROR"})
+SKIPPED_FRAME = "Skipped: the vision provider failed on the earlier keyframes."
 MAX_SEGMENTS = 300
 PROMPT_TRANSCRIPT_CHARS = 12_000  # what the model is shown of a transcript or of the uploader's notes
 PROMPT_NOTES_CHARS = 4_000
@@ -446,16 +449,26 @@ async def observing_frames(state: State, config: RunnableConfig) -> dict:
         return {"vision": status, "observations": {}, "partial": True, "limitations": [*notes, f"Vision: {message}"],
                 "steps": [*steps, local_step(S4, "vision", None, started, status="skipped")]}
     gate = asyncio.Semaphore(VISION_CONCURRENCY)
+    total, finished, ok, down = len(prepared.frames), 0, 0, 0
 
     async def one(frame: PreparedFrame) -> tuple[PreparedFrame, VisionStatus, list[VisualObservation], StepTrace | None]:
+        nonlocal finished, ok, down
         async with gate:
-            try:
-                result = await deps.vision.observe(
-                    frame.asset_id or inp.asset_id, frame.data, frame.content_type, stage=S4, agent="vision")
-            except LLMError as exc:  # the gateway deadline expired; the frame never goes to a text model instead
-                failed = VisionStatus(status="failed", provider=exc.trace.provider, model_id=exc.trace.model_id, message=exc.message)
-                return frame, failed, [], exc.trace
-        return frame, result.status, list(result.observations), result.trace
+            if down >= VISION_GIVE_UP_AFTER and not ok:  # the provider is down: do not spend a deadline per frame
+                outcome = (frame, VisionStatus(status="failed", provider=None, model_id=None, message=SKIPPED_FRAME), [], None)
+            else:
+                try:
+                    result = await deps.vision.observe(
+                        frame.asset_id or inp.asset_id, frame.data, frame.content_type, stage=S4, agent="vision")
+                    outcome = (frame, result.status, list(result.observations), result.trace)
+                except LLMError as exc:  # the gateway deadline expired; the frame never goes to a text model instead
+                    failed = VisionStatus(status="failed", provider=exc.trace.provider, model_id=exc.trace.model_id, message=exc.message)
+                    outcome = (frame, failed, [], exc.trace)
+        finished += 1
+        ok += outcome[1].status == "analyzed"
+        down += outcome[3] is not None and outcome[3].error_code in PROVIDER_DOWN
+        await _announce(config, 3, f"Describing keyframes ({finished} of {total} done).")
+        return outcome
 
     results = await asyncio.gather(*(one(f) for f in prepared.frames))
     observations = {frame.frame_id: obs for frame, _, obs, _ in results}
@@ -463,7 +476,7 @@ async def observing_frames(state: State, config: RunnableConfig) -> dict:
     analysed = [s for s in statuses if s.status == "analyzed"]
     traces = [t for *_, t in results if t is not None]
     failed = len(statuses) - len(analysed)
-    overall = analysed[0] if analysed else statuses[-1]
+    overall = analysed[0] if analysed else next((s for s in statuses if s.message != SKIPPED_FRAME), statuses[-1])
     update: dict = {"vision": overall, "observations": observations,
                     "steps": [*steps, merge_steps(S4, "vision", traces, started) if traces else local_step(S4, "vision", None, started, status="skipped")]}
     if failed:

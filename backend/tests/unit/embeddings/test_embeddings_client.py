@@ -119,3 +119,37 @@ def test_normalisation_is_unit_length():
 
     assert math.isclose(math.sqrt(sum(v * v for v in _normalised([3.0, 4.0]))), 1.0)
     assert _normalised([0.0, 0.0]) == [0.0, 0.0]
+
+
+async def test_the_embedding_client_warms_credentials_before_it_builds_its_client(monkeypatch):
+    from app.llm import google
+
+    order: list[str] = []
+
+    async def warm(_settings):
+        order.append("warm")
+
+    def build(_settings, **_kw):
+        order.append("build")
+        return FakeClient(embed=[vectors_for, vectors_for])
+
+    monkeypatch.setattr(google, "warm_credentials", warm)
+    monkeypatch.setattr(google, "build_client", build)
+    client = EmbeddingClient(settings(), backoff_seconds=0)
+    await client.embed(["a"])
+    await client.embed(["b"])
+    assert order == ["warm", "build"]  # once: the Application Default Credentials lookup never runs on the event loop
+
+
+async def test_missing_credentials_fail_an_embedding_call_as_a_typed_error(monkeypatch):
+    from google.auth.exceptions import DefaultCredentialsError
+
+    from app.llm import google
+
+    async def no_credentials(_settings):
+        raise DefaultCredentialsError("could not find default credentials")
+
+    monkeypatch.setattr(google, "warm_credentials", no_credentials)
+    with pytest.raises(LLMError) as caught:
+        await EmbeddingClient(settings(), backoff_seconds=0).embed(["a"])
+    assert caught.value.code == "PROVIDER_ERROR" and caught.value.retryable is False

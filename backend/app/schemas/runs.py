@@ -19,6 +19,7 @@ RunType = Literal[
     "social_simulation",
     "transcreate",
     "creative_xray",
+    "voice_direct",
 ]
 RunStatus = Literal["queued", "running", "completed", "partial", "failed", "cancelled"]
 TERMINAL_RUN_STATUSES: frozenset[str] = frozenset({"completed", "partial", "failed", "cancelled"})
@@ -57,6 +58,7 @@ class RunResultRef(ApiModel):
         "version",
         "operation",
         "creative_xray",
+        "voice_plan",
     ]
     ids: list[UUID]
     url: str = Field(description="API path of the result resource, e.g. /api/v1/projects/{id}/discoveries/{run_id}.")

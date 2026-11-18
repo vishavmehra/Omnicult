@@ -42,6 +42,7 @@ OPERATIONS = {
     "social_simulation": "Social simulation",
     "transcreate": "Transcreation",
     "creative_xray": "Creative X-Ray",
+    "voice_direct": "Voice Director",
 }
 
 

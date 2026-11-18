@@ -100,7 +100,7 @@ class GroundedResearchClient:
         (text, citations, queries, metadata), retries, usage = await google.run_generation(
             lambda: self.api, self._settings, meter=self._meter, backoff=self._backoff, capability="grounded_research",
             model=model, contents=question, config=config, stage=stage, agent=agent, prompt_version="grounded-research-v1",
-            extract=extract,
+            extract=extract, warm=self._client is None,
             estimate_usd=estimate_cost(model, input_tokens=len(question) // 2 + 200, output_tokens=config.max_output_tokens,
                                        grounded_requests=1).usd,
         )

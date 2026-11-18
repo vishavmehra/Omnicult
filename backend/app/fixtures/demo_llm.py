@@ -457,3 +457,7 @@ RESPONDERS |= STUDIO_RESPONDERS
 from app.fixtures import demo_aamod  # noqa: E402
 
 RESPONDERS |= {"xray-scenes-v1": demo_aamod.xray_scenes}  # the Aamod film only; any other creative gets "no demo fixture"
+
+from app.fixtures.demo_voice import RESPONDERS as VOICE_RESPONDERS  # noqa: E402
+
+RESPONDERS |= VOICE_RESPONDERS

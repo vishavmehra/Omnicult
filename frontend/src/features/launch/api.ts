@@ -59,7 +59,8 @@ export function useHistory(campaignId: string) {
 
 export function useRegions() {
   return useQuery({
-    queryKey: ["regions", "IN"],
+    // Own key: Studio caches the whole regions page under ["regions", "IN"]; this caches only `items` (a shared key crashed Launch).
+    queryKey: ["regions", "IN", "items"],
     staleTime: 10 * 60_000,
     queryFn: async () => (await unwrap(api.GET("/api/v1/regions", { params: { query: { country_code: "IN", limit: 100 } } }))).items,
   });

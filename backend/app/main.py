@@ -1,3 +1,6 @@
+import asyncio
+import contextlib
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -15,6 +18,8 @@ from app.api.routes import (
     campaigns,
     conflicts,
     desk,
+    country_packs,
+    direct,
     discoveries,
     evaluations,
     evidence,
@@ -36,6 +41,7 @@ from app.api.routes import (
     search,
     studies,
     studio,
+    teams,
     trends,
     workspaces,
 )
@@ -44,6 +50,7 @@ from app.core.config import Settings, get_settings
 from app.core.errors import REQUEST_ID_HEADER, RequestContextMiddleware, install_error_handlers
 from app.core.logging import configure_logging
 from app.db.session import dispose_engine
+from app.llm import google
 from app.llm.budget import get_default_usage_sink, set_default_usage_sink
 from app.media.ffmpeg import log_startup_tools
 from app.services import runs as run_engine
@@ -80,6 +87,9 @@ ROUTERS = (
     proof,
     runs,
     studio,
+    teams,
+    country_packs,
+    direct,
 )
 
 API_PREFIX = "/api/v1"
@@ -89,13 +99,29 @@ def _operation_id(route: APIRoute) -> str:
     return route.name
 
 
+async def warm_google_credentials() -> None:
+    """Load the Application Default Credentials off the event loop at startup (and share them with every client), so the
+    first AI request does not wait on the lookup. Best effort: a failure is logged and the first call reports it."""
+    settings = get_settings()
+    if not google.is_configured(settings):
+        return
+    try:
+        await google.warm_credentials(settings)
+    except Exception as exc:
+        logging.getLogger(__name__).warning("Google credentials could not be loaded at startup", extra={"error": type(exc).__name__})
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     await run_engine.mark_interrupted_runs()
     await log_startup_tools()  # ffmpeg and ffprobe: detected once, logged; video features degrade clearly if absent
     previous = get_default_usage_sink()
     set_default_usage_sink(DbUsageSink())  # every gateway call is stored in ai_usage_events and budgets read it back
+    warming = asyncio.create_task(warm_google_credentials())  # in the background: the API serves requests meanwhile
     yield
+    warming.cancel()
+    with contextlib.suppress(asyncio.CancelledError):
+        await warming
     set_default_usage_sink(previous)
     await run_engine.shutdown()
     await dispose_engine()

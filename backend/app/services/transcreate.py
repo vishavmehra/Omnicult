@@ -26,7 +26,9 @@ from app.studio.engine import Edit, OpSpec
 from app.workflows.transcreate import TranscreateInput, TranscreateOutcome
 
 
-async def start_transcreate(user_id: UUID, campaign_id: UUID, body: v.TranscreateRequest) -> RunAccepted:
+async def start_transcreate(user_id: UUID, campaign_id: UUID, body: v.TranscreateRequest, *, direct: dict[str, Any] | None = None) -> RunAccepted:
+    """`direct` (the Voice Director's plan id, step id and instruction) is kept on the run and read back when the operation
+    is recorded, so the person's instruction becomes the reason on the version."""
     async with read_session() as s:
         campaign, project = await campaign_for(s, user_id, campaign_id, writable=True)
         source = await node_in(s, campaign, body.version_id, "version_id") if body.version_id else await newest_node(s, campaign.id)
@@ -60,7 +62,7 @@ async def start_transcreate(user_id: UUID, campaign_id: UUID, body: v.Transcreat
         "region_name": region.name, "language": language.code, "language_name": language.name, "script": language.script,
         "tone": body.tone.model_dump(),
         "lines": [{"handle": f"L{i}", "element_id": e["id"], "kind": e["kind"], "text": e["value"]} for i, e in enumerate(chosen, 1)],
-        "claims": claims, "glossary": glossary,
+        "claims": claims, "glossary": glossary, **({"direct": direct} if direct else {}),
     }
     return await _create_run(user_id, project, "transcreate", inputs, campaign_id=campaign.id)
 
@@ -113,6 +115,9 @@ async def persist(s: AsyncSession, run: m.AgentRun, outcome: TranscreateOutcome,
         rejection = v.Rejection(code="CHECKS_FAILED", element_ids=[x.element_id for x in outcome.lines],
                                 message="No line passed the script and glossary checks; nothing was applied.")
     reason = f"Transcreated {len(passing)} of {len(outcome.lines)} line(s) into {data['language_name']} for {data['region_name']}."
+    if direct := data.get("direct"):  # started by the Voice Director: the instruction leads, the counts follow
+        reason = f"{direct['instruction']} ({reason})"
+        params |= {key: direct[key] for key in ("direct_plan_id", "direct_step_id", "direct_source")}
     op, node = await record_operation(
         s, project=project, campaign=campaign, source=source, spec=spec, actor="ai", actor_user_id=run.created_by,
         reason=reason, claim_ids=claim_ids, params=params, label=f"Transcreation: {data['language_name']} ({data['region_code']})"[:80],

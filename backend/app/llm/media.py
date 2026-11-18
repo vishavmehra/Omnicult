@@ -161,7 +161,7 @@ class ImageGenerationClient(_Adapter):
         (image, mime, note), retries, usage = await google.run_generation(
             lambda: self.api, self._settings, meter=self._meter, backoff=self._backoff, capability=self.capability,
             model=model, contents=[types.Content(role="user", parts=parts)], config=config, stage=stage, agent=agent,
-            prompt_version="image-generate-v1", extract=extract,
+            prompt_version="image-generate-v1", extract=extract, warm=self._client is None,
             estimate_usd=estimate_cost(model, input_tokens=len(prompt) // 3 + (IMAGE_TOKEN_ESTIMATE if reference_image else 0),
                                        images=1).usd,
         )
@@ -219,7 +219,7 @@ class TTSClient(_Adapter):
         (pcm, rate), retries, usage = await google.run_generation(
             lambda: self.api, self._settings, meter=self._meter, backoff=self._backoff, capability=self.capability,
             model=model, contents=text, config=config, stage=stage, agent=agent, prompt_version="tts-speak-v1",
-            extract=extract,
+            extract=extract, warm=self._client is None,
             estimate_usd=estimate_cost(model, input_tokens=len(text) // 3 + 1,
                                        audio_seconds=len(text) / 8 + 1).usd,  # about 8 characters per second of speech
         )

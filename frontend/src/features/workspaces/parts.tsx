@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { WorkspaceFeatureChips } from "@/components/shell/feature-links";
 import { WORKSPACES, type WorkspaceKey } from "@/components/shell/workspaces";
 import { sectionHref } from "@/features/project/workflow";
 import { api } from "@/lib/api/client";
@@ -24,8 +25,9 @@ export function WorkspaceHeader({ workspace, children, actions }: { workspace: W
         <h1 className="type-title text-[30px] text-ink sm:text-[34px]">{ws.label}</h1>
         <p className="max-w-[68ch] text-[14.5px] text-ink-secondary">{ws.purpose}</p>
         {children}
+        <WorkspaceFeatureChips workspace={workspace} />
       </div>
-      {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+      {actions &&<div className="flex flex-wrap gap-2">{actions}</div>}
     </header>
   );
 }

@@ -45,15 +45,17 @@ BLOCKED_MESSAGE = (
 
 # Deadlines in seconds (defect #4). "Per request" is the SDK timeout of one HTTP call; the deadline caps one whole
 # gateway or adapter call, including bounded retries, the one repair, and a fallback model. Basis: chat calls measured
-# 0.7-19.6 s, embeddings 3.5-25 s per request, vision 1.7-7.1 s on the previous provider; image and speech are slower.
+# 0.7-19.6 s, embeddings 3.5-25 s per request, vision 6.6-24 s per image (Gemini 3.8 Flash); a six-participant Quick Read
+# took 20.7 s for about 1,000 output tokens, and Vertex answered one request under load with a 504 after about 100 s. A
+# deadline exceeds its request timeout, so a call that fails fast (429, 5xx) can still be retried within it.
 CHAT_DEADLINE_FACTOR = 2.5  # one generate_structured call: LLM_REQUEST_TIMEOUT_SECONDS x 2.5 (150 s by default)
 CAPABILITY_LIMITS: dict[str, tuple[float, float]] = {  # name -> (per request, deadline)
-    "embeddings": (30.0, 40.0),  # the deadline applies per batch of up to the adapter's max_batch texts
-    "vision": (30.0, 45.0),  # per image (Gemini 3.8 Flash measured 6.6 to 24 s)
+    "embeddings": (30.0, 60.0),  # the deadline applies per batch of up to the adapter's max_batch texts
+    "vision": (40.0, 75.0),  # per image
     "image_generation": (90.0, 120.0),
     "tts": (60.0, 90.0),
     "grounded_research": (60.0, 90.0),
-    "transcribe": (60.0, 90.0),  # up to about 61 s of audio per call; one request, so no per-batch scaling
+    "transcribe": (60.0, 120.0),  # up to about 61 s of audio per call; one request, so no per-batch scaling
 }
 CAPABILITY_ADAPTERS: dict[str, tuple[str, str]] = {  # name -> (module, class)
     "embeddings": ("app.llm.embeddings", "EmbeddingClient"),

@@ -38,6 +38,7 @@ const RUNNING_STAGE: Record<RunType, string> = {
   social_simulation: "simulating_rounds",
   transcreate: "transcreating_lines",
   creative_xray: "observing_frames",
+  voice_direct: "planning",
 };
 const firstPolled = new Map<string, number>();
 

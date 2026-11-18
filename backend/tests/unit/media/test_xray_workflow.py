@@ -39,15 +39,19 @@ def deps(*, llm: Any = None, media: Any = None, vision: Any = "default", transcr
 async def test_a_video_goes_through_all_five_stages_and_only_verified_items_are_kept() -> None:
     seen: list[dict] = []
     stages: list[tuple[str, int, int]] = []
+    messages: list[str] = []
 
     async def progress(stage: str, done: int, total: int, message: str) -> None:
         stages.append((stage, done, total))
+        messages.append(message)
 
     transcribe = FakeTranscribe(SEGMENTS, music_mood="festive, upbeat")
     outcome = await run_creative_xray(inp(), deps(llm=scripted_llm(standard, seen=seen), transcribe=transcribe), progress)
 
     assert outcome.status == "completed" and outcome.error is None
-    assert stages == [(name, i, 5) for i, name in enumerate(STAGES)]
+    assert list(dict.fromkeys(stages)) == [(name, i, 5) for i, name in enumerate(STAGES)]  # each stage once, in order
+    assert [m for m in messages if m.startswith("Describing keyframes (")] == [  # partial progress inside the vision stage
+        "Describing keyframes (1 of 3 done).", "Describing keyframes (2 of 3 done).", "Describing keyframes (3 of 3 done)."]
     assert [s.stage for s in outcome.steps] == list(STAGES) and all(s.status in ("completed", "skipped") for s in outcome.steps)
     assert outcome.probe and outcome.probe.duration_ms == 9000
     assert outcome.transcribe.status == "transcribed" and transcribe.calls == ["mr"]  # the declared language was passed on
@@ -248,3 +252,35 @@ async def test_a_huge_transcript_and_notes_are_truncated_for_the_model_and_the_r
     assert any("first 24 of 60 transcript segments" in note for note in outcome.limitations)
     assert any("first 4000 characters of the uploader's notes" in note for note in outcome.limitations)
     assert len(outcome.transcript) == 60  # the stored transcript is complete
+
+
+async def test_keyframes_are_described_with_bounded_concurrency_and_a_dead_provider_is_given_up_on() -> None:
+    import asyncio
+
+    from app.llm.gateway import LLMError
+    from app.schemas.common import StepTrace
+    from app.workflows.xray import SKIPPED_FRAME, VISION_CONCURRENCY, VISION_GIVE_UP_AFTER
+
+    class DeadVision:
+        def __init__(self) -> None:
+            self.calls, self.running, self.peak = 0, 0, 0
+
+        def is_configured(self) -> bool:
+            return True
+
+        async def observe(self, asset_id: Any, image: bytes, content_type: str, *, stage: str, agent: str) -> Any:
+            self.calls, self.running = self.calls + 1, self.running + 1
+            self.peak = max(self.peak, self.running)
+            await asyncio.sleep(0.01)
+            self.running -= 1
+            trace = StepTrace(stage=stage, agent=agent, status="failed", provider="google", model_id="m", error_code="PROVIDER_TIMEOUT")
+            raise LLMError("PROVIDER_TIMEOUT", "The vision provider did not finish within 75 seconds.", retryable=True, trace=trace)
+
+    frames = 12
+    vision = DeadVision()
+    outcome = await run_creative_xray(inp(), deps(vision=vision, media=FakeMedia(frame_count=frames)))
+    assert vision.peak <= VISION_CONCURRENCY
+    assert VISION_GIVE_UP_AFTER <= vision.calls < frames  # the later keyframes were skipped, not each sent to wait out a deadline
+    assert outcome.status == "partial" and outcome.vision.status == "failed" and "did not finish" in outcome.vision.message
+    assert any(f"{frames} of {frames} keyframes could not be described" in note for note in outcome.limitations)
+    assert SKIPPED_FRAME not in "".join(outcome.limitations)  # the reason shown is the provider's, not the skip note
