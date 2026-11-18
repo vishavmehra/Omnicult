@@ -164,7 +164,7 @@ def create_app() -> FastAPI:
     # Interactive docs are a development aid; production serves only the API, /health, and /ready.
     docs = {"docs_url": None, "redoc_url": None, "openapi_url": None} if production else {}
     app = FastAPI(
-        title="Nativeproof API", version="0.1.0", generate_unique_id_function=_operation_id, lifespan=lifespan, **docs
+        title="Omnicult API", version="0.1.0", generate_unique_id_function=_operation_id, lifespan=lifespan, **docs
     )
     install_error_handlers(app)
     app.add_middleware(RequestContextMiddleware)

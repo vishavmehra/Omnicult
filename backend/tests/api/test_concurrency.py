@@ -35,7 +35,7 @@ async def test_heavy_polling_does_not_starve_run_writes(
         while not stop.is_set():
             assert (await client.get(f"{API}/runs/{accepted['run_id']}")).status_code == 200
 
-    caplog.set_level(logging.WARNING, logger="nativeproof.runs")
+    caplog.set_level(logging.WARNING, logger="omnicult.runs")
     pollers = [asyncio.create_task(poll()) for _ in range(40)]
     try:
         run = await wait_for_run(client, accepted["run_id"], timeout=30)

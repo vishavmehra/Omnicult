@@ -120,7 +120,7 @@ async def assessing_evidence(state: State, config: RunnableConfig) -> dict:
     await announce(config, RUN, 1, "Assessing evidence quality.")
     started, inp = time.perf_counter(), state["inp"]
     columns = [_column(m, state["outcomes"][m.country_code]) for m in inp.request.markets]
-    return {"columns": columns, "steps": [*state["steps"], local_step(S2, "atlas", "nativeproof", started)]}
+    return {"columns": columns, "steps": [*state["steps"], local_step(S2, "atlas", "omnicult", started)]}
 
 
 async def comparing_markets(state: State, config: RunnableConfig) -> dict:
@@ -134,7 +134,7 @@ async def comparing_markets(state: State, config: RunnableConfig) -> dict:
     else:
         specific, note = True, "Qloo signals differ by market; differences are aggregate affinity, not demand."
     return {"comparability": MarketComparability(market_specific_signals=specific, notes=[note, STRUCTURE_NOTE]),
-            "steps": [*state["steps"], local_step(S3, "atlas", "nativeproof", started)]}
+            "steps": [*state["steps"], local_step(S3, "atlas", "omnicult", started)]}
 
 
 async def summarizing(state: State, config: RunnableConfig) -> dict:

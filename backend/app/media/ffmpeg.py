@@ -20,7 +20,7 @@ from typing import Literal
 from app.core.config import get_settings
 from app.core.errors import ProviderNotConfigured, ValidationFailed
 
-log = logging.getLogger("nativeproof.media")
+log = logging.getLogger("omnicult.media")
 _NO_WINDOW = subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0  # type: ignore[attr-defined]
 _PTS_TIME = re.compile(r"pts_time:\s*([0-9]+(?:\.[0-9]+)?)")
 INSTALL_HINT = "Install ffmpeg (https://ffmpeg.org/download.html) and make sure ffmpeg and ffprobe are on PATH, or set FFMPEG_PATH and FFPROBE_PATH."

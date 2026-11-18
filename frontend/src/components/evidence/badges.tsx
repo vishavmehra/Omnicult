@@ -134,7 +134,7 @@ export function SyntheticLabel({ compact, children, className }: { compact?: boo
   );
 }
 
-/** Persistent disclosure for AI-generated reactions (legacy NativeProof pages). */
+/** Persistent disclosure for AI-generated reactions (legacy Omnicult pages). */
 export function SyntheticBadge() {
   return <SyntheticLabel>AI-generated reaction, not a real participant</SyntheticLabel>;
 }

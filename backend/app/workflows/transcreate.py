@@ -89,7 +89,7 @@ async def loading_context(state: State, config: RunnableConfig) -> dict:
     await announce(config, RUN, 0, "Loading campaign context.")
     started, inp = time.perf_counter(), state["inp"]
     protected = _flat(inp.context.brand.protected_terms)
-    return {"protected": protected, "steps": [local_step(S1, "transcreate", "nativeproof", started)]}
+    return {"protected": protected, "steps": [local_step(S1, "transcreate", "omnicult", started)]}
 
 
 async def generating_lines(state: State, config: RunnableConfig) -> dict:
@@ -126,7 +126,7 @@ async def checking_terms(state: State, config: RunnableConfig) -> dict:
         )
         for d in state["drafts"]
     }
-    return {"checks": checks, "steps": [*state["steps"], local_step(S3, "transcreate", "nativeproof", started)]}
+    return {"checks": checks, "steps": [*state["steps"], local_step(S3, "transcreate", "omnicult", started)]}
 
 
 async def checking_script(state: State, config: RunnableConfig) -> dict:
@@ -137,7 +137,7 @@ async def checking_script(state: State, config: RunnableConfig) -> dict:
         d.element_id: script_check(d.regional_copy, inp.script, preserved=state["checks"][d.element_id]["preserved_terms"], min_share=min_share)
         for d in state["drafts"]
     }
-    return {"scripts": scripts, "steps": [*state["steps"], local_step(S4, "transcreate", "nativeproof", started)]}
+    return {"scripts": scripts, "steps": [*state["steps"], local_step(S4, "transcreate", "omnicult", started)]}
 
 
 GRAPH = linear_graph(State, [(S1, loading_context), (S2, generating_lines), (S3, checking_terms), (S4, checking_script)])

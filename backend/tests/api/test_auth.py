@@ -29,7 +29,7 @@ async def test_missing_and_malformed_tokens_are_401(client: httpx.AsyncClient) -
 
 
 def test_dev_token_maps_to_stable_uuid5() -> None:
-    assert auth.dev_user_id("local") == uuid5(NAMESPACE_URL, "nativeproof-dev:local")
+    assert auth.dev_user_id("local") == uuid5(NAMESPACE_URL, "omnicult-dev:local")
 
 
 async def test_dev_token_yields_an_identity_with_the_internal_id() -> None:

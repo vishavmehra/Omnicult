@@ -119,7 +119,7 @@ def no_network() -> Iterator[None]:
 
 @pytest.fixture
 async def aamod(client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch) -> httpx.AsyncClient:
-    """The shared client with the Aamod seed on (the suite pins the legacy seed for the pre-Omnicult tests)."""
+    """The shared client with the Aamod seed on (the suite pins the legacy seed for the older tests)."""
     monkeypatch.setenv("DEMO_SEED", "aamod")
     get_settings.cache_clear()
     return client
@@ -309,7 +309,7 @@ async def test_try_the_demo_seeds_the_whole_aamod_journey(aamod: httpx.AsyncClie
     assert {r.mode for r in await rows(m.Claim, m.Claim.workspace_id.is_(None))} == {"demo"}, "the shared claims are demo fixtures"
     assert {r.source_kind for r in await rows(m.MetricSeries)} == {"sample"}
     for step in [s for r in await rows(m.AgentRun, m.AgentRun.project_id == UUID(pid)) for s in r.steps]:
-        assert step["provider"] in ("fixture", "nativeproof"), step
+        assert step["provider"] in ("fixture", "omnicult"), step
 
     # -- a user who presses Run in the demo project gets labelled fixture output, not a provider error ----------------------------
     plan = {"version_id": root["id"], "region_code": "IN-TN", "language": "ta"}

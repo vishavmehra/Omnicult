@@ -42,7 +42,7 @@ async def run_to_end(client: httpx.AsyncClient, url: str, body: dict[str, Any]) 
 def assert_demo_labels(evidence: list[dict[str, Any]], steps: list[dict[str, Any]]) -> None:
     assert all(e["is_live_data"] is False and e["retrieval_mode"] in {"fixture", "generated"} for e in evidence)
     assert all(e["provenance"]["fixture_origin"] for e in evidence if e["retrieval_mode"] == "fixture")
-    assert all(step["provider"] in {"fixture", "nativeproof", None} for step in steps)
+    assert all(step["provider"] in {"fixture", "omnicult", None} for step in steps)
 
 
 async def test_demo_journey_over_http(client: httpx.AsyncClient, offline: Any) -> None:

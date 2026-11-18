@@ -90,7 +90,7 @@ def expand_participants(
             rng = random.Random(f"{seed}:{group.id}:{k}")
             subset = _weighted_subset(rng, group.interests, max(1, min(3, len(group.interests)))) if group.interests else []
             participants.append(Participant(
-                id=uuid5(NAMESPACE_URL, f"nativeproof-participant:{population_id}:{ordinal}"), population_id=population_id,
+                id=uuid5(NAMESPACE_URL, f"omnicult-participant:{population_id}:{ordinal}"), population_id=population_id,
                 group_id=group.id, ordinal=ordinal, region=group.region, interests=subset,
                 traits={key: rng.choice(values) for key, values in TRAITS.items()},
                 evidence_ids=[i for i in group.evidence_ids if i not in group_only],

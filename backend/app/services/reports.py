@@ -481,7 +481,7 @@ def to_markdown(report: Report) -> str:
 def export(report: Report, fmt: str) -> tuple[bytes, str, str]:
     """(body, media type, filename) for a download."""
     slug = re.sub(r"[^a-z0-9]+", "-", report.title.lower()).strip("-")[:60] or "report"
-    stem = f"nativeproof-{slug}-v{report.version_number}"
+    stem = f"omnicult-{slug}-v{report.version_number}"
     if fmt == "json":
         return json.dumps(report.model_dump(mode="json"), indent=2).encode(), "application/json", f"{stem}.json"
     return to_markdown(report).encode(), "text/markdown; charset=utf-8", f"{stem}.md"

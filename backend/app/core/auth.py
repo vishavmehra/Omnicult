@@ -1,6 +1,6 @@
 """Bearer-token verification.
 
-AUTH_MODE=dev:      `dev-<label>` maps to uuid5(NAMESPACE_URL, "nativeproof-dev:<label>"). Refused in production.
+AUTH_MODE=dev:      `dev-<label>` maps to uuid5(NAMESPACE_URL, "omnicult-dev:<label>"). Refused in production.
 AUTH_MODE=firebase: Firebase Authentication ID tokens, verified here with Google's public keys (rules from
                     https://firebase.google.com/docs/auth/admin/verify-id-tokens, checked 2026-11-17):
                       * header alg RS256, `kid` one of the keys served at the securetoken JWKS endpoint;
@@ -26,7 +26,7 @@ import jwt
 from app.core.config import Settings
 from app.core.errors import Unauthenticated
 
-logger = logging.getLogger("nativeproof.auth")
+logger = logging.getLogger("omnicult.auth")
 
 DEV_TOKEN = re.compile(r"^dev-([A-Za-z0-9_.-]{1,64})$")
 FIREBASE_JWKS_URL = "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"
@@ -52,7 +52,7 @@ class Identity:
 
 
 def dev_user_id(label: str) -> UUID:
-    return uuid5(NAMESPACE_URL, f"nativeproof-dev:{label}")
+    return uuid5(NAMESPACE_URL, f"omnicult-dev:{label}")
 
 
 class JwksCache:

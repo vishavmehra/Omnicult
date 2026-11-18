@@ -65,7 +65,7 @@ def no_real_google_credentials(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def pytest_configure(config: pytest.Config) -> None:
-    config.addinivalue_line("markers", "postgres: opt-in checks against a real Postgres (NATIVEPROOF_TEST_POSTGRES_URL)")
+    config.addinivalue_line("markers", "postgres: opt-in checks against a real Postgres (OMNICULT_TEST_POSTGRES_URL)")
 
 
 def auth(label: str) -> dict[str, str]:
@@ -83,7 +83,7 @@ def test_settings(monkeypatch: pytest.MonkeyPatch, tmp_path: Any) -> Iterator[No
     monkeypatch.setenv("LOG_LEVEL", "WARNING")
     monkeypatch.setenv("DATABASE_URL", f"sqlite+aiosqlite:///{(tmp_path / 'test.db').as_posix()}")
     monkeypatch.setenv("ASSET_STORAGE_BACKEND", "database")  # tests never reach the real Storage bucket
-    monkeypatch.setenv("DEMO_SEED", "legacy")  # the pre-Omnicult workflow tests are written for the Northstar seed; Aamod tests opt in
+    monkeypatch.setenv("DEMO_SEED", "legacy")  # the older workflow tests are written for the Northstar seed; Aamod tests opt in
     for name in BLANKED:
         monkeypatch.setenv(name, "")
     # A zero-dimension embedding space is not usable, which switches the post-run search indexing off. Tests that configure a

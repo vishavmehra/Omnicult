@@ -35,7 +35,7 @@ from app.schemas.common import ErrorDetail
 from app.schemas.media import MediaCapabilities, MediaLimits, RenderTextRequest, ToolStatus
 from app.schemas.xray import MediaProbe
 
-log = logging.getLogger("nativeproof.media")
+log = logging.getLogger("omnicult.media")
 THUMBNAIL_PX = 320
 PROCESSING_FAILED = "The media could not be processed."
 _locks: dict[UUID, asyncio.Lock] = {}

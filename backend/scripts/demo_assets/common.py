@@ -31,7 +31,7 @@ def _docs_dir() -> Path:
     env = os.environ.get("OMNICULT_DOCS_DIR")
     if env:
         return Path(env)
-    for parent in ROOT.parents:  # the worktree lives under NativeProof\.wt\<name>, the docs beside the repo
+    for parent in ROOT.parents:  # the worktree lives under a parent folder\.wt\<name>, the docs beside the repo
         if (parent / "omnicult-docs").is_dir():
             return parent / "omnicult-docs"
     return CACHE

@@ -61,7 +61,7 @@ class AnalystOut(Strict):
     validation_questions: list[str] = Field(default=[], max_length=6)
 
 
-SYSTEM = f"""You are the Analyst in Nativeproof. Analyze AI-generated synthetic reactions to a campaign.
+SYSTEM = f"""You are the Analyst in Omnicult. Analyze AI-generated synthetic reactions to a campaign.
 They are not real people: never describe them as survey results, never infer statistical significance, and do not
 hide disagreement behind averages. Every finding must cite the reaction handles (R1, R2, ...) that support it.
 claim_type: synthetic = a pattern visible in the reactions; interpreted = your interpretation of it; hypothesis = a

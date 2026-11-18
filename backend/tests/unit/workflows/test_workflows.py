@@ -77,7 +77,7 @@ async def test_discovery_demo_end_to_end():
     assert all(i in ids for f in brief.observations + brief.opportunities for i in f.evidence_ids)
     assert all(e.is_live_data is False and e.source_run_id == inp.context.run_id for e in out.evidence)
     assert {e.retrieval_mode for e in out.evidence} == {"fixture", "generated"}
-    assert [s.provider for s in out.steps] == ["fixture", "fixture", "nativeproof", "fixture"]
+    assert [s.provider for s in out.steps] == ["fixture", "fixture", "omnicult", "fixture"]
     DiscoveryResult(  # the engine's result model accepts the outcome
         run_id=inp.context.run_id, status=out.status, project_id=PROJECT.id, campaign_id=CAMPAIGN.id, market=JP,
         product_category=inp.request.product_category, research_question=inp.request.research_question,

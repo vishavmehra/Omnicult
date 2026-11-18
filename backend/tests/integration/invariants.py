@@ -24,7 +24,7 @@ from app.schemas.reports import Report
 from app.schemas.studies import Finding, RehearsalResult, Study, SyntheticReaction
 
 DEMO_RETRIEVAL_MODES = frozenset({"fixture", "generated"})
-DEMO_STEP_PROVIDERS = frozenset({"fixture", "nativeproof"})
+DEMO_STEP_PROVIDERS = frozenset({"fixture", "omnicult"})
 FIXTURE_ORIGINS = frozenset({"hand_authored", "captured_live"})
 # D-024: workflows verified from the official Qloo hackathon kit.
 VERIFIED_QLOO_WORKFLOWS = frozenset(
@@ -122,7 +122,7 @@ def check_demo_evidence(records: Iterable[EvidenceRecord], project_id: UUID | No
 
 
 def check_demo_run_metadata(metadata: RunMetadata, run_id: UUID | None = None, run_type: str | None = None) -> None:
-    """Demo runs never call an external provider (README §5): steps are fixture or nativeproof only."""
+    """Demo runs never call an external provider (README §5): steps are fixture or omnicult only."""
     assert metadata.mode == "demo", f"run {metadata.run_id}: run_metadata.mode {metadata.mode!r} in a demo project"
     if run_id is not None:
         assert metadata.run_id == run_id, f"run_metadata.run_id {metadata.run_id} != {run_id}"
@@ -130,10 +130,10 @@ def check_demo_run_metadata(metadata: RunMetadata, run_id: UUID | None = None, r
     for step in metadata.steps:
         if step.status == "skipped" and step.provider is None:  # nothing ran, so nothing was called
             continue
-        # A stage that mixes fixture and local steps reports them joined ("fixture,nativeproof", the merge_steps).
+        # A stage that mixes fixture and local steps reports them joined ("fixture,omnicult", the merge_steps).
         tokens = set((step.provider or "").split(","))
         assert tokens and tokens <= DEMO_STEP_PROVIDERS, (
-            f"run {metadata.run_id} stage {step.stage}: provider {step.provider!r} in demo mode (expected fixture|nativeproof)"
+            f"run {metadata.run_id} stage {step.stage}: provider {step.provider!r} in demo mode (expected fixture|omnicult)"
         )
         assert not step.fallback_used, f"run {metadata.run_id} stage {step.stage}: fallback_used in demo mode"
     if run_type is not None:

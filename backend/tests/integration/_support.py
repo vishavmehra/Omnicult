@@ -57,7 +57,7 @@ def auth(label: str = "qa-alice") -> dict[str, str]:
 
 
 def dev_user_id(label: str) -> UUID:
-    return uuid5(NAMESPACE_URL, f"nativeproof-dev:{label}")
+    return uuid5(NAMESPACE_URL, f"omnicult-dev:{label}")
 
 
 # --------------------------------------------------------------------------- environment
@@ -66,7 +66,7 @@ def dev_user_id(label: str) -> UUID:
 def base_env(tmp_path: Path) -> dict[str, str]:
     """Hermetic test settings. Google credentials are absent unless a test sets them, and tests that configure them
     also install `FakeProvider`, so no request can reach the network."""
-    database = (tmp_path / "nativeproof-test.db").as_posix()
+    database = (tmp_path / "omnicult-test.db").as_posix()
     return {
         "APP_ENV": "test",
         "AUTH_MODE": "dev",
@@ -279,7 +279,7 @@ async def running_app(*, raise_app_exceptions: bool = True, customize: Any = Non
         # The app's JSON log handler is bound to this test's captured stdout; drop it so later tests that
         # log before creating an app do not write to a closed stream ("--- Logging error ---").
         root = logging.getLogger()
-        for handler in [h for h in root.handlers if getattr(h, "_nativeproof", False)]:
+        for handler in [h for h in root.handlers if getattr(h, "_omnicult", False)]:
             root.removeHandler(handler)
 
 

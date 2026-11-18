@@ -1,6 +1,6 @@
 """Measure real model cost of a population study and one social round (docs/15 §14). Opt-in, small, no database.
 
-Run from backend/:  NATIVEPROOF_LIVE_TESTS=1 uv run python -m scripts.measure_population_cost [participants]
+Run from backend/:  OMNICULT_LIVE_TESTS=1 uv run python -m scripts.measure_population_cost [participants]
 
 Uses the real gateway from backend/.env and the demo discovery evidence as grounding (no Qloo call). Prints calls,
 tokens, and seconds per stage, per interview batch, and per social round. Never prints keys or prompts.
@@ -68,7 +68,7 @@ async def main(size: int) -> None:
 
 
 if __name__ == "__main__":
-    if os.environ.get("NATIVEPROOF_LIVE_TESTS") != "1":
-        print("Skipped: set NATIVEPROOF_LIVE_TESTS=1 to make real model calls.")
+    if os.environ.get("OMNICULT_LIVE_TESTS") != "1":
+        print("Skipped: set OMNICULT_LIVE_TESTS=1 to make real model calls.")
     else:
         asyncio.run(main(min(100, int(sys.argv[1]) if len(sys.argv) > 1 else 40)))

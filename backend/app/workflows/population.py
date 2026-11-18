@@ -129,7 +129,7 @@ async def preparing_evidence(state: State, config: RunnableConfig) -> dict:
     notes = list(collected.limitations) if collected else []
     if inp.asset and vision.status != "analyzed":
         notes.append(f"The creative was not analyzed ({vision.message}); participants saw the text only.")
-    provider = "qloo" if any(c.retrieval_mode in ("live", "cached") for c in calls) else "fixture" if calls else "nativeproof"
+    provider = "qloo" if any(c.retrieval_mode in ("live", "cached") for c in calls) else "fixture" if calls else "omnicult"
     step = merge_steps(S1, "atlas", traces, started) if traces else local_step(S1, "atlas", provider, started)
     return {"digest": digest, "handles": handles, "interest_rows": rows, "interests": interests,
             "grounded": bool(collected and collected.grounded), "new_evidence": collected.evidence if collected else [],
@@ -169,7 +169,7 @@ async def constructing_population(state: State, config: RunnableConfig) -> dict:
     checkpoint: CheckpointFn = config["configurable"]["checkpoint"]
     if inp.population is not None:  # reuse (or resume): the same people, never rebuilt
         return {"population": inp.population, "participants": list(inp.participants),
-                "steps": [*state["steps"], local_step(S2, "audience", "nativeproof", started)]}
+                "steps": [*state["steps"], local_step(S2, "audience", "omnicult", started)]}
     try:
         result = await agents.build_groups(
             deps.llm, stage=S2, count=group_count(inp.size, len(inp.regions)), regions=[r.model_dump() for r in inp.regions],

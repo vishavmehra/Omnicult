@@ -1,4 +1,4 @@
-"""Shared primitives for the Nativeproof HTTP contract.
+"""Shared primitives for the Omnicult HTTP contract.
 
 Contract-owned: the integration owner approves every change in app/schemas/, because
 contracts/openapi.json and the frontend's generated types are built from these models.
@@ -145,7 +145,7 @@ class StepTrace(ApiModel):
     stage: str
     agent: str
     status: Literal["completed", "failed", "skipped"]
-    provider: str | None = Field(default=None, description="qloo, google, fixture, or nativeproof (earlier runs may also show nebius or openrouter).")
+    provider: str | None = Field(default=None, description="qloo, google, fixture, or omnicult (earlier runs may also show nebius or openrouter).")
     model_id: str | None = None
     prompt_version: str | None = None
     schema_version: str | None = None

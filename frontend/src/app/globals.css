@@ -17,7 +17,7 @@
     var(--font-noto-telu), var(--font-noto-knda), var(--font-noto-gujr), var(--font-noto-guru), var(--font-noto-orya), ui-sans-serif,
     system-ui, sans-serif;
   --font-display: var(--font-eczar), Georgia, serif;
-  /* Legacy NativeProof pages use font-serif for titles: they now get the display face. */
+  /* Legacy Omnicult pages use font-serif for titles: they now get the display face. */
   --font-serif: var(--font-eczar), Georgia, serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
   --font-heading: var(--font-archivo);
@@ -70,7 +70,7 @@
   --color-spine-rule: var(--spine-rule);
   --color-mat: var(--mat);
   --color-mat-ink: var(--mat-ink);
-  /* Legacy names kept so the NativeProof pages keep rendering: lavender is now the plum selection. */
+  /* Legacy names kept so the Omnicult pages keep rendering: lavender is now the plum selection. */
   --color-lavender: var(--plum);
   --color-lavender-ink: var(--rose);
 

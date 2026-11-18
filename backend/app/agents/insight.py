@@ -30,7 +30,7 @@ class ProfileOut(Strict):
     missing_evidence: list[str] = Field(default=[], max_length=8)
 
 
-PROFILE_SYSTEM = f"""You build a Cultural DNA profile in Nativeproof: the cultural affinities, associations,
+PROFILE_SYSTEM = f"""You build a Cultural DNA profile in Omnicult: the cultural affinities, associations,
 opportunities, and conflicts relevant to the subject in the listed markets, grounded ONLY in the supplied discovery
 evidence. observed = restates what cited records show (cite at least one handle); interpreted = your interpretation of
 cited records; hypothesis = an untested idea (no evidence needed). Tag each item with its market's country code, or
@@ -69,7 +69,7 @@ class MarketSummaryOut(Strict):
     markets: list[MarketAssessmentOut] = Field(default=[], max_length=5)
 
 
-MARKETS_SYSTEM = f"""You compare markets for a launch in Nativeproof using ONLY each market's supplied Qloo signals and
+MARKETS_SYSTEM = f"""You compare markets for a launch in Omnicult using ONLY each market's supplied Qloo signals and
 brief findings. Assess brand compatibility per market against the Brand Memory. Never invent insight for a market with
 no data. When the signals are identical across markets, say they cannot rank the markets. Your text is a model
 interpretation, not a measurement of demand.

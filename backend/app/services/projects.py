@@ -16,7 +16,7 @@ from app.core.errors import Forbidden, NotFound
 from app.services.common import apply_patch, get_project, paginate, visible_projects
 from app.services.identity import WRITE_ROLES, ensure_personal_workspace, member_role
 
-# Legacy seed (DEMO_SEED=legacy). Mirrors contracts/fixtures/Project.json and Campaign.json; the pre-Omnicult demo
+# Legacy seed (DEMO_SEED=legacy). Mirrors contracts/fixtures/Project.json and Campaign.json; the earlier demo
 # fixtures are written for exactly this brand, campaign copy, and market.
 DEMO_MARKET = {"country_code": "JP", "display_name": "Japan"}
 DEMO_PROJECT = {
@@ -172,7 +172,7 @@ async def create_project(user_id: UUID, body: ProjectCreate) -> Project:
 
 async def create_demo_project(user_id: UUID) -> Project:
     """The caller's demo project: the fictional Aamod journey (app/services/demo_journey.py), created on first use.
-    DEMO_SEED=legacy keeps the pre-Omnicult Northstar / Japan seed for the workflow tests written against it."""
+    DEMO_SEED=legacy keeps the earlier Northstar / Japan seed for the workflow tests written against it."""
     if get_settings().demo_seed == "legacy":
         return await create_legacy_demo_project(user_id)
     from app.services.demo_journey import seed_aamod_journey  # imported here: it builds on this module

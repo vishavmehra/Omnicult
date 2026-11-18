@@ -19,7 +19,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from app.core.logging import request_id_var
 from app.schemas.common import ErrorBody, ErrorCode, ErrorDetail, ErrorResponse
 
-logger = logging.getLogger("nativeproof.http")
+logger = logging.getLogger("omnicult.http")
 
 REQUEST_ID_HEADER = "X-Request-ID"
 _SAFE_REQUEST_ID = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")

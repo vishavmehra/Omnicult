@@ -496,5 +496,5 @@ def test_the_json_log_formatter_redacts_the_key(monkeypatch: pytest.MonkeyPatch,
         assert "[REDACTED]" in out and KEY not in out
     finally:
         get_settings.cache_clear()
-        logging.getLogger().handlers = [h for h in logging.getLogger().handlers if not getattr(h, "_nativeproof", False)]
+        logging.getLogger().handlers = [h for h in logging.getLogger().handlers if not getattr(h, "_omnicult", False)]
         logging.getLogger().setLevel(level)

@@ -18614,7 +18614,7 @@
             "title": "Retrieved At"
           },
           "source_provider": {
-            "description": "qloo, nativeproof, fixture, a model provider id, or user.",
+            "description": "qloo, omnicult, fixture, a model provider id, or user.",
             "title": "Source Provider",
             "type": "string"
           },
@@ -48369,7 +48369,7 @@
                 "type": "null"
               }
             ],
-            "description": "qloo, google, fixture, or nativeproof (earlier runs may also show nebius or openrouter).",
+            "description": "qloo, google, fixture, or omnicult (earlier runs may also show nebius or openrouter).",
             "title": "Provider"
           },
           "retries": {
@@ -54447,7 +54447,7 @@
     }
   },
   "info": {
-    "title": "Nativeproof API",
+    "title": "Omnicult API",
     "version": "0.1.0"
   },
   "openapi": "3.1.0",

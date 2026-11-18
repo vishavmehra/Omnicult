@@ -5,7 +5,7 @@ import pytest
 from tests.integration._support import API, expect_error, running_app
 
 DUMMY = "sk-qa-DUMMY-hygiene-5d7f9b1c3e"
-LEAKY_MESSAGE = f"qa boom: token={DUMMY} at C:\\srv\\nativeproof\\app\\secret_module.py line 42"
+LEAKY_MESSAGE = f"qa boom: token={DUMMY} at C:\\srv\\omnicult\\app\\secret_module.py line 42"
 
 
 def add_boom_routes(app):  # type: ignore[no-untyped-def]

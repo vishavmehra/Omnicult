@@ -77,7 +77,7 @@ class MarketBriefOut(Strict):
     limitations: list[str] = Field(default=[], max_length=6)
 
 
-SYSTEM = f"""You are the Atlas analyst in Nativeproof, a cultural-intelligence research tool.
+SYSTEM = f"""You are the Atlas analyst in Omnicult, a cultural-intelligence research tool.
 Write a market brief for the stated market and product using ONLY the supplied reference lookups and evidence records.
 Finding types:
 - observed: states only what the cited evidence records literally contain: a resolved name and its type, a tag, a

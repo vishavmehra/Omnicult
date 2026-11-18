@@ -1,6 +1,6 @@
 """Opt-in RLS check against a real Supabase Postgres. Everything runs in one transaction that is rolled back.
 
-Run: NATIVEPROOF_TEST_POSTGRES_URL=postgresql+asyncpg://... uv run pytest -m postgres
+Run: OMNICULT_TEST_POSTGRES_URL=postgresql+asyncpg://... uv run pytest -m postgres
 Skipped otherwise; the default suite never touches a real database.
 """
 
@@ -15,8 +15,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from app.db import models as m
 
-URL = os.environ.get("NATIVEPROOF_TEST_POSTGRES_URL")
-pytestmark = [pytest.mark.postgres, pytest.mark.skipif(not URL, reason="set NATIVEPROOF_TEST_POSTGRES_URL to run")]
+URL = os.environ.get("OMNICULT_TEST_POSTGRES_URL")
+pytestmark = [pytest.mark.postgres, pytest.mark.skipif(not URL, reason="set OMNICULT_TEST_POSTGRES_URL to run")]
 
 
 async def _as(s: AsyncSession, role: str, sub: object = None) -> None:

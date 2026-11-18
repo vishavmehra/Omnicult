@@ -121,7 +121,7 @@ export function useCampaignRuns(types?: RunType[], limit = 30) {
   });
 }
 
-/** Links into the earlier NativeProof research pages for this campaign: real tools, kept working during the migration. */
+/** Links into the earlier Omnicult research pages for this campaign: real tools, kept working during the migration. */
 export function EarlierTools({ tools }: { tools: { segment: string; label: string; note: string }[] }) {
   const { campaign } = useCampaign();
   return (

@@ -1,7 +1,7 @@
 [project]
-name = "nativeproof-backend"
+name = "omnicult-backend"
 version = "0.1.0"
-description = "Nativeproof FastAPI backend"
+description = "Omnicult FastAPI backend"
 requires-python = ">=3.12"
 dependencies = [
     "aiosqlite>=0.22.1",

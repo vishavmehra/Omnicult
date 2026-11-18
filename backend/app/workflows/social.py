@@ -71,7 +71,7 @@ async def building_network(state: State, config: RunnableConfig) -> dict:
         stances[post.participant_id] = post.stance
     definition = NetworkDefinition(method=NETWORK_METHOD, degree=inp.degree, similarity_definition=PEER_SIMILARITY_DEFINITION)
     return {"network": peer_network(inp.participants, inp.degree, inp.seed), "definition": definition, "initial": initial,
-            "stances": stances, "posts": list(inp.prior_posts), "steps": [local_step(S1, "audience", "nativeproof", started)]}
+            "stances": stances, "posts": list(inp.prior_posts), "steps": [local_step(S1, "audience", "omnicult", started)]}
 
 
 def _feed(participant: Participant, state: State, round_index: int, size: int) -> list[tuple[UUID, str, str | None, bool]]:
@@ -156,7 +156,7 @@ async def simulating_rounds(state: State, config: RunnableConfig) -> dict:
 
 async def analysing_dynamics(state: State, config: RunnableConfig) -> dict:
     await announce(config, RUN, 2, "Analysing dynamics.")
-    return {"steps": [*state["steps"], local_step(S3, "analyst", "nativeproof", time.perf_counter())]}
+    return {"steps": [*state["steps"], local_step(S3, "analyst", "omnicult", time.perf_counter())]}
 
 
 async def summarizing(state: State, config: RunnableConfig) -> dict:

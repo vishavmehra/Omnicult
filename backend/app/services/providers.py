@@ -11,7 +11,7 @@ from app.integrations.qloo import get_qloo_service
 from app.llm.gateway import LLMGateway
 from app.schemas.health import Readiness, ReadinessCapabilities, ReadinessDependencies
 
-logger = logging.getLogger("nativeproof.providers")
+logger = logging.getLogger("omnicult.providers")
 DB_CHECK_TIMEOUT_SECONDS = 10  # a cold TLS connection to Supabase can take several seconds
 
 

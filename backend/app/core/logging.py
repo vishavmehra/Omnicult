@@ -59,10 +59,10 @@ def _secret_values(settings: Settings) -> list[str]:
 def configure_logging(settings: Settings) -> None:
     """Install one JSON handler on the root logger. Idempotent."""
     root = logging.getLogger()
-    for handler in [h for h in root.handlers if getattr(h, "_nativeproof", False)]:
+    for handler in [h for h in root.handlers if getattr(h, "_omnicult", False)]:
         root.removeHandler(handler)
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(JsonFormatter(_secret_values(settings)))
-    handler._nativeproof = True  # type: ignore[attr-defined]
+    handler._omnicult = True  # type: ignore[attr-defined]
     root.addHandler(handler)
     root.setLevel(settings.log_level.upper())

@@ -43,7 +43,7 @@ from app.services.qloo_cache import DbQlooCache
 from app.services.results import API, evidence_by_ids, to_adaptations
 from app.services.studies import to_study
 
-logger = logging.getLogger("nativeproof.runs")
+logger = logging.getLogger("omnicult.runs")
 
 ACTIVE = ("queued", "running")
 USABLE = ("completed", "partial")

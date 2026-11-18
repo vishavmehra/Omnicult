@@ -159,7 +159,7 @@ async def normalizing_evidence(state: State, config: RunnableConfig) -> dict:
             add("related_interest", result.seed.name, query_term=f"related to {result.seed.name}", match_status="resolved",
                 name=item.name, entity_id=item.entity_id, entity_type=item.entity_type, attributes=item.attributes,
                 evidence_ids=own, limitations=list(dict.fromkeys([AFFINITY_NOTE, *result.limitations])))
-    step = local_step(S3, "atlas", "nativeproof", started)
+    step = local_step(S3, "atlas", "omnicult", started)
     return {"references": references, "roles": roles, "evidence": evidence, "steps": [*state["steps"], step]}
 
 

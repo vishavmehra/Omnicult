@@ -11409,7 +11409,7 @@ export interface components {
             retrieved_at: string | null;
             /**
              * Source Provider
-             * @description qloo, nativeproof, fixture, a model provider id, or user.
+             * @description qloo, omnicult, fixture, a model provider id, or user.
              */
             source_provider: string;
             /** Source Reference */
@@ -22952,7 +22952,7 @@ export interface components {
             prompt_version: string | null;
             /**
              * Provider
-             * @description qloo, google, fixture, or nativeproof (earlier runs may also show nebius or openrouter).
+             * @description qloo, google, fixture, or omnicult (earlier runs may also show nebius or openrouter).
              */
             provider: string | null;
             /**

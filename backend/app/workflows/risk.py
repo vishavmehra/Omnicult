@@ -113,7 +113,7 @@ async def loading_content(state: State, config: RunnableConfig) -> dict:
                     status="open", status_note=None, updated_at=now,
                 ))
     return {"findings": findings, "brand_text": text, "applied": applied,
-            "steps": [local_step(S1, "red_team", "nativeproof", started)]}
+            "steps": [local_step(S1, "red_team", "omnicult", started)]}
 
 
 async def analyzing_creatives(state: State, config: RunnableConfig) -> dict:
@@ -180,7 +180,7 @@ async def checking_evidence(state: State, config: RunnableConfig) -> dict:
             status="open", status_note=None, updated_at=now,
         ))
     notes = [*state.get("limitations", []), *([DROPPED_NOTE] if dropped else [])]
-    update = {"findings": findings, "limitations": notes, "steps": [*state["steps"], local_step(S4, "red_team", "nativeproof", started)]}
+    update = {"findings": findings, "limitations": notes, "steps": [*state["steps"], local_step(S4, "red_team", "omnicult", started)]}
     if invalid:  # defect #5: explicit error instead of silently persisting part of the model output
         update |= {"partial": True, "error": state.get("error") or RunError(
             code="RUN_FAILED", stage=S4, retryable=True,

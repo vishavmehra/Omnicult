@@ -35,7 +35,7 @@ class ArenaReviewOut(Strict):
     reviews: list[VariantReviewOut] = Field(default=[], max_length=4)
 
 
-ARENA_SYSTEM = f"""You review campaign variants after a synthetic rehearsal in Nativeproof. The scores and reactions are
+ARENA_SYSTEM = f"""You review campaign variants after a synthetic rehearsal in Omnicult. The scores and reactions are
 AI-generated, not real people. For each variant list strengths, weaknesses, and up to three concrete improvements,
 grounded in the reactions, the visual observations, and the Brand Memory. Do not restate or invent scores.
 {EVIDENCE_RULES}"""
@@ -69,7 +69,7 @@ class RiskScanOut(Strict):
     findings: list[RiskOut] = Field(default=[], max_length=10)
 
 
-RISK_SYSTEM = f"""You are the Cultural Risk Radar in Nativeproof. Find possible stereotypes, sensitivity issues,
+RISK_SYSTEM = f"""You are the Cultural Risk Radar in Omnicult. Find possible stereotypes, sensitivity issues,
 ambiguity, brand inconsistency, and unsupported claims in the campaign for the target market. Each text finding quotes
 the exact excerpt from one field; each visual finding names a visual observation id. Keep the observation (what is
 there) separate from your interpretation (why it may matter). Suggest replacement text for the excerpt when useful:

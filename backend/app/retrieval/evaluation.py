@@ -1,4 +1,4 @@
-"""Retrieval evaluation (D-034): 15 labeled Nativeproof queries over a fixed demo-scenario corpus.
+"""Retrieval evaluation (D-034): 15 labeled Omnicult queries over a fixed demo-scenario corpus.
 
 Usage (from backend/, with EMBEDDING_* configured; 2 embedding requests per variant):
     uv run python -m app.retrieval.evaluation [--dimensions 1024] [--no-instruction]
@@ -26,7 +26,7 @@ CORPUS: list[tuple[str, SearchKind, str, str]] = [
     ("ev-kumo", "evidence", "Related interest: Kumo Trail Co.",
      "Kumo Trail Co. was returned as a related brand for audiences with a Hiking affinity in Japan."),
     ("ev-minimal", "evidence", "Ambiguous match: 'minimal design'",
-     "Two plausible tags were returned, Minimalism and Minimalist architecture; Nativeproof did not choose one."),
+     "Two plausible tags were returned, Minimalism and Minimalist architecture; Omnicult did not choose one."),
     ("ev-escape", "evidence", "Unresolved: 'great escape'",
      "Qloo returned no usable match for 'great escape'; any interpretation of the phrase is a hypothesis."),
     ("ev-trail-framing", "evidence", "Interpretation: trail-focused framing",

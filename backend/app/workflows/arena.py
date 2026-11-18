@@ -88,7 +88,7 @@ async def loading_variants(state: State, config: RunnableConfig) -> dict:
     text, applied = brand_block(inp.context.brand, examples)
     base, extra = divmod(inp.responses_per_variant, len(segments))
     digest, handles = evidence_digest(inp.grounding_evidence, sources_only=True)
-    step = merge_steps(S1, "audience", traces, started) if traces else local_step(S1, "audience", "nativeproof", started)
+    step = merge_steps(S1, "audience", traces, started) if traces else local_step(S1, "audience", "omnicult", started)
     return {"segments": segments, "allocation": [base + (i < extra) for i in range(len(segments))], "digest": digest,
             "handles": handles, "brand_text": text, "applied": applied, "limitations": notes, "steps": [step]}
 

@@ -56,7 +56,7 @@ async def loading_context(state: State, config: RunnableConfig) -> dict:
     protected = merge_terms(inp.protected_terms, inp.context.brand.protected_terms, inp.request.protected_terms)
     digest, handles = evidence_digest(inp.grounding_evidence, sources_only=True)
     return {"protected": protected, "digest": digest, "handles": handles,
-            "steps": [local_step(S1, "voice", "nativeproof", started)]}
+            "steps": [local_step(S1, "voice", "omnicult", started)]}
 
 
 async def generating_adaptations(state: State, config: RunnableConfig) -> dict:
@@ -99,7 +99,7 @@ async def checking_constraints(state: State, config: RunnableConfig) -> dict:
     started, inp = time.perf_counter(), state["inp"]
     prohibited = inp.context.brand.prohibited_terms
     checks = [constraint_checks(inp.source_content, v.content, state["protected"], prohibited) for v in state["variants"]]
-    return {"checks": checks, "steps": [*state["steps"], local_step(S3, "red_team", "nativeproof", started)]}
+    return {"checks": checks, "steps": [*state["steps"], local_step(S3, "red_team", "omnicult", started)]}
 
 
 async def reviewing_risks(state: State, config: RunnableConfig) -> dict:

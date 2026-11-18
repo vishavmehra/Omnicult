@@ -4,8 +4,8 @@ import pytest
 
 from tests.integration._support import API, running_app
 
-ALLOWED = ("http://localhost:3000", "https://app.nativeproof.test")
-DISALLOWED = ("https://evil.example", "http://localhost:3001", "null", "https://app.nativeproof.test.evil.example")
+ALLOWED = ("http://localhost:3000", "https://app.omnicult.test")
+DISALLOWED = ("https://evil.example", "http://localhost:3001", "null", "https://app.omnicult.test.evil.example")
 
 
 def preflight(origin: str) -> dict[str, str]:

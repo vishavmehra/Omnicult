@@ -71,7 +71,7 @@ def qa_env(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, qa_db_template: Path
         _in_thread(clone)
         env["DATABASE_URL"] = _pg.with_database(_pg.ADMIN_URL, database)
     elif isinstance(qa_db_template, Path):
-        shutil.copyfile(qa_db_template, tmp_path / "nativeproof-test.db")
+        shutil.copyfile(qa_db_template, tmp_path / "omnicult-test.db")
     apply_env(monkeypatch, env)
     yield env
     if database is not None:

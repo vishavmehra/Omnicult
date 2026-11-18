@@ -1,1 +1,1 @@
-"""Nativeproof backend application package."""
+"""Omnicult backend application package."""

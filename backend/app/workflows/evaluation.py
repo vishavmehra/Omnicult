@@ -52,7 +52,7 @@ def _candidates(inp: EvaluationInput) -> list[tuple[str, str, object]]:
 
 async def loading_candidates(state: State, config: RunnableConfig) -> dict:
     await announce(config, RUN, 0, "Loading candidates.")
-    return {"steps": [local_step(S1, "loop", "nativeproof", time.perf_counter())]}
+    return {"steps": [local_step(S1, "loop", "omnicult", time.perf_counter())]}
 
 
 async def assessing_candidates(state: State, config: RunnableConfig) -> dict:
@@ -104,7 +104,7 @@ async def scoring(state: State, config: RunnableConfig) -> dict:
         ))
     missing = any(r.overall_score is None for r in results)
     return {"results": results, "limitations": list(dict.fromkeys(limitations)), "partial": missing,
-            "steps": [*state["steps"], local_step(S3, "loop", "nativeproof", started)]}
+            "steps": [*state["steps"], local_step(S3, "loop", "omnicult", started)]}
 
 
 async def recommending(state: State, config: RunnableConfig) -> dict:
@@ -112,7 +112,7 @@ async def recommending(state: State, config: RunnableConfig) -> dict:
     started, inp, results = time.perf_counter(), state["inp"], state["results"]
     original = next((r for r in results if r.candidate_type == "original"), None)
     recommendation = recommend(original, best_candidate(results), inp.market)
-    return {"recommendation": recommendation, "steps": [*state["steps"], local_step(S4, "loop", "nativeproof", started)]}
+    return {"recommendation": recommendation, "steps": [*state["steps"], local_step(S4, "loop", "omnicult", started)]}
 
 
 GRAPH = linear_graph(State, [(S1, loading_candidates), (S2, assessing_candidates), (S3, scoring), (S4, recommending)])

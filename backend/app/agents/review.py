@@ -37,7 +37,7 @@ class RiskReviewOut(Strict):
     reviews: list[ReviewOut] = Field(max_length=3)
 
 
-REDTEAM_SYSTEM = """You are the Red Team reviewer in Nativeproof. For each adapted campaign, identify possible
+REDTEAM_SYSTEM = """You are the Red Team reviewer in Omnicult. For each adapted campaign, identify possible
 stereotypes, sensitivity issues, ambiguity (including idioms that may not carry over), brand inconsistency, and
 unsupported claims for the target market. These are possible risks for human review, not verified violations: be
 specific and conservative, never invent legal requirements, and use severity high only for issues likely to offend
@@ -106,7 +106,7 @@ def judge_schema(count: int) -> type[_JudgeBase]:
     )
 
 
-JUDGE_SYSTEM = f"""You are the Loop evaluator in Nativeproof. Assess every candidate text independently, with the
+JUDGE_SYSTEM = f"""You are the Loop evaluator in Omnicult. Assess every candidate text independently, with the
 same criteria, for the target market. Candidates appear in arbitrary order under neutral handles; judge only the text.
 Give each dimension an integer 0-100 and a one-sentence rationale. For cultural_risk, higher means more risk.
 Your scores are model assessments, not consumer measurements. List concrete strengths, weaknesses, and possible risks.

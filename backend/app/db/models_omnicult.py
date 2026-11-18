@@ -1,4 +1,4 @@
-"""Omnicult tables added after the NativeProof schema (migrations 0007+): identity and tenancy, reference data,
+"""Omnicult tables added after the base schema (migrations 0007+): identity and tenancy, reference data,
 evidence (claims, conflicts), and metering. Re-exported by `app.db.models`, so `m.User`, `m.Claim`, ... work.
 
 Tenancy: a workspace is the tenant. `projects.workspace_id` places every project (and through it every child row) in

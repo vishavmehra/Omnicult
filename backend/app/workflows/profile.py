@@ -74,7 +74,7 @@ async def loading_evidence(state: State, config: RunnableConfig) -> dict:
     missing = [f"No completed discovery for {m.display_name}." for c, m in wanted.items() if c not in seen] + missing
     limitations = [] if records else ["No discovery evidence was available, so no profile items were generated."]
     return {"records": records, "market_of": market_of, "missing": missing, "limitations": limitations,
-            "partial": not records, "steps": [local_step(S1, "atlas", "nativeproof", started)]}
+            "partial": not records, "steps": [local_step(S1, "atlas", "omnicult", started)]}
 
 
 async def retrieving_context(state: State, config: RunnableConfig) -> dict:
@@ -95,7 +95,7 @@ async def retrieving_context(state: State, config: RunnableConfig) -> dict:
     for row in digest:
         row["market"] = state["market_of"][handles[row["handle"]].id].country_code
     text, applied = brand_block(inp.context.brand)
-    step = merge_steps(S2, "atlas", traces, started) if traces else local_step(S2, "atlas", "nativeproof", started)
+    step = merge_steps(S2, "atlas", traces, started) if traces else local_step(S2, "atlas", "omnicult", started)
     return {"digest": digest, "handles": handles, "brand_text": text, "applied": applied, "steps": [*state["steps"], step],
             "limitations": [*state.get("limitations", []), *notes]}
 
@@ -137,7 +137,7 @@ async def checking_evidence(state: State, config: RunnableConfig) -> dict:
             evidence_ids=[e.id for e in cited], limitations=[AFFINITY_NOTE] if cited else [NO_EVIDENCE_NOTE],
         ))
     limitations = [*state.get("limitations", []), *([DROPPED_NOTE] if dropped else [])]
-    return {"items": items, "limitations": limitations, "steps": [*state["steps"], local_step(S4, "atlas", "nativeproof", started)]}
+    return {"items": items, "limitations": limitations, "steps": [*state["steps"], local_step(S4, "atlas", "omnicult", started)]}
 
 
 GRAPH = linear_graph(State, [(S1, loading_evidence), (S2, retrieving_context), (S3, synthesizing_profile), (S4, checking_evidence)])

@@ -72,7 +72,7 @@ async def loading_context(state: State, config: RunnableConfig) -> dict:
     update: dict = {"digest": digest, "handles": handles}
     if study.segments:
         segments = [audience.SegmentDraft(s.label, s.description, "user") for s in study.segments[: cfg.segment_count]]
-        step = local_step(S1, "audience", "nativeproof", started)
+        step = local_step(S1, "audience", "omnicult", started)
     else:
         try:
             segments, step = await audience.generate_segments(
@@ -161,7 +161,7 @@ async def aggregating_results(state: State, config: RunnableConfig) -> dict:
             id=uuid4(), project_id=ctx.project_id, evidence_type="deterministic_calculation", claim_type="derived",
             title=f"{DEFINITIONS[d][0]} score from synthetic rehearsal",
             summary=f"{DEFINITIONS[d][0]} {res.score} of 100 from {res.n} synthetic ratings; spread {res.spread}.",
-            source_provider="nativeproof", source_workflow=None, source_reference=None, subject=None, related_entity=None,
+            source_provider="omnicult", source_workflow=None, source_reference=None, subject=None, related_entity=None,
             attributes=[
                 SourceAttribute(key="score", label="Score (0-100)", value=res.score,
                                 description="round((mean rating - 1) / 4 * 100, 1), scoring version mvp-1."),
@@ -177,7 +177,7 @@ async def aggregating_results(state: State, config: RunnableConfig) -> dict:
         if res.n
     ]
     return {"dimension_results": DimensionResults(**results), "segment_summaries": summaries, "evidence": evidence,
-            "steps": [*state["steps"], local_step(S3, "analyst", "nativeproof", started)]}
+            "steps": [*state["steps"], local_step(S3, "analyst", "omnicult", started)]}
 
 
 async def analyzing_reactions(state: State, config: RunnableConfig) -> dict:

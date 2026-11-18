@@ -237,7 +237,7 @@ async def loading_context(state: VState, config: RunnableConfig) -> dict:
     prompt = visual_prompt(inp, has_plate=plate is not None, has_reference=inp.reference is not None)
     update: dict[str, Any] = {"original": original, "reference_png": _png(layout), "prompt": prompt, "demo": demo,
                               "limitations": [*([] if plate is not None else [NO_PLATE_NOTE])],
-                              "steps": [local_step(V1, "remake_visual", "nativeproof", started)]}
+                              "steps": [local_step(V1, "remake_visual", "omnicult", started)]}
     if demo:
         fixture = fixtures.visual_background(inp.region_code)
         if fixture is None:
@@ -293,19 +293,19 @@ async def rendering_text(state: VState, config: RunnableConfig) -> dict:
         )
     except UnsupportedCapability as exc:
         return _fail(state, RunError(code="UNSUPPORTED_CAPABILITY", stage=V3, retryable=False, message=exc.message),
-                     local_step(V3, "remake_visual", "nativeproof", started, status="failed", error_code="UNSUPPORTED_CAPABILITY"))
+                     local_step(V3, "remake_visual", "omnicult", started, status="failed", error_code="UNSUPPORTED_CAPABILITY"))
     except Exception:  # an image the model returned that cannot be decoded or drawn on
         return _fail(state, RunError(code="RUN_FAILED", stage=V3, retryable=True,
                                      message="The generated image could not be processed. No version was created."),
-                     local_step(V3, "remake_visual", "nativeproof", started, status="failed", error_code="RUN_FAILED"))
-    return {"composite": composite, "steps": [*state["steps"], local_step(V3, "remake_visual", "nativeproof", started)]}
+                     local_step(V3, "remake_visual", "omnicult", started, status="failed", error_code="RUN_FAILED"))
+    return {"composite": composite, "steps": [*state["steps"], local_step(V3, "remake_visual", "omnicult", started)]}
 
 
 async def checking_locked_regions(state: VState, config: RunnableConfig) -> dict:
     await announce(config, VISUAL, 3, "Checking the locked regions.")
     started, composite = time.perf_counter(), state["composite"]
     broken = [r.element_id for r, ok in zip(state["inp"].locked, composite.locked_identical, strict=True) if not ok]
-    step = local_step(V4, "remake_visual", "nativeproof", started, status="failed" if broken else "completed",
+    step = local_step(V4, "remake_visual", "omnicult", started, status="failed" if broken else "completed",
                       error_code="RUN_FAILED" if broken else None)
     if broken:  # never presented as a success: the stored image would not hold the protected pixels
         return _fail(state, RunError(code="RUN_FAILED", stage=V4, retryable=False,
@@ -366,7 +366,7 @@ async def sound_loading_context(state: SState, config: RunnableConfig) -> dict:
     if not inp.lines or len(inp.lines) > inp.max_lines:
         return _fail(state, RunError(code="VALIDATION_ERROR", stage=A1, retryable=False,
                                      message=f"Remake: Sound speaks 1 to {inp.max_lines} lines per run. Nothing was generated."))
-    update: dict[str, Any] = {"demo": demo, "steps": [local_step(A1, "remake_sound", "nativeproof", started)],
+    update: dict[str, Any] = {"demo": demo, "steps": [local_step(A1, "remake_sound", "omnicult", started)],
                               "limitations": [UNREVIEWED_NOTE]}
     if not demo:
         client = deps.llm.capability("tts")
@@ -444,7 +444,7 @@ async def assembling_track(state: SState, config: RunnableConfig) -> dict:
         track, spans = pipeline.concat_wavs([a.wav for _, _, a in spoken])
     except ValueError as exc:
         return _fail(state, RunError(code="RUN_FAILED", stage=A4, retryable=False, message=f"{exc} No version was created."),
-                     local_step(A4, "remake_sound", "nativeproof", started, status="failed", error_code="RUN_FAILED"))
+                     local_step(A4, "remake_sound", "omnicult", started, status="failed", error_code="RUN_FAILED"))
     spans_by_id = {line.element_id: span for (line, _, _), span in zip(spoken, spans, strict=True)}
     results = []
     for line, language, audio, problems in state["clips"]:
@@ -457,7 +457,7 @@ async def assembling_track(state: SState, config: RunnableConfig) -> dict:
         results.append({"element_id": line.element_id, "text": line.text, "language": language, "start_ms": start, "end_ms": end,
                         "duration_ms": duration, "window_ms": line.window_ms, "fits_window": fits,
                         "back_translation": line.back_translation, "problems": problems, "spoken": audio is not None})
-    return {"steps": [*state["steps"], local_step(A4, "remake_sound", "nativeproof", started)],
+    return {"steps": [*state["steps"], local_step(A4, "remake_sound", "omnicult", started)],
             "meta": {**state["meta"], "track": track, "results": results}}
 
 

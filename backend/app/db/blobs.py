@@ -34,7 +34,7 @@ CONTENT_HEADERS = {"X-Content-Type-Options": "nosniff", "Cache-Control": "privat
 TIMEOUT = httpx.Timeout(30.0, connect=5.0)
 BACKOFF = (0.25, 0.75)  # one retry per entry, for 5xx and network errors only
 UNAVAILABLE = "Asset storage is unavailable right now. Try again shortly."
-log = logging.getLogger("nativeproof.storage")
+log = logging.getLogger("omnicult.storage")
 _transport: httpx.AsyncBaseTransport | None = None  # tests install an httpx.MockTransport
 _gcs: Any = None  # a google.cloud.storage.Client, created on first use; tests install a fake
 LOCAL_ROOT = Path("storage/assets")  # ASSET_STORAGE_BACKEND=local (relative to the working directory; git-ignored)

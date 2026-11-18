@@ -1,1 +1,1 @@
-"""Pydantic models that define the Nativeproof HTTP contract (see contracts/README.md)."""
+"""Pydantic models that define the Omnicult HTTP contract (see contracts/README.md)."""

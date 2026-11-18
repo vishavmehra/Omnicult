@@ -262,7 +262,7 @@ class FakeWorkflows:
                 disagreement=False, definition=d, interpretation="Synthetic ratings.", limitations=[NOTE],
             )
         calc = self._evidence(inp.context, "deterministic_calculation", "derived", "Clarity score",
-                              provider="nativeproof", method="deterministic_aggregation", retrieval="generated")
+                              provider="omnicult", method="deterministic_aggregation", retrieval="generated")
         summary = RehearsalSummary(
             key_findings=[Finding(id="kf-1", category="clarity", title="Mostly clear", summary="Clear.",
                                   supporting_response_ids=[r.id for r in reactions[:2]], evidence_ids=[calc.id],
@@ -320,7 +320,7 @@ class FakeWorkflows:
         if status == "failed":
             return EvaluationOutcome(comparability=comparability, scoring_definition=SCORING, **self._failed("campaign_evaluation"))
         calc = self._evidence(inp.context, "deterministic_calculation", "derived", "Overall scores",
-                              provider="nativeproof", method="deterministic_aggregation", retrieval="generated")
+                              provider="omnicult", method="deterministic_aggregation", retrieval="generated")
 
         def result(candidate_id: str, kind: Any, adaptation: Adaptation | None, content: CampaignContent, base: int) -> CandidateResult:
             scores = DimensionScores(clarity=base, brand_fidelity=base, cultural_relevance=base, cultural_risk=20)

@@ -49,7 +49,7 @@ def variants_schema(count: int) -> type[_VariantsBase]:
     )
 
 
-SYSTEM = f"""You are the Voice agent in Nativeproof. Adapt a campaign for the target market while preserving the
+SYSTEM = f"""You are the Voice agent in Omnicult. Adapt a campaign for the target market while preserving the
 brand's intent and voice. Each variant must follow a genuinely different strategy, not a paraphrase of another.
 Keep every protected term that appears in the source verbatim. Never use prohibited terms. Do not invent product
 facts or claims. For each field you change, give the reason; cite evidence handles only when a record directly

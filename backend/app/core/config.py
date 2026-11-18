@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     # Server-side Storage credential (ASSET_STORAGE_BACKEND=supabase). Never sent to the browser or logged.
     supabase_secret_key: SecretStr | None = None
 
-    database_url: str = "sqlite+aiosqlite:///./nativeproof.db"
+    database_url: str = "sqlite+aiosqlite:///./omnicult.db"
 
     # Provider-neutral call limits. The model gateway itself is configured in the Google block at the end of this class.
     llm_request_timeout_seconds: float = 60
@@ -168,7 +168,7 @@ class Settings(BaseSettings):
 
     # --- demo journey -------------------------------------------------------------------------------------------------
     # What POST /projects/demo seeds. "aamod" is the Omnicult journey (app/services/demo_journey.py). "legacy" keeps the
-    # old NativeProof Northstar / Japan seed that the pre-Omnicult workflow tests are written for (tests/conftest.py pins
+    # earlier Northstar / Japan seed that the older workflow tests are written for (tests/conftest.py pins
     # it); it is not offered in any deployment.
     demo_seed: Literal["aamod", "legacy"] = "aamod"
     # --- lens (Market Lens) ---------------------------------------------------------------------------------------

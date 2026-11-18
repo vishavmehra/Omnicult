@@ -1,6 +1,6 @@
 """Opt-in live journey through the APPLICATION (API, run engine, workflows, gateway) with real models.
 
-Run from backend/:  NATIVEPROOF_LIVE_TESTS=1 uv run python -m scripts.verify_app_inference [--out report.md]
+Run from backend/:  OMNICULT_LIVE_TESTS=1 uv run python -m scripts.verify_app_inference [--out report.md]
 
 In-process ASGI app, dev auth, a throwaway SQLite database, and the real gateway from backend/.env. It makes a
 live project and runs an ungrounded rehearsal (6 reactions, 2 segments), Voice (2 variants), Loop, Risk Radar (copy
@@ -129,7 +129,7 @@ async def journey(out: Path | None = None) -> dict[str, Any]:
         evidence = (await client.get(f"{api}/projects/{pid}/evidence", params={"limit": 100})).json()["items"]
         checks["all runs completed"] = all(r["status"] == "completed" for r in runs)
         checks["every model step is google"] = all(
-            s.get("provider") in ("google", "nativeproof", None) for r in runs for s in r["steps"])
+            s.get("provider") in ("google", "omnicult", None) for r in runs for s in r["steps"])
         checks["rehearsal re-reads with 6 synthetic reactions"] = len(rehearsal_view.get("reactions", [])) == 6 and all(
             x["is_synthetic"] for x in rehearsal_view.get("reactions", []))
         checks["rehearsal disclosed as ungrounded"] = rehearsal_view.get("simulation_disclosure", {}).get("grounded") is False
@@ -174,10 +174,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", type=Path, default=None, help="Also write the markdown report to this file.")
     args = parser.parse_args()
-    if os.environ.get("NATIVEPROOF_LIVE_TESTS") != "1":
-        print("Skipped: set NATIVEPROOF_LIVE_TESTS=1 to make real model calls.")
+    if os.environ.get("OMNICULT_LIVE_TESTS") != "1":
+        print("Skipped: set OMNICULT_LIVE_TESTS=1 to make real model calls.")
         return 0
-    with tempfile.TemporaryDirectory(prefix="nativeproof-live-") as workdir:
+    with tempfile.TemporaryDirectory(prefix="omnicult-live-") as workdir:
         _isolate(Path(workdir))
         from app.core.config import get_settings
 
