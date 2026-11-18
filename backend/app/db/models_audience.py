@@ -33,8 +33,8 @@ class AudienceRun(Base):
     status: Mapped[str] = mapped_column(default="queued")
     mode: Mapped[str]
     region_codes: Mapped[list] = mapped_column(default=list)
-    content_version_id: Mapped[UUID | None]  # a campaign content version; no foreign key by design
-    version_ref: Mapped[str | None]  # opaque reference to a version node (Creative Studio); stored, never joined
+    content_version_id: Mapped[UUID | None]  # a campaign content version of the same campaign (migration 0021)
+    version_ref: Mapped[str | None]  # opaque reference to a version node (Creative Studio); stored, never joined, no foreign key by design
     seed: Mapped[int | None]
     config: Mapped[dict] = mapped_column(default=dict)
     inputs: Mapped[dict] = mapped_column(default=dict)
@@ -53,6 +53,8 @@ class AudienceRun(Base):
 
     __table_args__ = (
         ForeignKeyConstraint(["campaign_id", "project_id"], ["campaigns.id", "campaigns.project_id"]),
+        ForeignKeyConstraint(
+            ["content_version_id", "campaign_id"], ["campaign_versions.id", "campaign_versions.campaign_id"], ondelete="RESTRICT"),
         CheckConstraint(f"kind IN ({RUN_KINDS})", name="kind"),
         CheckConstraint(f"status IN ({RUN_STATUSES})", name="status"),
         CheckConstraint("mode IN ('live', 'demo')", name="mode"),

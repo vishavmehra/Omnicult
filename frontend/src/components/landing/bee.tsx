@@ -4,7 +4,8 @@ import { useEffect, useId, useRef } from "react";
 
 import { prefersReducedMotion, subscribe } from "@/components/ambient/ticker";
 
-import { PLANTS, clamp, getField, onField, perchAt, pickPoint, rand, route, type Plant, type Pt } from "./meadow-field";
+import { PLANTS, airspace, clamp, getField, onField, perchAt, pickPoint, rand, route, type Plant, type Pt } from "./meadow-field";
+import { buzz, panAt } from "./meadow-sound";
 
 /*
  * A honeybee working the corner daisies, side view: banded amber abdomen with its sting, a fuzzy thorax, elbowed
@@ -95,6 +96,7 @@ export function Bee() {
     let look: Pt | null = null;
     const start = beside(FLOWERS[0], side, performance.now() / 1000);
     const p = { ...start };
+    airspace.add(p);
     const v = { x: 0, y: 0 };
 
     const step = (dt: number, now: number) => {
@@ -128,7 +130,7 @@ export function Bee() {
         timer = rand(1.4, 3);
       } else if (mode === "feed" && timer < 0) {
         // Next: another daisy, or now and then a short look round the open sky.
-        const peek = pickPoint(f, 16 * f.s);
+        const peek = pickPoint(f, 16 * f.s, FLOWERS[flower].side === "L" ? "l" : "r", p);
         if (Math.random() < 0.3 && route(p, peek, f) === peek) {
           look = peek;
           mode = "look";
@@ -158,11 +160,17 @@ export function Bee() {
       wings[0]?.setAttribute("opacity", (0.3 + 0.45 * r).toFixed(2));
       wings[1]?.setAttribute("opacity", (0.3 + 0.45 * (1 - r)).toFixed(2));
       place(p.x + jx * f.s, p.y + jy * f.s, tilt);
+      // Its buzz: loudest on a dart, softer while hovering, silent while it feeds.
+      buzz(mode === "feed" ? 0 : mode === "hover" ? 0.5 : 1, panAt(p.x, f.w));
     };
 
     place(p.x, p.y, 0);
     el.style.opacity = "1";
-    return subscribe(step);
+    const off = subscribe(step);
+    return () => {
+      off();
+      airspace.delete(p);
+    };
   }, []);
 
   return (

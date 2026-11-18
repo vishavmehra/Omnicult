@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { prefersReducedMotion, subscribe } from "@/components/ambient/ticker";
 
 import { getField, onField, rand, type Field } from "./meadow-field";
+import { crackle, panAt, stridulate } from "./meadow-sound";
 
 /*
  * A grasshopper on the bottom edge, side view: short antennae, a big compound eye, the saddle-shaped pronotum, leathery
@@ -87,7 +88,8 @@ function HopperArt({
   );
 }
 
-const spots = (f: Field) => (f.wide ? [0.62, 0.72, 0.84, 0.93] : [0.52, 0.7, 0.88]);
+// Fractions of the width along the ground line, clear of the corner tufts.
+const spots = (f: Field) => (f.wide ? [0.58, 0.68, 0.78] : [0.42, 0.56, 0.68]);
 const spotX = (f: Field, i: number) => {
   const list = spots(f);
   return list[Math.min(i, list.length - 1)] * f.w;
@@ -104,7 +106,7 @@ export function Grasshopper() {
     const el = wrap.current;
     if (!el) return;
     let facing = -1; // the drawing faces right; -1 mirrors it to face left
-    let spot = 2;
+    let spot = 1;
     const groundY = (f: Field) => f.h + 2 * f.s;
     const render = (x: number, y: number, rot = 0, squash = 1) => {
       el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -100%) scale(${facing}, ${squash.toFixed(3)}) rotate(${rot.toFixed(1)}deg)`;
@@ -157,6 +159,7 @@ export function Grasshopper() {
         if (rub < 0 && rubbing <= 0) {
           rubbing = rand(0.6, 1);
           rub = rand(9, 18);
+          stridulate(panAt(x0, f.w), rubbing);
         }
         if (rubbing > 0) {
           rubbing -= dt;
@@ -183,6 +186,7 @@ export function Grasshopper() {
           const d = Math.abs(spotX(f, next) - fromX);
           T = 0.55 + Math.min(0.6, d / 1400);
           flash = d > 200 * f.s;
+          if (flash) crackle(panAt((fromX + spotX(f, next)) / 2, f.w), T * 0.7);
         }
       } else if (state === "leap") {
         s += dt / T;

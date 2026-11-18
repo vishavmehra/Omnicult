@@ -13,7 +13,7 @@ feature 42, is roadmap), so every platform reads `not_connected`. No token or cr
 from datetime import date, datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import CheckConstraint, ForeignKey, Index, UniqueConstraint
+from sqlalchemy import CheckConstraint, ForeignKey, ForeignKeyConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base, utcnow
@@ -66,6 +66,9 @@ class MetricSeries(Base):
     last_updated_at: Mapped[datetime]
 
     __table_args__ = (
+        ForeignKeyConstraint(  # the campaign must belong to the project (migration 0021)
+            ["campaign_id", "project_id"], ["campaigns.id", "campaigns.project_id"], ondelete="RESTRICT",
+            name="fk_metric_series_campaign_id_project_id_campaigns"),
         UniqueConstraint(  # named: the generated name would exceed Postgres' 63-character identifier limit
             "campaign_id", "source_kind", "day", "platform", "channel", "version_label", "region_code", "metric",
             name="uq_metric_series_slice",

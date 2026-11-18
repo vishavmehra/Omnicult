@@ -391,6 +391,7 @@ async def limitations(ctx: SectionContext) -> Provided | Missing:
     history = ctx.results.get("run_history")
     if isinstance(history, Provided) and history.content.totals.runs_without_cost:  # type: ignore[attr-defined]
         items.append("Some runs have no recorded cost, so the estimated total is a lower bound. Costs are estimates, not invoices.")
+    items += _record_limitations(ctx)
     if ctx.unknown_codes:
         items.append("Not reported, no such region: " + ", ".join(ctx.unknown_codes) + ".")
     for spec in ordered_specs():
@@ -402,3 +403,26 @@ async def limitations(ctx: SectionContext) -> Provided | Missing:
         [KindLabel(kind="calculated", applies_to="Assembled by fixed rules from the other sections. No model wrote these statements.")],
     )
 
+
+
+def _record_limitations(ctx: SectionContext) -> list[str]:
+    """Limits that come with the sections other streams provide (see `proof_sections_records`): synthetic respondents,
+    model readings, rule recommendations and sample figures are named, so a reader cannot take them for more."""
+    items: list[str] = []
+    found = {section_id: r.content for section_id, r in ctx.results.items() if isinstance(r, Provided)}
+    if "audience_results" in found:
+        items.append("Audience results are synthetic: generated respondents are not real people, share one model's biases and are not independent observations.")
+    if "risk_findings" in found:
+        items.append("A Risk Check is a screening aid for human review. It is not legal advice, not an ASCI ruling and not clearance, and a creative with no findings has not been cleared.")
+    if "xray_findings" in found:
+        items.append("Cultural readings in Creative X-Ray are model interpretations, not facts, and a vision or speech model can misread a frame.")
+    if "transcreation" in found:
+        items.append("Transcreated copy and its back-translation come from one model run and are not reviewed by a native speaker unless a person says so.")
+    if "readiness" in found:
+        items.append("A readiness verdict is a recommendation computed by fixed rules from the stored observations. It is not an approval and not a forecast.")
+    if getattr(found.get("live_performance"), "sample_data", False):
+        items.append("Performance figures are a labelled sample dataset, not a connected account. They are not real campaign results.")
+    return items
+
+
+from app.services import proof_sections_records  # noqa: E402,F401  (registers the providers of the other streams' sections)

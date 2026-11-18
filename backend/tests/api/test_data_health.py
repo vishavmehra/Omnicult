@@ -8,7 +8,9 @@ from uuid import UUID, uuid4
 import httpx
 import pytest
 
+from app.db import models as m
 from app.db.base import utcnow
+from app.db.session import session
 from app.services import data_health
 from app.services.data_health import cache_state, claim_state, freshness_label
 from app.services.metering import AiUsage, record_ai_usage
@@ -84,11 +86,12 @@ async def test_source_health_reports_last_retrieval_freshness_and_counts(seeded:
 
 async def test_attempts_are_reported_only_where_they_are_logged(seeded: Any, client: httpx.AsyncClient) -> None:
     ws = await workspace_of("alice")
-    await put(ws, "Pongal")
+    await put(ws, "Pongal", source_type="gdelt")  # GDELT has no call log; the culture sources log theirs (stream lens)
     health = by_type((await client.get(f"{API}/workspaces/{ws}/data-health")).json())
-    wikidata = health["wikidata"]
-    assert (wikidata["attempts_logged"], wikidata["attempts"], wikidata["errors"], wikidata["last_error"]) == (False, None, None, None)
-    assert "not logged" in wikidata["limitations"][0]
+    unlogged = health["gdelt"]
+    assert (unlogged["attempts_logged"], unlogged["attempts"], unlogged["errors"], unlogged["last_error"]) == (False, None, None, None)
+    assert "not logged" in unlogged["limitations"][0]
+    assert health["wikidata"]["attempts_logged"] is True and health["wikidata"]["attempts"] == 0  # logged, and nothing was attempted
     grounding = health["gemini_grounding"]  # logged through ai_usage_events, even with no claim stored from it
     assert (grounding["attempts_logged"], grounding["attempts"], grounding["errors"], grounding["claims"], grounding["freshness"]) == (True, 0, 0, 0, "unknown")
     for status, code in (("ok", None), ("error", "RATE_LIMITED"), ("error", "PROVIDER_TIMEOUT")):
@@ -100,6 +103,40 @@ async def test_attempts_are_reported_only_where_they_are_logged(seeded: Any, cli
     grounding = by_type((await client.get(f"{API}/workspaces/{ws}/data-health")).json())["gemini_grounding"]
     assert (grounding["attempts"], grounding["errors"], grounding["last_error"]["code"]) == (3, 2, "PROVIDER_TIMEOUT")
     assert grounding["last_attempt_at"] and grounding["attempts_logged"] is True
+
+
+async def test_vertex_ai_calls_are_reported_per_capability_for_this_workspace_only(seeded: Any, client: httpx.AsyncClient) -> None:
+    ws, other = await workspace_of("alice"), await workspace_of("bob")
+    quiet = by_type((await client.get(f"{API}/workspaces/{ws}/data-health")).json())["vertex_ai"]  # listed before any call is made
+    assert (quiet["attempts_logged"], quiet["attempts"], quiet["errors"], quiet["last_success_at"], quiet["capabilities"]) == (True, 0, 0, None, [])
+    assert (quiet["claims"], quiet["freshness"], quiet["last_error"], quiet["last_attempt_at"]) == (0, "unknown", None, None)
+
+    def at(minutes: int) -> datetime:
+        return CLOCK + timedelta(minutes=minutes)
+
+    calls = [  # (capability, status, error code, minute, provider, workspace)
+        ("chat", "ok", None, 0, "google", ws), ("chat", "error", "PROVIDER_TIMEOUT", 5, "google", ws), ("chat", "ok", None, 10, "google", ws),
+        ("vision", "error", "PROVIDER_ERROR", 3, "google", ws), ("transcribe", "ok", None, 7, "google", ws),
+        ("transcribe", "error", "CONTENT_BLOCKED", 20, "google", ws),
+        ("chat", "ok", None, 30, "another-provider", ws), ("chat", "error", "OTHER_WORKSPACE", 40, "google", other), ("chat", "ok", None, 50, "google", None),
+    ]
+    async with session() as s, s.begin():
+        s.add_all(m.AiUsageEvent(id=uuid4(), capability=cap, provider=provider, model="gemini-3.8-flash", status=status, error_code=code,
+                                 workspace_id=workspace, created_at=at(minute)) for cap, status, code, minute, provider, workspace in calls)
+    health = by_type((await client.get(f"{API}/workspaces/{ws}/data-health")).json())["vertex_ai"]
+
+    def stamp(minutes: int) -> str:
+        return at(minutes).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    assert (health["attempts"], health["errors"], health["attempts_logged"], health["limitations"]) == (6, 3, True, [])
+    assert (health["last_attempt_at"], health["last_success_at"]) == (stamp(20), stamp(10))
+    assert health["last_error"] == {"at": stamp(20), "code": "CONTENT_BLOCKED"}
+    assert health["capabilities"] == [
+        {"capability": "chat", "attempts": 3, "errors": 1, "last_success_at": stamp(10)},
+        {"capability": "transcribe", "attempts": 2, "errors": 1, "last_success_at": stamp(7)},
+        {"capability": "vision", "attempts": 1, "errors": 1, "last_success_at": None},  # only a failure so far
+    ]
+    assert by_type((await client.get(f"{API}/workspaces/{ws}/data-health")).json())["gemini_grounding"]["capabilities"] == []
 
 
 async def test_a_registered_call_log_is_used_for_its_source_type(seeded: Any, client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -149,8 +186,8 @@ async def test_data_health_shows_a_workspace_only_its_own_and_shared_claims(seed
     await put(None, "Onam", region="IN-KL", source_type="wikipedia", group="wikimedia2")  # shared reference claim
     bob = client_for(BOB)
     mine = by_type((await bob.get(f"{API}/workspaces/{bob_ws}/data-health")).json())
-    assert "wikidata" not in mine and mine["wikipedia"]["claims"] == 1  # alice's claim is invisible; the shared one is not
+    assert mine["wikidata"]["claims"] == 0 and mine["wikipedia"]["claims"] == 1  # alice's claim is invisible; the shared one is not
     assert (await bob.get(f"{API}/workspaces/{alice}/data-health")).status_code == 404
     assert (await client.get(f"{API}/workspaces/{bob_ws}/data-health")).status_code == 404
     await add_member(alice, "bob", "viewer")
-    assert "wikidata" in by_type((await bob.get(f"{API}/workspaces/{alice}/data-health")).json())
+    assert by_type((await bob.get(f"{API}/workspaces/{alice}/data-health")).json())["wikidata"]["claims"] == 1

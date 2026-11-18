@@ -3,8 +3,8 @@
 Reads stored claims and their sources only; it never calls a source, so it cannot report a source as "up". Per source
 type it shows the last stored retrieval, freshness against each claim's expiry, and what is known about attempts and
 errors. Attempts are known only where a call log exists: `CALL_LOG_READERS` maps a source type to a reader, and the
-built-in one covers `gemini_grounding` through `ai_usage_events`. Every other source reports `attempts_logged: false`
-instead of a made-up zero. Per region it reuses the Evidence Meter, so coverage here equals coverage everywhere else.
+built-in ones cover `gemini_grounding` and the AI provider `vertex_ai` (per capability) through `ai_usage_events`. Every
+other source reports `attempts_logged: false` instead of a made-up zero. Per region it reuses the Evidence Meter, so coverage here equals coverage everywhere else.
 """
 
 from collections import defaultdict
@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import func, or_, select
+from sqlalchemy import case, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.analytics.confidence import FRESHNESS_YEARS
@@ -22,6 +22,7 @@ from app.db.base import utcnow
 from app.db.session import read_session
 from app.schemas.common import DataMode
 from app.schemas.proof import (
+    CapabilityCallHealth,
     DataHealth,
     FreshnessRules,
     RegionCoverage,
@@ -49,11 +50,21 @@ LIMITATIONS = [
 
 
 @dataclass(frozen=True)
+class CapabilityCalls:
+    capability: str
+    attempts: int
+    errors: int
+    last_success_at: datetime | None
+
+
+@dataclass(frozen=True)
 class CallStats:
     attempts: int
     errors: int
     last_attempt_at: datetime | None
     last_error: tuple[datetime, str | None] | None
+    last_success_at: datetime | None = None
+    by_capability: tuple[CapabilityCalls, ...] = ()
 
 
 CallLogReader = Callable[[AsyncSession, UUID], Awaitable[CallStats]]
@@ -78,6 +89,35 @@ async def _grounding_calls(s: AsyncSession, workspace_id: UUID) -> CallStats:
 
 
 register_call_log("gemini_grounding", _grounding_calls)
+
+VERTEX_AI = "vertex_ai"
+
+
+async def _vertex_calls(s: AsyncSession, workspace_id: UUID) -> CallStats:
+    """Every recorded Google model call of the workspace (the gateway stores each request, failed attempts included, in
+    `ai_usage_events` with provider `google`), per capability: attempts, errors and the last success. A call made outside a
+    workspace scope carries no workspace and is not counted. When the backend is the Gemini Developer API instead of Vertex
+    AI the rows are the same, so the source name is the deployment's intended provider."""
+    e, failed = m.AiUsageEvent, m.AiUsageEvent.status != "ok"
+    where = (e.provider == "google", e.workspace_id == workspace_id)
+    rows = (await s.execute(
+        select(
+            e.capability, func.count(e.id), func.sum(case((failed, 1), else_=0)), func.max(case((e.status == "ok", e.created_at)))
+        ).where(*where).group_by(e.capability).order_by(e.capability)
+    )).all()
+    by_capability = tuple(CapabilityCalls(cap, int(n), int(bad or 0), ok) for cap, n, bad, ok in rows)
+    last = await s.scalar(select(func.max(e.created_at)).where(*where))
+    last_error = (await s.execute(
+        select(e.created_at, e.error_code).where(*where, failed).order_by(e.created_at.desc()).limit(1)
+    )).first()
+    successes = [c.last_success_at for c in by_capability if c.last_success_at]
+    return CallStats(
+        sum(c.attempts for c in by_capability), sum(c.errors for c in by_capability), last,
+        (last_error[0], last_error[1]) if last_error else None, max(successes) if successes else None, by_capability,
+    )
+
+
+register_call_log(VERTEX_AI, _vertex_calls)
 
 
 def freshness_label(claims: int, expired: int, aging: int) -> str:
@@ -126,6 +166,9 @@ def source_health(
         attempts=stats.attempts if stats else None, errors=stats.errors if stats else None,
         last_attempt_at=stats.last_attempt_at if stats else None,
         last_error=SourceCallError(at=stats.last_error[0], code=stats.last_error[1]) if stats and stats.last_error else None,
+        last_success_at=stats.last_success_at if stats else None,
+        capabilities=[CapabilityCallHealth(capability=c.capability, attempts=c.attempts, errors=c.errors, last_success_at=c.last_success_at)
+                      for c in stats.by_capability] if stats else [],
         attempts_logged=stats is not None, region_codes=sorted(region_codes), limitations=notes,
     )
 

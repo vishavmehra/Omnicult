@@ -4,14 +4,14 @@ import { useEffect, useRef } from "react";
 
 import { prefersReducedMotion, subscribe } from "@/components/ambient/ticker";
 
-import { PLANTS, clamp, getField, onField, perchAt, rand, repel, type Pt } from "./meadow-field";
+import { PLANTS, airspace, clamp, getField, onField, perchAt, rand, repel, type Field, type Pt, type Rect } from "./meadow-field";
 
 /*
  * An underwing moth, from above: feathery antennae, a furry thorax, broad cryptic grey forewings with zig-zag cross
- * lines and a kidney spot. At rest on a seed stalk (the right tuft's; the left one's when a wide left margin gives it
- * room) it folds its wings back into a delta that hides the hindwings; before flying it shivers to warm up, then
- * flutters off in a jittery, zig-zagging flight that flashes the amber-banded hindwings, and comes back to its stalk.
- * It keeps longer hours in the dark theme. Hidden on phones.
+ * lines and a kidney spot. At rest on the seed stalk in the left tuft it folds its wings back into a delta that hides
+ * the hindwings; before flying it shivers to warm up, then flutters in a jittery, zig-zagging flight up and down the
+ * left margin (flashing the amber-banded hindwings) and comes back to its stalk. It keeps longer hours in the dark
+ * theme. Hidden on phones.
  */
 
 const FORE = "M-3 -8 C-12 -15.5 -28 -21.5 -38.5 -20.5 C-42.5 -20 -42.5 -15.5 -39.5 -12.5 C-32 -5.5 -20 0.5 -4 -0.4 Z";
@@ -90,13 +90,13 @@ export function Moth() {
       sides[0]?.setAttribute("transform", `scale(${spread.toFixed(3)},1)`);
       sides[1]?.setAttribute("transform", `scale(${(-spread).toFixed(3)},1)`);
     };
-    // Home: the left seed stalk only when a wide left margin gives it room to fly; otherwise the right one.
-    const leftHome = (f: ReturnType<typeof getField>) => f.wide && f.pockets.length > 5;
     const stalk = (t: number, still: boolean) => {
       const f = getField();
-      const p = perchAt(leftHome(f) ? PLANTS.seedL : PLANTS.seedR, f, t, still);
+      const p = perchAt(PLANTS.seedL, f, t, still);
       return { x: p.x, y: p.y + 6 * f.s, deg: p.deg };
     };
+    // Where it flutters: the left margin, or a small box above the left tuft when the margin is too narrow.
+    const box = (f: Field): Rect => f.marginL ?? { l: 14, t: f.band - 120 * f.s, r: f.tuftL + 70 * f.s, b: f.h - 40 * f.s };
     const show = (on: boolean) => {
       el.style.display = on ? "" : "none";
     };
@@ -116,6 +116,7 @@ export function Moth() {
     let mode: "rest" | "shiver" | "flutter" | "return" = "rest";
     let timer = rand(4, 9);
     const pos: Pt = { x: 0, y: 0 };
+    airspace.add(pos);
     let deg = 0;
     let dir = -Math.PI / 2;
     let turnAt = 0;
@@ -161,11 +162,10 @@ export function Moth() {
           // Jittery flight: a new heading every fraction of a second, pulled back toward home if it strays.
           if (now > turnAt) {
             turnAt = now + rand(120, 340);
-            const cx = home.x + (leftHome(f) ? 1 : -1) * 90 * f.s;
-            const cy = home.y - 140 * f.s;
-            const away = Math.hypot(pos.x - cx, pos.y - cy);
-            const back = Math.atan2(cy - pos.y, cx - pos.x);
-            dir = away > 170 * f.s ? back + rand(-0.5, 0.5) : dir + rand(-1.3, 1.3);
+            const b = box(f);
+            const out = pos.x < b.l + 10 || pos.x > b.r - 10 || pos.y < b.t + 10 || pos.y > b.b - 10;
+            const back = Math.atan2((b.t + b.b) / 2 - pos.y, (b.l + b.r) / 2 - pos.x);
+            dir = out ? back + rand(-0.5, 0.5) : dir + rand(-1.3, 1.3);
             speed = rand(110, 210) * f.s;
           }
           const push = repel(pos, f, 22 * f.s);
@@ -200,7 +200,11 @@ export function Moth() {
     place(p0.x, p0.y, p0.deg);
     pose(1, 1);
     el.style.opacity = "1";
-    return subscribe(step);
+    const off = subscribe(step);
+    return () => {
+      off();
+      airspace.delete(pos);
+    };
   }, []);
 
   return (

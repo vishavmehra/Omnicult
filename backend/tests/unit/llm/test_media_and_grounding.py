@@ -198,7 +198,7 @@ async def test_grounded_research_errors_and_configuration():
 
 async def test_gateway_exposes_every_capability_behind_deadlines_and_one_meter():
     gw = LLMGateway(settings(), client=FakeClient(), usage_sink=InMemoryUsageSink())
-    for name in ("embeddings", "vision", "image_generation", "tts", "grounded_research"):
+    for name in ("embeddings", "vision", "transcribe", "image_generation", "tts", "grounded_research"):
         wrapper = gw.capability(name)
         assert wrapper is not None and wrapper.is_configured(), name
         assert wrapper._provider == "google" and wrapper._model

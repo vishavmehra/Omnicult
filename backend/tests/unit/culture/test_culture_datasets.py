@@ -91,7 +91,9 @@ async def test_a_day_with_two_holidays_yields_two_claims():
 async def test_every_demo_state_has_a_calendar_and_unknown_regions_none(region):
     claims = await HolidaysCalendarSource().moments(region, year=2026)
     assert any(c.value["name"] == "Republic Day" and c.value["date"] == "2026-01-26" for c in claims)
-    assert await HolidaysCalendarSource().moments("IN-GJ", year=2026) == []
+    assert await HolidaysCalendarSource().moments("IN-ZZ", year=2026) == []  # not a state: no guess
+    other = await HolidaysCalendarSource().moments("IN-GJ", year=2026)  # a state without curated references: dates only, no festival link
+    assert other and all("curated_festival" not in c.value for c in other)
 
 
 # ---- curated ----

@@ -11,6 +11,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from app.analytics.risk_rules import HARD_CLAIM
+from app.fixtures import demo_aamod
 
 Context = Mapping[str, Any]
 
@@ -42,7 +43,7 @@ def quick_read(ctx: Context) -> dict:
     intended = ctx.get("intended_message")
     out = []
     for row in ctx["participants"]:
-        s = SENTIMENTS[row["ordinal"] % len(SENTIMENTS)]
+        s = demo_aamod.sentiment_for(ctx, row) or SENTIMENTS[row["ordinal"] % len(SENTIMENTS)]
         clarity, relevance, risk = RATINGS[s]
         where = f"{row['state']} ({row['language']}, {row['city_tier']}, age {row['age_band']})"
         concerns = []
@@ -126,6 +127,9 @@ def study_analysis(ctx: Context) -> dict:
 
 
 def risk_check(ctx: Context) -> dict:
+    aamod = demo_aamod.risk_findings(ctx)
+    if aamod is not None:
+        return {"findings": aamod}
     ad_by_id = {row["id"]: row["handle"] for row in ctx.get("ad_codes", [])}
     claims = ctx.get("claims") or []
     sensitive = next((c for c in claims if c["category"] in ("sensitivity", "symbol", "colour")), None)

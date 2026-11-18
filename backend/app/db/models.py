@@ -848,3 +848,6 @@ from app.db.models_pulse import MetricSeries, PlatformConnection  # noqa: E402,F
 from app.db.models_media import CreativeAsset, CreativeScene  # noqa: E402,F401  (media stream tables)
 
 from app.db.models_proof import ProofReport, ProofReportExport  # noqa: E402,F401  (Proof Vault tables, migration 0017)
+
+from app.db.models_desk import BrandKitDesignRow, CampaignBriefRow  # noqa: E402,F401  (Campaign Desk tables, migration 0019)
+from app.db.models_lens import CultureCall, LensBuild  # noqa: E402,F401  (Market Lens tables, migration 0020)

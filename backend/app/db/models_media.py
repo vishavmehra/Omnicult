@@ -42,6 +42,8 @@ class CreativeAsset(Base):
     __table_args__ = (
         _fk(["campaign_id", "project_id"], "campaigns", ["id", "project_id"]),
         _fk(["asset_id", "project_id"], "assets", ["id", "project_id"]),
+        ForeignKeyConstraint(["latest_run_id", "project_id"], ["agent_runs.id", "agent_runs.project_id"], ondelete="RESTRICT"),
+        ForeignKeyConstraint(["current_run_id", "project_id"], ["agent_runs.id", "agent_runs.project_id"], ondelete="RESTRICT"),
         UniqueConstraint("id", "project_id"),
         UniqueConstraint("campaign_id", "asset_id"),
         CheckConstraint("kind IN ('image', 'video', 'audio')", name="kind"),

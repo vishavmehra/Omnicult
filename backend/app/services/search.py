@@ -22,6 +22,7 @@ from app.core.config import get_settings
 from app.db import models as m
 from app.db.base import utcnow
 from app.db.session import session
+from app.llm.budget import UsageContext, usage_scope
 from app.retrieval import IndexedChunk, RetrievalService, SearchDocument, get_retrieval_service
 from app.retrieval.service import (
     adaptation_document,
@@ -213,6 +214,10 @@ async def search(
         project = await get_project(s, user_id, project_id)
         documents = await project_documents(s, project_id) if project.mode == "live" else []
     service = get_retrieval_service("live" if project.mode == "live" else "demo", get_settings(), store)
-    if service.is_configured():
-        await sync_index(service, store, project_id, documents)
-    return await service.search(project_id, q, kinds, limit, region_code=region_code)
+    with usage_scope(UsageContext(workspace_id=project.workspace_id, project_id=project_id, user_id=user_id)):  # embedding calls
+        if service.is_configured():
+            await sync_index(service, store, project_id, documents)
+        return await service.search(project_id, q, kinds, limit, region_code=region_code)
+
+
+from app.services import search_sources  # noqa: E402,F401  (registers the scene, finding and version sources)

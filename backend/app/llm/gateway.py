@@ -53,6 +53,7 @@ CAPABILITY_LIMITS: dict[str, tuple[float, float]] = {  # name -> (per request, d
     "image_generation": (90.0, 120.0),
     "tts": (60.0, 90.0),
     "grounded_research": (60.0, 90.0),
+    "transcribe": (60.0, 90.0),  # up to about 61 s of audio per call; one request, so no per-batch scaling
 }
 CAPABILITY_ADAPTERS: dict[str, tuple[str, str]] = {  # name -> (module, class)
     "embeddings": ("app.llm.embeddings", "EmbeddingClient"),
@@ -60,6 +61,7 @@ CAPABILITY_ADAPTERS: dict[str, tuple[str, str]] = {  # name -> (module, class)
     "image_generation": ("app.llm.media", "ImageGenerationClient"),
     "tts": ("app.llm.media", "TTSClient"),
     "grounded_research": ("app.llm.grounding", "GroundedResearchClient"),
+    "transcribe": ("app.llm.transcribe", "TranscribeClient"),
 }
 # Pre-call input estimate for budgeting: a deliberately low chars-per-token figure (Indic scripts), so it over-estimates.
 CHARS_PER_TOKEN_FLOOR = 2
@@ -184,9 +186,9 @@ def provider_llm_error(exc: ProviderError, trace: StepTrace, *, timeout_seconds:
 
 
 def budget_llm_error(exc: BudgetExceeded, trace: StepTrace) -> LLMError:
-    scope = "run" if exc.scope == "run" else "daily"
-    return LLMError("BUDGET_EXCEEDED", f"The {scope} AI budget (${exc.limit:.2f}) was reached, so no further model call "
-                    "was made.", retryable=False, trace=trace)
+    scope, setting = ("run", "AI_RUN_BUDGET_USD") if exc.scope == "run" else ("daily", "AI_DAILY_BUDGET_USD")
+    return LLMError("BUDGET_EXCEEDED", f"The {scope} AI budget (${exc.limit:.2f}, {setting}) was reached, so no further "
+                    "model call was made.", retryable=False, trace=trace)
 
 
 class DeadlinedCapability:

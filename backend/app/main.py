@@ -14,12 +14,14 @@ from app.api.routes import (
     brand,
     campaigns,
     conflicts,
+    desk,
     discoveries,
     evaluations,
     evidence,
     graph,
     health,
     launch,
+    lens,
     markets,
     media,
     populations,
@@ -42,8 +44,10 @@ from app.core.config import Settings, get_settings
 from app.core.errors import REQUEST_ID_HEADER, RequestContextMiddleware, install_error_handlers
 from app.core.logging import configure_logging
 from app.db.session import dispose_engine
+from app.llm.budget import get_default_usage_sink, set_default_usage_sink
 from app.media.ffmpeg import log_startup_tools
 from app.services import runs as run_engine
+from app.services.metering import DbUsageSink
 
 ROUTERS = (
     workspaces,
@@ -52,6 +56,7 @@ ROUTERS = (
     projects,
     brand,
     campaigns,
+    desk,
     discoveries,
     profiles,
     markets,
@@ -66,6 +71,7 @@ ROUTERS = (
     evidence,
     graph,
     launch,
+    lens,
     pulse,
     search,
     assets,
@@ -87,7 +93,10 @@ def _operation_id(route: APIRoute) -> str:
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     await run_engine.mark_interrupted_runs()
     await log_startup_tools()  # ffmpeg and ffprobe: detected once, logged; video features degrade clearly if absent
+    previous = get_default_usage_sink()
+    set_default_usage_sink(DbUsageSink())  # every gateway call is stored in ai_usage_events and budgets read it back
     yield
+    set_default_usage_sink(previous)
     await run_engine.shutdown()
     await dispose_engine()
 
@@ -123,7 +132,7 @@ def create_app() -> FastAPI:
         CORSMiddleware,
         allow_origins=settings.cors_origins,
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allow_headers=["Authorization", "Content-Type", REQUEST_ID_HEADER],
+        allow_headers=["Authorization", "Content-Type", "Idempotency-Key", REQUEST_ID_HEADER],
         expose_headers=[
             REQUEST_ID_HEADER, "Content-Disposition", "X-Omnicult-Shaping", "X-Omnicult-Text-Fit",
             "X-Omnicult-Overlaps-Locked", "X-Omnicult-Locked-Restored",

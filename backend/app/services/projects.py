@@ -5,6 +5,7 @@ from uuid import UUID, uuid4
 
 from sqlalchemy import select
 
+from app.core.config import get_settings
 from app.core.errors import Conflict
 from app.db import models as m
 from app.db.base import utcnow
@@ -15,8 +16,8 @@ from app.core.errors import Forbidden, NotFound
 from app.services.common import apply_patch, get_project, paginate, visible_projects
 from app.services.identity import WRITE_ROLES, ensure_personal_workspace, member_role
 
-# Seed for POST /projects/demo. Mirrors contracts/fixtures/Project.json and Campaign.json; the
-# demo fixtures are written for exactly this brand, campaign copy, and market.
+# Legacy seed (DEMO_SEED=legacy). Mirrors contracts/fixtures/Project.json and Campaign.json; the pre-Omnicult demo
+# fixtures are written for exactly this brand, campaign copy, and market.
 DEMO_MARKET = {"country_code": "JP", "display_name": "Japan"}
 DEMO_PROJECT = {
     "name": "Japan Market Launch",
@@ -170,6 +171,16 @@ async def create_project(user_id: UUID, body: ProjectCreate) -> Project:
 
 
 async def create_demo_project(user_id: UUID) -> Project:
+    """The caller's demo project: the fictional Aamod journey (app/services/demo_journey.py), created on first use.
+    DEMO_SEED=legacy keeps the pre-Omnicult Northstar / Japan seed for the workflow tests written against it."""
+    if get_settings().demo_seed == "legacy":
+        return await create_legacy_demo_project(user_id)
+    from app.services.demo_journey import seed_aamod_journey  # imported here: it builds on this module
+
+    return await seed_aamod_journey(user_id)
+
+
+async def create_legacy_demo_project(user_id: UUID) -> Project:
     now = utcnow()
     project = m.Project(
         id=uuid4(), owner_id=user_id, mode="demo", status="active", target_markets=[DEMO_MARKET], last_activity_at=now,

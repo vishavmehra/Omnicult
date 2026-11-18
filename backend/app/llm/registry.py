@@ -10,6 +10,8 @@ https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models for ids and lo
 (https://cloud.google.com/vertex-ai/generative-ai/pricing) is rendered by script and could not be read by the tooling used
 here, so Vertex list prices are assumed equal to the Gemini API paid tier. Check the billing report before relying on
 them. Thinking tokens bill as output. Audio input to Flash models can bill higher than text input; that is not modelled.
+`transcribe` (speech to timed text, app/llm/transcribe.py) is listed for the multimodal Gemini 3 and 4 models, which
+accept audio input on Vertex AI; the first live call is recorded in `verified`.
 """
 
 from dataclasses import dataclass
@@ -19,7 +21,9 @@ from typing import Literal
 from app.core.config import Settings
 
 Tier = Literal["fast", "default", "reasoning"]
-Capability = Literal["chat", "embeddings", "vision", "image_generation", "tts", "live", "grounded_research", "music"]
+Capability = Literal[
+    "chat", "embeddings", "vision", "transcribe", "image_generation", "tts", "live", "grounded_research", "music"
+]
 TaskClass = Literal[
     "extraction",
     "research_synthesis",
@@ -101,6 +105,7 @@ def _spec(model_id: str, caps: str, price: Price, **kw) -> ModelSpec:
 
 
 _TEXT = "chat vision grounded_research"
+_TEXT_AUDIO = _TEXT + " transcribe"  # multimodal models that also take audio input
 _FLASH_38_NOW = Price(0.75, 3.75)
 _FLASH_38_2027 = Price(1.50, 7.50)
 
@@ -108,23 +113,23 @@ _FLASH_38_2027 = Price(1.50, 7.50)
 MODELS: dict[str, ModelSpec] = {
     spec.model_id: spec
     for spec in (
-        _spec("gemini-3.5-flash-lite", _TEXT, Price(0.30, 2.50), structured_output=True, multimodal_input=True,
+        _spec("gemini-3.5-flash-lite", _TEXT_AUDIO, Price(0.30, 2.50), structured_output=True, multimodal_input=True,
               thinking=True, thinking_headroom=1024, locations=("global", "asia-south1"), verified="2026-11-17"),
-        _spec("gemini-3.8-flash", _TEXT, _FLASH_38_NOW, price_from=(date(2027, 1, 1), _FLASH_38_2027),
+        _spec("gemini-3.8-flash", _TEXT_AUDIO, _FLASH_38_NOW, price_from=(date(2027, 1, 1), _FLASH_38_2027),
               structured_output=True, multimodal_input=True, thinking=True, thinking_headroom=2048,
               thinking_levels=("LOW", "MEDIUM", "HIGH"), locations=("global", "us", "eu"), verified="2026-11-17"),
-        _spec("gemini-3.6-flash", _TEXT, _FLASH_38_NOW, price_from=(date(2027, 1, 1), _FLASH_38_2027),
+        _spec("gemini-3.6-flash", _TEXT_AUDIO, _FLASH_38_NOW, price_from=(date(2027, 1, 1), _FLASH_38_2027),
               structured_output=True, multimodal_input=True, thinking=True, thinking_headroom=2048,
               locations=("global", "us", "eu")),
-        _spec("gemini-3.5-flash", _TEXT, Price(1.50, 9.00), structured_output=True, multimodal_input=True,
+        _spec("gemini-3.5-flash", _TEXT_AUDIO, Price(1.50, 9.00), structured_output=True, multimodal_input=True,
               thinking=True, thinking_headroom=2048, locations=("global",), verified="2026-11-17",
               note="Vertex price from third-party aggregators; not on the Gemini API page"),
         # Pro class. Argon: introductory $2/$10 through 2026-11-30, $4/$20 from 2026-12-01 (aggregator reports; Google's Vertex
         # price page was not machine-readable). Sampling parameters are fixed by the model; MINIMAL thinking is rejected.
-        _spec("gemini-4-argon", _TEXT, Price(2.00, 10.00), price_from=(date(2026, 12, 1), Price(4.00, 20.00)),
+        _spec("gemini-4-argon", _TEXT_AUDIO, Price(2.00, 10.00), price_from=(date(2026, 12, 1), Price(4.00, 20.00)),
               structured_output=True, multimodal_input=True, thinking=True, thinking_headroom=4096,
               thinking_levels=("LOW", "MEDIUM", "HIGH"), locations=("global", "us", "eu"), verified="2026-11-17"),
-        _spec("gemini-3.1-pro-preview", _TEXT, Price(2.00, 12.00, long_input_threshold=200_000, long_input_per_m=4.00,
+        _spec("gemini-3.1-pro-preview", _TEXT_AUDIO, Price(2.00, 12.00, long_input_threshold=200_000, long_input_per_m=4.00,
               long_output_per_m=18.00), structured_output=True, multimodal_input=True, thinking=True,
               thinking_headroom=4096, verified="2026-11-17", note="preview"),
         _spec("gemini-2.5-pro", _TEXT, Price(1.25, 10.00, long_input_threshold=200_000, long_input_per_m=2.50,
@@ -216,10 +221,11 @@ def thinking_level_for(model_id: str, tier: Tier | None) -> str | None:
 
 
 def capability_model(settings: Settings, capability: Capability) -> str | None:
-    """Configured model id for a non-text capability. Vision and grounded research use the default text model."""
+    """Configured model id for a non-text capability. Vision, transcription and grounded research use the default text model."""
     return {
         "chat": settings.gemini_model_default,
         "vision": settings.gemini_model_default,
+        "transcribe": settings.gemini_model_default,
         "grounded_research": settings.gemini_model_default,
         "image_generation": settings.gemini_model_image,
         "tts": settings.gemini_model_tts,

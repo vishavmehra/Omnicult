@@ -42,6 +42,7 @@ from app.core.idempotency import idempotency_key_var
 from app.db import models as m
 from app.db.base import utcnow
 from app.db.session import read_session, session
+from app.llm.budget import UsageContext, usage_scope
 from app.llm.gateway import LLMError, LLMGateway
 from app.reference.ad_codes import load_index
 from app.reference.india import LANGUAGES, REGIONS
@@ -55,7 +56,6 @@ from app.services.audit import record_audit
 from app.services.campaigns import current_version
 from app.services.common import ARCHIVED, conflict, get_owned, not_found, paginate, require_writable, touch
 from app.services.identity import READ_ONLY, REVIEW_ROLES
-from app.services.metering import AiUsage, record_ai_usage
 from app.services.projects import to_brand
 from app.workflows import followup
 from app.workflows.audience_types import (
@@ -408,12 +408,13 @@ async def _execute(run_id: UUID) -> None:
             async with asyncio.timeout(timeout):
                 kind, workflow_input, mode = await _build_input(run_id)
                 llm, progress = make_llm(mode), _progress_callback(run_id)
-                if kind == "quick_read":
-                    outcome = await run_quick_read(workflow_input, llm, progress)
-                elif kind == "audience_study":
-                    outcome = await run_audience_study(workflow_input, llm, progress)
-                else:
-                    outcome = await run_risk_check(workflow_input, llm, progress)
+                with usage_scope(await _usage_context(run_id)):  # its model calls become ai_usage_events rows (campaign, no run_id)
+                    if kind == "quick_read":
+                        outcome = await run_quick_read(workflow_input, llm, progress)
+                    elif kind == "audience_study":
+                        outcome = await run_audience_study(workflow_input, llm, progress)
+                    else:
+                        outcome = await run_risk_check(workflow_input, llm, progress)
             await _persist(run_id, kind, outcome)
     except asyncio.CancelledError:
         await _fail(run_id, INTERRUPTED)
@@ -425,6 +426,15 @@ async def _execute(run_id: UUID) -> None:
     except Exception:
         logger.exception("Audience Lab run failed unexpectedly", extra={"run_id": str(run_id)})
         await _fail(run_id, UNEXPECTED)
+
+
+async def _usage_context(run_id: UUID) -> UsageContext:
+    """Audience runs live in `audience_runs`, which `ai_usage_events.run_id` (a foreign key to agent_runs) cannot point at:
+    their model calls keep workspace, project, campaign and user, and no run id."""
+    async with read_session() as s:
+        run = await s.get(m.AudienceRun, run_id)
+        assert run is not None
+        return UsageContext(workspace_id=run.workspace_id, project_id=run.project_id, campaign_id=run.campaign_id, user_id=run.created_by)
 
 
 STAGE_COUNT = {"quick_read": 3, "audience_study": 4, "risk_check": 3}
@@ -547,16 +557,6 @@ async def _persist(run_id: UUID, kind: str, outcome: Any) -> None:
         if run.mode == "demo" and outcome.status in USABLE:
             run.progress["message"] = run.progress["message"][:-1] + " (demo fixtures)."
         run.completed_at = now
-        for st in outcome.steps:  # one usage event per stage that called a real model
-            if _called_model(st):
-                await record_ai_usage(AiUsage(
-                    capability="text", provider=st.provider or "unknown", model=st.model_id or "unknown",
-                    prompt_version=st.prompt_version, input_tokens=(st.usage.input_tokens or 0) if st.usage else 0,
-                    output_tokens=(st.usage.output_tokens or 0) if st.usage else 0,
-                    estimated_cost_usd=(st.usage.estimated_cost_usd or 0.0) if st.usage else 0.0, latency_ms=st.latency_ms,
-                    status="ok" if st.status == "completed" else "error", error_code=st.error_code,
-                    workspace_id=run.workspace_id, project_id=run.project_id, campaign_id=run.campaign_id, user_id=run.created_by,
-                ), s=s)
 
 
 async def _fail(run_id: UUID, error: RunError) -> None:
@@ -867,7 +867,8 @@ async def ask_panel(user_id: UUID, campaign_id: UUID, run_id: UUID, body: v.AskP
             except LLMError as exc:
                 return exc
 
-    results = await asyncio.gather(*(answer(c) for c in chunks))
+    with usage_scope(UsageContext(workspace_id=run.workspace_id, project_id=run.project_id, campaign_id=run.campaign_id, user_id=user_id)):
+        results = await asyncio.gather(*(answer(c) for c in chunks))
     failures = [r for r in results if isinstance(r, LLMError)]
     if len(failures) == len(results):
         _raise_for(failures[0])
@@ -898,13 +899,6 @@ async def ask_panel(user_id: UUID, campaign_id: UUID, run_id: UUID, body: v.AskP
         s.add_all(m.PanelAnswer(
             id=uuid4(), question_id=question_id, run_id=run.id, participant_id=pid, answer=rep.answer, stance=rep.stance,
             memory_refs=[str(x) for x in rep.memory_refs], model_id=rep.model_id, created_at=now) for pid, rep in answered.items())
-        for t in traces:
-            if _called_model(t):
-                await record_ai_usage(AiUsage(
-                    capability="text", provider=t.provider or "unknown", model=t.model_id or "unknown", prompt_version=t.prompt_version,
-                    input_tokens=(t.usage.input_tokens or 0) if t.usage else 0, output_tokens=(t.usage.output_tokens or 0) if t.usage else 0,
-                    estimated_cost_usd=(t.usage.estimated_cost_usd or 0.0) if t.usage else 0.0, latency_ms=t.latency_ms,
-                    workspace_id=run.workspace_id, project_id=run.project_id, campaign_id=run.campaign_id, user_id=user_id), s=s)
         await s.flush()
         return await _question_view(s, question_id)
 

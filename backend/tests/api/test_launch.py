@@ -8,7 +8,8 @@ import pytest
 from sqlalchemy import func, select
 
 from app.db import models as m
-from app.db.session import read_session
+from app.db.base import utcnow
+from app.db.session import read_session, session
 from tests.api.firebase_tokens import bearer
 from tests.api.launch_support import conflict, finding, observations_json, quick_read, risk
 from tests.api.omnicult_support import API, add_member, client_for, firebase_app, seed, seeded  # noqa: F401
@@ -22,6 +23,16 @@ async def campaign_of(client: httpx.AsyncClient) -> dict[str, Any]:
     project = await make_project(client)
     campaign = await make_campaign(client, project["id"])
     return {"project": project, "id": campaign["id"], "workspace_id": project["workspace_id"], "base": f"{API}/campaigns/{campaign['id']}"}
+
+
+async def new_version(c: dict[str, Any]) -> UUID:
+    """A Creative Studio version of the campaign: a verdict or an approval must point at one."""
+    node = m.VersionNode(
+        id=uuid4(), campaign_id=UUID(c["id"]), project_id=UUID(c["project"]["id"]), label="Original", actor="user", settings={},
+        elements=[{"id": "headline", "kind": "headline", "value": "Happy Diwali"}], created_at=utcnow())
+    async with session() as s, s.begin():
+        s.add(node)
+    return node.id
 
 
 def readiness_body(version_id: UUID | None = None, region: str = TN, **changes: Any) -> dict[str, Any]:
@@ -93,7 +104,7 @@ async def test_compare_validates_input_and_the_region(client: httpx.AsyncClient,
 
 async def test_computing_readiness_stores_a_verdict_bound_to_the_exact_version(client: httpx.AsyncClient, seeded: Any) -> None:
     c = await campaign_of(client)
-    version_id = uuid4()
+    version_id = await new_version(c)
     response = await client.post(f"{c['base']}/readiness", json=readiness_body(version_id, region=MH))
     assert response.status_code == 201, response.text
     verdict = response.json()
@@ -111,17 +122,17 @@ async def test_computing_readiness_stores_a_verdict_bound_to_the_exact_version(c
 async def test_a_problem_version_gets_fix_or_rethink_with_a_reason_and_an_action(client: httpx.AsyncClient, seeded: Any) -> None:
     c = await campaign_of(client)
     blocked = (await client.post(f"{c['base']}/readiness", json=readiness_body(
-        risk_check=risk(finding("f1", "low", blocks_go=True)).model_dump(mode="json")))).json()
+        await new_version(c), risk_check=risk(finding("f1", "low", blocks_go=True)).model_dump(mode="json")))).json()
     assert blocked["verdict"] == "fix" and blocked["highest_priority_issue"]["rule_id"] == "FX1_blocking_finding_unresolved"
     assert blocked["risk"]["blocking"] == 1 and "f1" in blocked["main_reason"]
     failed = (await client.post(f"{c['base']}/readiness", json=readiness_body(
-        quick_read=quick_read(understood=1).model_dump(mode="json")))).json()
+        await new_version(c), quick_read=quick_read(understood=1).model_dump(mode="json")))).json()
     assert failed["verdict"] == "rethink" and failed["highest_priority_issue"]["rule_id"] == "RT1_message_not_understood"
 
 
 async def test_identical_inputs_return_the_stored_verdict_and_changed_inputs_add_history(client: httpx.AsyncClient, seeded: Any) -> None:
     c = await campaign_of(client)
-    version_id = uuid4()
+    version_id = await new_version(c)
     first = await client.post(f"{c['base']}/readiness", json=readiness_body(version_id))
     again = await client.post(f"{c['base']}/readiness", json=readiness_body(version_id))
     assert (first.status_code, again.status_code) == (201, 200) and again.json()["id"] == first.json()["id"]
@@ -135,7 +146,7 @@ async def test_identical_inputs_return_the_stored_verdict_and_changed_inputs_add
 
 async def test_the_board_groups_verdicts_by_region_and_version_with_history_and_decisions(client: httpx.AsyncClient, seeded: Any) -> None:
     c = await campaign_of(client)
-    v1, v2 = uuid4(), uuid4()
+    v1, v2 = await new_version(c), await new_version(c)
     await client.post(f"{c['base']}/readiness", json=readiness_body(v1, TN))
     await client.post(f"{c['base']}/readiness", json=readiness_body(v1, TN, risk_check=risk(finding("h1", "high")).model_dump(mode="json")))
     await client.post(f"{c['base']}/readiness", json=readiness_body(v2, TN))
@@ -156,10 +167,10 @@ async def test_the_board_groups_verdicts_by_region_and_version_with_history_and_
 
 async def test_history_filters_by_region_and_version_and_paginates(client: httpx.AsyncClient, seeded: Any) -> None:
     c = await campaign_of(client)
-    version = uuid4()
+    version = await new_version(c)
     for i in range(3):
         await client.post(f"{c['base']}/readiness", json=readiness_body(version, TN, quick_read=quick_read(understood=5 + i).model_dump(mode="json")))
-    await client.post(f"{c['base']}/readiness", json=readiness_body(uuid4(), MH))
+    await client.post(f"{c['base']}/readiness", json=readiness_body(await new_version(c), MH))
     everything = (await client.get(f"{c['base']}/readiness/history")).json()
     assert everything["total"] == 4
     page = (await client.get(f"{c['base']}/readiness/history", params={"region_code": TN, "limit": 2, "offset": 1})).json()
@@ -180,7 +191,8 @@ async def test_the_rules_are_served_as_documentation(client: httpx.AsyncClient, 
 async def test_demo_projects_mark_their_verdicts_as_demo(client: httpx.AsyncClient, seeded: Any) -> None:
     demo = (await client.post(f"{API}/projects/demo")).json()
     campaign = (await client.get(f"{API}/projects/{demo['id']}/campaigns")).json()["items"][0]
-    verdict = (await client.post(f"{API}/campaigns/{campaign['id']}/readiness", json=readiness_body())).json()
+    demo_version = await new_version({"id": campaign["id"], "project": demo})
+    verdict = (await client.post(f"{API}/campaigns/{campaign['id']}/readiness", json=readiness_body(demo_version))).json()
     assert verdict["mode"] == "demo"
     approval = (await client.post(f"{API}/campaigns/{campaign['id']}/approvals", json=approval_body(verdict["version_id"]))).json()
     assert approval["mode"] == "demo"
@@ -191,7 +203,7 @@ async def test_demo_projects_mark_their_verdicts_as_demo(client: httpx.AsyncClie
 
 async def test_an_approval_records_the_person_the_reason_and_the_recommendation_in_force(client: httpx.AsyncClient, seeded: Any) -> None:
     c = await campaign_of(client)
-    version = uuid4()
+    version = await new_version(c)
     verdict = (await client.post(f"{c['base']}/readiness", json=readiness_body(version))).json()
     response = await client.post(f"{c['base']}/approvals", json=approval_body(version))
     assert response.status_code == 201, response.text
@@ -204,7 +216,7 @@ async def test_an_approval_records_the_person_the_reason_and_the_recommendation_
 
 async def test_approving_against_a_fix_or_without_a_verdict_is_allowed_and_flagged(client: httpx.AsyncClient, seeded: Any) -> None:
     c = await campaign_of(client)
-    fix_version, bare_version = uuid4(), uuid4()
+    fix_version, bare_version = await new_version(c), await new_version(c)
     await client.post(f"{c['base']}/readiness", json=readiness_body(fix_version, risk_check=risk(finding("h1", "high")).model_dump(mode="json")))
     over_fix = (await client.post(f"{c['base']}/approvals", json=approval_body(fix_version))).json()
     assert over_fix["verdict_at_decision"] == "fix" and over_fix["overrides_recommendation"] is True
@@ -219,11 +231,11 @@ async def test_approving_against_a_fix_or_without_a_verdict_is_allowed_and_flagg
 
 async def test_the_verdict_an_approval_cites_must_match_the_campaign_region_and_version(client: httpx.AsyncClient, seeded: Any) -> None:
     c, other = await campaign_of(client), await campaign_of(client)
-    version = uuid4()
+    version = await new_version(c)
     mine = (await client.post(f"{c['base']}/readiness", json=readiness_body(version))).json()
-    theirs = (await client.post(f"{other['base']}/readiness", json=readiness_body(version))).json()
+    theirs = (await client.post(f"{other['base']}/readiness", json=readiness_body(await new_version(other)))).json()
     for wrong in (approval_body(version, region=MH, readiness_verdict_id=mine["id"]),
-                  approval_body(uuid4(), readiness_verdict_id=mine["id"]),
+                  approval_body(await new_version(c), readiness_verdict_id=mine["id"]),
                   approval_body(version, readiness_verdict_id=theirs["id"]),
                   approval_body(version, readiness_verdict_id=str(uuid4()))):
         response = await client.post(f"{c['base']}/approvals", json=wrong)
@@ -233,7 +245,7 @@ async def test_the_verdict_an_approval_cites_must_match_the_campaign_region_and_
 
 async def test_an_approval_needs_a_reason_a_known_decision_and_region(client: httpx.AsyncClient, seeded: Any) -> None:
     c = await campaign_of(client)
-    version = uuid4()
+    version = await new_version(c)
     assert (await client.post(f"{c['base']}/approvals", json=approval_body(version) | {"reason": ""})).status_code == 422
     assert (await client.post(f"{c['base']}/approvals", json={k: v for k, v in approval_body(version).items() if k != "reason"})).status_code == 422
     assert (await client.post(f"{c['base']}/approvals", json=approval_body(version, "maybe"))).status_code == 422
@@ -243,7 +255,7 @@ async def test_an_approval_needs_a_reason_a_known_decision_and_region(client: ht
 
 async def test_approvals_list_newest_first_with_filters(client: httpx.AsyncClient, seeded: Any) -> None:
     c = await campaign_of(client)
-    v1, v2 = uuid4(), uuid4()
+    v1, v2 = await new_version(c), await new_version(c)
     await client.post(f"{c['base']}/approvals", json=approval_body(v1, "request_changes"))
     await client.post(f"{c['base']}/approvals", json=approval_body(v1, "approve"))
     await client.post(f"{c['base']}/approvals", json=approval_body(v2, "reject", MH))
@@ -267,7 +279,7 @@ async def test_only_owners_editors_and_reviewers_can_record_an_approval(
     c = await campaign_of(client)
     await add_member(UUID(c["workspace_id"]), "bob", role)
     bob = client_for(BOB)
-    response = await bob.post(f"{c['base']}/approvals", json=approval_body(uuid4()))
+    response = await bob.post(f"{c['base']}/approvals", json=approval_body(await new_version(c)))
     if allowed:
         assert response.status_code == 201 and response.json()["decided_by"] != ""
         assert response.json()["decided_by_name"] is None or isinstance(response.json()["decided_by_name"], str)
@@ -287,7 +299,7 @@ async def test_only_owners_and_editors_can_compute_and_store_a_verdict(
     c = await campaign_of(client)
     await add_member(UUID(c["workspace_id"]), "bob", role)
     bob = client_for(BOB)
-    response = await bob.post(f"{c['base']}/readiness", json=readiness_body())
+    response = await bob.post(f"{c['base']}/readiness", json=readiness_body(await new_version(c)))
     assert response.status_code == (201 if allowed else 403)
     compare = await bob.post(f"{c['base']}/scores/compare", json=compare_body())
     assert compare.status_code == 200  # comparing stores nothing, so every role can do it
@@ -295,7 +307,7 @@ async def test_only_owners_and_editors_can_compute_and_store_a_verdict(
 
 async def test_other_workspaces_cannot_reach_any_launch_room_endpoint(client: httpx.AsyncClient, client_for: Any, seeded: Any) -> None:
     c = await campaign_of(client)
-    version = uuid4()
+    version = await new_version(c)
     await client.post(f"{c['base']}/readiness", json=readiness_body(version))
     await client.post(f"{c['base']}/approvals", json=approval_body(version))
     bob = client_for(BOB)
@@ -325,7 +337,7 @@ async def test_an_unknown_campaign_is_a_404(client: httpx.AsyncClient, seeded: A
 
 async def test_an_archived_project_is_read_only_for_verdicts_and_approvals(client: httpx.AsyncClient, seeded: Any) -> None:
     c = await campaign_of(client)
-    version = uuid4()
+    version = await new_version(c)
     await client.post(f"{c['base']}/readiness", json=readiness_body(version))
     assert (await client.delete(f"{API}/projects/{c['project']['id']}")).status_code == 204
     assert (await client.post(f"{c['base']}/readiness", json=readiness_body())).status_code == 409
@@ -348,7 +360,7 @@ async def test_anonymous_visitors_cannot_record_an_approval(firebase_app: Any) -
 
 async def test_important_operations_are_audited(client: httpx.AsyncClient, seeded: Any) -> None:
     c = await campaign_of(client)
-    version = uuid4()
+    version = await new_version(c)
     await client.post(f"{c['base']}/readiness", json=readiness_body(version))
     await client.post(f"{c['base']}/approvals", json=approval_body(version, "reject"))
     async with read_session() as s:

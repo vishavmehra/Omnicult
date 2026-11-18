@@ -37,7 +37,9 @@ def to_campaign(campaign: m.Campaign, versions: list[m.CampaignVersion]) -> Camp
     return Campaign(
         id=campaign.id, project_id=campaign.project_id, name=campaign.name,
         campaign_type=campaign.campaign_type,  # type: ignore[arg-type]
-        objective=campaign.objective, target_markets=campaign.target_markets,  # type: ignore[arg-type]
+        objective=campaign.objective,
+        # the stored markets may carry a `region_code` (written by the Campaign Brief); the Market contract is country-level
+        target_markets=[{k: t[k] for k in ("country_code", "display_name")} for t in campaign.target_markets],  # type: ignore[arg-type]
         evaluation_criteria=campaign.evaluation_criteria,  # type: ignore[arg-type]
         current_version=to_version(ordered[0]), versions=[to_version(v) for v in ordered],
         created_at=campaign.created_at, updated_at=campaign.updated_at,

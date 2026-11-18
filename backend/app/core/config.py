@@ -161,6 +161,17 @@ class Settings(BaseSettings):
     ai_run_budget_usd: float = 0.50
     ai_daily_budget_usd: float = 5.0
 
+    # --- demo journey -------------------------------------------------------------------------------------------------
+    # What POST /projects/demo seeds. "aamod" is the Omnicult journey (app/services/demo_journey.py). "legacy" keeps the
+    # old NativeProof Northstar / Japan seed that the pre-Omnicult workflow tests are written for (tests/conftest.py pins
+    # it); it is not offered in any deployment.
+    demo_seed: Literal["aamod", "legacy"] = "aamod"
+    # --- lens (Market Lens) ---------------------------------------------------------------------------------------
+    # A live build calls free public APIs (Wikidata, Wikipedia pageviews), so the same region is not rebuilt more often
+    # than this, and one build is cut off after the timeout (its partial result is not stored).
+    lens_live_build_min_interval_seconds: int = 300
+    lens_build_timeout_seconds: int = 90
+
     @field_validator("google_cloud_project", "gemini_api_key", mode="before")
     @classmethod
     def _blank_google_is_unset(cls, value: object) -> object:

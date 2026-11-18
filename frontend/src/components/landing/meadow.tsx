@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 import { Ants } from "./ants";
@@ -10,6 +10,7 @@ import { Butterflies } from "./butterflies";
 import { Dragonfly } from "./dragonfly";
 import { Fireflies } from "./fireflies";
 import { Grasshopper } from "./grasshopper";
+import { attachSound } from "./meadow-sound";
 import { Moth } from "./moth";
 import { Tufts } from "./tufts";
 
@@ -22,6 +23,7 @@ import { Tufts } from "./tufts";
  * at rest, in place. pointer-events: none throughout; aria-hidden, since it is ornament.
  *
  * Paint order is depth: fireflies low in the grass, then the tufts, the ground walkers, and the flyers on top.
+ * Sound (meadow-sound) is attached here too: it starts on the first click or key press and closes with the page.
  * Landing only (DESIGN.md: the landing ornaments never come into the app).
  */
 
@@ -33,6 +35,7 @@ export function Meadow() {
     () => true,
     () => false,
   );
+  useEffect(() => attachSound(), []);
   if (!mounted) return null;
   return createPortal(
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[5] overflow-hidden [--s:0.6] sm:[--s:0.8] lg:[--s:1]">

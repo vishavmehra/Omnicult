@@ -240,9 +240,11 @@ async def test_a_live_run_records_the_model_prompt_version_usage_and_metering(se
     assert meta["seed"] == 42 and meta["usage"]["model_stages"] == 1
     async with read_session() as s:
         events = (await s.execute(select(m.AiUsageEvent).where(m.AiUsageEvent.campaign_id == UUID(campaign["id"])))).scalars().all()
-    assert len(events) == 1 and events[0].provider == "metered" and events[0].model == "test-model"
-    assert events[0].prompt_version == "quick-read-v1" and (events[0].input_tokens, events[0].output_tokens) == (20, 40)
-    assert events[0].project_id == UUID(project["id"]) and events[0].user_id is not None
+    # the gateway stores one row per model request (this stage made two), with the campaign but no agent_runs run id
+    assert len(events) == 2 and {(e.capability, e.provider, e.model, e.prompt_version) for e in events} == {("chat", "google", "test-model", "quick-read-v1")}
+    assert sum(e.input_tokens for e in events) == 20 and sum(e.output_tokens for e in events) == 40
+    assert {e.project_id for e in events} == {UUID(project["id"])} and {e.run_id for e in events} == {None}
+    assert {e.workspace_id for e in events} == {await workspace_of("alice")} and {e.user_id for e in events} == {dev_user_id("alice")}
 
 
 async def test_a_failed_live_run_reports_the_error_and_keeps_the_panel_without_responses(seeded, client: httpx.AsyncClient, live) -> None:

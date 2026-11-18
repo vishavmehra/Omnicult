@@ -7,6 +7,7 @@ it with a database sink at startup via `set_default_usage_sink`. Costs are estim
 `registry.py`, never billed amounts.
 """
 
+import asyncio
 import contextvars
 import logging
 import time
@@ -16,6 +17,7 @@ from contextlib import asynccontextmanager, contextmanager
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
 from typing import Literal, Protocol
+from uuid import UUID
 
 from app.llm.registry import PRICE_TABLE_VERSION, estimate_cost, price_for
 from app.schemas.common import Usage
@@ -40,6 +42,49 @@ def current_run_id() -> str | None:
 
 
 @dataclass(frozen=True)
+class UsageContext:
+    """Who a model call is for, so its usage row can be attributed. Every field is optional: a call made outside any scope
+    is still recorded, just unattributed."""
+
+    workspace_id: UUID | None = None
+    project_id: UUID | None = None
+    campaign_id: UUID | None = None
+    user_id: UUID | None = None
+    run_id: UUID | None = None  # an agent_runs id; Audience Lab runs keep None (their table is not agent_runs) and the campaign
+
+
+_usage_context: contextvars.ContextVar[UsageContext | None] = contextvars.ContextVar("llm_usage_context", default=None)
+
+
+@contextmanager
+def usage_scope(context: UsageContext):
+    """Attribute every model call made inside the block to `context`; a `run_id` also counts against that run's budget."""
+    token = _usage_context.set(context)
+    run_token = _run_id.set(str(context.run_id)) if context.run_id else None
+    try:
+        yield
+    finally:
+        _usage_context.reset(token)
+        if run_token is not None:
+            _run_id.reset(run_token)
+
+
+def current_usage_context() -> UsageContext:
+    return _usage_context.get() or UsageContext()
+
+
+def failure_code(exc: BaseException) -> str:
+    """The error code a failed provider attempt is recorded with (the codes LLMError uses). A cancelled call is recorded
+    as CANCELLED: the caller gave up (a user cancel or an expired deadline), the provider did not fail."""
+    if isinstance(exc, asyncio.CancelledError):
+        return "CANCELLED"
+    from app.llm.google import map_exception  # lazy: google.py imports the gateway, which imports this module
+
+    error = map_exception(exc)
+    return "CONTENT_BLOCKED" if error.blocked else "PROVIDER_TIMEOUT" if error.timeout else "PROVIDER_ERROR"
+
+
+@dataclass(frozen=True)
 class UsageEvent:
     """One model request. The shape `ai_usage_events` will persist."""
 
@@ -58,10 +103,15 @@ class UsageEvent:
     thinking_tokens: int | None = None
     images: int = 0
     audio_seconds: float = 0.0
+    grounded_requests: int = 0  # Google Search grounded requests; the fee is already inside estimated_cost_usd
     estimated_cost_usd: float | None = None  # a stand-in price when price_known is False, so budgets still hold
     price_known: bool = True
     price_table_version: str | None = None
     latency_ms: int | None = None
+    workspace_id: UUID | None = None
+    project_id: UUID | None = None
+    campaign_id: UUID | None = None
+    user_id: UUID | None = None
 
 
 class UsageSink(Protocol):
@@ -163,8 +213,9 @@ class Meter:
         record, started, failed = CallRecord(), time.perf_counter(), False
         try:
             yield record
-        except BaseException:
+        except BaseException as exc:
             failed = True
+            record.error_code = record.error_code or failure_code(exc)
             raise
         finally:
             if self.guard is not None:
@@ -178,15 +229,16 @@ class Meter:
                     output_tokens=usage.output_tokens if usage else None, images=record.images,
                     audio_seconds=record.audio_seconds, grounded_requests=record.grounded_requests,
                 ).usd
+            where = current_usage_context()
             event = UsageEvent(
                 timestamp=datetime.now(UTC), capability=capability, provider=self.provider, model=model,
                 status="error" if failed or record.error_code else "ok", run_id=run_id, stage=stage, agent=agent,
                 prompt_version=prompt_version, error_code=record.error_code,
                 input_tokens=usage.input_tokens if usage else None, output_tokens=usage.output_tokens if usage else None,
                 thinking_tokens=usage.thinking_tokens if usage else None, images=record.images,
-                audio_seconds=record.audio_seconds, estimated_cost_usd=cost,
-                price_known=known,
-                price_table_version=PRICE_TABLE_VERSION, latency_ms=int((time.perf_counter() - started) * 1000),
+                audio_seconds=record.audio_seconds, grounded_requests=record.grounded_requests, estimated_cost_usd=cost,
+                price_known=known, price_table_version=PRICE_TABLE_VERSION, latency_ms=int((time.perf_counter() - started) * 1000),
+                workspace_id=where.workspace_id, project_id=where.project_id, campaign_id=where.campaign_id, user_id=where.user_id,
             )
             try:
                 await self.sink.record(event)

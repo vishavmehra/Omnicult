@@ -1,101 +1,128 @@
 "use client";
 
-import { SyntheticLabel } from "@/components/evidence/badges";
+import { CircleAlert, FlaskConical, LoaderCircle, TriangleAlert } from "lucide-react";
+import { useCallback } from "react";
+
+import { SyntheticLabel, Tag } from "@/components/evidence/badges";
 import { ContextPanel } from "@/components/shell/workspace-shell";
-import { EmptyState, ErrorState, LoadingState } from "@/components/states";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useRuns } from "@/features/lab/api";
+import { AskTab } from "@/features/lab/ask-panel";
+import { QuickReadTab } from "@/features/lab/quick-read";
+import { RiskCheckTab } from "@/features/lab/risk-check";
+import { StudyTab } from "@/features/lab/study";
+import { isActive } from "@/features/lab/types";
+import { LAB_TABS, useLabLocation, type LabTab } from "@/features/lab/use-lab-location";
 
 import { useCampaign } from "./campaign-context";
-import { CampaignFacts, CreativeMat, EarlierTools, FeatureScope, SectionTitle, useCampaignRuns, WorkspaceHeader } from "./parts";
-import { RunLedger } from "./run-ledger";
+import { CampaignFacts, CreativeMat, FeatureScope, SectionTitle, WorkspaceHeader } from "./parts";
 
-const COMPOSITION = ["State", "Language", "City tier", "Age band"];
+const TAB_LABEL: Record<LabTab, string> = { quick: "Quick Read", study: "Audience Study", ask: "Ask the Panel", risk: "Risk Check" };
 
 /**
- * Audience Lab: the creative under test stays in view, the study configuration beside it, and every result is labelled
- * synthetic. Runs listed here are this campaign's real rehearsal, panel and risk runs.
+ * One line that answers "what is going on in this lab": how many runs are moving, finished with gaps, or failed, across
+ * the three kinds. Counts come from the same lists the tabs show, so there is nothing to disagree.
+ */
+function LabActivity() {
+  const { campaign } = useCampaign();
+  const lists = [useRuns(campaign.id, "quick_read"), useRuns(campaign.id, "audience_study"), useRuns(campaign.id, "risk_check")];
+  const all = lists.flatMap((l) => l.data ?? []);
+  if (all.length === 0) return null;
+  const running = all.filter((r) => isActive(r.status)).length;
+  const gaps = all.filter((r) => r.status === "partial").length;
+  const failed = all.filter((r) => r.status === "failed").length;
+  return (
+    <p className="type-ledger flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-[12.5px] text-ink-muted" aria-live="polite">
+      <span>{all.length} {all.length === 1 ? "run" : "runs"} in this campaign</span>
+      {running > 0 && (
+        <span className="inline-flex items-center gap-1 text-info">
+          <LoaderCircle aria-hidden className="size-3.5 animate-spin motion-reduce:animate-none" />
+          {running} running
+        </span>
+      )}
+      {gaps > 0 && (
+        <span className="inline-flex items-center gap-1 text-warning">
+          <TriangleAlert aria-hidden className="size-3.5" />
+          {gaps} completed with gaps
+        </span>
+      )}
+      {failed > 0 && (
+        <span className="inline-flex items-center gap-1 text-danger">
+          <CircleAlert aria-hidden className="size-3.5" />
+          {failed} failed
+        </span>
+      )}
+    </p>
+  );
+}
+
+/**
+ * Audience Lab: Quick Read, Audience Study, Ask the Panel and Risk Check on one campaign. Every result is labelled
+ * synthetic, the panel size is never presented as people surveyed, and each tab keeps its place in the URL.
  */
 export function LabWorkspace() {
-  const { campaign } = useCampaign();
-  const runs = useCampaignRuns(["campaign_rehearsal", "population_study", "social_simulation", "risk_scan"]);
-  const rehearsals = runs.data?.filter((r) => r.run_type !== "risk_scan") ?? [];
-  const risk = runs.data?.filter((r) => r.run_type === "risk_scan") ?? [];
+  const { campaign, project } = useCampaign();
+  const loc = useLabLocation();
+  const onTab = useCallback((v: unknown) => loc.setTab(v as LabTab), [loc]);
 
   return (
     <>
       <WorkspaceHeader workspace="lab">
         <CampaignFacts />
-        <div className="pt-2">
-          <SyntheticLabel>Synthetic audience: simulated opinions, not consumer research or proof of purchase intent</SyntheticLabel>
+        <div className="flex flex-wrap items-center gap-2 pt-2">
+          <SyntheticLabel>Synthetic audience. Simulated reactions, not consumer research.</SyntheticLabel>
+          {project.mode === "demo" && (
+            <Tag className="border-warning/40 bg-warning-soft text-warning" title="A demo project: runs use labelled fixtures and call no model.">
+              <FlaskConical aria-hidden />
+              Demo project: fixture runs, no model called
+            </Tag>
+          )}
         </div>
+        <LabActivity />
       </WorkspaceHeader>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-        <section aria-labelledby="under-test" className="space-y-3">
+      <Tabs value={loc.tab} onValueChange={onTab} className="gap-5">
+        <TabsList variant="line" aria-label="Audience Lab" className="h-auto w-full justify-start gap-1 overflow-x-auto border-b border-border pb-1">
+          {LAB_TABS.map((t) => (
+            <TabsTrigger key={t} value={t} className="h-9 flex-none px-3 text-[14px] after:bottom-[-5px]">
+              {TAB_LABEL[t]}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        <TabsContent value="quick">
+          <QuickReadTab loc={loc} />
+        </TabsContent>
+        <TabsContent value="study">
+          <StudyTab loc={loc} />
+        </TabsContent>
+        <TabsContent value="ask">
+          <AskTab loc={loc} />
+        </TabsContent>
+        <TabsContent value="risk">
+          <RiskCheckTab loc={loc} />
+        </TabsContent>
+      </Tabs>
+
+      <ContextPanel title="Lab context">
+        <section aria-labelledby="under-test" className="space-y-2.5">
           <SectionTitle id="under-test" meta={`v${campaign.current_version.version_number}`}>
             Creative under test
           </SectionTitle>
           <CreativeMat content={campaign.current_version.content} size="sm" />
-          <div className="rounded-card border border-border bg-surface">
-            <p className="border-b border-border px-3 py-2 text-[13px] font-semibold text-ink">Participant composition</p>
-            <dl className="ledger-rules type-ledger text-[13px]">
-              {COMPOSITION.map((d) => (
-                <div key={d} className="flex justify-between gap-3 px-3 py-2">
-                  <dt className="text-ink-secondary">{d}</dt>
-                  <dd className="text-ink-muted">Set when a study is configured</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
+          <p className="text-[12.5px] text-ink-muted">Quick Read and Audience Study react to this copy unless you pick another version in the form.</p>
         </section>
-
-        <div className="min-w-0 space-y-6">
-          {runs.error ? (
-            <ErrorState error={runs.error} onRetry={() => void runs.refetch()} />
-          ) : runs.isPending ? (
-            <LoadingState label="Loading this campaign's studies…" />
-          ) : (
-            <>
-              <section aria-labelledby="quick-read" className="space-y-2.5">
-                <SectionTitle id="quick-read" meta="Rehearsals, panels and buzz simulations">
-                  Quick Read and studies
-                </SectionTitle>
-                {rehearsals.length === 0 ? (
-                  <EmptyState
-                    title="No audience runs for this campaign"
-                    description="A Quick Read asks a synthetic panel how the creative lands: first reactions, message understanding, confusion and regional concerns. Each answer keeps its participant profile, model and prompt version."
-                    needs={[
-                      { label: `A creative version (v${campaign.current_version.version_number} is ready)`, met: true },
-                      { label: "At least one target region", met: campaign.target_markets.length > 0 },
-                      { label: "A study configured from the earlier Audience page (Omnicult Quick Read arrives with the model gateway)", met: false },
-                    ]}
-                  />
-                ) : (
-                  <RunLedger runs={rehearsals} empty="" />
-                )}
-              </section>
-              <section aria-labelledby="risk-check" className="space-y-2.5">
-                <SectionTitle id="risk-check" meta="Findings attach to a part of the creative">
-                  Risk Check
-                </SectionTitle>
-                <RunLedger runs={risk} empty="No risk scans for this campaign yet." />
-              </section>
-            </>
-          )}
-        </div>
-      </div>
-
-      <ContextPanel title="Study context">
-        <p className="text-[13px] leading-relaxed text-ink-body">
-          Repeated answers from one model are not independent confirmation. Synthetic results can never raise a claim above Moderate confidence on their
-          own.
-        </p>
-        <EarlierTools
-          tools={[
-            { segment: "audience", label: "Audience", note: "Population studies, interviews and quick rehearsals" },
-            { segment: "risk-radar", label: "Risk Radar", note: "Risk scan with accept, dismiss and apply" },
-            { segment: "arena", label: "Campaign Arena", note: "Variants against one synthetic audience" },
-          ]}
-        />
+        <section aria-labelledby="lab-limits" className="space-y-2">
+          <h3 id="lab-limits" className="text-[13px] font-semibold text-ink">
+            What a synthetic panel can and cannot show
+          </h3>
+          <ul className="list-disc space-y-1 pl-5 text-[13px] leading-relaxed text-ink-body marker:text-ink-muted">
+            <li>It rehearses reactions and questions for real research. It does not measure real people or predict sales.</li>
+            <li>The panel size is a setting, not a count of people surveyed. Twelve answers from one model are not twelve observations.</li>
+            <li>Agreement between participants is not confirmation: they share one model&apos;s biases.</li>
+            <li>A statement is claim-supported only when it cites an observed or calculated claim. Everything else is interpretation.</li>
+            <li>Risk Check findings are for human review. They are never legal advice, and no finding is not clearance.</li>
+          </ul>
+        </section>
         <FeatureScope workspace="lab" />
       </ContextPanel>
     </>

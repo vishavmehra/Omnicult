@@ -29,7 +29,7 @@ ORDER = [
     "limitations", "run_history",
 ]
 STUBS = ["creative_versions", "xray_findings", "risk_findings", "transcreation", "audience_results", "readiness",
-         "approvals", "live_performance"]
+         "approvals", "live_performance"]  # the sections other streams' records feed (tests/api/test_proof_records.py has data for them)
 
 
 async def make_report(client: httpx.AsyncClient, campaign_id: str, **body: Any) -> dict[str, Any]:
@@ -42,18 +42,21 @@ def section(report: dict[str, Any], section_id: str) -> dict[str, Any]:
     return next(s for s in report["sections"] if s["id"] == section_id)
 
 
-async def test_the_registry_covers_every_section_and_unwired_ones_report_missing(seeded: Any, client: httpx.AsyncClient) -> None:
+async def test_the_registry_covers_every_section_and_a_section_with_no_records_reports_why_it_is_missing(
+    seeded: Any, client: httpx.AsyncClient
+) -> None:
     assert set(REGISTRY) == set(SECTION_MODELS)
     listed = (await client.get(f"{API}/proof-report-sections")).json()
     assert [s["id"] for s in listed] == ORDER
-    assert {s["id"] for s in listed if not s["wired"]} == set(STUBS)
+    assert all(s["wired"] for s in listed)  # every section has a provider; none is a placeholder any more
     setup = await campaign_with_regions(client)
     await tamil_nadu_claims(setup["workspace_id"])
     report = await make_report(client, setup["campaign"]["id"])
     assert [s["id"] for s in report["sections"]] == ORDER and report["assembly"]["section_ids"] == ORDER
-    for stub in STUBS:  # a placeholder says so; it never looks like an empty, complete section
-        found = section(report, stub)
-        assert (found["status"], found["missing_reason"], found["content"], found["kind_labels"]) == ("missing", NOT_IN_BUILD, None, [])
+    for record_section in STUBS:  # no stream has written a record yet: each says what is missing, never an empty "complete" section
+        found = section(report, record_section)
+        assert (found["status"], found["content"], found["kind_labels"]) == ("missing", None, [])
+        assert found["missing_reason"] and found["missing_reason"] != NOT_IN_BUILD, record_section
     assert [m["id"] for m in report["missing_sections"]] == STUBS and report["status"] == "partial"
     for wired in set(ORDER) - set(STUBS):
         found = section(report, wired)
@@ -220,7 +223,7 @@ async def test_exports_json_markdown_and_pdf_keep_labels_and_the_legal_notice(se
     text = markdown.text
     assert markdown.headers["content-type"].startswith("text/markdown") and text.startswith("# Launch proof")
     for expected in ("not legal clearance", "## How to read this report", "Regional evidence: claims by category", "Pongal is the main harvest festival.",
-                     "Not included: not available in this build.", "## Run and model metadata", "observed:", "calculated:", "## Missing sections"):
+                     "Not included: No creative version is recorded for this campaign.", "## Run and model metadata", "observed:", "calculated:", "## Missing sections"):
         assert expected.lower() in text.lower(), expected
     pdf = await client.get(base)  # pdf is the default
     assert pdf.status_code == 200 and pdf.headers["content-type"] == "application/pdf" and pdf.content.startswith(b"%PDF-")

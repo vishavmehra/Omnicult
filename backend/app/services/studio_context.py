@@ -23,7 +23,7 @@ CLAIM_PRIORITY = (
     "media", "demographic", "trend",
 )
 CLAIM_LIMIT = 24
-LLM_STATUS = {"PROVIDER_TIMEOUT": 504, "RATE_LIMITED": 429, "PROVIDER_NOT_CONFIGURED": 503}
+LLM_STATUS = {"PROVIDER_TIMEOUT": 504, "RATE_LIMITED": 429, "BUDGET_EXCEEDED": 429, "PROVIDER_NOT_CONFIGURED": 503}
 
 
 async def region_named(s: AsyncSession, region_code: str, field: str = "region_code") -> m.Region:

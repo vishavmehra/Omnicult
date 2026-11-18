@@ -22,9 +22,11 @@ from app.db import models as m
 from app.db.base import utcnow
 from app.db.session import read_session, session
 from app.schemas import launch as v
+from app.services import launch_observations
 from app.services.audit import record_audit
 from app.services.common import ARCHIVED, conflict, get_owned, not_found, paginate, require_writable, touch
 from app.services.identity import READ_ONLY, REVIEW_ROLES
+from app.services.versions import node_in
 
 APPROVAL_NOTE = "A Go verdict is a recommendation computed by rules. Approvals are decisions recorded by people."
 
@@ -49,11 +51,23 @@ def fingerprint(region_code: str, version_id: UUID, observations: v.VersionObser
 
 
 async def compare_scores(user_id: UUID, campaign_id: UUID, body: v.ScoreCompareRequest) -> v.ScoreComparison:
-    """mvp-2 score cards for 2-4 versions in one region, with comparability and major differences. Nothing is stored."""
+    """mvp-2 score cards for 2-4 versions in one region, with comparability and major differences. Nothing is stored.
+    A version sent without observations has them gathered from stored records (`launch_observations`); the response lists,
+    per version, what was supplied or read and what was missing. Supplied observations are used exactly as sent."""
     async with read_session() as s:
         await get_owned(s, m.Campaign, campaign_id, user_id, "Campaign")
         await _region(s, body.region_code)
-    return scoring_v2.compare(body.region_code, body.versions)
+    resolved: list[v.ScoreVersionInput] = []
+    sources: list[v.ObservationSources] = []
+    for item in body.versions:
+        if item.observations is None:
+            observations, report = await launch_observations.gather(user_id, campaign_id, body.region_code, item.version_id)
+            item = item.model_copy(update={"observations": observations})
+        else:
+            report = launch_observations.describe_supplied(item.version_id, item.observations)
+        resolved.append(item)
+        sources.append(report)
+    return scoring_v2.compare(body.region_code, resolved).model_copy(update={"observation_sources": sources})
 
 
 # --- readiness ------------------------------------------------------------------------------------
@@ -91,23 +105,34 @@ async def _latest_verdict(s: AsyncSession, campaign_id: UUID, region_id: UUID, v
 async def compute_readiness(user_id: UUID, campaign_id: UUID, body: v.ReadinessRequest) -> tuple[v.ReadinessVerdict, bool]:
     """Compute and store the verdict. Returns (verdict, created); identical inputs under the same rules return the
     newest stored verdict instead of adding a duplicate row."""
-    fp = fingerprint(body.region_code, body.version_id, body.observations)
+    async with read_session() as s:  # fail early, before anything is read for the verdict
+        campaign, project = await get_owned(s, m.Campaign, campaign_id, user_id, "Campaign")
+        require_writable(project)
+        await _region(s, body.region_code)
+        await node_in(s, campaign, body.version_id, "version_id")
+    if body.observations is None:
+        observations, report = await launch_observations.gather(user_id, campaign_id, body.region_code, body.version_id)
+    else:
+        observations, report = body.observations, launch_observations.describe_supplied(body.version_id, body.observations)
+    fp = fingerprint(body.region_code, body.version_id, observations)
     now = utcnow()
     async with session() as s, s.begin():
         campaign, project = await get_owned(s, m.Campaign, campaign_id, user_id, "Campaign")
         require_writable(project)
         region = await _region(s, body.region_code)
+        await node_in(s, campaign, body.version_id, "version_id")
         latest = await _latest_verdict(s, campaign.id, region.id, body.version_id)
         # ponytail: two simultaneous identical requests can both insert; history stays correct. Add a unique index on
         # (campaign_id, region_id, version_id, input_fingerprint) if duplicate rows ever matter.
         if latest is not None and latest.input_fingerprint == fp:
             return _verdict_view(latest, region.code, region.name, is_latest=True), False
-        assessment = readiness_rules.assess(body.version_id, body.label, body.observations)
+        assessment = readiness_rules.assess(body.version_id, body.label, observations)
         row = m.ReadinessVerdict(
             id=uuid4(), project_id=project.id, campaign_id=campaign.id, region_id=region.id, version_id=body.version_id,
             verdict=assessment.verdict, main_reason=assessment.main_reason, rule_version=assessment.rule_version,
             scoring_version=assessment.scoring_version, overall_score=assessment.score.overall, input_fingerprint=fp,
-            inputs=body.observations.model_dump(mode="json"), result=assessment.model_dump(mode="json"),
+            inputs=observations.model_dump(mode="json"),
+            result={**assessment.model_dump(mode="json"), "observation_sources": report.model_dump(mode="json")},
             mode=project.mode, computed_by=user_id, computed_at=now,
         )
         s.add(row)
@@ -215,6 +240,7 @@ async def record_approval(user_id: UUID, campaign_id: UUID, body: v.ApprovalCrea
         if project.status == "archived":
             raise Conflict(ARCHIVED)
         region = await _region(s, body.region_code)
+        await node_in(s, campaign, body.version_id, "version_id")
         if body.readiness_verdict_id is not None:
             verdict = await s.get(m.ReadinessVerdict, body.readiness_verdict_id)
             if verdict is None or (verdict.campaign_id, verdict.region_id, verdict.version_id) != (

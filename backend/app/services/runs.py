@@ -26,7 +26,7 @@ from app.core.idempotency import idempotency_key_var
 from app.db import models as m
 from app.db.base import utcnow
 from app.db.session import read_session, session
-from app.llm.budget import run_scope
+from app.llm.budget import UsageContext, usage_scope
 from app.schemas.adaptations import AdaptationCreate
 from app.schemas.campaigns import CampaignContent, EvaluationCriteria
 from app.schemas.common import ErrorDetail, Market
@@ -394,7 +394,7 @@ async def _execute(run_id: UUID, run_type: str) -> None:
                     from app.services import population
 
                     extra["checkpoint"] = population.checkpoint_for(run_id, run_type)
-                with run_scope(str(run_id)):  # model calls made by this run count against its AI budget
+                with usage_scope(await _usage_context(run_id)):  # its model calls are attributed to it and count against its budget
                     outcome = await run_workflow(workflow_input, deps, _progress_callback(run_id), **extra)
             await _persist(run_id, outcome)
         await index_project(run_id=run_id)
@@ -420,6 +420,16 @@ async def _execute(run_id: UUID, run_type: str) -> None:
         await _fail(run_id, UNEXPECTED)
 
 
+async def _usage_context(run_id: UUID) -> UsageContext:
+    """Who a run's model calls are for (ai_usage_events columns)."""
+    async with read_session() as s:
+        row = (await s.execute(
+            select(m.Project.workspace_id, m.AgentRun.project_id, m.AgentRun.campaign_id, m.AgentRun.created_by)
+            .join(m.Project, m.Project.id == m.AgentRun.project_id).where(m.AgentRun.id == run_id)
+        )).one()
+    return UsageContext(workspace_id=row[0], project_id=row[1], campaign_id=row[2], user_id=row[3], run_id=run_id)
+
+
 async def index_project(*, run_id: UUID | None = None, project_id: UUID | None = None) -> None:
     """Best-effort retrieval indexing after a write (live projects, embeddings configured). Never fails the caller."""
     try:
@@ -438,7 +448,8 @@ async def index_project(*, run_id: UUID | None = None, project_id: UUID | None =
             if not service.is_configured():
                 return
             documents = await project_documents(s, project.id)
-        await sync_index(service, store, project.id, documents)
+        with usage_scope(UsageContext(workspace_id=project.workspace_id, project_id=project.id)):
+            await sync_index(service, store, project.id, documents)
     except Exception:
         logger.warning("Retrieval indexing failed; search re-indexes on its next query", exc_info=True)
 

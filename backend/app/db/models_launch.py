@@ -1,8 +1,9 @@
 """Launch Room tables (migration 0016): readiness verdicts and human approvals. Both are append-only.
 
-`version_id` is a plain UUID: the creative version it concerns may be a campaign content version or a version node from
-the Creative Studio stream, so there is no foreign key to either (the integration step adds one). Everything else is
-scoped through `(campaign_id, project_id)`, which makes a cross-project reference impossible at the database level.
+`version_id` is a Creative Studio version node of the same campaign: the composite key (version_id, campaign_id) ->
+version_nodes (migration 0021, ON DELETE RESTRICT) makes any other id, or a version of another campaign, impossible.
+Everything else is scoped through `(campaign_id, project_id)`, which makes a cross-project reference impossible at the
+database level.
 """
 
 from datetime import datetime
@@ -42,6 +43,7 @@ class ReadinessVerdict(Base):
 
     __table_args__ = (
         ForeignKeyConstraint(["campaign_id", "project_id"], ["campaigns.id", "campaigns.project_id"]),
+        ForeignKeyConstraint(["version_id", "campaign_id"], ["version_nodes.id", "version_nodes.campaign_id"], ondelete="RESTRICT"),
         CheckConstraint(f"verdict IN ({VERDICTS})", name="verdict"),
         CheckConstraint("mode IN ('live', 'demo')", name="mode"),
         Index("ix_readiness_verdicts_campaign_region_version_at", "campaign_id", "region_id", "version_id", "computed_at"),
@@ -69,6 +71,7 @@ class Approval(Base):
 
     __table_args__ = (
         ForeignKeyConstraint(["campaign_id", "project_id"], ["campaigns.id", "campaigns.project_id"]),
+        ForeignKeyConstraint(["version_id", "campaign_id"], ["version_nodes.id", "version_nodes.campaign_id"], ondelete="RESTRICT"),
         CheckConstraint(f"decision IN ({APPROVAL_DECISIONS})", name="decision"),
         CheckConstraint(f"verdict_at_decision IS NULL OR verdict_at_decision IN ({VERDICTS})", name="verdict_at_decision"),
         CheckConstraint("mode IN ('live', 'demo')", name="mode"),

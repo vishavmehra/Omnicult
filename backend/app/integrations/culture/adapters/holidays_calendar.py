@@ -14,9 +14,12 @@ from typing import Any
 from app.integrations.culture.adapters.curated import load_curated, name_variants
 from app.integrations.culture.base import SourceBase, SourceDescriptor, now_utc
 from app.integrations.culture.regions import region_for, subdivision
+from app.reference import india
 from app.schemas.claims import ClaimDraft, ClaimScope, SourceRef
 
 PYPI_URL = "https://pypi.org/project/holidays/"
+INDIA_NAMES = {row.code: row.name for row in india.REGIONS}  # every state and union territory, not only the demo four
+PACKAGE_SUBDIVISION = {"UT": "UK"}  # the package still uses the legacy code for Uttarakhand
 
 
 def supported_subdivisions() -> list[str]:
@@ -44,24 +47,26 @@ class HolidaysCalendarSource(SourceBase):
     )
 
     async def moments(self, region_code: str, *, year: int) -> list[ClaimDraft]:
-        region = region_for(region_code)
-        if region is None or not 1950 <= year <= 2100:  # outside the years the package documents: no guess
+        code = region_code.upper()
+        region = region_for(code)
+        state = region.name if region else INDIA_NAMES.get(code)
+        if state is None or not 1950 <= year <= 2100:  # outside the years the package documents: no guess
             return []
         import holidays
 
-        sub = subdivision(region.code)
+        sub = PACKAGE_SUBDIVISION.get(subdivision(code), subdivision(code))
         if sub not in holidays.India.subdivisions:
             return []
         calendar = holidays.India(subdiv=sub, years=year)
         version = metadata.version("holidays")
-        curated = load_curated(region.code)
+        curated = load_curated(code)
         festivals = {v: e for e in (curated.entries if curated else []) if e.attribute == "major_festival"
                      for v in name_variants(str(e.value.get("name", "")) if isinstance(e.value, dict) else "")}
         retrieved = now_utc()
         out: list[ClaimDraft] = []
         for day, joined in sorted(calendar.items()):
             for holiday_name in joined.split("; "):
-                out.append(self._claim(region.code, region.name, sub, year, version, day, holiday_name, festivals, retrieved))
+                out.append(self._claim(code, state, sub, year, version, day, holiday_name, festivals, retrieved))
         return out
 
     def _claim(self, code: str, state: str, sub: str, year: int, version: str, day: date, name: str,

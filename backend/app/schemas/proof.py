@@ -257,8 +257,12 @@ class CreativeVersionItem(ApiModel):
 
 
 class CreativeVersionsContent(ApiModel):
-    versions: list[CreativeVersionItem]
-    comparison_summary: str | None
+    versions: list[CreativeVersionItem] = Field(description="Version nodes of the campaign, oldest first.")
+    comparison_summary: str | None = Field(description="Code-written comparison of the newest version with the original; null with one version.")
+    truncated: bool = Field(default=False, description="True when the campaign has more versions than the report carries.")
+
+
+XRayField = Literal["on_screen_text", "ad_claim", "cultural_observation", "cultural_interpretation"]
 
 
 class XRayFinding(ApiModel):
@@ -266,12 +270,17 @@ class XRayFinding(ApiModel):
     observation: str
     anchor: Anchor | None
     claim_ids: list[UUID]
-    confidence: ConfidenceLevel | None
+    confidence: ConfidenceLevel | None = Field(description="Null: no confidence is computed for an X-Ray reading.")
     kind: ContentKind
+    field: XRayField = Field(default="cultural_observation", description="Which part of the scene the finding comes from.")
+    creative_label: str | None = None
 
 
 class XRayContent(ApiModel):
     findings: list[XRayFinding]
+    creatives: int = Field(default=0, description="Creatives whose current analysis the findings come from.")
+    scenes: int = Field(default=0, description="Scenes read.")
+    truncated: bool = Field(default=False, description="True when there were more findings than the report carries.")
 
 
 class TranscreationItem(ApiModel):
@@ -289,21 +298,27 @@ class TranscreationItem(ApiModel):
 
 class TranscreationContent(ApiModel):
     items: list[TranscreationItem]
+    truncated: bool = Field(default=False, description="True when there were more lines than the report carries.")
 
 
 class AudienceResultItem(ApiModel):
     id: str
-    method: Literal["quick_read", "ask_the_panel"]
+    method: Literal["quick_read", "audience_study", "ask_the_panel"]
     region_code: str | None
     respondent_count: int = Field(description="Synthetic respondents; never independent human observations.")
     summary: str
     disagreement: str | None
     limitations: list[str]
     kind: Literal["synthetic"] = "synthetic"
+    run_id: UUID | None = None
+    mode: DataMode = "live"
+    model_ids: list[str] = Field(default=[], description="Models that generated the respondents; empty for demo fixtures.")
+    created_at: datetime | None = None
 
 
 class AudienceResultsContent(ApiModel):
     results: list[AudienceResultItem]
+    truncated: bool = Field(default=False, description="True when there were more results than the report carries.")
 
 
 class RiskFindingItem(ApiModel):
@@ -315,11 +330,27 @@ class RiskFindingItem(ApiModel):
     ad_code_ref: str | None
     status: str | None
     kind: ContentKind
+    region_code: str | None = None
+    run_id: UUID | None = None
+    interpretation: str | None = Field(default=None, description="Why it may matter; a model interpretation unless kind is calculated.")
+    suggested_fix: str | None = None
+    blocks_go: bool = Field(default=False, description="Computed by risk-rules-v1; counts toward the readiness verdict while unresolved.")
+    claim_ids: list[UUID] = []
 
 
 class RiskFindingsContent(ApiModel):
     findings: list[RiskFindingItem]
     disclaimer: str = Field(description="A Risk Check is an aid to human review, not legal advice.")
+    run_ids: list[UUID] = Field(default=[], description="The Risk Check runs the findings come from (newest usable run per region).")
+
+
+class ReadinessVerdictRef(ApiModel):
+    verdict_id: UUID
+    region_code: str
+    version_id: UUID
+    verdict: Literal["go", "fix", "rethink"]
+    main_reason: str
+    computed_at: datetime
 
 
 class ReadinessContent(ApiModel):
@@ -331,6 +362,14 @@ class ReadinessContent(ApiModel):
     confidence_limitations: list[str]
     rule_version: str
     kind: Literal["calculated"] = "calculated"
+    verdict_id: UUID | None = None
+    region_code: str | None = None
+    version_id: UUID | None = None
+    computed_at: datetime | None = None
+    other_verdicts: list[ReadinessVerdictRef] = Field(
+        default=[], description="The newest verdict of every other region and version, newest first. The headline is the newest overall."
+    )
+    note: str = Field(default="A recommendation computed by fixed rules. It is not an approval and not a forecast.")
 
 
 class ApprovalItem(ApiModel):
@@ -342,6 +381,10 @@ class ApprovalItem(ApiModel):
     note: str | None
     decided_at: datetime
     kind: Literal["observed"] = "observed"
+    region_code: str | None = None
+    approver_name: str | None = None
+    verdict_at_decision: Literal["go", "fix", "rethink"] | None = None
+    overrides_recommendation: bool = Field(default=False, description="Approved although the recommendation was not Go (or none existed).")
 
 
 class ApprovalsContent(ApiModel):
@@ -350,6 +393,7 @@ class ApprovalsContent(ApiModel):
 
 class LivePerformanceItem(ApiModel):
     region_code: str | None
+    version_label: str | None = Field(default=None, description="The creative version the figures belong to, as the data source labels it.")
     metric: str
     value: float | str | None
     period: str | None
@@ -361,6 +405,8 @@ class LivePerformanceItem(ApiModel):
 class LivePerformanceContent(ApiModel):
     items: list[LivePerformanceItem]
     sample_data: bool = Field(description="True when the figures are a labelled sample, not a connected account.")
+    dataset_version: str | None = None
+    note: str = Field(default="")
 
 
 # --- sections ---------------------------------------------------------------------------------------------------
@@ -578,6 +624,15 @@ class SourceCallError(ApiModel):
     code: str | None
 
 
+class CapabilityCallHealth(ApiModel):
+    """One AI capability's recorded calls (chat, vision, transcribe, ...) for a provider source."""
+
+    capability: str
+    attempts: int
+    errors: int
+    last_success_at: datetime | None
+
+
 class SourceHealth(ApiModel):
     source_type: str
     sources: int = Field(description="Distinct source records behind the workspace's visible claims.")
@@ -598,6 +653,12 @@ class SourceHealth(ApiModel):
     errors: int | None
     last_attempt_at: datetime | None
     last_error: SourceCallError | None
+    last_success_at: datetime | None = Field(
+        default=None, description="Newest successful recorded call; null when none, or when attempts are not logged."
+    )
+    capabilities: list[CapabilityCallHealth] = Field(
+        default_factory=list, description="Per capability call counts, for sources that are AI providers (vertex_ai)."
+    )
     attempts_logged: bool
     region_codes: list[str]
     limitations: list[str]

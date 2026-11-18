@@ -33,6 +33,8 @@ class ProofReport(Base):
 
     __table_args__ = (
         ForeignKeyConstraint(["campaign_id", "project_id"], ["campaigns.id", "campaigns.project_id"]),
+        ForeignKeyConstraint(
+            ["campaign_version_id", "campaign_id"], ["campaign_versions.id", "campaign_versions.campaign_id"], ondelete="RESTRICT"),
         UniqueConstraint("campaign_id", "version_number"),
         CheckConstraint("status IN ('complete', 'partial')", name="status"),
         CheckConstraint("mode IN ('live', 'demo')", name="mode"),

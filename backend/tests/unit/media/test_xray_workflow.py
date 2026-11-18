@@ -69,6 +69,34 @@ async def test_a_video_goes_through_all_five_stages_and_only_verified_items_are_
     assert any("could not be verified were removed" in note for note in outcome.limitations)
 
 
+async def test_the_gateways_transcribe_capability_gives_a_live_video_its_transcript() -> None:
+    from app.llm.budget import InMemoryUsageSink
+    from app.llm.gateway import LLMGateway
+    from app.workflows import _transcribe_capability
+    from tests.unit.llm.genai_fakes import FakeClient, reply, settings
+
+    speech = {"segments": [
+        {"start": "00:00.0", "end": "00:02.0", "text": "Celebrate Ganesh Chaturthi with us", "language": "mr"},
+        {"start": "00:07.0", "end": "00:09.0", "text": "Free delivery across Maharashtra"}], "music_mood": "festive, upbeat"}
+    sink = InMemoryUsageSink()
+    gateway = LLMGateway(settings(), client=FakeClient([reply(json.dumps(speech), prompt=400, out=60)]), usage_sink=sink)
+    transcribe = _transcribe_capability(gateway)  # how build_workflow_deps wires it
+    assert transcribe is not None and transcribe.is_configured()
+
+    outcome = await run_creative_xray(inp(), deps(transcribe=transcribe))
+
+    assert outcome.status == "completed" and outcome.transcribe.status == "transcribed"
+    assert (outcome.transcribe.provider, outcome.transcribe.model_id) == ("google", "gemini-3.8-flash")
+    assert [(t.id, t.start_ms, t.end_ms, t.source, t.language, t.text) for t in outcome.transcript] == [
+        ("t1", 0, 2000, "transcription", "mr", "Celebrate Ganesh Chaturthi with us"),
+        ("t2", 7000, 9000, "transcription", "mr", "Free delivery across Maharashtra")]  # ids are the workflow's, the language the declared one
+    assert all(s.music_mood == "festive, upbeat" for s in outcome.scenes)
+    step = next(s for s in outcome.steps if s.stage == "transcribing")
+    assert (step.status, step.provider, step.prompt_version, step.usage.input_tokens) == ("completed", "google", "transcribe-v1", 400)
+    assert [(e.capability, e.stage, e.agent) for e in sink.events] == [("transcribe", "transcribing", "transcribe")]
+    assert _transcribe_capability(LLMGateway(settings(google_cloud_project=None))) is None  # not configured: reported unavailable
+
+
 async def test_a_missing_transcript_is_marked_unavailable_and_nothing_is_invented() -> None:
     outcome = await run_creative_xray(inp(), deps())  # no transcribe capability, no sidecar
     assert outcome.status == "partial" and outcome.error is None

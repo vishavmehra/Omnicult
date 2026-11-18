@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 
 import { prefersReducedMotion, subscribe } from "@/components/ambient/ticker";
 
-import { PLANTS, crosses, getField, onField, perchAt, pickPoint, rand, route, smooth, type Pt } from "./meadow-field";
+import { PLANTS, airspace, crosses, getField, onField, perchAt, pickPoint, rand, route, smooth, type Pt } from "./meadow-field";
+import { flutter, panAt } from "./meadow-sound";
 
 /*
  * A dragonfly, seen from above: two pairs of long glassy wings held flat (the hindwings broader at the base), a dark
@@ -87,6 +88,7 @@ export function Dragonfly() {
     let timer = rand(2, 4);
     let legs = 0;
     const pos: Pt = { ...reed(performance.now() / 1000, false) };
+    airspace.add(pos);
     let deg = 0;
     let from: Pt = { ...pos };
     let to: Pt = { ...pos };
@@ -102,7 +104,7 @@ export function Dragonfly() {
     // A patrol point it can reach in a straight line without crossing a keep-out zone, at least a short hop away.
     const patrol = (f: ReturnType<typeof getField>, m: number): Pt | null => {
       for (let i = 0; i < 14; i++) {
-        const p = pickPoint(f, m);
+        const p = pickPoint(f, m, "lr", pos);
         if (!crosses(pos, p, f, m * 0.5) && Math.hypot(p.x - pos.x, p.y - pos.y) > 120 * f.s) return p;
       }
       return null;
@@ -192,11 +194,17 @@ export function Dragonfly() {
         deg = deg + (nearest(deg, r.deg) - deg) * Math.min(1, dt * 10);
       }
       place(pos.x, pos.y, deg);
+      // Its wings are heard on a dart, faintly while it hovers, not at all on the reed.
+      flutter(mode === "perch" ? 0 : mode === "dart" || mode === "home" ? 1 : 0.4, panAt(pos.x, f.w));
     };
 
     place(pos.x, pos.y, deg);
     el.style.opacity = "1";
-    return subscribe(step);
+    const off = subscribe(step);
+    return () => {
+      off();
+      airspace.delete(pos);
+    };
   }, []);
 
   return (

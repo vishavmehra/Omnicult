@@ -9,6 +9,8 @@ instead of inventing text. Back-translations are literal English renderings of t
 from collections.abc import Mapping
 from typing import Any
 
+from app.fixtures import demo_aamod
+
 Context = Mapping[str, Any]
 FORMAL_FROM = 70  # a formality dial at or above this picks the formal rendering
 
@@ -45,6 +47,8 @@ def _festival_handles(claims: list[Mapping[str, Any]]) -> list[str]:
 
 
 def transcreate_lines(ctx: Context) -> dict[str, Any] | None:
+    if any(line["text"].strip() in demo_aamod.PHRASEBOOK for line in ctx["lines"].values()):
+        return demo_aamod.transcreate_lines(ctx)  # the fictional Aamod journey has its own phrasebook
     language = ctx["language"]
     formal = ctx["tone"]["formality"] >= FORMAL_FROM
     out = []
@@ -71,6 +75,9 @@ CHIPS: dict[str, tuple[str, str, str, str]] = {
 
 
 def tweak_chips(ctx: Context) -> dict[str, Any] | None:
+    aamod = demo_aamod.tweak_chips(ctx)
+    if aamod is not None:
+        return aamod
     element = ctx["element"]
     entry = CHIPS.get(str(element["value"]).strip().casefold())
     if entry is None:

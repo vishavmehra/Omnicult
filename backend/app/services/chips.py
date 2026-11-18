@@ -19,6 +19,7 @@ from app.db.session import read_session, session
 from app.llm.gateway import LLMError
 from app.schemas import versions as v
 from app.services import studio_context as ctx
+from app.services.ai_guard import guarded_ai_call
 from app.services.common import conflict, not_found, paginate
 from app.services.runs import brand_of, merge_terms
 from app.services.versions import (
@@ -78,10 +79,11 @@ async def generate_chips(user_id: UUID, campaign_id: UUID, body: v.ChipGenerate)
     digest = [{key: val for key, val in c.items() if key != "id"} for c in claims]  # the model sees handles, never database ids
     gateway = ctx.gateway_for(project.mode)
     try:
-        result = await tweak.propose_chips(
-            gateway, stage="proposing_chips", element=element, context=others, region=f"{region.name} ({region.code})",
-            claims=digest, glossary=glossary, brand=brand_agent.brand_block(brand_context)[0], count=body.max_chips,
-        )
+        async with guarded_ai_call(user_id, project, campaign.id):  # 429 over the per-user or per-workspace limit
+            result = await tweak.propose_chips(
+                gateway, stage="proposing_chips", element=element, context=others, region=f"{region.name} ({region.code})",
+                claims=digest, glossary=glossary, brand=brand_agent.brand_block(brand_context)[0], count=body.max_chips,
+            )
     except LLMError as exc:
         raise ctx.llm_failure(exc) from exc
     drafts, notes = tweak.validate_chips(

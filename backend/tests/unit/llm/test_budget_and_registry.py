@@ -2,15 +2,17 @@
 
 import asyncio
 from datetime import UTC, date, datetime, timedelta
+from uuid import uuid4
 
 import pytest
 
 from app.core.config import Settings
 from app.llm import registry
 from app.llm.budget import (
-    BudgetExceeded, BudgetGuard, InMemoryUsageSink, Meter, UsageEvent, current_run_id, get_default_usage_sink, metered,
-    run_scope, set_default_usage_sink,
+    BudgetExceeded, BudgetGuard, InMemoryUsageSink, Meter, UsageContext, UsageEvent, current_run_id, current_usage_context,
+    failure_code, get_default_usage_sink, metered, run_scope, set_default_usage_sink, usage_scope,
 )
+from app.llm.gateway import ProviderError
 from app.schemas.common import Usage
 from tests.unit.llm.genai_fakes import settings
 
@@ -210,3 +212,48 @@ def test_thinking_level_is_applied_only_to_models_that_accept_it():
     assert registry.thinking_level_for("gemini-4-argon", "reasoning") == "MEDIUM"
     assert registry.thinking_level_for("gemini-3.5-flash-lite", "fast") is None
     assert registry.thinking_level_for("unknown", "fast") is None and registry.thinking_level_for("gemini-3.8-flash", None) is None
+
+
+async def test_usage_scope_attributes_events_counts_against_the_run_and_restores():
+    sink = InMemoryUsageSink()
+    meter = Meter(sink)
+    ids = [uuid4() for _ in range(5)]
+    where = UsageContext(workspace_id=ids[0], project_id=ids[1], campaign_id=ids[2], user_id=ids[3], run_id=ids[4])
+    async with meter.call(capability="chat", model="m"):
+        pass
+    with usage_scope(where):
+        assert current_usage_context() == where and current_run_id() == str(ids[4])
+        async with meter.call(capability="chat", model="m"):
+            pass
+        with usage_scope(UsageContext(user_id=ids[3])):  # an inner scope replaces the context and the run
+            async with meter.call(capability="chat", model="m"):
+                pass
+            assert current_run_id() == str(ids[4])  # no run in the inner context: the outer run id stays
+    assert current_usage_context() == UsageContext() and current_run_id() is None
+    outside, inside, inner = sink.events
+    assert (outside.workspace_id, outside.run_id) == (None, None)
+    assert (inside.workspace_id, inside.project_id, inside.campaign_id, inside.user_id, inside.run_id) == (*ids[:4], str(ids[4]))
+    assert (inner.workspace_id, inner.user_id) == (None, ids[3])
+    assert await sink.spent_usd(run_id=str(ids[4])) == 0.0
+
+
+async def test_a_failed_attempt_is_recorded_with_the_code_the_error_maps_to():
+    sink = InMemoryUsageSink()
+    meter = Meter(sink)
+    for error in (ProviderError("t", transient=True, timeout=True), ProviderError("b", transient=False, blocked=True),
+                  ProviderError("x", transient=True), RuntimeError("boom"), asyncio.CancelledError()):
+        with pytest.raises(BaseException):
+            async with meter.call(capability="vision", model="m"):
+                raise error
+    assert [(e.status, e.error_code, e.estimated_cost_usd) for e in sink.events] == [
+        ("error", "PROVIDER_TIMEOUT", None), ("error", "CONTENT_BLOCKED", None), ("error", "PROVIDER_ERROR", None),
+        ("error", "PROVIDER_ERROR", None), ("error", "CANCELLED", None)]
+    assert failure_code(TimeoutError()) == "PROVIDER_TIMEOUT"
+
+
+def test_transcribe_is_routed_to_the_default_model_and_only_audio_capable_models_support_it():
+    s = settings()
+    assert registry.capability_model(s, "transcribe") == s.gemini_model_default == "gemini-3.8-flash"
+    assert all(registry.supports(m, "transcribe") for m in (
+        "gemini-3.8-flash", "gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-4-argon", "gemini-3.1-pro-preview"))
+    assert not any(registry.supports(m, "transcribe") for m in ("gemini-embedding-2", "gemini-3.1-flash-image", "gemini-3.8-flash-tts", "unknown"))

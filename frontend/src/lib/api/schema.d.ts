@@ -311,6 +311,64 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/brief": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Brief
+         * @description The current brief. A campaign with no saved brief returns version 0 with content derived from the campaign record.
+         */
+        get: operations["get_brief"];
+        /**
+         * Save Brief
+         * @description Replace the brief. Changed content becomes the next version; unchanged content is a no-op. Demo campaigns return 409.
+         */
+        put: operations["save_brief"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/brief/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Brief Versions */
+        get: operations["list_brief_versions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/brief/versions/{version}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Brief Version */
+        get: operations["get_brief_version"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/chips": {
         parameters: {
             query?: never;
@@ -484,6 +542,160 @@ export interface paths {
         head?: never;
         /** Update Glossary Term */
         patch: operations["update_glossary_term"];
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lens/atlas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Atlas
+         * @description Culture Atlas: every state and union territory with what is known and how strong the evidence is (Evidence Meter
+         *     rating), plus the source families and their dates.
+         */
+        get: operations["get_atlas"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lens/builds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Builds
+         * @description Build history of the workspace in the campaign's mode, newest first.
+         */
+        get: operations["list_builds"];
+        put?: never;
+        /**
+         * Build Profiles
+         * @description Build, or refresh, the profile of each state: gather claims from the culture sources, store them with provenance and
+         *     computed confidence, and save a versioned build record. Owner or editor role.
+         *
+         *     Demo campaigns use the labelled fixture source only. Live campaigns call the live sources with their cool-downs: a state
+         *     built less than LENS_LIVE_BUILD_MIN_INTERVAL_SECONDS ago answers 429, and rate-limited or unconfigured sources are
+         *     reported in the build's `gaps`, `calls` and `status` (partial), never hidden.
+         */
+        post: operations["build_profiles"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lens/compare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Compare States
+         * @description Region Compare: 2 to 4 states side by side on the same dimensions, with missing evidence shown as missing.
+         */
+        get: operations["compare_states"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lens/language-map": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Language Map
+         * @description Language Map: languages and scripts of every state (reference data) with Census 2011 mother-tongue shares where a
+         *     build stored them, labelled 2011.
+         */
+        get: operations["get_language_map"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lens/regions/{region_code}/builds/{build_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Build
+         * @description One build with its source calls (status, cache hit, duration, error type).
+         */
+        get: operations["get_build"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lens/regions/{region_code}/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Moment Calendar
+         * @description Moment Calendar: dated moments for a year (each date a claim with its source) and the festivals sources describe
+         *     without an exact date. Disagreeing sources stay as separate claims with their conflict. An optional window flags moments
+         *     inside it.
+         */
+        get: operations["get_moment_calendar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lens/regions/{region_code}/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get State Profile
+         * @description State Profile: languages, festivals and moments, cultural references, humour and tone, public attention, open
+         *     conflicts and the Evidence Meter. Every fact is a claim with source, date, kind, scope and confidence.
+         */
+        get: operations["get_state_profile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/campaigns/{campaign_id}/locks": {
@@ -1265,6 +1477,26 @@ export interface paths {
         patch: operations["update_cultural_profile"];
         trace?: never;
     };
+    "/api/v1/desk/today": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Today
+         * @description What changed, open evidence conflicts, readiness verdicts and next actions across the caller's campaigns.
+         */
+        get: operations["get_today"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/evidence/{evidence_id}": {
         parameters: {
             query?: never;
@@ -1633,6 +1865,30 @@ export interface paths {
          * @description Replace the user-approved Brand Memory. Only people write here. Demo projects return 409.
          */
         put: operations["update_brand"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{project_id}/brand-kit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Brand Kit
+         * @description The brand record and the Brand Kit design, with calculated contrast ratios and the Brand Glossary's size.
+         */
+        get: operations["get_brand_kit"];
+        /**
+         * Save Brand Kit
+         * @description Replace the design half of the Brand Kit. Term lists are edited through PUT /projects/{id}/brand. Demo brands return 409.
+         */
+        put: operations["save_brand_kit"];
         post?: never;
         delete?: never;
         options?: never;
@@ -3005,6 +3261,8 @@ export interface components {
         };
         /** ApprovalItem */
         ApprovalItem: {
+            /** Approver Name */
+            approver_name: string | null;
             /** Approver User Id */
             approver_user_id: string | null;
             /**
@@ -3027,8 +3285,18 @@ export interface components {
             kind: "observed";
             /** Note */
             note: string | null;
+            /**
+             * Overrides Recommendation
+             * @description Approved although the recommendation was not Go (or none existed).
+             * @default false
+             */
+            overrides_recommendation: boolean;
+            /** Region Code */
+            region_code: string | null;
             /** Role */
             role: string | null;
+            /** Verdict At Decision */
+            verdict_at_decision: ("go" | "fix" | "rethink") | null;
             /** Version Id */
             version_id: string | null;
         };
@@ -3468,6 +3736,8 @@ export interface components {
         };
         /** AudienceResultItem */
         AudienceResultItem: {
+            /** Created At */
+            created_at: string | null;
             /** Disagreement */
             disagreement: string | null;
             /** Id */
@@ -3484,7 +3754,19 @@ export interface components {
              * Method
              * @enum {string}
              */
-            method: "quick_read" | "ask_the_panel";
+            method: "quick_read" | "audience_study" | "ask_the_panel";
+            /**
+             * Mode
+             * @default live
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /**
+             * Model Ids
+             * @description Models that generated the respondents; empty for demo fixtures.
+             * @default []
+             */
+            model_ids: string[];
             /** Region Code */
             region_code: string | null;
             /**
@@ -3492,6 +3774,8 @@ export interface components {
              * @description Synthetic respondents; never independent human observations.
              */
             respondent_count: number;
+            /** Run Id */
+            run_id: string | null;
             /** Summary */
             summary: string;
         };
@@ -3499,6 +3783,12 @@ export interface components {
         AudienceResultsContent: {
             /** Results */
             results: components["schemas"]["AudienceResultItem"][];
+            /**
+             * Truncated
+             * @description True when there were more results than the report carries.
+             * @default false
+             */
+            truncated: boolean;
         };
         /** AudienceResultsSection */
         AudienceResultsSection: {
@@ -3821,6 +4111,55 @@ export interface components {
             /** Text */
             text: string;
         };
+        /** BrandKit */
+        BrandKit: {
+            /** Communication Style */
+            communication_style: string | null;
+            /** Contrast */
+            contrast: components["schemas"]["KitContrastResult"][];
+            /** Description */
+            description: string | null;
+            design: components["schemas"]["KitDesign-Output"];
+            /** Editable */
+            editable: boolean;
+            glossary: components["schemas"]["KitGlossaryLink"];
+            /** Locked Reason */
+            locked_reason: string | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Name */
+            name: string;
+            /** Preferred Terms */
+            preferred_terms: string[];
+            /** Prohibited Terms */
+            prohibited_terms: string[];
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Protected Terms */
+            protected_terms: string[];
+            provenance: components["schemas"]["DeskProvenance"];
+            /**
+             * Revision
+             * @description 0 means no design has been saved yet.
+             */
+            revision: number;
+            /** Saved */
+            saved: boolean;
+            /** Target Audience */
+            target_audience: string | null;
+            /** Updated At */
+            updated_at: string | null;
+            /** Updated By */
+            updated_by: string | null;
+            /** Voice */
+            voice: string[];
+        };
         /** BrandSummary */
         BrandSummary: {
             /** Description */
@@ -3887,6 +4226,352 @@ export interface components {
              */
             voice: string[];
         };
+        /** BriefAudience */
+        "BriefAudience-Input": {
+            /**
+             * Age Bands
+             * @default []
+             */
+            age_bands: ("18-24" | "25-34" | "35-44" | "45-54" | "55+")[];
+            /**
+             * City Tiers
+             * @default []
+             */
+            city_tiers: ("tier1" | "tier2" | "tier3" | "rural")[];
+            /** Summary */
+            summary?: string | null;
+            /**
+             * Targeting Exclusions
+             * @description What the audience must never be selected or sampled by (for example protected traits).
+             */
+            targeting_exclusions?: string | null;
+        };
+        /** BriefAudience */
+        "BriefAudience-Output": {
+            /**
+             * Age Bands
+             * @default []
+             */
+            age_bands: ("18-24" | "25-34" | "35-44" | "45-54" | "55+")[];
+            /**
+             * City Tiers
+             * @default []
+             */
+            city_tiers: ("tier1" | "tier2" | "tier3" | "rural")[];
+            /** Summary */
+            summary: string | null;
+            /**
+             * Targeting Exclusions
+             * @description What the audience must never be selected or sampled by (for example protected traits).
+             */
+            targeting_exclusions: string | null;
+        };
+        /** BriefBudget */
+        "BriefBudget-Input": {
+            /**
+             * By Region
+             * @default {}
+             */
+            by_region: {
+                [key: string]: number;
+            };
+            /** Currency */
+            currency: string;
+            /** Note */
+            note?: string | null;
+            /**
+             * Sample
+             * @description True when the numbers are planning placeholders. Always true for a demo project (set by the server).
+             * @default false
+             */
+            sample: boolean;
+            /** Total */
+            total: number;
+        };
+        /** BriefBudget */
+        "BriefBudget-Output": {
+            /**
+             * By Region
+             * @default {}
+             */
+            by_region: {
+                [key: string]: number;
+            };
+            /** Currency */
+            currency: string;
+            /** Note */
+            note: string | null;
+            /**
+             * Sample
+             * @description True when the numbers are planning placeholders. Always true for a demo project (set by the server).
+             * @default false
+             */
+            sample: boolean;
+            /** Total */
+            total: number;
+        };
+        /** BriefChannel */
+        "BriefChannel-Input": {
+            /**
+             * Creative Ref
+             * @description Opaque reference to the creative this channel runs; shown as text.
+             */
+            creative_ref?: string | null;
+            /** Format */
+            format?: string | null;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+        };
+        /** BriefChannel */
+        "BriefChannel-Output": {
+            /**
+             * Creative Ref
+             * @description Opaque reference to the creative this channel runs; shown as text.
+             */
+            creative_ref: string | null;
+            /** Format */
+            format: string | null;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+        };
+        /**
+         * BriefCompleteness
+         * @description Calculated from the saved content: which required parts are still empty.
+         */
+        BriefCompleteness: {
+            /** Complete */
+            complete: boolean;
+            /** Filled */
+            filled: number;
+            /** Missing */
+            missing: ("objective" | "origin_region" | "target_regions" | "languages" | "channels" | "budget" | "dates" | "success_metric")[];
+            /** Required */
+            required: number;
+        };
+        /**
+         * BriefContent
+         * @description The brief as people write it. Replaced as a whole; each saved change becomes a new version.
+         */
+        "BriefContent-Input": {
+            budget?: components["schemas"]["BriefBudget-Input"] | null;
+            /**
+             * Channels
+             * @default []
+             */
+            channels: components["schemas"]["BriefChannel-Input"][];
+            /**
+             * Constraints
+             * @default []
+             */
+            constraints: string[];
+            cta?: components["schemas"]["BriefCta-Input"] | null;
+            dates?: components["schemas"]["BriefDates-Input"] | null;
+            /**
+             * Languages
+             * @description Languages per region code (ISO 639-1; ISO 639-3 where no two-letter code exists).
+             * @default {}
+             */
+            languages: {
+                [key: string]: string[];
+            };
+            /** Objective */
+            objective?: string | null;
+            /**
+             * Original Creative Refs
+             * @default []
+             */
+            original_creative_refs: string[];
+            /** Primary Message */
+            primary_message?: string | null;
+            product?: components["schemas"]["BriefProduct-Input"] | null;
+            /**
+             * @default {
+             *       "targets": []
+             *     }
+             */
+            regions: components["schemas"]["BriefRegions-Input"];
+            /**
+             * Scripts
+             * @description Scripts per region code (ISO 15924).
+             * @default {}
+             */
+            scripts: {
+                [key: string]: string[];
+            };
+            /**
+             * Status
+             * @default planning
+             * @enum {string}
+             */
+            status: "planning" | "live" | "closed";
+            success_metric?: components["schemas"]["BriefSuccessMetric-Input"] | null;
+            target_audience?: components["schemas"]["BriefAudience-Input"] | null;
+        };
+        /**
+         * BriefContent
+         * @description The brief as people write it. Replaced as a whole; each saved change becomes a new version.
+         */
+        "BriefContent-Output": {
+            budget: components["schemas"]["BriefBudget-Output"] | null;
+            /**
+             * Channels
+             * @default []
+             */
+            channels: components["schemas"]["BriefChannel-Output"][];
+            /**
+             * Constraints
+             * @default []
+             */
+            constraints: string[];
+            cta: components["schemas"]["BriefCta-Output"] | null;
+            dates: components["schemas"]["BriefDates-Output"] | null;
+            /**
+             * Languages
+             * @description Languages per region code (ISO 639-1; ISO 639-3 where no two-letter code exists).
+             * @default {}
+             */
+            languages: {
+                [key: string]: string[];
+            };
+            /** Objective */
+            objective: string | null;
+            /**
+             * Original Creative Refs
+             * @default []
+             */
+            original_creative_refs: string[];
+            /** Primary Message */
+            primary_message: string | null;
+            product: components["schemas"]["BriefProduct-Output"] | null;
+            /**
+             * @default {
+             *       "targets": []
+             *     }
+             */
+            regions: components["schemas"]["BriefRegions-Output"];
+            /**
+             * Scripts
+             * @description Scripts per region code (ISO 15924).
+             * @default {}
+             */
+            scripts: {
+                [key: string]: string[];
+            };
+            /**
+             * Status
+             * @default planning
+             * @enum {string}
+             */
+            status: "planning" | "live" | "closed";
+            success_metric: components["schemas"]["BriefSuccessMetric-Output"] | null;
+            target_audience: components["schemas"]["BriefAudience-Output"] | null;
+        };
+        /** BriefCta */
+        "BriefCta-Input": {
+            /** Festival Hook */
+            festival_hook?: string | null;
+            original?: components["schemas"]["BriefOriginalCta-Input"] | null;
+            /** Text En */
+            text_en?: string | null;
+        };
+        /** BriefCta */
+        "BriefCta-Output": {
+            /** Festival Hook */
+            festival_hook: string | null;
+            original: components["schemas"]["BriefOriginalCta-Output"] | null;
+            /** Text En */
+            text_en: string | null;
+        };
+        /** BriefDateSource */
+        "BriefDateSource-Input": {
+            /** Id */
+            id: string;
+            /** Publisher */
+            publisher?: string | null;
+            /** Retrieved At */
+            retrieved_at?: string | null;
+            /** Title */
+            title: string;
+            /** Url */
+            url?: string | null;
+        };
+        /** BriefDateSource */
+        "BriefDateSource-Output": {
+            /** Id */
+            id: string;
+            /** Publisher */
+            publisher: string | null;
+            /** Retrieved At */
+            retrieved_at: string | null;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string | null;
+        };
+        /** BriefDates */
+        "BriefDates-Input": {
+            /**
+             * End
+             * Format: date
+             */
+            end: string;
+            /**
+             * Key Moments
+             * @default []
+             */
+            key_moments: components["schemas"]["BriefKeyMoment-Input"][];
+            /** Note */
+            note?: string | null;
+            /**
+             * Sources
+             * @default []
+             */
+            sources: components["schemas"]["BriefDateSource-Input"][];
+            /**
+             * Start
+             * Format: date
+             */
+            start: string;
+            /**
+             * Timezone
+             * @default Asia/Kolkata
+             */
+            timezone: string;
+        };
+        /** BriefDates */
+        "BriefDates-Output": {
+            /**
+             * End
+             * Format: date
+             */
+            end: string;
+            /**
+             * Key Moments
+             * @default []
+             */
+            key_moments: components["schemas"]["BriefKeyMoment-Output"][];
+            /** Note */
+            note: string | null;
+            /**
+             * Sources
+             * @default []
+             */
+            sources: components["schemas"]["BriefDateSource-Output"][];
+            /**
+             * Start
+             * Format: date
+             */
+            start: string;
+            /**
+             * Timezone
+             * @default Asia/Kolkata
+             */
+            timezone: string;
+        };
         /** BriefFinding */
         BriefFinding: {
             /**
@@ -3910,6 +4595,54 @@ export interface components {
             /** Validation Question */
             validation_question: string | null;
         };
+        /** BriefKeyMoment */
+        "BriefKeyMoment-Input": {
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Note */
+            note?: string | null;
+            /**
+             * Region Codes
+             * @default []
+             */
+            region_codes: string[];
+            /**
+             * Source Ids
+             * @default []
+             */
+            source_ids: string[];
+        };
+        /** BriefKeyMoment */
+        "BriefKeyMoment-Output": {
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Note */
+            note: string | null;
+            /**
+             * Region Codes
+             * @default []
+             */
+            region_codes: string[];
+            /**
+             * Source Ids
+             * @default []
+             */
+            source_ids: string[];
+        };
         /** BriefMarket */
         BriefMarket: {
             /**
@@ -3924,6 +4657,189 @@ export interface components {
              * @description ISO 3166-2 region, when the campaign targets one.
              */
             region_code: string | null;
+        };
+        /** BriefMetric */
+        "BriefMetric-Input": {
+            /** Definition */
+            definition: string;
+            /** Id */
+            id: string;
+            /** Target */
+            target?: string | null;
+        };
+        /** BriefMetric */
+        "BriefMetric-Output": {
+            /** Definition */
+            definition: string;
+            /** Id */
+            id: string;
+            /** Target */
+            target: string | null;
+        };
+        /** BriefMoney */
+        BriefMoney: {
+            /** Amount */
+            amount: number;
+            /** Currency */
+            currency: string;
+        };
+        /** BriefOriginalCta */
+        "BriefOriginalCta-Input": {
+            /** Region Code */
+            region_code: string;
+            /** Text */
+            text: string;
+            /** Translation En */
+            translation_en?: string | null;
+        };
+        /** BriefOriginalCta */
+        "BriefOriginalCta-Output": {
+            /** Region Code */
+            region_code: string;
+            /** Text */
+            text: string;
+            /** Translation En */
+            translation_en: string | null;
+        };
+        /** BriefProduct */
+        "BriefProduct-Input": {
+            /** Description */
+            description?: string | null;
+            /** Name */
+            name: string;
+            /** Net Weight G */
+            net_weight_g?: number | null;
+            price?: components["schemas"]["BriefMoney"] | null;
+            /** Price Note */
+            price_note?: string | null;
+        };
+        /** BriefProduct */
+        "BriefProduct-Output": {
+            /** Description */
+            description: string | null;
+            /** Name */
+            name: string;
+            /** Net Weight G */
+            net_weight_g: number | null;
+            price: components["schemas"]["BriefMoney"] | null;
+            /** Price Note */
+            price_note: string | null;
+        };
+        /** BriefRegions */
+        "BriefRegions-Input": {
+            /**
+             * Origin
+             * @description Where the original creative was made (ISO 3166-2:IN).
+             */
+            origin?: string | null;
+            /**
+             * Targets
+             * @default []
+             */
+            targets: string[];
+        };
+        /** BriefRegions */
+        "BriefRegions-Output": {
+            /**
+             * Origin
+             * @description Where the original creative was made (ISO 3166-2:IN).
+             */
+            origin: string | null;
+            /**
+             * Targets
+             * @default []
+             */
+            targets: string[];
+        };
+        /** BriefSuccessMetric */
+        "BriefSuccessMetric-Input": {
+            /** Note */
+            note?: string | null;
+            primary: components["schemas"]["BriefMetric-Input"];
+            /**
+             * Secondary
+             * @default []
+             */
+            secondary: components["schemas"]["BriefMetric-Input"][];
+        };
+        /** BriefSuccessMetric */
+        "BriefSuccessMetric-Output": {
+            /** Note */
+            note: string | null;
+            primary: components["schemas"]["BriefMetric-Output"];
+            /**
+             * Secondary
+             * @default []
+             */
+            secondary: components["schemas"]["BriefMetric-Output"][];
+        };
+        /** BriefUpdate */
+        BriefUpdate: {
+            /**
+             * Change Note
+             * @description Why this version exists; shown in the version list.
+             */
+            change_note?: string | null;
+            content: components["schemas"]["BriefContent-Input"];
+            /**
+             * Expected Version
+             * @description The version the editor was looking at. A different current version is a 409, so edits never overwrite each other.
+             */
+            expected_version?: number | null;
+        };
+        /** BriefVersion */
+        BriefVersion: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Change Note */
+            change_note: string | null;
+            /** Changed Fields */
+            changed_fields: string[];
+            content: components["schemas"]["BriefContent-Output"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By */
+            created_by: string | null;
+            provenance: components["schemas"]["DeskProvenance"];
+            /** Version */
+            version: number;
+        };
+        /** BriefVersionPage */
+        BriefVersionPage: {
+            /** Items */
+            items: components["schemas"]["BriefVersionSummary"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** BriefVersionSummary */
+        BriefVersionSummary: {
+            /** Change Note */
+            change_note: string | null;
+            /**
+             * Changed Fields
+             * @description Top-level brief fields that differ from the previous version.
+             */
+            changed_fields: string[];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By */
+            created_by: string | null;
+            provenance: components["schemas"]["DeskProvenance"];
+            /** Version */
+            version: number;
         };
         /** Campaign */
         Campaign: {
@@ -3965,6 +4881,49 @@ export interface components {
              * @description Every content version, newest first.
              */
             versions: components["schemas"]["ContentVersion"][];
+        };
+        /** CampaignBrief */
+        CampaignBrief: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Change Note */
+            change_note: string | null;
+            completeness: components["schemas"]["BriefCompleteness"];
+            content: components["schemas"]["BriefContent-Output"];
+            /** Created At */
+            created_at: string | null;
+            /** Created By */
+            created_by: string | null;
+            /** Editable */
+            editable: boolean;
+            /**
+             * Locked Reason
+             * @description Why the brief cannot be edited here (demo, archived or read-only role).
+             */
+            locked_reason: string | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            provenance: components["schemas"]["DeskProvenance"];
+            /** Saved */
+            saved: boolean;
+            /**
+             * Version
+             * @description 0 means no brief has been saved yet; `content` is then derived from the campaign record (objective and regions).
+             */
+            version: number;
+            /** Version Count */
+            version_count: number;
         };
         /** CampaignBriefContent */
         CampaignBriefContent: {
@@ -4180,6 +5139,20 @@ export interface components {
             tradeoffs: string[];
             /** Weaknesses */
             weaknesses: string[];
+        };
+        /**
+         * CapabilityCallHealth
+         * @description One AI capability's recorded calls (chat, vision, transcribe, ...) for a provider source.
+         */
+        CapabilityCallHealth: {
+            /** Attempts */
+            attempts: number;
+            /** Capability */
+            capability: string;
+            /** Errors */
+            errors: number;
+            /** Last Success At */
+            last_success_at: string | null;
         };
         /** CategoryClaims */
         CategoryClaims: {
@@ -5065,9 +6038,21 @@ export interface components {
         };
         /** CreativeVersionsContent */
         CreativeVersionsContent: {
-            /** Comparison Summary */
+            /**
+             * Comparison Summary
+             * @description Code-written comparison of the newest version with the original; null with one version.
+             */
             comparison_summary: string | null;
-            /** Versions */
+            /**
+             * Truncated
+             * @description True when the campaign has more versions than the report carries.
+             * @default false
+             */
+            truncated: boolean;
+            /**
+             * Versions
+             * @description Version nodes of the campaign, oldest first.
+             */
             versions: components["schemas"]["CreativeVersionItem"][];
         };
         /** CreativeVersionsSection */
@@ -5390,6 +6375,27 @@ export interface components {
             role: "keyframe" | "thumbnail" | "audio_track";
             /** Size Bytes */
             size_bytes: number;
+        };
+        /**
+         * DeskProvenance
+         * @description Where a record came from: typed by a person, or loaded from a labelled demonstration fixture.
+         */
+        DeskProvenance: {
+            /** Fixture Id */
+            fixture_id: string | null;
+            /** Fixture Version */
+            fixture_version: number | null;
+            /**
+             * Label
+             * @description Shown beside the record; a fixture always carries one.
+             */
+            label: string | null;
+            /**
+             * Source
+             * @default user
+             * @enum {string}
+             */
+            source: "user" | "demo_fixture";
         };
         /** DimensionDefinition */
         DimensionDefinition: {
@@ -6320,6 +7326,38 @@ export interface components {
             /** Stale Window Years */
             stale_window_years: number;
         };
+        /**
+         * GatheredInput
+         * @description One observation the server read from stored records instead of receiving it in the request.
+         */
+        GatheredInput: {
+            /**
+             * Detail
+             * @description What was read and how it maps to the observation, in plain words.
+             */
+            detail: string;
+            /**
+             * Observation
+             * @enum {string}
+             */
+            observation: "quick_read" | "risk_check" | "transcreation" | "references" | "objective_checks" | "evidence_meter" | "open_conflicts";
+            /**
+             * Record Ids
+             * @description Ids of the stored records (runs, operations, creatives, conflicts).
+             */
+            record_ids: string[];
+            /**
+             * Source
+             * @description The kind of stored record it was read from, for example quick_read_run or transcreate_operation.
+             */
+            source: string;
+            /**
+             * Synthetic
+             * @description True when the records are synthetic-panel output.
+             * @default false
+             */
+            synthetic: boolean;
+        };
         /** GlossaryTerm */
         GlossaryTerm: {
             /**
@@ -6883,6 +7921,631 @@ export interface components {
              */
             kind: "observed" | "calculated" | "synthetic" | "interpretation" | "unverified";
         };
+        /** KitClaimsPolicy */
+        "KitClaimsPolicy-Input": {
+            /**
+             * Allowed
+             * @default []
+             */
+            allowed: string[];
+            /**
+             * Forbidden
+             * @default []
+             */
+            forbidden: string[];
+        };
+        /** KitClaimsPolicy */
+        "KitClaimsPolicy-Output": {
+            /**
+             * Allowed
+             * @default []
+             */
+            allowed: string[];
+            /**
+             * Forbidden
+             * @default []
+             */
+            forbidden: string[];
+        };
+        /** KitColour */
+        "KitColour-Input": {
+            /** Hex */
+            hex: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Role */
+            role?: string | null;
+        };
+        /** KitColour */
+        "KitColour-Output": {
+            /** Hex */
+            hex: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Role */
+            role: string | null;
+        };
+        /** KitContrastPair */
+        "KitContrastPair-Input": {
+            /**
+             * Background
+             * @description Id of the background colour.
+             */
+            background: string;
+            /** Note */
+            note?: string | null;
+            /**
+             * Text
+             * @description Id of the text colour.
+             */
+            text: string;
+        };
+        /** KitContrastPair */
+        "KitContrastPair-Output": {
+            /**
+             * Background
+             * @description Id of the background colour.
+             */
+            background: string;
+            /** Note */
+            note: string | null;
+            /**
+             * Text
+             * @description Id of the text colour.
+             */
+            text: string;
+        };
+        /** KitContrastResult */
+        KitContrastResult: {
+            /** Background */
+            background: string;
+            /** Background Hex */
+            background_hex: string;
+            /**
+             * Grade
+             * @enum {string}
+             */
+            grade: "AAA" | "AA" | "AA large" | "fail";
+            /** Note */
+            note: string | null;
+            /**
+             * Ratio
+             * @description WCAG 2.x contrast ratio, calculated from the two colours and rounded to two places.
+             */
+            ratio: number;
+            /** Text */
+            text: string;
+            /** Text Hex */
+            text_hex: string;
+        };
+        /**
+         * KitDesign
+         * @description The visual and verbal identity part of the Brand Kit, replaced as a whole.
+         */
+        "KitDesign-Input": {
+            /** Category */
+            category?: string | null;
+            /**
+             * @default {
+             *       "allowed": [],
+             *       "forbidden": []
+             *     }
+             */
+            claims_policy: components["schemas"]["KitClaimsPolicy-Input"];
+            /**
+             * Colours
+             * @default []
+             */
+            colours: components["schemas"]["KitColour-Input"][];
+            /**
+             * Contrast Pairs
+             * @default []
+             */
+            contrast_pairs: components["schemas"]["KitContrastPair-Input"][];
+            /**
+             * Fictional
+             * @default false
+             */
+            fictional: boolean;
+            /**
+             * Fonts
+             * @default []
+             */
+            fonts: components["schemas"]["KitFont-Input"][];
+            /**
+             * @default {
+             *       "lockups": [],
+             *       "min_width_px": {},
+             *       "rules": []
+             *     }
+             */
+            logo: components["schemas"]["KitLogo-Input"];
+            name_check?: components["schemas"]["KitNameCheck-Input"] | null;
+            /** Name Meaning */
+            name_meaning?: string | null;
+            /**
+             * Never Change
+             * @default []
+             */
+            never_change: components["schemas"]["KitNeverChange-Input"][];
+            /**
+             * Product Images
+             * @default []
+             */
+            product_images: components["schemas"]["KitProductImage-Input"][];
+            /**
+             * Protected Term Rules
+             * @default []
+             */
+            protected_term_rules: components["schemas"]["KitProtectedTerm-Input"][];
+            tagline?: components["schemas"]["KitTagline-Input"] | null;
+            /**
+             * @default {
+             *       "do": [],
+             *       "dont": [],
+             *       "traits": []
+             *     }
+             */
+            tone_of_voice: components["schemas"]["KitTone-Input"];
+            /**
+             * Typography Rules
+             * @default []
+             */
+            typography_rules: string[];
+        };
+        /**
+         * KitDesign
+         * @description The visual and verbal identity part of the Brand Kit, replaced as a whole.
+         */
+        "KitDesign-Output": {
+            /** Category */
+            category: string | null;
+            /**
+             * @default {
+             *       "allowed": [],
+             *       "forbidden": []
+             *     }
+             */
+            claims_policy: components["schemas"]["KitClaimsPolicy-Output"];
+            /**
+             * Colours
+             * @default []
+             */
+            colours: components["schemas"]["KitColour-Output"][];
+            /**
+             * Contrast Pairs
+             * @default []
+             */
+            contrast_pairs: components["schemas"]["KitContrastPair-Output"][];
+            /**
+             * Fictional
+             * @default false
+             */
+            fictional: boolean;
+            /**
+             * Fonts
+             * @default []
+             */
+            fonts: components["schemas"]["KitFont-Output"][];
+            /**
+             * @default {
+             *       "lockups": [],
+             *       "min_width_px": {},
+             *       "rules": []
+             *     }
+             */
+            logo: components["schemas"]["KitLogo-Output"];
+            name_check: components["schemas"]["KitNameCheck-Output"] | null;
+            /** Name Meaning */
+            name_meaning: string | null;
+            /**
+             * Never Change
+             * @default []
+             */
+            never_change: components["schemas"]["KitNeverChange-Output"][];
+            /**
+             * Product Images
+             * @default []
+             */
+            product_images: components["schemas"]["KitProductImage-Output"][];
+            /**
+             * Protected Term Rules
+             * @default []
+             */
+            protected_term_rules: components["schemas"]["KitProtectedTerm-Output"][];
+            tagline: components["schemas"]["KitTagline-Output"] | null;
+            /**
+             * @default {
+             *       "do": [],
+             *       "dont": [],
+             *       "traits": []
+             *     }
+             */
+            tone_of_voice: components["schemas"]["KitTone-Output"];
+            /**
+             * Typography Rules
+             * @default []
+             */
+            typography_rules: string[];
+        };
+        /** KitFont */
+        "KitFont-Input": {
+            /** Family */
+            family: string;
+            /** License */
+            license?: string | null;
+            /** Role */
+            role?: string | null;
+            /** Scripts */
+            scripts: string[];
+            /** Source */
+            source?: string | null;
+            /**
+             * Weights
+             * @default []
+             */
+            weights: number[];
+        };
+        /** KitFont */
+        "KitFont-Output": {
+            /** Family */
+            family: string;
+            /** License */
+            license: string | null;
+            /** Role */
+            role: string | null;
+            /** Scripts */
+            scripts: string[];
+            /** Source */
+            source: string | null;
+            /**
+             * Weights
+             * @default []
+             */
+            weights: number[];
+        };
+        /**
+         * KitGlossaryLink
+         * @description The Brand Glossary lives in Creative Studio (`/campaigns/{id}/glossary`); this is its size, for the Brand Kit panel.
+         */
+        KitGlossaryLink: {
+            /** Languages */
+            languages: string[];
+            /** Never Translate Count */
+            never_translate_count: number;
+            /** Protected Count */
+            protected_count: number;
+            /** Term Count */
+            term_count: number;
+        };
+        /** KitLockup */
+        "KitLockup-Input": {
+            /**
+             * Asset Id
+             * @description The uploaded asset that holds the raster file, when linked.
+             */
+            asset_id?: string | null;
+            /** Id */
+            id: string;
+            /**
+             * Source Path
+             * @description The raster file (PNG) as named in the source material.
+             */
+            source_path?: string | null;
+            /** Use */
+            use: string;
+            /**
+             * Vector Path
+             * @description The vector original; reference only, not uploadable here.
+             */
+            vector_path?: string | null;
+        };
+        /** KitLockup */
+        "KitLockup-Output": {
+            /**
+             * Asset Id
+             * @description The uploaded asset that holds the raster file, when linked.
+             */
+            asset_id: string | null;
+            /** Id */
+            id: string;
+            /**
+             * Source Path
+             * @description The raster file (PNG) as named in the source material.
+             */
+            source_path: string | null;
+            /** Use */
+            use: string;
+            /**
+             * Vector Path
+             * @description The vector original; reference only, not uploadable here.
+             */
+            vector_path: string | null;
+        };
+        /** KitLogo */
+        "KitLogo-Input": {
+            /** Clear Space */
+            clear_space?: string | null;
+            /** Description */
+            description?: string | null;
+            /**
+             * Lockups
+             * @default []
+             */
+            lockups: components["schemas"]["KitLockup-Input"][];
+            /**
+             * Min Width Px
+             * @default {}
+             */
+            min_width_px: {
+                [key: string]: number;
+            };
+            /**
+             * Rules
+             * @default []
+             */
+            rules: string[];
+        };
+        /** KitLogo */
+        "KitLogo-Output": {
+            /** Clear Space */
+            clear_space: string | null;
+            /** Description */
+            description: string | null;
+            /**
+             * Lockups
+             * @default []
+             */
+            lockups: components["schemas"]["KitLockup-Output"][];
+            /**
+             * Min Width Px
+             * @default {}
+             */
+            min_width_px: {
+                [key: string]: number;
+            };
+            /**
+             * Rules
+             * @default []
+             */
+            rules: string[];
+        };
+        /** KitNameCandidate */
+        KitNameCandidate: {
+            /** Name */
+            name: string;
+            /** Reason */
+            reason: string;
+        };
+        /** KitNameCheck */
+        "KitNameCheck-Input": {
+            /** Checked At */
+            checked_at?: string | null;
+            /** Method */
+            method?: string | null;
+            /**
+             * Rejected Candidates
+             * @default []
+             */
+            rejected_candidates: components["schemas"]["KitNameCandidate"][];
+            /** Result */
+            result?: string | null;
+        };
+        /** KitNameCheck */
+        "KitNameCheck-Output": {
+            /** Checked At */
+            checked_at: string | null;
+            /** Method */
+            method: string | null;
+            /**
+             * Rejected Candidates
+             * @default []
+             */
+            rejected_candidates: components["schemas"]["KitNameCandidate"][];
+            /** Result */
+            result: string | null;
+        };
+        /**
+         * KitNeverChange
+         * @description A zone or element that adaptations must not alter. Locks in Creative Studio enforce it on versions.
+         */
+        "KitNeverChange-Input": {
+            /**
+             * Assets
+             * @default []
+             */
+            assets: string[];
+            /** Bbox Note */
+            bbox_note?: string | null;
+            /** Description */
+            description: string;
+            /** Id */
+            id: string;
+            /**
+             * Regions
+             * @description Named boxes, normalised [x, y, width, height].
+             * @default {}
+             */
+            regions: {
+                [key: string]: number[];
+            };
+            /** Text */
+            text?: string | null;
+        };
+        /**
+         * KitNeverChange
+         * @description A zone or element that adaptations must not alter. Locks in Creative Studio enforce it on versions.
+         */
+        "KitNeverChange-Output": {
+            /**
+             * Assets
+             * @default []
+             */
+            assets: string[];
+            /** Bbox Note */
+            bbox_note: string | null;
+            /** Description */
+            description: string;
+            /** Id */
+            id: string;
+            /**
+             * Regions
+             * @description Named boxes, normalised [x, y, width, height].
+             * @default {}
+             */
+            regions: {
+                [key: string]: number[];
+            };
+            /** Text */
+            text: string | null;
+        };
+        /** KitProductImage */
+        "KitProductImage-Input": {
+            /** Asset Id */
+            asset_id?: string | null;
+            /** Background */
+            background?: string | null;
+            /** Description */
+            description?: string | null;
+            /** Height */
+            height?: number | null;
+            /** Id */
+            id: string;
+            /** Provenance */
+            provenance?: string | null;
+            /** Source Path */
+            source_path?: string | null;
+            /** Width */
+            width?: number | null;
+        };
+        /** KitProductImage */
+        "KitProductImage-Output": {
+            /** Asset Id */
+            asset_id: string | null;
+            /** Background */
+            background: string | null;
+            /** Description */
+            description: string | null;
+            /** Height */
+            height: number | null;
+            /** Id */
+            id: string;
+            /** Provenance */
+            provenance: string | null;
+            /** Source Path */
+            source_path: string | null;
+            /** Width */
+            width: number | null;
+        };
+        /** KitProtectedTerm */
+        "KitProtectedTerm-Input": {
+            /** Rule */
+            rule?: string | null;
+            /** Term */
+            term: string;
+        };
+        /** KitProtectedTerm */
+        "KitProtectedTerm-Output": {
+            /** Rule */
+            rule: string | null;
+            /** Term */
+            term: string;
+        };
+        /** KitTagline */
+        "KitTagline-Input": {
+            /** Language */
+            language?: string | null;
+            /**
+             * Locked
+             * @default false
+             */
+            locked: boolean;
+            /** Note */
+            note?: string | null;
+            /** Script */
+            script?: string | null;
+            /** Text */
+            text: string;
+            /**
+             * Translate
+             * @default true
+             */
+            translate: boolean;
+        };
+        /** KitTagline */
+        "KitTagline-Output": {
+            /** Language */
+            language: string | null;
+            /**
+             * Locked
+             * @default false
+             */
+            locked: boolean;
+            /** Note */
+            note: string | null;
+            /** Script */
+            script: string | null;
+            /** Text */
+            text: string;
+            /**
+             * Translate
+             * @default true
+             */
+            translate: boolean;
+        };
+        /** KitTone */
+        "KitTone-Input": {
+            /**
+             * Do
+             * @default []
+             */
+            do: string[];
+            /**
+             * Dont
+             * @default []
+             */
+            dont: string[];
+            /** Summary */
+            summary?: string | null;
+            /**
+             * Traits
+             * @default []
+             */
+            traits: string[];
+        };
+        /** KitTone */
+        "KitTone-Output": {
+            /**
+             * Do
+             * @default []
+             */
+            do: string[];
+            /**
+             * Dont
+             * @default []
+             */
+            dont: string[];
+            /** Summary */
+            summary: string | null;
+            /**
+             * Traits
+             * @default []
+             */
+            traits: string[];
+        };
+        /** KitUpdate */
+        KitUpdate: {
+            design: components["schemas"]["KitDesign-Input"];
+            /**
+             * Expected Revision
+             * @description The revision the editor was looking at; a different current revision is a 409.
+             */
+            expected_revision?: number | null;
+        };
         /** LegendItem */
         LegendItem: {
             /** Description */
@@ -6894,6 +8557,753 @@ export interface components {
             kind: "audience_group" | "region" | "interest" | "evidence" | "campaign_element" | "theme" | "reaction" | "recommendation" | "campaign_version" | "participant" | "post";
             /** Label */
             label: string;
+        };
+        /** LensAtlas */
+        LensAtlas: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Mode Label */
+            mode_label: string;
+            /** Sources */
+            sources: components["schemas"]["LensSourceSummary"][];
+            /**
+             * States
+             * @description Every state and union territory, evidence strength included even when weak or empty.
+             */
+            states: components["schemas"]["LensAtlasState"][];
+            summary: components["schemas"]["LensAtlasSummary"];
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /** LensAtlasState */
+        LensAtlasState: {
+            /**
+             * Built
+             * @description A profile build exists for this state in this mode.
+             */
+            built: boolean;
+            /** Categories Covered */
+            categories_covered: number;
+            /** Categories Total */
+            categories_total: number;
+            /** Claims */
+            claims: number;
+            /** Code */
+            code: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "state" | "union_territory";
+            last_build: components["schemas"]["LensBuildView"] | null;
+            /** Missing Categories */
+            missing_categories: string[];
+            /** Name */
+            name: string;
+            /** Newest Source Date */
+            newest_source_date: string | null;
+            /** Open Conflicts */
+            open_conflicts: number;
+            /** Primary Language */
+            primary_language: string | null;
+            /** Primary Script */
+            primary_script: string | null;
+            /** Source Types */
+            source_types: string[];
+            /** Sources */
+            sources: number;
+            /** Stale Claims */
+            stale_claims: number;
+            /**
+             * Strength
+             * @enum {string}
+             */
+            strength: "weak" | "partial" | "solid";
+            /** Strength Reasons */
+            strength_reasons: string[];
+            /** Supported Claims */
+            supported_claims: number;
+        };
+        /** LensAtlasSummary */
+        LensAtlasSummary: {
+            /** Claims */
+            claims: number;
+            /** Open Conflicts */
+            open_conflicts: number;
+            /** Partial */
+            partial: number;
+            /** Solid */
+            solid: number;
+            /** States Total */
+            states_total: number;
+            /** States With Claims */
+            states_with_claims: number;
+            /** Weak */
+            weak: number;
+        };
+        /** LensBuildBatch */
+        LensBuildBatch: {
+            /** Builds */
+            builds: components["schemas"]["LensBuildView"][];
+        };
+        /** LensBuildPage */
+        LensBuildPage: {
+            /** Items */
+            items: components["schemas"]["LensBuildView"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** LensBuildRequest */
+        LensBuildRequest: {
+            /**
+             * Include Grounding
+             * @description Live only. Add one Gemini Google-Search grounded research answer per region (costs credit; always an interpretation).
+             * @default false
+             */
+            include_grounding: boolean;
+            /**
+             * Include Trends
+             * @description Read Wikipedia pageviews for the festivals cited (live: network calls; labelled attention, not demand).
+             * @default true
+             */
+            include_trends: boolean;
+            /**
+             * Region Codes
+             * @description States and union territories to build (ISO 3166-2:IN). Live builds take at most 6 per request.
+             */
+            region_codes: string[];
+            /**
+             * Years
+             * @description Calendar years whose public holidays are gathered. Default: this year and the next.
+             */
+            years?: number[] | null;
+        };
+        /**
+         * LensBuildView
+         * @description One saved, versioned build of a region profile. `version` counts builds per workspace, region and mode.
+         */
+        LensBuildView: {
+            /**
+             * Calls
+             * @description The source calls of this build; empty in build lists.
+             */
+            calls: components["schemas"]["LensCallView"][];
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Categories */
+            categories: {
+                [key: string]: number;
+            };
+            /**
+             * Claim Count
+             * @description Claims this build gathered (after merging equal statements).
+             */
+            claim_count: number;
+            /** Conflicts Opened */
+            conflicts_opened: number;
+            /** Created Claims */
+            created_claims: number;
+            /** Error */
+            error: string | null;
+            /**
+             * Finished At
+             * Format: date-time
+             */
+            finished_at: string;
+            /**
+             * Gaps
+             * @description What is missing: empty categories, failed sources, sources that are not configured.
+             */
+            gaps: string[];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Include Grounding */
+            include_grounding: boolean;
+            /** Include Trends */
+            include_trends: boolean;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Rejected Claims */
+            rejected_claims: number;
+            /** Sources Skipped */
+            sources_skipped: string[];
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /**
+             * Status
+             * @description completed: every source answered; partial: some failed or are not configured; failed: nothing stored.
+             * @enum {string}
+             */
+            status: "completed" | "partial" | "failed";
+            /**
+             * Updated Claims
+             * @description Claims already stored that gained a source or a newer retrieval date.
+             */
+            updated_claims: number;
+            /** Version */
+            version: number;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+            /** Years */
+            years: number[];
+        };
+        /** LensCalendar */
+        LensCalendar: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Conflicts */
+            conflicts: components["schemas"]["Conflict"][];
+            /** Gaps */
+            gaps: string[];
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Mode Label */
+            mode_label: string;
+            /** Months */
+            months: components["schemas"]["LensCalendarMonth"][];
+            region: components["schemas"]["Region"];
+            /** Sources */
+            sources: components["schemas"]["LensSourceSummary"][];
+            /** Timed */
+            timed: components["schemas"]["LensTimedMoment"][];
+            window: components["schemas"]["LensWindow"] | null;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+            /** Year */
+            year: number;
+            /**
+             * Years Available
+             * @description Years with stored public-holiday dates for this state. Other years need a build that includes them.
+             */
+            years_available: number[];
+        };
+        /** LensCalendarMonth */
+        LensCalendarMonth: {
+            /** Dated */
+            dated: components["schemas"]["LensDatedMoment"][];
+            /** Month */
+            month: number;
+            /** Name */
+            name: string;
+        };
+        /** LensCallView */
+        LensCallView: {
+            /** Cached */
+            cached: boolean;
+            /** Duration Ms */
+            duration_ms: number;
+            /** Error */
+            error: string | null;
+            /**
+             * Error Type
+             * @description timeout, network, rate_limited, http, auth, validation, not_configured or an adapter error name.
+             */
+            error_type: string | null;
+            /** Operation */
+            operation: string;
+            /** Result Count */
+            result_count: number;
+            /**
+             * Retrieved At
+             * Format: date-time
+             */
+            retrieved_at: string;
+            /** Source */
+            source: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ok" | "empty" | "error";
+        };
+        /** LensCodeMixing */
+        LensCodeMixing: {
+            /** Note */
+            note: string;
+            /**
+             * Status
+             * @constant
+             */
+            status: "no_sourced_claims";
+        };
+        /** LensCompare */
+        LensCompare: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Mode Label */
+            mode_label: string;
+            /** Regions */
+            regions: components["schemas"]["LensCompareRegion"][];
+            /** Rows */
+            rows: components["schemas"]["LensCompareRow"][];
+            /** Sources */
+            sources: components["schemas"]["LensSourceSummary"][];
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /** LensCompareCell */
+        LensCompareCell: {
+            /** Items */
+            items: components["schemas"]["LensCompareItem"][];
+            /**
+             * Missing
+             * @description No claim in this dimension for this state: a gap in the evidence, not a statement about the state.
+             */
+            missing: boolean;
+            /** Region Code */
+            region_code: string;
+            /**
+             * Total
+             * @description Claims in this cell before the display limit.
+             */
+            total: number;
+        };
+        /** LensCompareItem */
+        LensCompareItem: {
+            /**
+             * Also In
+             * @description Other compared states with a sourced claim on the same subject. Absence elsewhere means no claim was found, not that the thing does not exist.
+             */
+            also_in: string[];
+            /** Attribute */
+            attribute: string;
+            /**
+             * Claim Id
+             * Format: uuid
+             */
+            claim_id: string;
+            /**
+             * Confidence
+             * @description Effective confidence: one level lower while the claim is in an open conflict.
+             * @enum {string}
+             */
+            confidence: "low" | "moderate" | "high";
+            /** In Conflict */
+            in_conflict: boolean;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "observed" | "calculated" | "synthetic" | "interpretation" | "unverified";
+            /** Label */
+            label: string;
+            /** Newest Source Date */
+            newest_source_date: string | null;
+            /** Source Count */
+            source_count: number;
+            /** Stale */
+            stale: boolean;
+            /** Subject */
+            subject: string;
+        };
+        /** LensCompareRegion */
+        LensCompareRegion: {
+            /** Built */
+            built: boolean;
+            /** Categories Covered */
+            categories_covered: number;
+            /** Categories Total */
+            categories_total: number;
+            /** Claims */
+            claims: number;
+            /** High */
+            high: number;
+            /** Low */
+            low: number;
+            /** Missing Categories */
+            missing_categories: string[];
+            /** Moderate */
+            moderate: number;
+            /** Newest Source Date */
+            newest_source_date: string | null;
+            /** Open Conflicts */
+            open_conflicts: number;
+            region: components["schemas"]["Region"];
+            /** Sources */
+            sources: number;
+            /** Stale Claims */
+            stale_claims: number;
+            /**
+             * Strength
+             * @enum {string}
+             */
+            strength: "weak" | "partial" | "solid";
+            /** Strength Reasons */
+            strength_reasons: string[];
+            /** Supported Claims */
+            supported_claims: number;
+        };
+        /** LensCompareRow */
+        LensCompareRow: {
+            /** Categories */
+            categories: string[];
+            /** Cells */
+            cells: components["schemas"]["LensCompareCell"][];
+            /** Key */
+            key: string;
+            /**
+             * Shared Subjects
+             * @description Subjects with a sourced claim in every compared state.
+             */
+            shared_subjects: number;
+            /** Title */
+            title: string;
+        };
+        /**
+         * LensDatedMoment
+         * @description A moment with an exact date for the selected year: a claim whose value carries the date.
+         */
+        LensDatedMoment: {
+            /**
+             * Also Stated By
+             * @description Other claims that give the same date for the same subject (a second source that agrees).
+             */
+            also_stated_by: components["schemas"]["ClaimView"][];
+            claim: components["schemas"]["ClaimView"];
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /**
+             * Date Basis
+             * @enum {string}
+             */
+            date_basis: "public_holiday_list" | "source_text";
+            /**
+             * Festival Subject
+             * @description The festival entry this date corresponds to, when the source list links them.
+             */
+            festival_subject: string | null;
+            /**
+             * In Window
+             * @description Inside the requested campaign window; null when no window was requested.
+             */
+            in_window: boolean | null;
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /** Subject */
+            subject: string;
+        };
+        /** LensElsewhere */
+        LensElsewhere: {
+            /** Claims */
+            claims: number;
+            /** Label */
+            label: string;
+            /**
+             * View
+             * @enum {string}
+             */
+            view: "calendar" | "language_map";
+        };
+        /** LensLanguageEntry */
+        LensLanguageEntry: {
+            /** Code */
+            code: string | null;
+            /** Disputed */
+            disputed: boolean;
+            /** Name */
+            name: string;
+            /** Native Name */
+            native_name: string | null;
+            /**
+             * Role
+             * @description From the reference table (principal or additional official language); not a speaker share. Null for census-only languages.
+             */
+            role: ("primary" | "secondary" | "code_mixed") | null;
+            /** Script */
+            script: string | null;
+            /**
+             * Shares
+             * @description Census 2011 mother-tongue shares. More than one value means sources disagree; all are kept.
+             */
+            shares: components["schemas"]["LensShare"][];
+        };
+        /** LensLanguageMap */
+        LensLanguageMap: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            code_mixing: components["schemas"]["LensCodeMixing"];
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Mode Label */
+            mode_label: string;
+            /**
+             * Period
+             * @description The census year the shares describe.
+             */
+            period: string;
+            /** Regions */
+            regions: components["schemas"]["LensLanguageRegion"][];
+            /** Sources */
+            sources: components["schemas"]["LensSourceSummary"][];
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /** LensLanguageRegion */
+        LensLanguageRegion: {
+            /**
+             * Conflicts
+             * @description Conflicts between share claims of this state; both values stay in `shares`.
+             */
+            conflicts: components["schemas"]["Conflict"][];
+            /** Has Census */
+            has_census: boolean;
+            /** Languages */
+            languages: components["schemas"]["LensLanguageEntry"][];
+            /** Primary Language */
+            primary_language: string | null;
+            /** Primary Script */
+            primary_script: string | null;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+        };
+        /** LensProfileSection */
+        LensProfileSection: {
+            /** Categories */
+            categories: string[];
+            /** Claims */
+            claims: components["schemas"]["ClaimView"][];
+            /** Description */
+            description: string;
+            /**
+             * Elsewhere
+             * @description Claims of these categories that are shown in another Lens view instead.
+             */
+            elsewhere: components["schemas"]["LensElsewhere"][];
+            /**
+             * Empty Reason
+             * @description Why the section is empty; null when it has claims.
+             */
+            empty_reason: string | null;
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "languages" | "festivals" | "references" | "tone" | "trends";
+            /** Title */
+            title: string;
+        };
+        /** LensShare */
+        LensShare: {
+            /** @description The calculated share claim, with its sources. */
+            claim: components["schemas"]["ClaimView"];
+            /** Percent */
+            percent: number;
+            /** Speakers */
+            speakers: number | null;
+        };
+        /**
+         * LensSourceSummary
+         * @description A source family behind the claims on a page, with its dates and its limits, so every page states what it rests on.
+         */
+        LensSourceSummary: {
+            /** Claims */
+            claims: number;
+            /** Description */
+            description: string;
+            /** Label */
+            label: string;
+            /** Limitations */
+            limitations: string[];
+            /** Newest Published At */
+            newest_published_at: string | null;
+            /** Newest Retrieved At */
+            newest_retrieved_at: string | null;
+            /** Oldest Published At */
+            oldest_published_at: string | null;
+            /** Source Type */
+            source_type: string;
+            /**
+             * Sources
+             * @description Distinct sources (pages, tables, packages) cited.
+             */
+            sources: number;
+        };
+        /** LensStateProfile */
+        LensStateProfile: {
+            /** @description The latest build; null when the state has never been built in this mode. */
+            build: components["schemas"]["LensBuildView"] | null;
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Conflicts */
+            conflicts: components["schemas"]["Conflict"][];
+            /** Gaps */
+            gaps: string[];
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Limitations */
+            limitations: string[];
+            meter: components["schemas"]["EvidenceMeter"];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Mode Label */
+            mode_label: string;
+            region: components["schemas"]["Region"];
+            /** Sections */
+            sections: components["schemas"]["LensProfileSection"][];
+            /** Sources */
+            sources: components["schemas"]["LensSourceSummary"][];
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /**
+         * LensTimedMoment
+         * @description A festival or moment a source describes without an exact date for the year. Months named are read from the text.
+         */
+        LensTimedMoment: {
+            /** Conflict Ids */
+            conflict_ids: string[];
+            /**
+             * Dated For Year
+             * @description Exact dates of linked public-holiday entries in the selected year.
+             */
+            dated_for_year: string[];
+            /**
+             * May Overlap Window
+             * @description A month named in the timing text falls inside the requested window; null without a window.
+             */
+            may_overlap_window: boolean | null;
+            /** Months Named */
+            months_named: number[];
+            /** Name */
+            name: string;
+            /** Subject */
+            subject: string;
+            /** Timings */
+            timings: components["schemas"]["LensTiming"][];
+        };
+        /** LensTiming */
+        LensTiming: {
+            /** Attribute */
+            attribute: string;
+            claim: components["schemas"]["ClaimView"];
+            /**
+             * Text
+             * @description The timing exactly as the source states it.
+             */
+            text: string;
+        };
+        /** LensWindow */
+        LensWindow: {
+            /**
+             * Date From
+             * Format: date
+             */
+            date_from: string;
+            /**
+             * Date To
+             * Format: date
+             */
+            date_to: string;
         };
         /** LimitationsContent */
         LimitationsContent: {
@@ -6930,8 +9340,15 @@ export interface components {
         };
         /** LivePerformanceContent */
         LivePerformanceContent: {
+            /** Dataset Version */
+            dataset_version: string | null;
             /** Items */
             items: components["schemas"]["LivePerformanceItem"][];
+            /**
+             * Note
+             * @default
+             */
+            note: string;
             /**
              * Sample Data
              * @description True when the figures are a labelled sample, not a connected account.
@@ -6957,6 +9374,11 @@ export interface components {
             source: string;
             /** Value */
             value: number | string | null;
+            /**
+             * Version Label
+             * @description The creative version the figures belong to, as the data source labels it.
+             */
+            version_label: string | null;
         };
         /** LivePerformanceSection */
         LivePerformanceSection: {
@@ -7483,6 +9905,16 @@ export interface components {
             /** Version Label */
             version_label: string | null;
         };
+        /** MissingInput */
+        MissingInput: {
+            /**
+             * Observation
+             * @enum {string}
+             */
+            observation: "quick_read" | "risk_check" | "transcreation" | "references" | "objective_checks" | "evidence_meter" | "open_conflicts";
+            /** Reason */
+            reason: string;
+        };
         /** MissingSection */
         MissingSection: {
             /**
@@ -7555,6 +9987,30 @@ export interface components {
              * @description The query term or entity id the observations are matched on.
              */
             reference_key: string;
+        };
+        /**
+         * ObservationSources
+         * @description Where one version's observations came from. `supplied`: the request carried them and nothing was read. `gathered`:
+         *     the request carried none, so the server read the latest relevant stored records; `missing` says what it could not
+         *     find, and a missing observation is scored as missing, never assumed.
+         */
+        ObservationSources: {
+            /** Gathered */
+            gathered: components["schemas"]["GatheredInput"][];
+            /** Missing */
+            missing: components["schemas"]["MissingInput"][];
+            /** Notes */
+            notes: string[];
+            /**
+             * Origin
+             * @enum {string}
+             */
+            origin: "supplied" | "gathered";
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
         };
         /** OnScreenText */
         OnScreenText: {
@@ -9352,6 +11808,8 @@ export interface components {
         };
         /** ReadinessContent */
         ReadinessContent: {
+            /** Computed At */
+            computed_at: string | null;
             /** Confidence Limitations */
             confidence_limitations: string[];
             /** Highest Priority Issue */
@@ -9366,8 +11824,21 @@ export interface components {
             main_reason: string;
             /** Next Action */
             next_action: string;
+            /**
+             * Note
+             * @default A recommendation computed by fixed rules. It is not an approval and not a forecast.
+             */
+            note: string;
             /** Open Conflicts */
             open_conflicts: number;
+            /**
+             * Other Verdicts
+             * @description The newest verdict of every other region and version, newest first. The headline is the newest overall.
+             * @default []
+             */
+            other_verdicts: components["schemas"]["ReadinessVerdictRef"][];
+            /** Region Code */
+            region_code: string | null;
             /** Rule Version */
             rule_version: string;
             /**
@@ -9375,6 +11846,10 @@ export interface components {
              * @enum {string}
              */
             verdict: "go" | "fix" | "rethink";
+            /** Verdict Id */
+            verdict_id: string | null;
+            /** Version Id */
+            version_id: string | null;
         };
         /** ReadinessDependencies */
         ReadinessDependencies: {
@@ -9439,12 +11914,14 @@ export interface components {
              * @default Version
              */
             label: string;
-            observations: components["schemas"]["VersionObservations"];
+            /** @description Omit to have the server gather them from the latest stored records (see ScoreVersionInput.observations). */
+            observations?: components["schemas"]["VersionObservations"] | null;
             /** Region Code */
             region_code: string;
             /**
              * Version Id
              * Format: uuid
+             * @description A Creative Studio version of the campaign.
              */
             version_id: string;
         };
@@ -9558,6 +12035,8 @@ export interface components {
             mode: "live" | "demo";
             /** Next Action */
             next_action: string;
+            /** @description How the observations were obtained; null for a verdict stored before gathering existed. */
+            observation_sources: components["schemas"]["ObservationSources"] | null;
             /** Open Conflicts */
             open_conflicts: components["schemas"]["OpenConflictInput-Output"][];
             provenance: components["schemas"]["Provenance-Output"];
@@ -9584,6 +12063,33 @@ export interface components {
              * @enum {string}
              */
             verdict: "go" | "fix" | "rethink";
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** ReadinessVerdictRef */
+        ReadinessVerdictRef: {
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Main Reason */
+            main_reason: string;
+            /** Region Code */
+            region_code: string;
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "go" | "fix" | "rethink";
+            /**
+             * Verdict Id
+             * Format: uuid
+             */
+            verdict_id: string;
             /**
              * Version Id
              * Format: uuid
@@ -10619,17 +13125,37 @@ export interface components {
             /** Ad Code Ref */
             ad_code_ref: string | null;
             anchor: components["schemas"]["Anchor-Output"] | null;
+            /**
+             * Blocks Go
+             * @description Computed by risk-rules-v1; counts toward the readiness verdict while unresolved.
+             * @default false
+             */
+            blocks_go: boolean;
             /** Category */
             category: string;
+            /**
+             * Claim Ids
+             * @default []
+             */
+            claim_ids: string[];
             /** Description */
             description: string;
             /** Id */
             id: string;
             /**
+             * Interpretation
+             * @description Why it may matter; a model interpretation unless kind is calculated.
+             */
+            interpretation: string | null;
+            /**
              * Kind
              * @enum {string}
              */
             kind: "observed" | "calculated" | "synthetic" | "interpretation" | "unverified";
+            /** Region Code */
+            region_code: string | null;
+            /** Run Id */
+            run_id: string | null;
             /**
              * Severity
              * @enum {string}
@@ -10637,6 +13163,8 @@ export interface components {
             severity: "low" | "medium" | "high";
             /** Status */
             status: string | null;
+            /** Suggested Fix */
+            suggested_fix: string | null;
         };
         /** RiskFindingUpdate */
         RiskFindingUpdate: {
@@ -10657,6 +13185,12 @@ export interface components {
             disclaimer: string;
             /** Findings */
             findings: components["schemas"]["RiskFindingItem"][];
+            /**
+             * Run Ids
+             * @description The Risk Check runs the findings come from (newest usable run per region).
+             * @default []
+             */
+            run_ids: string[];
         };
         /** RiskFindingsSection */
         RiskFindingsSection: {
@@ -11633,6 +14167,12 @@ export interface components {
             methodology: components["schemas"]["ScoringMethodology"];
             /** Notes */
             notes: string[];
+            /**
+             * Observation Sources
+             * @description Per version: supplied or gathered, what was read, and what was missing.
+             * @default []
+             */
+            observation_sources: components["schemas"]["ObservationSources"][];
             /** Ranking */
             ranking: components["schemas"]["RankedVersion"][];
             /** Region Code */
@@ -11647,7 +14187,8 @@ export interface components {
         ScoreVersionInput: {
             /** Label */
             label: string;
-            observations: components["schemas"]["VersionObservations"];
+            /** @description Omit to have the server gather them from the latest stored Quick Read, Risk Check, transcreation and X-Ray records for this campaign, region and version (the version must then be a Creative Studio version of the campaign). Supplied observations are used as sent and nothing is gathered. */
+            observations?: components["schemas"]["VersionObservations"] | null;
             /**
              * Version Id
              * Format: uuid
@@ -12295,6 +14836,11 @@ export interface components {
              * @enum {string}
              */
             cache_state: "fixture" | "stored_live" | "mixed" | "none";
+            /**
+             * Capabilities
+             * @description Per capability call counts, for sources that are AI providers (vertex_ai).
+             */
+            capabilities: components["schemas"]["CapabilityCallHealth"][];
             /** Claims */
             claims: number;
             /** Errors */
@@ -12321,6 +14867,11 @@ export interface components {
              * @description Newest successful retrieval stored.
              */
             last_retrieved_at: string | null;
+            /**
+             * Last Success At
+             * @description Newest successful recorded call; null when none, or when attempts are not logged.
+             */
+            last_success_at: string | null;
             /** Limitations */
             limitations: string[];
             /** Live Claims */
@@ -12874,6 +15425,183 @@ export interface components {
              */
             source_kind: "sample";
         };
+        /** TodayCampaign */
+        TodayCampaign: {
+            /** Brand Name */
+            brand_name: string;
+            /** Brief Complete */
+            brief_complete: boolean;
+            /** Brief Missing */
+            brief_missing: ("objective" | "origin_region" | "target_regions" | "languages" | "channels" | "budget" | "dates" | "success_metric")[];
+            /** Brief Version */
+            brief_version: number;
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Last Activity At */
+            last_activity_at: string | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Name */
+            name: string;
+            /** Next Actions */
+            next_actions: components["schemas"]["TodayNextAction"][];
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Readiness */
+            readiness: components["schemas"]["TodayReadiness"][];
+            /** Region Codes */
+            region_codes: string[];
+        };
+        /** TodayConflict */
+        TodayConflict: {
+            /** Campaign Ids */
+            campaign_ids: string[];
+            /** Claim A */
+            claim_a: string;
+            /** Claim B */
+            claim_b: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Reason */
+            reason: string;
+            /** Region Code */
+            region_code: string | null;
+            /** Region Name */
+            region_name: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "review_requested";
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /** TodayEvent */
+        TodayEvent: {
+            /** Actor */
+            actor: ("user" | "ai" | "system") | null;
+            /**
+             * At
+             * Format: date-time
+             */
+            at: string;
+            /** Brand Name */
+            brand_name: string;
+            /** Campaign Id */
+            campaign_id: string | null;
+            /** Campaign Name */
+            campaign_name: string | null;
+            /** Detail */
+            detail: string | null;
+            /** Id */
+            id: string;
+            /** Kind */
+            kind: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /**
+             * Project Id
+             * Format: uuid
+             */
+            project_id: string;
+            /** Title */
+            title: string;
+            /**
+             * Workspace
+             * @enum {string}
+             */
+            workspace: "desk" | "lens" | "studio" | "lab" | "launch" | "pulse" | "proof";
+        };
+        /** TodayNextAction */
+        TodayNextAction: {
+            /** Id */
+            id: string;
+            /**
+             * Priority
+             * @description 1 needs a person soonest.
+             */
+            priority: number;
+            /** Reason */
+            reason: string;
+            /** Title */
+            title: string;
+            /**
+             * Workspace
+             * @enum {string}
+             */
+            workspace: "desk" | "lens" | "studio" | "lab" | "launch" | "pulse" | "proof";
+        };
+        /** TodayReadiness */
+        TodayReadiness: {
+            /**
+             * Computed At
+             * Format: date-time
+             */
+            computed_at: string;
+            /** Main Reason */
+            main_reason: string;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Rule Version */
+            rule_version: string;
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "go" | "fix" | "rethink";
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** TodayView */
+        TodayView: {
+            /**
+             * Activity
+             * @description Newest first, from the rows each workspace wrote. Live Pulse writes none.
+             */
+            activity: components["schemas"]["TodayEvent"][];
+            /** Campaigns */
+            campaigns: components["schemas"]["TodayCampaign"][];
+            /**
+             * Conflicts
+             * @description Open and review-requested evidence conflicts in the caller's workspaces.
+             */
+            conflicts: components["schemas"]["TodayConflict"][];
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Limitations */
+            limitations: string[];
+        };
         /**
          * Tone
          * @description Tone Dials. Every dial is 0-100 and changes the parameters passed to generation (see app.studio.checks).
@@ -12998,6 +15726,12 @@ export interface components {
         TranscreationContent: {
             /** Items */
             items: components["schemas"]["TranscreationItem"][];
+            /**
+             * Truncated
+             * @description True when there were more lines than the report carries.
+             * @default false
+             */
+            truncated: boolean;
         };
         /** TranscreationItem */
         TranscreationItem: {
@@ -13701,8 +16435,26 @@ export interface components {
         };
         /** XRayContent */
         XRayContent: {
+            /**
+             * Creatives
+             * @description Creatives whose current analysis the findings come from.
+             * @default 0
+             */
+            creatives: number;
             /** Findings */
             findings: components["schemas"]["XRayFinding"][];
+            /**
+             * Scenes
+             * @description Scenes read.
+             * @default 0
+             */
+            scenes: number;
+            /**
+             * Truncated
+             * @description True when there were more findings than the report carries.
+             * @default false
+             */
+            truncated: boolean;
         };
         /**
          * XRayCreate
@@ -13732,8 +16484,20 @@ export interface components {
             anchor: components["schemas"]["Anchor-Output"] | null;
             /** Claim Ids */
             claim_ids: string[];
-            /** Confidence */
+            /**
+             * Confidence
+             * @description Null: no confidence is computed for an X-Ray reading.
+             */
             confidence: ("low" | "moderate" | "high") | null;
+            /** Creative Label */
+            creative_label: string | null;
+            /**
+             * Field
+             * @description Which part of the scene the finding comes from.
+             * @default cultural_observation
+             * @enum {string}
+             */
+            field: "on_screen_text" | "ad_claim" | "cultural_observation" | "cultural_interpretation";
             /** Id */
             id: string;
             /**
@@ -16492,6 +19256,500 @@ export interface operations {
             };
         };
     };
+    get_brief: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignBrief"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    save_brief: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BriefUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignBrief"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_brief_versions: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BriefVersionPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_brief_version: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                version: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BriefVersion"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_chips: {
         parameters: {
             query?: {
@@ -17887,6 +21145,1001 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GlossaryTerm"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_atlas: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensAtlas"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_builds: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+                region_code?: string | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensBuildPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    build_profiles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LensBuildRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensBuildBatch"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    compare_states: {
+        parameters: {
+            query: {
+                /** @description Repeat for 2 to 4 states. */
+                region_code: string[];
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensCompare"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_language_map: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensLanguageMap"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_build: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                /** @description ISO 3166-2:IN code, for example IN-TN. */
+                region_code: string;
+                build_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensBuildView"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_moment_calendar: {
+        parameters: {
+            query?: {
+                /** @description Default: the current year. */
+                year?: number | null;
+                /** @description Start of a campaign window to compare moments against. */
+                window_from?: string | null;
+                /** @description End of the window, inclusive. */
+                window_to?: string | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+                /** @description ISO 3166-2:IN code, for example IN-TN. */
+                region_code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensCalendar"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_state_profile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                /** @description ISO 3166-2:IN code, for example IN-TN. */
+                region_code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensStateProfile"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -24126,6 +28379,130 @@ export interface operations {
             };
         };
     };
+    get_today: {
+        parameters: {
+            query?: {
+                /** @description Limit the view to one campaign. */
+                campaign_id?: string | null;
+                /** @description Activity rows returned. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TodayView"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     get_evidence: {
         parameters: {
             query?: never;
@@ -27239,6 +31616,252 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Brand"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_brand_kit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BrandKit"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    save_brand_kit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["KitUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BrandKit"];
                 };
             };
             /** @description UNAUTHENTICATED */

@@ -5,6 +5,7 @@ import { DemoAction } from "@/components/landing/demo-action";
 import { LandingMotion } from "@/components/landing/landing-motion";
 import { Meadow } from "@/components/landing/meadow";
 import { SignInLink } from "@/components/landing/sign-in-link";
+import { SoundToggle } from "@/components/landing/sound-toggle";
 import { StageCarousel } from "@/components/landing/stage-carousel";
 import { ThemeToggle } from "@/components/shell/theme-toggle";
 import { Wordmark } from "@/components/shell/wordmark";
@@ -25,6 +26,7 @@ export default function LandingPage() {
         <header className="mx-auto flex h-16 w-full max-w-[1240px] items-center justify-between gap-3 px-5 sm:px-8">
           <Wordmark href="/" />
           <div className="flex items-center gap-1.5">
+            <SoundToggle />
             <ThemeToggle />
             <SignInLink variant="outline" className="h-9 px-3.5 text-[13.5px]" />
           </div>

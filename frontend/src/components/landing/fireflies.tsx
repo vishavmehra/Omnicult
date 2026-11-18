@@ -36,10 +36,16 @@ export function Fireflies() {
     const at = (fl: (typeof flies)[number], t: number) => {
       const f = getField();
       const n = f.phone ? 3 : COUNT;
-      const lane = f.w / n;
+      // Desktop: half in each page margin. One column: spread along the band above the grass.
+      const box = Math.min(f.w, 1240);
+      const margin = (f.w - box) / 2;
+      const split = f.wide && margin > 60;
+      const half = Math.ceil(n / 2);
+      const lane = split ? (margin - 16) / half : f.w / n;
+      const left = split ? (fl.i < half ? 8 : f.w - margin + 8) + lane * ((fl.i % half) + 0.5) : lane * (fl.i + 0.5);
       return {
-        x: lane * (fl.i + 0.5) + Math.sin(t * Math.PI * 2 * fl.fx + fl.px) * lane * 0.42,
-        y: f.h - (70 + 44 * Math.sin(t * Math.PI * 2 * fl.fy + fl.py)) * f.s,
+        x: left + Math.sin(t * Math.PI * 2 * fl.fx + fl.px) * lane * (split ? 0.6 : 0.42),
+        y: f.h - (90 + 60 * Math.sin(t * Math.PI * 2 * fl.fy + fl.py)) * f.s,
         on: fl.i < n,
       };
     };

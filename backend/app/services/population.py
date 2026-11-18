@@ -17,6 +17,7 @@ from app.db import models as m
 from app.db.base import utcnow
 from app.db.blobs import read as stored_bytes
 from app.db.session import read_session, session
+from app.llm.budget import UsageContext, usage_scope
 from app.schemas import population as ps
 from app.schemas.campaigns import CampaignContent
 from app.schemas.common import ErrorDetail, Market
@@ -547,8 +548,9 @@ async def ask_participant(user_id: UUID, population_study_id: UUID, participant_
     async with read_session() as s:
         row, participant, project = await _participant_in_study(s, user_id, population_study_id, participant_id)
         require_writable(project)
-    answer = await _answer(_answerer("answer_followup"), population_study_id=row.id, participant=detail,
-                           question=body.question, mode=project.mode)
+    with usage_scope(UsageContext(workspace_id=project.workspace_id, project_id=project.id, campaign_id=row.campaign_id, user_id=user_id)):
+        answer = await _answer(_answerer("answer_followup"), population_study_id=row.id, participant=detail,
+                               question=body.question, mode=project.mode)
     record = m.FollowUp(id=uuid4(), project_id=project.id, population_study_id=row.id, participant_id=participant.id,
                         group_id=participant.group_id, group_question_id=None, question=body.question,
                         answer=answer.answer, stance=answer.stance, memory_refs=_known_refs(answer.memory_refs, detail),
@@ -580,8 +582,9 @@ async def ask_group(user_id: UUID, population_study_id: UUID, group_id: str, bod
     sample = sorted(random.Random(f"{row.seed}:{group_id}:{body.question}").sample(
         members, min(body.sample_size, len(members))), key=lambda p: p.ordinal)
     details = [await participant_detail(user_id, population_study_id, p.id) for p in sample]
-    result = await _answer(answer_group_question, population_study_id=row.id, group_id=group_id, participants=details,
-                           question=body.question, mode=project.mode)
+    with usage_scope(UsageContext(workspace_id=project.workspace_id, project_id=project.id, campaign_id=row.campaign_id, user_id=user_id)):
+        result = await _answer(answer_group_question, population_study_id=row.id, group_id=group_id, participants=details,
+                               question=body.question, mode=project.mode)
     question_id, now = uuid4(), utcnow()
     by_id = {d.id: d for d in details}
     answers = list({a.participant_id: a for a in result.answers if a.participant_id in by_id}.values())  # sampled only

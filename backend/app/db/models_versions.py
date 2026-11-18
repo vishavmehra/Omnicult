@@ -140,14 +140,15 @@ class Chip(Base):
     provider: Mapped[str | None]
     model_id: Mapped[str | None]
     status: Mapped[str] = mapped_column(default="proposed")
-    applied_operation_id: Mapped[UUID | None]
-    applied_version_id: Mapped[UUID | None]
+    applied_operation_id: Mapped[UUID | None] = mapped_column(ForeignKey("operations.id", ondelete="RESTRICT"))
+    applied_version_id: Mapped[UUID | None]  # with campaign_id: version_nodes (migration 0021)
     created_by: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"))
     created_at: Mapped[datetime] = mapped_column(default=utcnow)
 
     __table_args__ = (
         _fk(["campaign_id", "project_id"], "campaigns", ["id", "project_id"]),
         _fk(["version_id", "campaign_id"], "version_nodes", ["id", "campaign_id"]),
+        ForeignKeyConstraint(["applied_version_id", "campaign_id"], ["version_nodes.id", "version_nodes.campaign_id"], ondelete="RESTRICT"),
         CheckConstraint("operation_type IN ('replace_text', 'swap_reference')", name="operation_type"),
         CheckConstraint(f"status IN ({CHIP_STATUSES})", name="status"),
         Index("ix_chips_campaign_id_version_id", "campaign_id", "version_id"),

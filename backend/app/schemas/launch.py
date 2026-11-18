@@ -168,13 +168,50 @@ class VersionObservations(ApiModel):
     open_conflicts: Annotated[list[OpenConflictInput], Field(max_length=50)] = []
 
 
+ObservationName = Literal[
+    "quick_read", "risk_check", "transcreation", "references", "objective_checks", "evidence_meter", "open_conflicts"
+]
+
+
+class GatheredInput(ApiModel):
+    """One observation the server read from stored records instead of receiving it in the request."""
+
+    observation: ObservationName
+    source: str = Field(description="The kind of stored record it was read from, for example quick_read_run or transcreate_operation.")
+    record_ids: list[UUID] = Field(description="Ids of the stored records (runs, operations, creatives, conflicts).")
+    detail: str = Field(description="What was read and how it maps to the observation, in plain words.")
+    synthetic: bool = Field(default=False, description="True when the records are synthetic-panel output.")
+
+
+class MissingInput(ApiModel):
+    observation: ObservationName
+    reason: str
+
+
+class ObservationSources(ApiModel):
+    """Where one version's observations came from. `supplied`: the request carried them and nothing was read. `gathered`:
+    the request carried none, so the server read the latest relevant stored records; `missing` says what it could not
+    find, and a missing observation is scored as missing, never assumed."""
+
+    version_id: UUID
+    origin: Literal["supplied", "gathered"]
+    gathered: list[GatheredInput]
+    missing: list[MissingInput]
+    notes: list[str]
+
+
 # --- Compare and Score ----------------------------------------------------------------------------
 
 
 class ScoreVersionInput(ApiModel):
     version_id: UUID
     label: Label
-    observations: VersionObservations
+    observations: VersionObservations | None = Field(
+        default=None,
+        description="Omit to have the server gather them from the latest stored Quick Read, Risk Check, transcreation and "
+        "X-Ray records for this campaign, region and version (the version must then be a Creative Studio version of the "
+        "campaign). Supplied observations are used as sent and nothing is gathered.",
+    )
 
 
 class ScoreCompareRequest(ApiModel):
@@ -280,6 +317,9 @@ class ScoringMethodology(ApiModel):
 class ScoreComparison(ApiModel):
     scoring_version: ScoringVersion
     region_code: str
+    observation_sources: list[ObservationSources] = Field(
+        default=[], description="Per version: supplied or gathered, what was read, and what was missing."
+    )
     cards: list[ScoreCard]
     ranking: list[RankedVersion]
     meaningful_margin: bool = Field(description="The top two overall scores differ by at least the documented margin.")
@@ -294,9 +334,12 @@ class ScoreComparison(ApiModel):
 
 class ReadinessRequest(ApiModel):
     region_code: RegionCode
-    version_id: UUID
+    version_id: UUID = Field(description="A Creative Studio version of the campaign.")
     label: Label = "Version"
-    observations: VersionObservations
+    observations: VersionObservations | None = Field(
+        default=None,
+        description="Omit to have the server gather them from the latest stored records (see ScoreVersionInput.observations).",
+    )
 
 
 class ReadinessIssue(ApiModel):
@@ -344,6 +387,9 @@ class ReadinessVerdict(ReadinessAssessment):
     version_id: UUID
     input_fingerprint: str = Field(description="SHA-256 of the canonical inputs: same inputs and rule version give the same verdict.")
     mode: DataMode
+    observation_sources: ObservationSources | None = Field(
+        default=None, description="How the observations were obtained; null for a verdict stored before gathering existed."
+    )
     is_latest: bool = Field(description="The newest verdict for this region and version.")
     computed_by: UUID
     computed_at: datetime

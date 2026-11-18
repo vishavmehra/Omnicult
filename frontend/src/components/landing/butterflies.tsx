@@ -237,7 +237,7 @@ function Butterfly({ tone, span, flowers, side, delay, enterY, rate: baseRate }:
         ay += push.y * speed * 3;
       }
       for (const o of airspace) {
-        if (o === me) continue;
+        if (o === me || landing) continue;
         const ox = me.x - o.x;
         const oy = me.y - o.y;
         const od = Math.hypot(ox, oy);
