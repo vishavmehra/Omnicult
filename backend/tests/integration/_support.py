@@ -79,6 +79,7 @@ def base_env(tmp_path: Path) -> dict[str, str]:
         "QLOO_TIMEOUT_SECONDS": "5",
         "MAX_ACTIVE_RUNS_PER_USER": "2",
         "ASSET_STORAGE_DIR": str(tmp_path / "storage"),
+        "DEMO_SEED": "legacy",  # these tests are written for the Northstar demo (one study, the seeded Japan market); Aamod has its own
     }
 
 
