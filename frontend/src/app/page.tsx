@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 
 import { AdaptationArtefact } from "@/components/landing/adaptation-artefact";
-import { Butterflies } from "@/components/landing/butterflies";
 import { DemoAction } from "@/components/landing/demo-action";
-import { Grasshopper } from "@/components/landing/grasshopper";
 import { LandingMotion } from "@/components/landing/landing-motion";
+import { Meadow } from "@/components/landing/meadow";
 import { SignInLink } from "@/components/landing/sign-in-link";
 import { StageCarousel } from "@/components/landing/stage-carousel";
 import { ThemeToggle } from "@/components/shell/theme-toggle";
@@ -66,9 +65,9 @@ export default function LandingPage() {
             Omnicult is decision support for regional campaigns, not a prediction of how a campaign will perform.
           </p>
         </main>
-        <Butterflies />
-        <Grasshopper />
       </LandingMotion>
+      {/* The meadow's creatures: a fixed layer in viewport coordinates, outside the scroll choreography. */}
+      <Meadow />
     </div>
   );
 }
