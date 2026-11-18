@@ -46,3 +46,6 @@ docs/
 scratch/
 *.scratch.*
 
+
+# Firebase CLI deploy cache
+.firebase/
