@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleAlert, CircleCheck, FileUp, Film, ImageIcon, LoaderCircle, Music, Play, RotateCw, ShieldCheck, Upload, X, type LucideIcon } from "lucide-react";
+import { CircleAlert, CircleCheck, FileUp, Film, ImageIcon, LoaderCircle, Music, Play, RotateCw, Upload, X, type LucideIcon } from "lucide-react";
 import { useId, useRef, useState, type DragEvent } from "react";
 
 import { ErrorState } from "@/components/states";
@@ -26,7 +26,7 @@ const FALLBACK_LIMITS = { max_image_bytes: 5 * 1024 * 1024, max_media_bytes: 50 
 type Picked = { file: File; kind: AssetKind; format: string; durationMs: number | null };
 
 /** Step one: choose a file, say you hold the rights, optionally add your own transcript or notes, and upload. */
-export function UploadForm({ projectId, demo, onUploaded }: { projectId: string; demo: boolean; onUploaded: (asset: Asset) => void }) {
+export function UploadForm({ projectId, onUploaded }: { projectId: string; onUploaded: (asset: Asset) => void }) {
   const id = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const caps = useMediaCapabilities();
@@ -177,13 +177,6 @@ export function UploadForm({ projectId, demo, onUploaded }: { projectId: string;
         </Label>
       )}
 
-      {demo && (
-        <p className="flex items-start gap-2 text-[12.5px] text-ink-secondary">
-          <ShieldCheck aria-hidden className="mt-0.5 size-4 shrink-0" />
-          This is a demo brand. Uploads are stored but never sent to a model, so the X-Ray gives timing and keyframes only.
-        </p>
-      )}
-
       <div className="flex flex-wrap items-center gap-3">
         <Button type="submit" disabled={!picked || !rights || upload.isPending}>
           {upload.isPending ? <LoaderCircle aria-hidden className="animate-spin motion-reduce:animate-none" /> : <Upload aria-hidden />}
@@ -320,7 +313,7 @@ export function RunForm({
       </div>
 
       {demo ? (
-        <p className="text-[12.5px] text-ink-secondary">Demo brand: nothing is sent to a model. The result is labelled as timing only.</p>
+        <p className="text-[12.5px] text-ink-secondary">Demo brand: no model is called, so the result is timing and keyframes only.</p>
       ) : (
         <p className="text-[12.5px] text-ink-secondary">
           A live run sends the creative&apos;s keyframes to a vision model, one call per frame, and costs model usage. Run it once, then read the result.

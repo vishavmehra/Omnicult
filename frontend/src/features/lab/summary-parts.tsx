@@ -3,7 +3,7 @@
 import { Sigma } from "lucide-react";
 import { useMemo } from "react";
 
-import { SyntheticLabel, Tag } from "@/components/evidence/badges";
+import { Tag } from "@/components/evidence/badges";
 import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -44,7 +44,6 @@ export function RatingRow({ result }: { result: DimensionResult }) {
             <Sigma aria-hidden />
             Calculated
           </Tag>
-          <SyntheticLabel compact />
           {result.disagreement && <Tag className="border-warning/45 bg-warning-soft text-warning">Ratings diverge</Tag>}
         </div>
       </div>

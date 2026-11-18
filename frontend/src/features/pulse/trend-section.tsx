@@ -4,12 +4,11 @@ import { useState } from "react";
 
 import { ErrorState, LoadingState } from "@/components/states";
 import type { components } from "@/lib/api/schema";
-import { formatDateTime } from "@/lib/format";
 
 import { useMetricCatalogue, useTimeSeries, type Filters } from "./api";
-import { formatDay, formatSpan, platformLabel, platformList, REACH_CAVEAT, regionLabel, shortVersion, slotFor, type GroupBy } from "./logic";
+import { formatSpan, platformLabel, platformList, REACH_CAVEAT, regionLabel, shortVersion, slotFor, type GroupBy } from "./logic";
 import { TrendChart, type ChartSeries } from "./trend-chart";
-import { ReachCaveat, SampleTag, Section, Segmented, SelectField } from "./ui";
+import { ReachCaveat, Section, Segmented, SelectField } from "./ui";
 
 type Series = components["schemas"]["Series"];
 
@@ -46,7 +45,6 @@ export function TrendSection({ campaignId, filters, names }: { campaignId: strin
   const unit = data?.series[0]?.unit ?? definition?.unit ?? "ratio";
   const hasValues = chartSeries.some((s) => s.points.some((p) => p.value !== null));
   const reach = metric === "reach" || metric === "frequency";
-  const provisionalFrom = data?.series.map((s) => s.provisional_from).filter((d): d is string => Boolean(d)).sort()[0] ?? null;
   const regionScope = filters.region === "all" ? "All regions" : regionLabel(filters.region, names);
   const platforms = data ? platformList([...new Set(data.series.flatMap((s) => s.platforms))]) : "";
 
@@ -54,12 +52,7 @@ export function TrendSection({ campaignId, filters, names }: { campaignId: strin
     <Section
       id="trend"
       title="Daily trend"
-      meta={
-        <>
-          <SampleTag />
-          {data && <span>{formatSpan(data.date_from, data.date_to)}</span>}
-        </>
-      }
+      meta={data && <span>{formatSpan(data.date_from, data.date_to)}</span>}
     >
       <div className="flex flex-wrap items-end gap-x-5 gap-y-3">
         <SelectField
@@ -99,11 +92,7 @@ export function TrendSection({ campaignId, filters, names }: { campaignId: strin
           />
         )}
         {data && hasValues && (
-          <dl className="type-meta mt-3 grid gap-x-6 gap-y-1 border-t border-border pt-3 sm:grid-cols-2 lg:grid-cols-3">
-            <div>
-              <dt className="inline">Source: </dt>
-              <dd className="inline text-ink-body">sample dataset {data.dataset_version}</dd>
-            </div>
+          <dl className="type-meta mt-3 grid gap-x-6 gap-y-1 border-t border-border pt-3 sm:grid-cols-3">
             <div>
               <dt className="inline">Platforms: </dt>
               <dd className="inline text-ink-body">{platforms || "none"}</dd>
@@ -113,27 +102,13 @@ export function TrendSection({ campaignId, filters, names }: { campaignId: strin
               <dd className="inline text-ink-body">{regionScope}</dd>
             </div>
             <div>
-              <dt className="inline">Last updated: </dt>
-              <dd className="inline text-ink-body">{formatDateTime(data.last_updated_at)}</dd>
-            </div>
-            <div>
               <dt className="inline">Version: </dt>
               <dd className="inline text-ink-body">{groupBy === "version" ? "each version separately" : "all versions combined"}</dd>
-            </div>
-            <div>
-              <dt className="inline">Provisional: </dt>
-              <dd className="inline text-ink-body">{provisionalFrom ? `from ${formatDay(provisionalFrom)} (shaded, dashed)` : "none in this range"}</dd>
             </div>
           </dl>
         )}
       </div>
       {reach && <ReachCaveat text={data?.caveats.find((c) => /reach/i.test(c)) ?? REACH_CAVEAT} />}
-      {provisionalFrom && ["conversions", "cpa", "roas"].includes(metric) && (
-        <p className="max-w-[78ch] text-[12.5px] text-ink-secondary">
-          <span className="font-medium text-ink">Provisional days read low. </span>
-          Conversions arrive days after the click, so the dip on the shaded days is the delay, not a collapse. Alerts never use these days.
-        </p>
-      )}
     </Section>
   );
 }

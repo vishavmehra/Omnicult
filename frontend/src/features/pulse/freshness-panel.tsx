@@ -6,7 +6,6 @@ import { LimitationList } from "@/components/evidence/limitation-list";
 import { ErrorState } from "@/components/states";
 import { Button } from "@/components/ui/button";
 import type { components } from "@/lib/api/schema";
-import { formatDateTime } from "@/lib/format";
 
 import { useFreshness, useLoadSample } from "./api";
 import { formatDay, formatSpan, platformList } from "./logic";
@@ -22,7 +21,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   );
 }
 
-/** What "fresh" means for what is on screen: the four data states, which one applies here, and the sample's own limits. */
+/** What "fresh" means for what is on screen: the data states, which one applies here, and the sample's own limits. */
 export function FreshnessPanel({ campaignId, status }: { campaignId: string; status: Status | undefined }) {
   const loaded = Boolean(status?.loaded);
   const freshness = useFreshness(campaignId, loaded);
@@ -37,17 +36,13 @@ export function FreshnessPanel({ campaignId, status }: { campaignId: string; sta
       meaning: "Reported, but the platform may still restate it, for example when conversions arrive late.",
       here: f?.provisional_from ? `The last ${provisionalDays} days, from ${formatDay(f.provisional_from)}. Shaded and dashed in charts, dotted underline in tables.` : "Shown when days are still being reported.",
     },
-    { label: "Sample", meaning: "Demonstration data. Never presented as a connected account.", here: "Everything on this page." },
   ];
   return (
     <div className="space-y-5">
       {f && status?.date_from && status.date_to && (
         <dl className="ledger-rules rounded-card border border-border">
-          <Row label="Source">Sample dataset {f.dataset_version}, generated</Row>
           <Row label="Period">{formatSpan(f.date_from, f.date_to)}</Row>
-          <Row label="Generated">{formatDateTime(f.last_updated_at)}</Row>
           <Row label="Refresh">{f.refresh}</Row>
-          <Row label="Real time">No. {f.notes[0]}</Row>
           <Row label="Platforms">{platformList(f.platforms)}</Row>
         </dl>
       )}

@@ -118,22 +118,19 @@ export function ConfidenceBadge({ label }: { label: ConfidenceLabel }) {
 }
 
 /**
- * Persistent disclosure for anything a simulation produced: participants, answers, panels, buzz. Dashed rule and the robot
- * mark read as "made, not observed" before the words do. `compact` keeps only the word for dense rows (with a tooltip).
+ * Quiet inline note for anything a simulation produced: participants, answers, panels, buzz. Small muted text with a robot
+ * mark, no box. `compact` keeps only the word for dense rows (with a tooltip).
  */
 export function SyntheticLabel({ compact, children, className }: { compact?: boolean; children?: ReactNode; className?: string }) {
   const full = children ?? "Synthetic: simulated opinion, not real research";
   return (
-    <Tag
+    <span
       title={compact ? "Synthetic: simulated by a model. Not a real participant and not real research." : undefined}
-      className={cn(
-        "h-auto min-h-5 max-w-full border-dashed border-ink-secondary/60 bg-surface-muted py-0.5 leading-tight whitespace-normal text-ink-secondary",
-        className,
-      )}
+      className={cn("type-meta inline-flex max-w-full items-center gap-1 [&>svg]:size-3 [&>svg]:shrink-0", className)}
     >
       <Bot aria-hidden />
       {compact ? "Synthetic" : full}
-    </Tag>
+    </span>
   );
 }
 
@@ -142,14 +139,13 @@ export function SyntheticBadge() {
   return <SyntheticLabel>AI-generated reaction, not a real participant</SyntheticLabel>;
 }
 
-/** Project/run mode. Demo data must never be confused with live results. */
+/** Project/run mode. Demo data must never be confused with live results, so it stays as quiet muted text. */
 export function ModeBadge({ mode }: { mode: DataMode }) {
   if (mode === "demo") {
     return (
-      <Tag className="border-warning/40 bg-warning-soft font-semibold tracking-wide text-warning" title="Demo project: deterministic, labeled fixtures. Not live research.">
-        <FlaskConical aria-hidden />
-        DEMO DATA
-      </Tag>
+      <span className="type-meta whitespace-nowrap" title="Demo project: deterministic, labeled fixtures. Not live research.">
+        Demo data
+      </span>
     );
   }
   return (

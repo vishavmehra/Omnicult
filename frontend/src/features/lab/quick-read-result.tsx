@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { LimitationList } from "@/components/evidence/limitation-list";
 import { Button } from "@/components/ui/button";
 
-import { DistributionLedger, Panel, RunBanner, StatementList, SyntheticNotice } from "./lab-parts";
+import { DistributionLedger, Panel, RunBanner, StatementList } from "./lab-parts";
 import { CITY_TIER_LABEL, SURVIVAL_LABEL, isSplit, pluralise, tallyBy } from "./labels";
 import { QuickReadParticipants } from "./participants";
 import { GroundingPanel, Provenance, RatingRow, SegmentTable } from "./summary-parts";
@@ -44,8 +44,6 @@ export function QuickReadView({ result, onAsk, onNewRun }: { result: QuickReadRe
 
       {usable && (
         <>
-          <SyntheticNotice size={panel.generated_size} description={result.disclosure.description} sharedModelNote={result.disclosure.shared_model_note} />
-
           <Panel
             id="qr-panel"
             title="The panel"

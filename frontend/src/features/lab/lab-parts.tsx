@@ -5,7 +5,7 @@ import { useId, useState, type ReactNode } from "react";
 
 import { ConfidenceIndicator } from "@/components/evidence/confidence";
 import { KindTag } from "@/components/evidence/evidence-row";
-import { ModeBadge, SyntheticLabel, Tag } from "@/components/evidence/badges";
+import { Tag } from "@/components/evidence/badges";
 import { RunStatusBadge } from "@/components/workflow/run-status";
 import { useNow } from "@/hooks/use-now";
 import { formatDateTime, formatElapsed, formatRelative, humanize } from "@/lib/format";
@@ -219,7 +219,7 @@ const TONE = {
 
 /**
  * The run's own state, as the server reports it: stage and message while it moves, the error as reported when it fails, and
- * a plain "completed with gaps" for partial results. Demo runs say they are fixtures. Never a made-up percentage.
+ * a plain "completed with gaps" for partial results. Never a made-up percentage.
  */
 export function RunBanner({ run, label, onNewRun }: { run: BannerRun; label: string; onNewRun?: () => void }) {
   const active = isActive(run.status);
@@ -281,18 +281,12 @@ export function RunBanner({ run, label, onNewRun }: { run: BannerRun; label: str
         <div className="min-w-0 flex-1 space-y-1 text-[13.5px]">
           <p className="font-medium text-ink">{title}</p>
           {lines}
-          {run.mode === "demo" && (
-            <p className="type-meta">
-              Saved demonstration result, run {formatDateTime(run.created_at)}. Written by a labelled fixture: no model was called, and it is not research.
-            </p>
-          )}
           {run.status === "failed" && onNewRun && (
             <button type="button" onClick={onNewRun} className="mt-1 text-[12.5px] font-medium text-rose underline underline-offset-2">
               Start a new run
             </button>
           )}
         </div>
-        <ModeBadge mode={run.mode} />
       </div>
     </div>
   );
@@ -344,7 +338,6 @@ export function RunPicker({
                   </span>
                   <span className="type-meta" title={formatDateTime(r.created_at)}>
                     {formatRelative(r.created_at)}
-                    {r.mode === "demo" && " · demo fixtures"}
                   </span>
                 </span>
                 <RunStatusBadge status={r.status} />
@@ -358,23 +351,6 @@ export function RunPicker({
           {all ? "Show fewer runs" : `Show ${runs.length - limit} earlier ${runs.length - limit === 1 ? "run" : "runs"}`}
         </button>
       )}
-    </div>
-  );
-}
-
-// ---------- synthetic disclosure ----------
-
-/** The disclosure every result opens with. Says what the panel is, and what its size does not mean. */
-export function SyntheticNotice({ size, description, sharedModelNote }: { size: number; description: string; sharedModelNote: string }) {
-  return (
-    <div className="space-y-1.5 rounded-md border border-dashed border-ink-secondary/50 bg-surface-muted/50 px-3.5 py-3">
-      <SyntheticLabel>Synthetic audience: simulated reactions, not consumer research</SyntheticLabel>
-      <p className="max-w-[68ch] text-[13px] leading-relaxed text-ink-body">
-        {description} {sharedModelNote}
-      </p>
-      <p className="max-w-[68ch] text-[13px] leading-relaxed text-ink-body">
-        The {size} here is the panel size configured for this run: synthetic participants generated, not people surveyed. {size} generated responses are not {size} independent observations, and nothing here predicts purchase or sales.
-      </p>
     </div>
   );
 }
@@ -463,7 +439,6 @@ export function StatementList({ points, claims, denominator, empty }: { points: 
                   Interpretation: no claim cited
                 </Tag>
               )}
-              <SyntheticLabel compact />
             </div>
             {grounded && <Disclosure summary={`Cites ${cites.length} ${cites.length === 1 ? "claim" : "claims"}`}><CitedClaims claims={cites} /></Disclosure>}
           </li>

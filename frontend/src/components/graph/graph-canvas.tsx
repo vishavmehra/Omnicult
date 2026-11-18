@@ -310,7 +310,7 @@ function GraphCanvasInner({ nodes, edges, legend, isLoading, error, onRetry, tru
               </p>
             )}
             {anyDemo && (
-              <p className="flex items-start gap-1.5 text-warning">
+              <p className="flex items-start gap-1.5">
                 <FlaskConical aria-hidden className="mt-0.5 size-3.5 shrink-0" />
                 Demo data: labeled fixtures, not live research.
               </p>

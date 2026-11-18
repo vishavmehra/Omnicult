@@ -14,7 +14,7 @@ import {
   ALERT_META, alertEvidence, alertHeadline, classifyCostPattern, DEFAULT_THRESHOLDS, formatSpan, formatValue, parseThresholds, regionLabel, shortVersion,
   type AlertThresholds, type PulseAlert, type SeriesPoint, type ThresholdForm,
 } from "./logic";
-import { ReachCaveat, SampleTag, Section } from "./ui";
+import { ReachCaveat, Section } from "./ui";
 
 const TYPE_ICON: Record<PulseAlert["alert_type"], ComponentType<{ className?: string }>> = { ctr_drop: TrendingDown, frequency_fatigue: Repeat, cost_spike: CircleDollarSign };
 
@@ -194,12 +194,7 @@ export function AlertsSection({ campaignId, names }: { campaignId: string; names
     <Section
       id="alerts"
       title="Alert preview"
-      meta={
-        <>
-          <SampleTag />
-          <span>Preview of Alerts, a roadmap feature</span>
-        </>
-      }
+      meta={<span>Preview of Alerts, a roadmap feature</span>}
     >
       <p className="flex max-w-[78ch] items-start gap-1.5 text-[13px] leading-snug text-ink-body">
         <Info aria-hidden className="mt-0.5 size-3.5 shrink-0 text-ink-secondary" />
@@ -271,7 +266,6 @@ export function AlertsSection({ campaignId, names }: { campaignId: string; names
               </ul>
             </div>
           )}
-          <p className="type-meta">{data.note}</p>
         </div>
       )}
     </Section>

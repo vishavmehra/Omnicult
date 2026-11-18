@@ -6,8 +6,8 @@ import type { components } from "@/lib/api/schema";
 import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-import { formatDay, formatSpan, formatValue, platformList, REACH_CAVEAT, sortRegions } from "./logic";
-import { NotAvailable, ReachCaveat, SampleTag, Section } from "./ui";
+import { formatSpan, formatValue, platformList, REACH_CAVEAT, sortRegions } from "./logic";
+import { NotAvailable, ReachCaveat, Section } from "./ui";
 
 type Summary = components["schemas"]["RegionSummary"];
 type Value = components["schemas"]["MetricValue"];
@@ -37,15 +37,14 @@ function cellTitle(v: Value, regionName: string) {
     `Range: ${formatSpan(v.date_from, v.date_to)}`,
     `Last updated: ${formatDateTime(v.last_updated_at)}`,
     v.provisional ? "Includes provisional days" : "Settled days only",
-    "Sample data, not from a connected account",
   ].join("\n");
 }
 
 /**
  * The four regions side by side: one column per region, metrics down the rows grouped as the API groups them. A value shows
- * its platforms on the row, its range and update time in the caption, and a dotted underline when it includes provisional days.
+ * its platforms on the row and a dotted underline when it includes provisional days.
  */
-export function RegionLedger({ data, stale, provisionalFrom }: { data: Summary; stale: boolean; provisionalFrom: string | null }) {
+export function RegionLedger({ data, stale }: { data: Summary; stale: boolean }) {
   const [raw, setRaw] = useState(false);
   const regions = sortRegions(data.regions, (r) => r.region_code);
   const reachShown = regions.some((r) => r.groups.some((g) => g.metrics.some((m) => m.metric === "reach" || m.metric === "frequency")));
@@ -57,17 +56,10 @@ export function RegionLedger({ data, stale, provisionalFrom }: { data: Summary; 
     <Section
       id="regions"
       title="Regions side by side"
-      meta={
-        <>
-          <SampleTag />
-          <span>{formatSpan(data.date_from, data.date_to)}</span>
-        </>
-      }
+      meta={<span>{formatSpan(data.date_from, data.date_to)}</span>}
     >
       <p className="type-meta flex flex-wrap gap-x-3 gap-y-0.5">
         <span>Platforms: {data.platform ? platformList([data.platform]) : platformList(first?.groups[0]?.metrics[0]?.platforms ?? [])}</span>
-        <span>Source: sample dataset {data.dataset_version}</span>
-        <span>Last updated {formatDateTime(data.last_updated_at)}</span>
         {anyProvisional && <span>Dotted underline: includes provisional days</span>}
       </p>
       <div className={cn("overflow-x-auto rounded-card border border-border bg-surface transition-opacity", stale && "opacity-60")} aria-busy={stale}>
@@ -138,12 +130,6 @@ export function RegionLedger({ data, stale, provisionalFrom }: { data: Summary; 
           Show raw quartile counts and exact figures
         </label>
         {reachShown && <ReachCaveat text={data.caveats.find((c) => /reach/i.test(c)) ?? REACH_CAVEAT} />}
-        {anyProvisional && (
-          <p className="max-w-[78ch] text-[12.5px] leading-snug text-ink-secondary">
-            <span className="font-medium text-ink">Provisional. </span>
-            {provisionalFrom ? `Days from ${formatDay(provisionalFrom)} are included and still being reported. ` : ""}Conversions arrive days later, so conversions, CPA and ROAS read worse than they will settle. Choose Settled days only to leave them out.
-          </p>
-        )}
       </div>
     </Section>
   );

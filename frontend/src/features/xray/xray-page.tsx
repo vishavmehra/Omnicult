@@ -65,7 +65,7 @@ function TranscriptNotice({ creative, onSidecar }: { creative: Creative; onSidec
 }
 
 /** One creative: its run, scene timeline, the selected scene, evidence and the Indic text preview. */
-function Workbench({ creativeId, demo, onSidecar }: { creativeId: string; demo: boolean; onSidecar: () => void }) {
+function Workbench({ creativeId, onSidecar }: { creativeId: string; onSidecar: () => void }) {
   const { campaign } = useCampaign();
   const creative = useCreative(creativeId);
   const c = creative.data;
@@ -120,7 +120,7 @@ function Workbench({ creativeId, demo, onSidecar }: { creativeId: string; demo: 
         </div>
       ) : (
         <section aria-labelledby="xray-scenes" className="space-y-4">
-          <SectionTitle id="xray-scenes" meta={`${plural(list.length, "scene")}${c.duration_ms != null ? ` · ${clock(c.duration_ms)}` : ""}${c.mode === "demo" ? " · demo fixture" : ""}`}>
+          <SectionTitle id="xray-scenes" meta={`${plural(list.length, "scene")}${c.duration_ms != null ? ` · ${clock(c.duration_ms)}` : ""}`}>
             {c.kind === "image" ? "The image" : "Scene timeline"}
           </SectionTitle>
           {(c.kind !== "image" || list.length > 1) && <SceneStrip scenes={list} selectedId={scene.id} onSelect={setPicked} />}
@@ -160,7 +160,6 @@ function Workbench({ creativeId, demo, onSidecar }: { creativeId: string; demo: 
           <TextPreviewTool key={scene.id} creative={c} scene={scene} />
         </section>
       )}
-      {demo && <p className="type-meta">This is a demo brand. Results from uploads here are fixtures and are labelled as such.</p>}
     </div>
   );
 }
@@ -248,13 +247,13 @@ export function XRayPage() {
                   }}
                 />
               ) : (
-                <UploadForm projectId={project.id} demo={project.mode === "demo"} onUploaded={setAsset} />
+                <UploadForm projectId={project.id} onUploaded={setAsset} />
               )}
             </Panel>
           </div>
         )}
 
-        {selectedId && <Workbench key={selectedId} creativeId={selectedId} demo={project.mode === "demo"} onSidecar={() => openAdd(null)} />}
+        {selectedId && <Workbench key={selectedId} creativeId={selectedId} onSidecar={() => openAdd(null)} />}
       </div>
     </>
   );

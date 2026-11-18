@@ -37,7 +37,7 @@ export function SourcesAndCalibration({ campaignId }: { campaignId: string }) {
             <h3 id="connections-title" className="text-[14px] font-semibold text-ink">
               Platform connections
             </h3>
-            <p className="mt-0.5 text-[12.5px] text-ink-secondary">{connections.data?.note ?? "Connecting ad accounts is not available in this build."}</p>
+            <p className="mt-0.5 text-[12.5px] text-ink-secondary">Connecting ad accounts is not available in this build.</p>
           </div>
           {connections.error ? (
             <div className="p-3">

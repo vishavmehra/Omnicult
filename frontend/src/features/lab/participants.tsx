@@ -3,7 +3,6 @@
 import { MessageCircleQuestion } from "lucide-react";
 import { useState } from "react";
 
-import { SyntheticLabel } from "@/components/evidence/badges";
 import { Button } from "@/components/ui/button";
 import { humanize } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -99,10 +98,7 @@ export function QuickReadParticipants({ participants, claims, onAsk }: { partici
             <li key={p.id} className="space-y-2 py-3">
               <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
                 <Identity p={p} />
-                <div className="flex items-center gap-2">
-                  <ReactionTag value={r?.sentiment} />
-                  <SyntheticLabel compact />
-                </div>
+                <ReactionTag value={r?.sentiment} />
               </div>
               {r ? (
                 <>
@@ -155,10 +151,7 @@ export function StudyParticipants({ participants, onAsk }: { participants: Study
             <li key={p.id} className="space-y-2 py-3">
               <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
                 <Identity p={p} />
-                <div className="flex items-center gap-2">
-                  {done ? <ReactionTag value={iv?.reaction} /> : <span className="text-[12px] text-ink-muted">{iv ? "Interview failed" : "No interview saved"}</span>}
-                  <SyntheticLabel compact />
-                </div>
+                {done ? <ReactionTag value={iv?.reaction} /> : <span className="text-[12px] text-ink-muted">{iv ? "Interview failed" : "No interview saved"}</span>}
               </div>
               {done && iv ? (
                 <>

@@ -72,7 +72,6 @@ export function CreativePicker({
                   </span>
                   <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                     {c.status ? <RunStatusBadge status={c.status} /> : <span className="type-meta">Not run yet</span>}
-                    {c.mode === "demo" && <span className="text-[11.5px] font-medium text-warning">Demo fixture</span>}
                   </span>
                 </span>
               </button>

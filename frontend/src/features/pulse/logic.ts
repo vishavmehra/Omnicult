@@ -15,8 +15,6 @@ export type AlertThresholds = S["AlertThresholds"];
 export type RegionComparison = S["RegionComparison"];
 export type ComparedMetric = S["ComparedMetric"];
 
-export const SAMPLE_LABEL = "Sample data, not from a connected account";
-
 /** Shown wherever reach (or frequency, which is derived from it) appears. The API sends the same statement; this is the floor. */
 export const REACH_CAVEAT =
   "Reach is cumulative from the first day of data and is not deduplicated across platforms or versions: a person reached through two of them is counted twice.";

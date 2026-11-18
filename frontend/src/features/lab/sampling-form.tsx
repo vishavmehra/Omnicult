@@ -91,7 +91,7 @@ export function SetupPanel({ title, meta, open, onOpenChange, children }: { titl
 
 const RUN_NOTE: Record<"live" | "demo", string> = {
   live: "Live run: calls the configured language model. Quick Reads usually finish within a minute; larger studies take longer.",
-  demo: "Demo project: runs on labelled fixtures. It is free, calls no model, and its results are not research.",
+  demo: "Demo project: runs on fixtures. It is free and calls no model.",
 };
 
 /** The one primary action of a setup form, with what pressing it will do and cost. */

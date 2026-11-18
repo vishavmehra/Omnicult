@@ -5,14 +5,13 @@ import { useState } from "react";
 
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
 import type { components } from "@/lib/api/schema";
-import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { useVersionComparison, type Filters } from "./api";
 import {
   formatPctChange, formatPoints, formatSpan, formatValue, isWindowChange, judge, platformLabel, platformList, shortVersion, slotFor, sortRegions, standout, type ComparedMetric, type Judgement,
 } from "./logic";
-import { SampleTag, Section, Segmented, SelectField, slotColor, NotAvailable } from "./ui";
+import { Section, Segmented, SelectField, slotColor, NotAvailable } from "./ui";
 
 type Status = components["schemas"]["DatasetStatus"];
 type Region = components["schemas"]["RegionComparison"];
@@ -111,12 +110,7 @@ export function CompareSection({ campaignId, status, filters, names }: { campaig
     <Section
       id="compare"
       title="Versions compared"
-      meta={
-        <>
-          <SampleTag />
-          {data && <span>{formatSpan(data.date_from, data.date_to)}</span>}
-        </>
-      }
+      meta={data && <span>{formatSpan(data.date_from, data.date_to)}</span>}
     >
       <div className="flex flex-wrap items-end gap-x-5 gap-y-3">
         <div className="space-y-1">
@@ -155,8 +149,7 @@ export function CompareSection({ campaignId, status, filters, names }: { campaig
               ))}
             </ul>
             <p className="type-meta border-t border-border py-2.5">
-              Bars share one scale across regions and start at zero. Platforms: {data.platform ? platformLabel(data.platform) : platformList(status.platforms)} · last updated {formatDateTime(data.last_updated_at)}
-              . Values include provisional days unless the period is set to Settled days only.
+              Bars share one scale across regions and start at zero. Platforms: {data.platform ? platformLabel(data.platform) : platformList(status.platforms)}. Dotted underline in the table: includes provisional days.
             </p>
           </div>
           <ul aria-label="Version colours" className="flex flex-wrap gap-x-4 gap-y-1 text-[12.5px] text-ink-secondary">

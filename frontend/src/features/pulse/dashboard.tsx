@@ -32,11 +32,12 @@ export function Dashboard({ campaignId, status }: { campaignId: string; status: 
       ) : !summary.data ? (
         <LoadingState label="Reading the regional summary…" />
       ) : (
-        <RegionLedger data={summary.data} stale={summary.isPlaceholderData} provisionalFrom={status.provisional_from} />
+        <RegionLedger data={summary.data} stale={summary.isPlaceholderData} />
       )}
       <TrendSection campaignId={campaignId} filters={filters} names={names} />
       <CompareSection campaignId={campaignId} status={status} filters={filters} names={names} />
       <AlertsSection campaignId={campaignId} names={names} />
+      <p className="type-meta">Source: sample dataset {status.dataset_version}</p>
     </div>
   );
 }

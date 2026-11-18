@@ -1,12 +1,12 @@
 "use client";
 
-import { ChevronDown, Clock, FlaskConical, Info } from "lucide-react";
+import { ChevronDown, Clock, Info } from "lucide-react";
 import { useId, type KeyboardEvent, type ReactNode } from "react";
 
 import { Tag } from "@/components/evidence/badges";
 import { cn } from "@/lib/utils";
 
-import { NOT_AVAILABLE, NOT_AVAILABLE_WHY, REACH_CAVEAT, SAMPLE_LABEL } from "./logic";
+import { NOT_AVAILABLE, NOT_AVAILABLE_WHY, REACH_CAVEAT } from "./logic";
 
 /**
  * Series colours: slots 1 to 4 of the validated categorical palette (dataviz skill, validate_palette.js: all checks pass in
@@ -17,16 +17,6 @@ export const PULSE_THEME =
   "[--pulse-s1:#2a78d6] [--pulse-s2:#eb6834] [--pulse-s3:#1baf7a] [--pulse-s4:#eda100] dark:[--pulse-s1:#3987e5] dark:[--pulse-s2:#d95926] dark:[--pulse-s3:#199e70] dark:[--pulse-s4:#c98500]";
 
 export const slotColor = (slot: number) => `var(--pulse-s${Math.min(4, Math.max(1, slot))})`;
-
-/** The permanent disclosure: a warning tag with the flask, in capitals, like DEMO DATA. */
-export function SampleTag({ className }: { className?: string }) {
-  return (
-    <Tag className={cn("border-warning/40 bg-warning-soft font-semibold tracking-wide text-warning", className)} title={SAMPLE_LABEL}>
-      <FlaskConical aria-hidden />
-      SAMPLE DATA
-    </Tag>
-  );
-}
 
 export function ProvisionalTag({ className }: { className?: string }) {
   return (
@@ -63,7 +53,7 @@ export function ReachCaveat({ className, text = REACH_CAVEAT }: { className?: st
   );
 }
 
-/** A section: plain title, optional trailing meta, then its content. Sample label sits in every section's meta. */
+/** A section: plain title, optional trailing meta, then its content. */
 export function Section({ id, title, meta, children, className }: { id: string; title: ReactNode; meta?: ReactNode; children: ReactNode; className?: string }) {
   return (
     <section aria-labelledby={id} className={cn("space-y-3", className)}>

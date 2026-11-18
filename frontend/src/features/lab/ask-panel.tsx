@@ -3,7 +3,7 @@
 import { Send, UserRound, UsersRound } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 
-import { SyntheticLabel, Tag } from "@/components/evidence/badges";
+import { Tag } from "@/components/evidence/badges";
 import { LimitationList } from "@/components/evidence/limitation-list";
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
 import { Button } from "@/components/ui/button";
@@ -57,10 +57,7 @@ function AnswerRow({ a, p, campaignId, runId }: { a: PanelAnswer; p?: PanelParti
     <li className="space-y-1 py-2.5">
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
         {p ? <Identity p={p} /> : <p className="text-[13.5px] font-semibold text-ink">Participant {a.ordinal + 1}</p>}
-        <div className="flex items-center gap-2">
-          <ReactionTag value={a.stance} />
-          <SyntheticLabel compact />
-        </div>
+        <ReactionTag value={a.stance} />
       </div>
       <p lang={langFor(a.answer, p?.language ?? "en")} className="max-w-[68ch] text-[14px] leading-snug text-ink">{a.answer}</p>
       <p className="type-meta">
@@ -97,8 +94,6 @@ function QuestionCard({ q, participants, defaultOpen }: { q: PanelQuestion; part
           <span>{describeTarget(q, byId)}</span>
           <span aria-hidden>·</span>
           <span title={formatDateTime(q.created_at)}>{formatRelative(q.created_at)}</span>
-          {q.mode === "demo" && <Tag className="border-warning/40 bg-warning-soft text-warning">Demo fixture</Tag>}
-          <SyntheticLabel compact />
         </p>
       </header>
       <div className="space-y-4 px-4 py-3">

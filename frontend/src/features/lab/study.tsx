@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 
-import { SyntheticLabel, Tag } from "@/components/evidence/badges";
+import { Tag } from "@/components/evidence/badges";
 import { LimitationList } from "@/components/evidence/limitation-list";
 import { ErrorState, LoadingState } from "@/components/states";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,7 +10,7 @@ import { useCampaign } from "@/features/workspaces/campaign-context";
 import { MessageSquareText } from "lucide-react";
 
 import { useAudienceStudy, useRuns, useSamplingOptions, useStartStudy } from "./api";
-import { CONTROL, DistributionLedger, FieldBlock, ListPicker, NativeSelect, Panel, RunBanner, RunPicker, SyntheticNotice } from "./lab-parts";
+import { CONTROL, DistributionLedger, FieldBlock, ListPicker, NativeSelect, Panel, RunBanner, RunPicker } from "./lab-parts";
 import { CITY_TIER_LABEL, DIMENSION_LABEL, pluralise } from "./labels";
 import { StudyParticipants } from "./participants";
 import { NO_DIMENSIONS, RunButton, SamplingDimensions, SetupPanel, toPlan, type Dimensions } from "./sampling-form";
@@ -160,8 +160,6 @@ function StudyView({ result, onAsk, onNewRun }: { result: AudienceStudyResult; o
       <RunBanner run={result} label="Audience Study" onNewRun={onNewRun} />
       {usable && (
         <>
-          <SyntheticNotice size={panel.generated_size} description={result.disclosure.description} sharedModelNote={result.disclosure.shared_model_note} />
-
           <Panel id="st-panel" title="The panel" meta={`${pluralise(panel.generated_size, "synthetic participant")} interviewed${panel.requested_size !== panel.generated_size ? `, ${panel.requested_size} requested` : ""}`}>
             <dl className="type-ledger grid gap-x-6 gap-y-1 text-[13px] sm:grid-cols-[8rem_minmax(0,1fr)]">
               <dt className="text-ink-muted">States</dt>
@@ -209,7 +207,6 @@ function StudyView({ result, onAsk, onNewRun }: { result: AudienceStudyResult; o
                         <MessageSquareText aria-hidden />
                         Model interpretation
                       </Tag>
-                      <SyntheticLabel compact />
                     </p>
                     <InterpretationList items={summary.group_differences} empty="The tallies showed no difference worth naming." />
                   </div>

@@ -85,7 +85,6 @@ export function SceneDetail({ scene, index, total, creative }: { scene: Scene; i
   const analysis = creative.analysis;
   const visionRan = analysis?.vision.status === "analyzed";
   const transcribe = analysis?.transcribe;
-  const demo = creative.mode === "demo";
   const titles: Record<string, string> = {};
   analysis?.frames.forEach((f) => (titles[f.id] = `Keyframe at ${clock(f.timestamp_ms)}`));
   analysis?.transcript.forEach((t) => (titles[t.id] = `Transcript line at ${clock(t.start_ms)}`));
@@ -109,9 +108,7 @@ export function SceneDetail({ scene, index, total, creative }: { scene: Scene; i
           </p>
         )}
         {!visionRan && (
-          <p className="text-[12.5px] text-warning">
-            {demo ? "Demo fixture: this scene carries timing and its keyframe only. No model read it." : "Timing and keyframe only: no vision model read this scene."}
-          </p>
+          <p className="text-[12.5px] text-warning">Timing and keyframe only: no vision model read this scene.</p>
         )}
       </section>
 

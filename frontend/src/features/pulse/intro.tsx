@@ -6,10 +6,9 @@ import { EmptyState, ErrorState } from "@/components/states";
 import { Button } from "@/components/ui/button";
 
 import { useLoadSample } from "./api";
-import { SAMPLE_LABEL } from "./logic";
 
 /**
- * Before the sample is loaded: what Live Pulse is, that this build runs it on a labelled sample, and the one action that
+ * Before the sample is loaded: what Live Pulse is, that this build runs it on a sample, and the one action that
  * loads it. Nothing is drawn and no number is shown until the user asks for the sample.
  */
 export function Intro({ campaignId }: { campaignId: string }) {
@@ -26,13 +25,12 @@ export function Intro({ campaignId }: { campaignId: string }) {
             </p>
             <p>
               No ad account can be connected in this build, so Live Pulse runs on a generated sample: three weeks of daily results for four regions and three versions, across
-              Google Ads and YouTube. Everything it draws is labelled <span className="font-medium text-ink">&ldquo;{SAMPLE_LABEL}&rdquo;</span>, and none of it describes a real audience
-              or a real campaign.
+              Google Ads and YouTube. None of it describes a real audience or a real campaign.
             </p>
           </div>
         }
         needs={[
-          { label: "The labelled sample dataset: load it below", met: false },
+          { label: "The sample dataset: load it below", met: false },
           { label: "A connected ad platform account: roadmap, not available in this build", met: false },
         ]}
         action={

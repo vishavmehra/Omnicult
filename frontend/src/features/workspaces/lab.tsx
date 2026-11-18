@@ -1,9 +1,9 @@
 "use client";
 
-import { CircleAlert, FlaskConical, LoaderCircle, TriangleAlert } from "lucide-react";
+import { CircleAlert, LoaderCircle, TriangleAlert } from "lucide-react";
 import { useCallback } from "react";
 
-import { SyntheticLabel, Tag } from "@/components/evidence/badges";
+import { SyntheticLabel } from "@/components/evidence/badges";
 import { ContextPanel } from "@/components/shell/workspace-shell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRuns } from "@/features/lab/api";
@@ -70,13 +70,11 @@ export function LabWorkspace() {
       <WorkspaceHeader workspace="lab">
         <CampaignFacts />
         <div className="flex flex-wrap items-center gap-2 pt-2">
-          <SyntheticLabel>Synthetic audience. Simulated reactions, not consumer research.</SyntheticLabel>
-          {project.mode === "demo" && (
-            <Tag className="border-warning/40 bg-warning-soft text-warning" title="A demo project: runs use labelled fixtures and call no model.">
-              <FlaskConical aria-hidden />
-              Demo project: fixture runs, no model called
-            </Tag>
-          )}
+          <SyntheticLabel>
+            {project.mode === "demo"
+              ? "Synthetic audience on demo fixtures. Simulated reactions, not consumer research."
+              : "Synthetic audience. Simulated reactions, not consumer research."}
+          </SyntheticLabel>
         </div>
         <LabActivity />
       </WorkspaceHeader>
