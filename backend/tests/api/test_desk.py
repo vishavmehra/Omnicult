@@ -14,6 +14,7 @@ from app.db import models as m
 from app.db.session import read_session, session
 from app.schemas import desk as v
 from app.services import desk
+from tests.api.delivery_support import add_version
 from tests.api.launch_support import observations_json
 from tests.api.omnicult_support import API, add_member, client_for, draft, put_claims, seeded, source  # noqa: F401
 from tests.api.test_crud import make_campaign, make_project
@@ -286,8 +287,10 @@ async def test_today_reports_real_rows_next_actions_readiness_and_conflicts(clie
         draft("Pongal", attribute="major_festival", sources=[source("wikimedia")]),
         draft("Onam", attribute="major_festival", sources=[source("census", source_type="census_2011"), source("survey", source_type="curated_reference")]),
     ])
+    # a verdict must name a real version of this campaign (a made-up id is a 404 now)
+    version = await add_version({"pid": UUID(c["project"]["id"]), "cid": UUID(c["id"])})
     verdict = await client.post(f"{API}/campaigns/{c['id']}/readiness", json={
-        "region_code": "IN-TN", "version_id": str(uuid4()), "observations": observations_json(),
+        "region_code": "IN-TN", "version_id": str(version), "observations": observations_json(),
     })
     assert verdict.status_code == 201, verdict.text
 

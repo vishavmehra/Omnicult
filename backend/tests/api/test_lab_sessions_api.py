@@ -319,7 +319,9 @@ async def test_a_focus_group_whose_first_round_fails_is_a_failed_run_with_nothin
     campaign, panel = await live_panel(client, live)
     live.responders["focus-round-v1"] = lambda ctx: None
     result = await focus(client, campaign["id"], panel["id"], speakers=3, guide=GUIDE[:1])
-    assert result["status"] == "failed" and result["error"]["code"] == "PROVIDER_ERROR" and "retrying is safe" in result["error"]["message"]
+    error = result["error"]  # a rejected request fails the same way again, so the message must not call a retry safe
+    assert result["status"] == "failed" and error["code"] == "PROVIDER_ERROR" and error["retryable"] is False
+    assert error["message"].endswith("No participant turn was saved.") and "retrying is safe" not in error["message"]
     assert [t["kind"] for t in result["turns"]] == ["moderator"] and result["summary"]["participant_turns"] == 0
 
 
