@@ -32,7 +32,7 @@ def video_input(mode: str = "live", **kw) -> RemakeVideoInput:
 
 
 def deps(video: FakeVideo | None) -> WorkflowDeps:
-    return WorkflowDeps(qloo=None, llm=FakeLLM({"video": video} if video else {}))  # type: ignore[arg-type]
+    return WorkflowDeps(llm=FakeLLM({"video": video} if video else {}))  # type: ignore[arg-type]
 
 
 # --- the prompt --------------------------------------------------------------------------------------------------

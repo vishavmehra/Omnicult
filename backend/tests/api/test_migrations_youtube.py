@@ -31,9 +31,11 @@ def tables(db: Path) -> set[str]:
         return {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
 
 
-def test_0031_is_the_single_head_on_top_of_0026() -> None:
+def test_0031_sits_on_0026_in_the_single_head_chain() -> None:
     script = ScriptDirectory.from_config(config(Path("unused.db")))
-    assert script.get_heads() == ["0031"] and script.get_revision("0031").down_revision == "0026"
+    heads = script.get_heads()
+    assert len(heads) == 1 and script.get_revision("0031").down_revision == "0026"
+    assert "0031" in {rev.revision for rev in script.walk_revisions("base", heads[0])}
 
 
 def test_youtube_columns_arrive_on_top_of_0026_keep_sample_rows_enforce_their_rules_and_go_on_downgrade(tmp_path: Path) -> None:

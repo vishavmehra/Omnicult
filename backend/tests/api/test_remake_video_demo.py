@@ -16,9 +16,22 @@ from tests.api.media_support import requires_ffmpeg
 from tests.api.omnicult_support import seeded  # noqa: F401
 from tests.api.remake_support import API, build_world, finish
 from tests.api.remake_video_support import mp4  # noqa: F401
-from tests.api.test_demo_journey import offline  # noqa: F401  (blocks outbound HTTP and asyncio subprocesses)
 from tests.api.test_remake_video import content, finish_video, start_video, video_output
 from tests.api.test_remake_committed_fixtures import KEY_VISUAL_TAMIL
+
+@pytest.fixture
+def offline(monkeypatch: pytest.MonkeyPatch) -> Any:
+    """Demo runs never reach the network or start a subprocess: any outbound request or subprocess fails the test."""
+    import asyncio
+
+    import respx
+
+    async def no_subprocess(*args: Any, **kwargs: Any) -> None:
+        raise AssertionError("demo runs must not start a subprocess")
+
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", no_subprocess)
+    with respx.mock(assert_all_called=False) as router:  # no route matches, so any outbound request fails
+        yield router
 
 pytestmark = [pytest.mark.usefixtures("seeded"), requires_ffmpeg]
 FIXTURES = Path(remake_demo.__file__).resolve().parent / "omnicult_demo"

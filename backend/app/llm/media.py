@@ -285,10 +285,12 @@ async def post_json(url: str, body: dict[str, Any], headers: dict[str, str], tim
         response = await http.post(url, json=body, headers=headers)
     if response.status_code != 200:
         try:
-            detail = str((response.json().get("error") or {}).get("message") or "")[:300]
+            error = response.json().get("error") or {}
         except ValueError:
-            detail = ""
-        log.warning("provider error", extra={"provider_http": response.status_code, "provider_detail": detail})
+            error = {}
+        log.warning("provider error", extra={
+            "provider_http": response.status_code, "provider_status": str(error.get("status") or "")[:40],
+            "provider_detail": " ".join(str(error.get("message") or "").split())[:400]})
         raise ProviderError(f"HTTP {response.status_code}", transient=response.status_code in (429, 500, 502, 503, 504),
                             timeout=response.status_code in (408, 504))
     return response.json()
