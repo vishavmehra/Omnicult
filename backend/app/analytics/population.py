@@ -44,7 +44,7 @@ TRAITS: dict[str, tuple[str, ...]] = {
     "tone_preference": ("understated", "expressive", "practical"),
 }
 SIMILARITY_DEFINITION = (
-    "Cosine similarity of two groups' interest-weight vectors over Qloo ids (missing ids count as 0); 0 = no shared "
+    "Cosine similarity of two groups' interest-weight vectors over interest ids (missing ids count as 0); 0 = no shared "
     "weighted interests, 1 = identical weighting. Not a measure of real audience overlap."
 )
 SIMILARITY_THRESHOLD = 0.2
@@ -301,7 +301,7 @@ def landscape_view(groups: Sequence[PopulationGroup], *, is_demo: bool, limit: i
                 seen.add(interest_id)
                 nodes.append(_node(interest_id, "interest", i.name, is_demo=is_demo, facts={"ref_kind": i.ref_kind}))
             edges.append(_edge(f"group:{g.id}", interest_id, "has_interest", "PopulationGroup.interests", i.weight,
-                               "Interest weight derived from Qloo evidence rank (0-1)."))
+                               "Interest weight derived from evidence rank (0-1)."))
     for a_id, b_id, score in landscape_similarity(groups, threshold):
         edges.append(_edge(f"group:{a_id}", f"group:{b_id}", "similar_to",
                            f"cosine over PopulationGroup.interests weights, shown at >= {threshold}", score, SIMILARITY_DEFINITION))
@@ -319,7 +319,7 @@ def landscape_view(groups: Sequence[PopulationGroup], *, is_demo: bool, limit: i
         limitations.append("No group pair reached the similarity threshold; only shared-evidence links are drawn.")
     legend = [LegendItem(kind="audience_group", label="Audience group", description="Synthetic archetype (size = participants)."),
               LegendItem(kind="region", label="Region", description="Market the group was assigned to."),
-              LegendItem(kind="interest", label="Interest", description="Qloo tag or entity cited by the group.")]
+              LegendItem(kind="interest", label="Interest", description="Interest tag or entity cited by the group.")]
     return GraphView(view="audience_landscape", nodes=nodes, edges=edges, legend=legend, truncated=truncated,
                      limitations=limitations, generated_at=_now())
 

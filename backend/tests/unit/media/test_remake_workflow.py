@@ -18,7 +18,7 @@ def sound_input(lines: list[VoiceLineIn], **kw) -> RemakeSoundInput:
 
 
 async def test_a_spoken_line_longer_than_its_scene_is_flagged_and_the_run_is_partial():
-    deps = WorkflowDeps(qloo=None, llm=FakeLLM({"tts": FakeSpeech(2.0), "music": FakeMusic()}))  # type: ignore[arg-type]
+    deps = WorkflowDeps(llm=FakeLLM({"tts": FakeSpeech(2.0), "music": FakeMusic()}))  # type: ignore[arg-type]
     lines = [VoiceLineIn(element_id="a", text="முதல் வரி", language="ta", window_ms=4000),
              VoiceLineIn(element_id="b", text="இரண்டாம் வரி", language="ta", window_ms=1500)]
     outcome = await run_remake_sound(sound_input(lines), deps)
@@ -30,7 +30,7 @@ async def test_a_spoken_line_longer_than_its_scene_is_flagged_and_the_run_is_par
 
 async def test_english_lines_are_spoken_in_english_and_unsupported_languages_are_reported():
     speech = FakeSpeech(1.0)
-    deps = WorkflowDeps(qloo=None, llm=FakeLLM({"tts": speech}))  # type: ignore[arg-type]
+    deps = WorkflowDeps(llm=FakeLLM({"tts": speech}))  # type: ignore[arg-type]
     lines = [VoiceLineIn(element_id="a", text="Every bond, a little sweeter.", language="en"),
              VoiceLineIn(element_id="b", text="xx", language="ta")]
     outcome = await run_remake_sound(sound_input(lines), deps)
@@ -39,7 +39,7 @@ async def test_english_lines_are_spoken_in_english_and_unsupported_languages_are
 
 async def test_no_lines_or_too_many_lines_make_no_call():
     speech = FakeSpeech()
-    deps = WorkflowDeps(qloo=None, llm=FakeLLM({"tts": speech}))  # type: ignore[arg-type]
+    deps = WorkflowDeps(llm=FakeLLM({"tts": speech}))  # type: ignore[arg-type]
     many = [VoiceLineIn(element_id=f"l{i}", text="x") for i in range(3)]
     outcome = await run_remake_sound(sound_input(many, max_lines=2), deps)
     assert outcome.status == "failed" and outcome.error.code == "VALIDATION_ERROR" and not speech.calls
@@ -48,5 +48,5 @@ async def test_no_lines_or_too_many_lines_make_no_call():
 async def test_a_visual_remake_without_the_original_is_refused_before_any_call():
     inp = RemakeVisualInput(context=context(), source_version_id=uuid4(), region_code="IN-TN", region_name="Tamil Nadu", language="ta",
                             language_name="Tamil", script="Taml", plate_element_id="plate", locked=[], texts=[])
-    outcome = await run_remake_visual(inp, WorkflowDeps(qloo=None, llm=FakeLLM({})))  # type: ignore[arg-type]
+    outcome = await run_remake_visual(inp, WorkflowDeps(llm=FakeLLM({})))  # type: ignore[arg-type]
     assert outcome.status == "failed" and outcome.error.code == "VALIDATION_ERROR" and "source creative" in outcome.error.message

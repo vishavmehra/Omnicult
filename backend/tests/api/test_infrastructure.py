@@ -17,19 +17,17 @@ async def test_ready_reports_configuration_without_provider_calls(client: httpx.
     assert response.status_code == 200
     assert response.json() == {
         "status": "degraded",
-        "dependencies": {"database": "available", "llm_provider": "not_configured", "qloo": "not_configured"},
+        "dependencies": {"database": "available", "llm_provider": "not_configured"},
         "capabilities": {"embeddings": "not_configured", "vision": "not_configured", "reranking": "not_configured"},
         "live_mode_available": False,
         "demo_mode_available": True,
     }
 
 
-async def test_ready_live_when_both_providers_configured(client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_ready_live_when_the_model_provider_is_configured(client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
     from app.core.config import get_settings
 
-    import sys
-
-    values = {"QLOO_API_KEY": "k", "QLOO_BIN": sys.executable, "GOOGLE_CLOUD_PROJECT": "p"}
+    values = {"GOOGLE_CLOUD_PROJECT": "p"}
     for name, value in values.items():
         monkeypatch.setenv(name, value)
     get_settings.cache_clear()

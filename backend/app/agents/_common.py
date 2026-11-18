@@ -28,9 +28,9 @@ SOURCE_EVIDENCE_TYPES = frozenset({"qloo_source", "provider_result", "user_input
 
 EVIDENCE_RULES = (
     "Rules: use only the supplied evidence for factual claims and cite it by handle (for example E1). Never invent "
-    "statistics, entities, sources, quotes, or handles. Qloo affinity is aggregate data, not evidence of demand, "
+    "statistics, entities, sources, quotes, or handles. Cultural affinity is aggregate data, not evidence of demand, "
     "purchase intent, or individual preference. Say so when evidence is insufficient. Your interpretations are model "
-    "interpretations, never Qloo observations. Avoid stereotypes and never infer sensitive traits."
+    "interpretations, never observations. Avoid stereotypes and never infer sensitive traits."
 )
 
 def tagged(tag: str, name: str, data: Any) -> str:
@@ -67,7 +67,7 @@ def evidence_digest(
 ) -> tuple[list[dict], dict[str, EvidenceRecord]]:
     """Source records first, then interpretations and calculations; at most `limit` (context selection).
 
-    Qloo records about no entity (ambiguous or unresolved lookups) are never supplied: ambiguous candidates
+    Source records about no entity (ambiguous or unresolved lookups) are never supplied: ambiguous candidates
     are shown to users but not used downstream. `sources_only` keeps observed source data and drops model
     interpretations, so generators are grounded in signals rather than in earlier model output."""
     usable = [

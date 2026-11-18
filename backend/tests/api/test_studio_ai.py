@@ -15,7 +15,7 @@ from app.db import models as m
 from app.db.session import read_session
 from app.fixtures.demo_llm import RESPONDERS
 from tests.api.omnicult_support import draft, put_claims, seeded, source, workspace_of  # noqa: F401
-from tests.api.test_demo_journey import offline  # noqa: F401  (blocks outbound HTTP and subprocesses)
+from tests.api.offline import offline  # noqa: F401  (blocks outbound HTTP and subprocesses)
 from tests.conftest import wait_for_run
 
 API = "/api/v1"

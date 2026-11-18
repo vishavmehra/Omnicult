@@ -12,7 +12,6 @@ class Health(ApiModel):
 class ReadinessDependencies(ApiModel):
     database: DependencyStatus
     llm_provider: DependencyStatus
-    qloo: DependencyStatus
 
 
 class ReadinessCapabilities(ApiModel):

@@ -1,6 +1,6 @@
 # What `gcloud builds submit backend` uploads. Keep in step with .dockerignore (the image only needs the files named
 # in the Dockerfile); .env files are never uploaded.
-# Directory patterns are anchored with a leading slash: unanchored, gitignore rules would also drop app/integrations/qloo.
+# Directory patterns are anchored with a leading slash: unanchored, gitignore rules could also drop a package under app/.
 .git/
 .venv/
 .pytest_cache/
@@ -18,4 +18,3 @@ __pycache__/
 # scripts/ stays out of the image except the idempotent seed scripts (run as a Cloud Run job).
 /scripts/*
 !/scripts/seed_*.py
-/qloo/

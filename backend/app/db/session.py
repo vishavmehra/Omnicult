@@ -19,7 +19,7 @@ _read_sessionmaker: async_sessionmaker[AsyncSession] | None = None
 
 
 def make_engine(url: str) -> AsyncEngine:
-    # No pre-ping: each one costs a full round trip (about 410 ms to Supabase from outside its region), and asyncpg
+    # No pre-ping: each one costs a full round trip (hundreds of ms to a remote database outside its region), and asyncpg
     # reports a dead connection anyway. Recycling keeps pooled connections fresh.
     engine = create_async_engine(url, pool_recycle=1800)
     if engine.dialect.name == "sqlite":

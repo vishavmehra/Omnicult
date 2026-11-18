@@ -112,7 +112,7 @@ class RunHistoryItem(ApiModel):
     failed_ai_calls: int
     error: RunError | None
     failed_stages: list[str]
-    resumable: bool = Field(description="True when the run saved a checkpoint that POST /runs/{id}/resume can continue from.")
+    resumable: bool = Field(description="Always false: interrupted runs are not resumed in this version; start a new run instead.")
     attempt: int
 
 

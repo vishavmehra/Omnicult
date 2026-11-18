@@ -104,8 +104,8 @@ def rig(monkeypatch: pytest.MonkeyPatch) -> Rig:
     get_settings.cache_clear()
     holder = Rig(llm=FakeLLM({"image_generation": FakeImage(), "tts": FakeSpeech(), "music": FakeMusic()}))
 
-    def build(mode: str, settings: Any, *, qloo_cache: Any = None) -> WorkflowDeps:
-        return WorkflowDeps(qloo=None, llm=holder.llm)  # type: ignore[arg-type]
+    def build(mode: str, settings: Any) -> WorkflowDeps:
+        return WorkflowDeps(llm=holder.llm)  # type: ignore[arg-type]
 
     monkeypatch.setattr("app.workflows.build_workflow_deps", build)
     return holder

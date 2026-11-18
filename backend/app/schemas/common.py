@@ -145,7 +145,7 @@ class StepTrace(ApiModel):
     stage: str
     agent: str
     status: Literal["completed", "failed", "skipped"]
-    provider: str | None = Field(default=None, description="qloo, google, fixture, or omnicult (earlier runs may also show nebius or openrouter).")
+    provider: str | None = Field(default=None, description="google, fixture, or omnicult (earlier runs may also show qloo, nebius or openrouter).")
     model_id: str | None = None
     prompt_version: str | None = None
     schema_version: str | None = None

@@ -101,7 +101,7 @@ def analysis(ctx: Context) -> dict:
     return {"group_differences": differences,
             "next_actions": ["Name the product and one concrete benefit in the headline.",
                              "Test the headline with real weekend hikers in Japan before launch."],
-            "evidence_gaps": ["No observed outcomes from real people.", "Interest signals are demo fixtures, not live Qloo data."]}
+            "evidence_gaps": ["No observed outcomes from real people.", "Interest signals are demo fixtures, not live data."]}
 
 
 def social_round(ctx: Context) -> dict:

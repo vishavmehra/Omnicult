@@ -12,7 +12,7 @@ import pytest
 from app.fixtures import remake_demo
 from tests.api.omnicult_support import seeded  # noqa: F401
 from tests.api.remake_support import API, build_world, finish, output_of
-from tests.api.test_demo_journey import offline  # noqa: F401
+from tests.api.offline import offline  # noqa: F401
 
 pytestmark = pytest.mark.usefixtures("seeded")
 FIXTURES = Path(remake_demo.__file__).resolve().parent / "omnicult_demo"

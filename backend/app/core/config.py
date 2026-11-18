@@ -19,35 +19,19 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     frontend_origins: str = "http://localhost:3000"
 
-    # Supabase settings remain only for ASSET_STORAGE_BACKEND=supabase (the infra stream replaces that backend with GCS).
-    supabase_url: str | None = None
-    # Server-side Storage credential (ASSET_STORAGE_BACKEND=supabase). Never sent to the browser or logged.
-    supabase_secret_key: SecretStr | None = None
-
     database_url: str = "sqlite+aiosqlite:///./omnicult.db"
 
     # Provider-neutral call limits. The model gateway itself is configured in the Google block at the end of this class.
     llm_request_timeout_seconds: float = 60
     llm_max_retries: int = 2
 
-    qloo_api_key: SecretStr | None = None
-    # Unset = the official default host (https://api.qloo.com). Set it only when the event key belongs to another
-    # Qloo host, e.g. https://hackathon.api.qloo.com (docs/04 A.9).
-    qloo_base_url: str | None = None
-    # auto (unset) = the official harness (`qloo exec`) when Node and the pinned harness exist, else direct REST.
-    qloo_transport: Literal["auto", "harness", "rest"] | None = None
-    qloo_bin: str = "qloo"
-    qloo_timeout_seconds: float = 30
-
     # Uploaded assets (contracts/README section 13)
     # database: bytes in a table (tests); local: files under storage/assets (development); gcs: a private Cloud Storage
-    # bucket (production); supabase: legacy Supabase Storage, removed with the rest of Supabase.
-    asset_storage_backend: Literal["database", "supabase", "gcs", "local"] = "database"
+    # bucket (production).
+    asset_storage_backend: Literal["database", "gcs", "local"] = "database"
     max_image_bytes: int = 5 * 1024 * 1024  # migration 0006 sets the bucket's file_size_limit to the same value
 
     max_active_runs_per_user: int = 2
-    # Work limit for one population study run; a larger request is refused with 422, never silently reduced.
-    population_max_participants: int = 600
 
     # --- infra (ops/deploy/) ---
     # Cloud Storage bucket for ASSET_STORAGE_BACKEND=gcs. Credentials come from the runtime service account (ADC),
@@ -101,11 +85,6 @@ class Settings(BaseSettings):
     proof_export_url_ttl_seconds: int = Field(default=300, ge=30, le=3600)
 
     @field_validator(
-        "supabase_url",
-        "supabase_secret_key",
-        "qloo_api_key",
-        "qloo_base_url",
-        "qloo_transport",
         "gcs_bucket",
         "firebase_project_id",
         "data_gov_in_api_key",
@@ -114,7 +93,7 @@ class Settings(BaseSettings):
     )
     @classmethod
     def _blank_is_unset(cls, value: object) -> object:
-        # `QLOO_API_KEY=` in a .env file means "not configured", not an empty credential.
+        # `GCS_BUCKET=` in a .env file means "not configured", not an empty value.
         return None if isinstance(value, str) and not value.strip() else value
 
     # A field validator, not a model validator: its error input is just the auth mode, never the full settings
@@ -126,14 +105,7 @@ class Settings(BaseSettings):
             raise ValueError("AUTH_MODE=dev is refused when APP_ENV=production.")
         return value
 
-    # Fail at startup, naming only the missing settings (the key is declared above, so info.data holds it).
-    @field_validator("asset_storage_backend")
-    @classmethod
-    def _supabase_storage_needs_credentials(cls, value: str, info: ValidationInfo) -> str:
-        if value == "supabase" and not (info.data.get("supabase_url") and info.data.get("supabase_secret_key")):
-            raise ValueError("ASSET_STORAGE_BACKEND=supabase needs SUPABASE_URL and SUPABASE_SECRET_KEY.")
-        return value
-
+    # Fail at startup, naming only the missing settings (the backend is declared above, so info.data holds it).
     @field_validator("gcs_bucket")
     @classmethod
     def _gcs_storage_needs_bucket(cls, value: str | None, info: ValidationInfo) -> str | None:

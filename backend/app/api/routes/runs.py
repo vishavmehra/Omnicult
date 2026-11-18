@@ -1,10 +1,10 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Query, status
+from fastapi import APIRouter, Query
 
 from app.api.deps import CurrentUser, Limit, Offset
-from app.schemas.runs import Run, RunAccepted, RunPage, RunStatus, RunType
+from app.schemas.runs import Run, RunPage, RunStatus, RunType
 from app.services import runs
 from app.services import results
 
@@ -33,12 +33,5 @@ async def list_runs(
 
 @router.post("/runs/{run_id}/cancel", response_model=Run)
 async def cancel_run(run_id: UUID, user: CurrentUser) -> Run:
-    """Cooperative cancel: stops at the next checkpoint; saved partial work stays (README §14.5). 409 if terminal."""
+    """Cancel a queued or running run. 409 if it already finished."""
     return await runs.cancel_run(user.id, run_id)
-
-
-@router.post("/runs/{run_id}/resume", status_code=status.HTTP_202_ACCEPTED, response_model=RunAccepted)
-async def resume_run(run_id: UUID, user: CurrentUser) -> RunAccepted:
-    """Resume an interrupted or failed population_study/social_simulation from its last checkpoint (README §14.5).
-    409 for other run types or runs without a checkpoint."""
-    return await runs.resume_run(user.id, run_id)

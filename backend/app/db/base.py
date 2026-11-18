@@ -1,4 +1,4 @@
-"""Declarative base and portable column types (SQLite locally, Postgres on Supabase)."""
+"""Declarative base and portable column types (SQLite locally, PostgreSQL deployed)."""
 
 from datetime import UTC, datetime
 

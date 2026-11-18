@@ -1,4 +1,4 @@
-"""Culture data layer: the Qloo replacement (docs/CONTRACTS_PHASE1.md section 4).
+"""Culture data layer: cited regional claims from open sources.
 
 Public interface: build_culture_service, CultureService, RegionProfileBuilder and the neutral result models. Adapters
 live in `adapters/`; every claim they return is a ClaimDraft with full SourceRef provenance.

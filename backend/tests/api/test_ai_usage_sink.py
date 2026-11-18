@@ -4,7 +4,6 @@ limited per user and per workspace. Fake providers and fake Gen AI clients only:
 
 import asyncio
 import json
-import sys
 from collections.abc import Callable
 from typing import Any
 from uuid import UUID, uuid4
@@ -26,12 +25,11 @@ from app.schemas.common import Usage
 from app.db.base import utcnow
 from app.services import metering, studio_context
 from app.services.metering import AiUsage, DbUsageSink, record_ai_usage, spend_usd
-from tests.api import fake_workflows
 from tests.api.omnicult_support import draft, put_claims, seeded, source, workspace_of  # noqa: F401
 from tests.api.test_crud import make_campaign, make_project
-from tests.api.test_runs import demo_setup, discovery_body, start
+from tests.api.run_support import TRANSCREATE, demo_setup, start, transcreate_url
 from tests.api.test_studio_ai import FESTIVAL, demo_studio
-from tests.api.test_demo_journey import offline  # noqa: F401  (blocks outbound HTTP and subprocesses)
+from tests.api.offline import offline  # noqa: F401  (blocks outbound HTTP and subprocesses)
 from tests.conftest import wait_for_run
 from tests.unit.llm.genai_fakes import FakeClient, api_error, embedding_reply, reply, settings as genai_settings
 from google.genai import types
@@ -118,35 +116,31 @@ async def test_a_synchronous_call_is_recorded_with_workspace_project_campaign_an
 # --- a run -------------------------------------------------------------------------------------------------------------
 
 
-@pytest.fixture
-def fake(monkeypatch: pytest.MonkeyPatch) -> fake_workflows.FakeWorkflows:
-    return fake_workflows.install(monkeypatch)
-
-
 def call_the_gateway_first(monkeypatch: pytest.MonkeyPatch, provider: Scripted, calls: int = 1) -> list[Any]:
-    """The fake discovery workflow first makes `calls` real gateway calls; their outcomes (value or LLMError) are returned."""
-    package = sys.modules["app.workflows"]
-    original, outcomes = package.run_discovery, []
+    """The transcreate workflow first makes `calls` real gateway calls; their outcomes (value or LLMError) are returned."""
+    import app.workflows as package
+
+    original, outcomes = package.run_transcreate, []
 
     async def with_model_calls(inp: Any, deps: Any, progress: Any) -> Any:
         gateway = LLMGateway(get_settings(), provider=provider, backoff_seconds=0)
         for _ in range(calls):
             try:
                 outcomes.append((await gateway.generate_structured(
-                    task="extraction", stage="resolving_references", agent="test", system="s", user="u", schema=Ping,
+                    task="extraction", stage="loading_context", agent="test", system="s", user="u", schema=Ping,
                     prompt_version="ping-v1")).value)
             except LLMError as exc:
                 outcomes.append(exc)
         return await original(inp, deps, progress)
 
-    monkeypatch.setattr(package, "run_discovery", with_model_calls)
+    monkeypatch.setattr(package, "run_transcreate", with_model_calls)
     return outcomes
 
 
-async def test_a_runs_model_calls_are_recorded_against_the_run(client: httpx.AsyncClient, fake: fake_workflows.FakeWorkflows, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_a_runs_model_calls_are_recorded_against_the_run(seeded: Any, client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
     call_the_gateway_first(monkeypatch, Scripted({"ping-v1": lambda ctx: {"ok": True}}), calls=2)
     project, campaign, _ = await demo_setup(client)
-    accepted = await start(client, f"{API}/projects/{project['id']}/discoveries", discovery_body(campaign["id"]))
+    accepted = await start(client, transcreate_url(campaign), TRANSCREATE)
     await wait_for_run(client, accepted["run_id"])
     rows = await events(run_id=UUID(accepted["run_id"]))
     assert [(r.capability, r.prompt_version, r.status) for r in rows] == [("chat", "ping-v1", "ok")] * 2
@@ -157,11 +151,11 @@ async def test_a_runs_model_calls_are_recorded_against_the_run(client: httpx.Asy
     assert history["cost_basis"] == "usage_events" and history["ai_calls"] == 2 and history["failed_ai_calls"] == 0
 
 
-async def test_the_run_budget_reads_spend_back_from_the_usage_table(client: httpx.AsyncClient, fake: fake_workflows.FakeWorkflows, monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_the_run_budget_reads_spend_back_from_the_usage_table(seeded: Any, client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
     # one call reports two million output tokens (about $5, over the $0.50 run budget): the run's next call is refused
     outcomes = call_the_gateway_first(monkeypatch, Scripted({"ping-v1": lambda ctx: {"ok": True}}, output_tokens=2_000_000), calls=2)
     project, campaign, _ = await demo_setup(client)
-    accepted = await start(client, f"{API}/projects/{project['id']}/discoveries", discovery_body(campaign["id"]))
+    accepted = await start(client, transcreate_url(campaign), TRANSCREATE)
     await wait_for_run(client, accepted["run_id"])
     assert isinstance(outcomes[0], Ping) and isinstance(outcomes[1], LLMError) and outcomes[1].code == "BUDGET_EXCEEDED"
     assert "AI_RUN_BUDGET_USD" in outcomes[1].message

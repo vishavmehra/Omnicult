@@ -19,13 +19,13 @@ def test_culture_settings_defaults_and_blank_keys_mean_unset():
     assert "zq-test-key-7731" not in repr(keyed)  # secrets never print
 
 
-def test_workflow_deps_carries_a_culture_service_and_keeps_qloo():
+def test_workflow_deps_carries_a_culture_service():
     demo = build_workflow_deps("demo", settings())
-    assert isinstance(demo.culture, CultureService) and demo.culture.mode == "fixture" and demo.qloo is not None
+    assert isinstance(demo.culture, CultureService) and demo.culture.mode == "fixture"
     live = build_workflow_deps("live", settings())
-    assert live.culture.mode == "live" and live.qloo is not None
+    assert live.culture.mode == "live"
     assert live.culture.skipped_sources() == ["gemini_grounding"]  # no grounded_research capability configured
 
 
 def test_existing_call_sites_that_omit_culture_still_work():
-    assert WorkflowDeps(qloo=None, llm=None).culture is None  # type: ignore[arg-type]
+    assert WorkflowDeps(llm=None).culture is None  # type: ignore[arg-type]

@@ -15,7 +15,6 @@ __pycache__/
 # scripts/ stays out of the image except the idempotent seed scripts (run as a Cloud Run job).
 /scripts/*
 !/scripts/seed_*.py
-/qloo/
 Dockerfile
 .dockerignore
 .gcloudignore

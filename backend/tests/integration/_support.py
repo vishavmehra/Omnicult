@@ -75,8 +75,6 @@ def base_env(tmp_path: Path) -> dict[str, str]:
         "DATABASE_URL": f"sqlite+aiosqlite:///{database}",
         "LLM_REQUEST_TIMEOUT_SECONDS": "5",
         "LLM_MAX_RETRIES": "0",
-        "QLOO_BIN": str(tmp_path / "qloo-not-installed"),
-        "QLOO_TIMEOUT_SECONDS": "5",
         "MAX_ACTIVE_RUNS_PER_USER": "2",
         "ASSET_STORAGE_DIR": str(tmp_path / "storage"),
         "DEMO_SEED": "legacy",  # these tests are written for the Northstar demo (one study, the seeded Japan market); Aamod has its own
@@ -104,7 +102,7 @@ def migrate(database_url: str) -> None:
 
 
 # Provider credentials are absent (None) by default because .env is not read.
-PROVIDER_SECRET_VARS = ("GEMINI_API_KEY", "GOOGLE_CLOUD_PROJECT", "GOOGLE_API_KEY", "QLOO_API_KEY", "SUPABASE_JWT_SECRET")
+PROVIDER_SECRET_VARS = ("GEMINI_API_KEY", "GOOGLE_CLOUD_PROJECT", "GOOGLE_API_KEY", "YOUTUBE_API_KEY")
 
 
 def apply_env(monkeypatch: pytest.MonkeyPatch, env: Mapping[str, str]) -> None:

@@ -50,8 +50,8 @@ class EvidenceRecord(ApiModel):
     claim_type: ClaimType
     title: str
     summary: str
-    source_provider: str = Field(description="qloo, omnicult, fixture, a model provider id, or user.")
-    source_workflow: str | None = Field(description="Verified Qloo workflow name, when Qloo-derived.")
+    source_provider: str = Field(description="google, omnicult, fixture, a model provider id, or user (earlier records may show qloo).")
+    source_workflow: str | None = Field(description="Name of the workflow that produced the record, when known.")
     source_reference: str | None
     subject: EntityRef | None
     related_entity: EntityRef | None

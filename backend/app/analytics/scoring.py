@@ -227,7 +227,7 @@ def constraint_checks(
     source: CampaignContent, adapted: CampaignContent, protected_terms: Sequence[str], prohibited_terms: Sequence[str]
 ) -> tuple[list[str], list[str], list[RiskFlag]]:
     """(missing protected terms, prohibited terms found, deterministic warnings). Same semantics as
-    app/services/adaptations.constraint_checks, so generated adaptations and user revisions agree."""
+    the studio checks (app/studio/checks.py), so every path applies the same rule."""
     source_text, adapted_text = _copy_text(source), _copy_text(adapted)
     missing = [t for t in protected_terms if t.casefold() in source_text and t.casefold() not in adapted_text]
     found = [t for t in prohibited_terms if t.casefold() in adapted_text]

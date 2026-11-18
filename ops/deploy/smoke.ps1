@@ -78,7 +78,7 @@ Test-Check 'api /health is public and ok' ($r.Status -eq 200 -and (ConvertFrom-J
 
 $r = Send-Http GET "$ApiUrl/ready"
 $ready = ConvertFrom-JsonSafe $r.Body
-$readyDetail = if ($ready) { "status=$($ready.status), database=$($ready.dependencies.database), llm_provider=$($ready.dependencies.llm_provider), qloo=$($ready.dependencies.qloo)" } else { "HTTP $($r.Status)" }
+$readyDetail = if ($ready) { "status=$($ready.status), database=$($ready.dependencies.database), llm_provider=$($ready.dependencies.llm_provider)" } else { "HTTP $($r.Status)" }
 Test-Check 'api /ready: database available' ($r.Status -eq 200 -and $ready.dependencies.database -eq 'available') $readyDetail
 Test-Check 'api /ready: Google (Vertex) model provider configured' ($ready -and $ready.dependencies.llm_provider -eq 'configured') 'configuration only, no model call is made'
 

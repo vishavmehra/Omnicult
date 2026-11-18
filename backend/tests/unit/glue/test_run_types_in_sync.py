@@ -1,9 +1,10 @@
 """One list of run types, kept in step everywhere it is written down.
 
 `schemas.runs.RunType` is the source of truth. The agent_runs CHECK (models and the migrated database), the run engine's
-tables, the Run History labels, the frontend maps and the generated frontend types must all hold exactly the same thirteen
-names: today's ten plus `transcreate`, `creative_xray` and `voice_direct`. A type added in one place and forgotten in another
-fails here. `voice_direct` is recorded synchronously (one planning call, no queue), so it has no run-engine tables.
+tables, the Run History labels, the frontend maps and the generated frontend types must all hold exactly the same fifteen
+names. A type added in one place and forgotten in another fails here. `voice_direct` is recorded synchronously (one planning
+call, no queue), so it has no run-engine tables. The ten types from earlier versions stay in the list because stored runs of
+those types remain valid, but this build no longer executes them.
 """
 
 import re
@@ -23,14 +24,18 @@ BACKEND = Path(__file__).resolve().parents[3]
 FRONTEND = BACKEND.parent / "frontend" / "src"
 RUN_TYPES = set(get_args(RunType))
 SYNCHRONOUS = {"voice_direct"}  # recorded by the service that made the call; never queued, so the run engine has no entry for it
-ENGINE_TYPES = RUN_TYPES - SYNCHRONOUS
+RETIRED = {
+    "market_discovery", "campaign_rehearsal", "campaign_adaptation", "campaign_evaluation", "cultural_profile",
+    "campaign_arena", "risk_scan", "market_comparison", "population_study", "social_simulation",
+}  # stored runs of these types stay readable; the engine no longer runs them
+ENGINE_TYPES = RUN_TYPES - SYNCHRONOUS - RETIRED
 
 
 def names(text: str) -> set[str]:
     return {a or b for a, b in re.findall(r"'([a-z_]+)'|\"([a-z_]+)\"", text)}
 
 
-def test_the_list_is_ten_types_plus_transcreate_creative_xray_voice_direct_and_remakes() -> None:
+def test_the_list_is_the_retired_types_plus_transcreate_creative_xray_voice_direct_and_remakes() -> None:
     added = {"transcreate", "creative_xray", "voice_direct", "remake_visual", "remake_sound"}
     assert len(RUN_TYPES) == 15
     assert RUN_TYPES >= added
@@ -63,9 +68,6 @@ def test_the_frontend_maps_and_generated_types_cover_every_type() -> None:
     meta = (FRONTEND / "features" / "project" / "workflow.ts").read_text(encoding="utf-8")
     block = meta.split("RUN_TYPE_META", 1)[1].split("};", 1)[0]
     assert set(re.findall(r"^\s+(\w+): \{ label:", block, re.M)) == RUN_TYPES
-    mock = (FRONTEND / "lib" / "api" / "mock.ts").read_text(encoding="utf-8")
-    block = mock.split("const RUNNING_STAGE", 1)[1].split("};", 1)[0]
-    assert set(re.findall(r"^\s+(\w+): \"", block, re.M)) == RUN_TYPES
     generated = (FRONTEND / "lib" / "api" / "schema.d.ts").read_text(encoding="utf-8")
     unions = [u for u in re.findall(r"run_type\??: \(([^)]*)\)", generated) if "market_discovery" in u]
     assert unions, "the generated types no longer mention run_type"

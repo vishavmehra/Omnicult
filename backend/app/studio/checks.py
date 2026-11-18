@@ -3,7 +3,7 @@
 Everything a model says about its own output is checked here, never trusted: the regional copy must use the expected
 script, protected terms must survive in the copy and in the English back-translation, prohibited alternatives must not
 appear in either, and the tone dials become explicit prompt directives (so a dial really changes the generation call).
-The flat brand-kit term lists follow the same case-insensitive rule as `services.adaptations.constraint_checks`.
+The flat brand-kit term lists follow a case-insensitive rule.
 """
 
 import re

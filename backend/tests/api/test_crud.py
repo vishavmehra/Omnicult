@@ -1,4 +1,4 @@
-"""Projects, demo seeding, campaigns and content versions, studies: ownership, archive, PATCH semantics."""
+"""Projects, demo seeding, campaigns and content versions: ownership, archive, PATCH semantics."""
 
 import json
 from pathlib import Path
@@ -9,7 +9,7 @@ import httpx
 from tests.conftest import BOB
 
 API = "/api/v1"
-FIXTURES = Path(__file__).resolve().parents[3] / "contracts" / "fixtures"
+FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "northstar"
 CONTENT = {"headline": "Find your trail", "body": "Gear for weekends.", "call_to_action": "Shop", "reference_terms": ["trail"]}
 
 
@@ -74,7 +74,6 @@ async def test_other_user_gets_404_everywhere(client: httpx.AsyncClient) -> None
         ("PATCH", f"{API}/campaigns/{campaign['id']}"),
         ("GET", f"{API}/projects/{project['id']}/runs"),
         ("GET", f"{API}/projects/{project['id']}/evidence"),
-        ("GET", f"{API}/projects/{project['id']}/reports"),
     ):
         response = await client.request(method, url, headers=BOB, json={} if method == "PATCH" else None)
         assert response.status_code == 404, (method, url, response.text)
@@ -90,7 +89,7 @@ async def test_pagination(client: httpx.AsyncClient) -> None:
     assert [p["name"] for p in page["items"]] == ["P2", "P1"]  # most recent activity first
 
 
-async def test_demo_project_matches_fixture_seed(client: httpx.AsyncClient) -> None:
+async def test_demo_project_matches_the_northstar_seed(client: httpx.AsyncClient) -> None:
     response = await client.post(f"{API}/projects/demo")
     assert response.status_code == 201
     project = response.json()
@@ -120,12 +119,6 @@ async def test_demo_project_matches_fixture_seed(client: httpx.AsyncClient) -> N
     assert (await client.patch(f"{API}/projects/{project['id']}", json={"protected_terms": []})).status_code == 409
     assert (await client.patch(f"{API}/projects/{project['id']}", json={"name": "Mine"})).status_code == 200
 
-    studies = (await client.get(f"{API}/projects/{project['id']}/studies")).json()
-    expected_study = json.loads((FIXTURES / "Study.json").read_text(encoding="utf-8"))
-    assert studies["total"] == 1 and studies["items"][0]["campaign_id"] == campaign["id"]
-    for key in ("name", "market", "research_questions", "dimensions", "segments", "simulation_config"):
-        assert studies["items"][0][key] == expected_study[key]
-
 
 async def test_campaign_versions(client: httpx.AsyncClient) -> None:
     project = await make_project(client)
@@ -152,38 +145,3 @@ async def test_campaign_versions(client: httpx.AsyncClient) -> None:
 
     listed = (await client.get(f"{API}/projects/{project['id']}/campaigns")).json()
     assert listed["total"] == 1 and listed["items"][0]["current_version"]["version_number"] == 2
-
-
-async def test_studies(client: httpx.AsyncClient) -> None:
-    project = await make_project(client)
-    campaign = await make_campaign(client, project["id"])
-    other_project = await make_project(client, name="Other")
-    other_campaign = await make_campaign(client, other_project["id"])
-    body = {"campaign_id": campaign["id"], "name": "Rehearsal", "market": {"country_code": "JP", "display_name": "Japan"},
-            "research_questions": ["Is it clear?"]}
-
-    created = await client.post(f"{API}/projects/{project['id']}/studies", json=body)
-    assert created.status_code == 201, created.text
-    study = created.json()
-    assert study["simulation_config"] == {"response_count": 12, "segment_count": 3, "random_seed": 42}
-    assert study["latest_rehearsal_run_id"] is None and study["dimensions"] == [
-        "clarity", "brand_fidelity", "cultural_relevance", "cultural_risk"]
-    assert (await client.get(f"{API}/studies/{study['id']}")).json() == study
-    assert (await client.get(f"{API}/studies/{study['id']}", headers=BOB)).status_code == 404
-
-    wrong_project = await client.post(f"{API}/projects/{project['id']}/studies", json=body | {"campaign_id": other_campaign["id"]})
-    assert wrong_project.status_code == 409
-    assert wrong_project.json()["error"]["details"][0]["field"] == "campaign_id"
-    bob_project = (await client.post(f"{API}/projects", json={"name": "B", "brand_name": "B"}, headers=BOB)).json()
-    not_mine = await client.post(f"{API}/projects/{bob_project['id']}/studies", json=body, headers=BOB)
-    assert not_mine.status_code == 404  # Alice's campaign does not exist for Bob
-
-    mismatch = await client.post(f"{API}/projects/{project['id']}/studies", json=body | {
-        "segments": [{"label": "A", "description": "a"}]})
-    assert mismatch.status_code == 422
-
-    second_campaign = await make_campaign(client, project["id"])
-    await client.post(f"{API}/projects/{project['id']}/studies", json=body | {"campaign_id": second_campaign["id"]})
-    filtered = (await client.get(f"{API}/projects/{project['id']}/studies", params={"campaign_id": campaign["id"]})).json()
-    assert filtered["total"] == 1 and filtered["items"][0]["id"] == study["id"]
-    assert (await client.get(f"{API}/projects/{project['id']}/studies")).json()["total"] == 2

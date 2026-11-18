@@ -55,7 +55,7 @@ class AdaptationChecks(ApiModel):
 class AdaptationContext(ApiModel):
     discovery_run_id: UUID | None
     rehearsal_run_id: UUID | None
-    grounded: bool = Field(description="True only when Qloo evidence was supplied to the generator.")
+    grounded: bool = Field(description="True only when source evidence was supplied to the generator.")
     rehearsal_informed: bool
 
 

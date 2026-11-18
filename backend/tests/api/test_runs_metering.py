@@ -15,10 +15,14 @@ from app.db.base import utcnow
 from app.db.session import read_session, session
 from app.services.audit import record_audit
 from app.services.metering import AiUsage, record_ai_usage, spend_usd
-from tests.api import fake_workflows
-from tests.api.omnicult_support import add_member, client_for, workspace_of  # noqa: F401
-from tests.api.test_runs import API, demo_setup, discovery_body, fake, start  # noqa: F401
+from tests.api.omnicult_support import add_member, client_for, seeded, workspace_of  # noqa: F401
+from tests.api.run_support import API, TRANSCREATE, demo_setup, start, transcreate_url
 from tests.conftest import BOB, wait_for_run
+
+
+@pytest.fixture(autouse=True)
+def reference_data(seeded: Any) -> Any:  # the regions a transcreate run names
+    return seeded
 
 
 @pytest.fixture(autouse=True)
@@ -33,33 +37,35 @@ async def run_rows() -> list[m.AgentRun]:
         return list((await s.execute(select(m.AgentRun))).scalars())
 
 
-async def test_a_retried_request_returns_the_run_it_already_created(client: httpx.AsyncClient, fake: fake_workflows.FakeWorkflows) -> None:
-    project, campaign, _ = await demo_setup(client)
-    url, body = f"{API}/projects/{project['id']}/discoveries", discovery_body(campaign["id"])
-    headers = {"Idempotency-Key": "launch-2026-11-17:atlas"}
-    first = await start(client, url, body, headers=headers)
-    retry = await client.post(url, json=body, headers=headers)
+async def test_a_retried_request_returns_the_run_it_already_created(client: httpx.AsyncClient) -> None:
+    _, campaign, _ = await demo_setup(client)
+    url = transcreate_url(campaign)
+    headers = {"Idempotency-Key": "launch-2026-11-17:transcreate"}
+    first = await start(client, url, TRANSCREATE, headers=headers)
+    retry = await client.post(url, json=TRANSCREATE, headers=headers)
     assert retry.status_code == 202 and retry.json()["run_id"] == first["run_id"]
     await wait_for_run(client, first["run_id"])
-    later = await client.post(url, json=body, headers=headers)  # still the same run once it has finished
+    later = await client.post(url, json=TRANSCREATE, headers=headers)  # still the same run once it has finished
     assert later.json()["run_id"] == first["run_id"] and later.json()["status"] == "completed"
     assert len(await run_rows()) == 1
-    fresh = await start(client, url, body)  # no key: a new run, as before
+    fresh = await start(client, url, TRANSCREATE)  # no key: a new run, as before
     assert fresh["run_id"] != first["run_id"]
 
 
 async def test_a_key_is_scoped_to_the_user_and_cannot_be_reused_for_a_different_request(
-    client: httpx.AsyncClient, client_for: Any, fake: fake_workflows.FakeWorkflows
+    client: httpx.AsyncClient, client_for: Any
 ) -> None:
-    project, campaign, study = await demo_setup(client)
+    _, campaign, _ = await demo_setup(client)
     headers = {"Idempotency-Key": "same-key"}
-    first = await start(client, f"{API}/projects/{project['id']}/discoveries", discovery_body(campaign["id"]), headers=headers)
+    first = await start(client, transcreate_url(campaign), TRANSCREATE, headers=headers)
     await wait_for_run(client, first["run_id"])
-    other_type = await client.post(f"{API}/studies/{study['id']}/rehearsals", json={}, headers=headers)
-    assert other_type.status_code == 409 and "Idempotency-Key" in other_type.json()["error"]["message"]
+    other_project, other_campaign, _ = await demo_setup(client)  # the same key for a request on another project
+    reused = await client.post(transcreate_url(other_campaign), json=TRANSCREATE, headers=headers)
+    assert other_project["id"] != campaign["project_id"]
+    assert reused.status_code == 409 and "Idempotency-Key" in reused.json()["error"]["message"]
     bob = client_for(BOB)
-    bobs_project, bobs_campaign, _ = await demo_setup(bob)
-    bobs = await start(bob, f"{API}/projects/{bobs_project['id']}/discoveries", discovery_body(bobs_campaign["id"]), headers=headers)
+    _, bobs_campaign, _ = await demo_setup(bob)
+    bobs = await start(bob, transcreate_url(bobs_campaign), TRANSCREATE, headers=headers)
     assert bobs["run_id"] != first["run_id"]  # another user may use the same key
 
 
@@ -70,25 +76,25 @@ async def test_an_invalid_key_is_rejected(client: httpx.AsyncClient) -> None:
     assert (await client.get(f"{API}/projects", headers={"Idempotency-Key": "ok_key-1.2:3"})).status_code == 200
 
 
-async def test_the_database_refuses_a_second_run_with_the_same_user_and_key(client: httpx.AsyncClient, fake: fake_workflows.FakeWorkflows) -> None:
+async def test_the_database_refuses_a_second_run_with_the_same_user_and_key(client: httpx.AsyncClient) -> None:
     from sqlalchemy.exc import IntegrityError
 
-    project, campaign, _ = await demo_setup(client)
-    first = await start(client, f"{API}/projects/{project['id']}/discoveries", discovery_body(campaign["id"]), headers={"Idempotency-Key": "k1"})
+    _, campaign, _ = await demo_setup(client)
+    first = await start(client, transcreate_url(campaign), TRANSCREATE, headers={"Idempotency-Key": "k1"})
     await wait_for_run(client, first["run_id"])
     original = (await run_rows())[0]
     async with session() as s:
         s.add(m.AgentRun(
-            id=uuid4(), project_id=original.project_id, run_type="market_discovery", status="queued", mode="demo",
+            id=uuid4(), project_id=original.project_id, run_type="transcreate", status="queued", mode="demo",
             created_by=original.created_by, idempotency_key="k1", created_at=utcnow(),
         ))
         with pytest.raises(IntegrityError):
             await s.commit()
 
 
-async def test_runs_record_who_created_them_and_their_lease(client: httpx.AsyncClient, fake: fake_workflows.FakeWorkflows) -> None:
-    project, campaign, _ = await demo_setup(client)
-    accepted = await start(client, f"{API}/projects/{project['id']}/discoveries", discovery_body(campaign["id"]))
+async def test_runs_record_who_created_them_and_their_lease(client: httpx.AsyncClient) -> None:
+    _, campaign, _ = await demo_setup(client)
+    accepted = await start(client, transcreate_url(campaign), TRANSCREATE)
     await wait_for_run(client, accepted["run_id"])
     [run] = await run_rows()
     assert run.created_by == dev_user_id("alice") and run.idempotency_key is None
@@ -96,24 +102,24 @@ async def test_runs_record_who_created_them_and_their_lease(client: httpx.AsyncC
     assert run.lease_expires_at is not None and run.lease_expires_at > run.heartbeat_at + timedelta(minutes=10)
 
 
-async def test_the_active_run_limit_counts_the_users_own_runs_across_workspaces(client: httpx.AsyncClient, client_for: Any, fake: fake_workflows.FakeWorkflows) -> None:
+async def test_the_active_run_limit_counts_the_users_own_runs_across_workspaces(client: httpx.AsyncClient, client_for: Any) -> None:
     """A teammate's runs in a shared workspace do not use up the caller's limit."""
     project, campaign, _ = await demo_setup(client)
     await add_member(UUID(project["workspace_id"]), "bob", "editor")
     async with session() as s, s.begin():
         for _ in range(2):  # bob already has two active runs in alice's project
-            s.add(m.AgentRun(id=uuid4(), project_id=UUID(project["id"]), run_type="market_discovery",
+            s.add(m.AgentRun(id=uuid4(), project_id=UUID(project["id"]), run_type="transcreate",
                              status="running", mode="demo", created_by=dev_user_id("bob"), created_at=utcnow()))
-    accepted = await client.post(f"{API}/projects/{project['id']}/discoveries", json=discovery_body(campaign["id"]))
+    accepted = await client.post(transcreate_url(campaign), json=TRANSCREATE)
     assert accepted.status_code == 202  # alice has none of her own
-    blocked = await client_for(BOB).post(f"{API}/projects/{project['id']}/discoveries", json=discovery_body(campaign["id"]))
+    blocked = await client_for(BOB).post(transcreate_url(campaign), json=TRANSCREATE)
     assert blocked.status_code == 429
 
 
-async def test_a_viewer_cannot_start_runs(client: httpx.AsyncClient, client_for: Any, fake: fake_workflows.FakeWorkflows) -> None:
+async def test_a_viewer_cannot_start_runs(client: httpx.AsyncClient, client_for: Any) -> None:
     project, campaign, _ = await demo_setup(client)
     await add_member(UUID(project["workspace_id"]), "bob", "viewer")
-    response = await client_for(BOB).post(f"{API}/projects/{project['id']}/discoveries", json=discovery_body(campaign["id"]))
+    response = await client_for(BOB).post(transcreate_url(campaign), json=TRANSCREATE)
     assert response.status_code == 403
     assert await run_rows() == []
 
@@ -145,9 +151,9 @@ async def test_usage_events_are_stored_and_summed(app: Any) -> None:
     assert await spend_usd(since=utcnow() + timedelta(days=1)) == 0.0
 
 
-async def test_usage_can_join_the_callers_transaction_and_link_to_a_run(client: httpx.AsyncClient, fake: fake_workflows.FakeWorkflows) -> None:
+async def test_usage_can_join_the_callers_transaction_and_link_to_a_run(client: httpx.AsyncClient) -> None:
     project, campaign, _ = await demo_setup(client)
-    accepted = await start(client, f"{API}/projects/{project['id']}/discoveries", discovery_body(campaign["id"]))
+    accepted = await start(client, transcreate_url(campaign), TRANSCREATE)
     run_id = UUID(accepted["run_id"])
     await wait_for_run(client, accepted["run_id"])
     async with session() as s, s.begin():

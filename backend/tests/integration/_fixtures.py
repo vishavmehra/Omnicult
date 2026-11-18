@@ -92,21 +92,6 @@ def qa_client(qa_app: AppHandle) -> httpx.AsyncClient:
 
 
 @pytest.fixture
-def qa_fake(monkeypatch: pytest.MonkeyPatch):  # type: ignore[no-untyped-def]
-    """the test double for `app.workflows` (knobs: status, raise_in, block). For engine tests that must not depend on F."""
-    import sys
-
-    import app as app_package
-    from tests.api import fake_workflows
-
-    fake = fake_workflows.install(monkeypatch)
-    # install() only replaces sys.modules; once the real package was imported, `import app.workflows as w`
-    # resolves the parent's attribute first and would keep running the real workflows.
-    monkeypatch.setattr(app_package, "workflows", sys.modules["app.workflows"], raising=False)
-    return fake
-
-
-@pytest.fixture
 def alice() -> dict[str, str]:
     return auth("qa-alice")
 

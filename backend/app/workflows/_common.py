@@ -9,21 +9,11 @@ from uuid import UUID, uuid4
 from langgraph.graph import END, START, StateGraph
 
 from app.llm.gateway import LLMError, merge_usage
-from app.schemas.common import ErrorCode, StepTrace
+from app.schemas.common import StepTrace
 from app.schemas.evidence import EvidenceRecord
 from app.schemas.runs import RunError
 
 STAGES: dict[str, tuple[str, str, str, str]] = {
-    "market_discovery": ("resolving_references", "retrieving_affinities", "normalizing_evidence", "generating_brief"),
-    "campaign_rehearsal": ("loading_context", "generating_reactions", "aggregating_results", "analyzing_reactions"),
-    "campaign_adaptation": ("loading_context", "generating_adaptations", "checking_constraints", "reviewing_risks"),
-    "campaign_evaluation": ("loading_candidates", "assessing_candidates", "scoring", "recommending"),
-    "cultural_profile": ("loading_evidence", "retrieving_context", "synthesizing_profile", "checking_evidence"),
-    "market_comparison": ("discovering_markets", "assessing_evidence", "comparing_markets", "summarizing"),
-    "campaign_arena": ("loading_variants", "analyzing_creatives", "generating_reactions", "scoring_variants"),
-    "risk_scan": ("loading_content", "analyzing_creatives", "assessing_risks", "checking_evidence"),
-    "population_study": ("preparing_evidence", "constructing_population", "running_interviews", "analysing_results"),
-    "social_simulation": ("building_network", "simulating_rounds", "analysing_dynamics", "summarizing"),
     "transcreate": ("loading_context", "transcreating_lines", "checking_terms", "checking_script"),
     "remake_visual": ("loading_context", "generating_scene", "rendering_text", "checking_locked_regions"),
     "remake_sound": ("loading_context", "speaking_lines", "making_jingle", "assembling_track"),
@@ -33,11 +23,6 @@ DEMO_UPLOADS_MESSAGE = "Demo projects do not analyze uploads"
 NO_VISION_MESSAGE = "No verified vision model is configured; the text analysis still ran."
 DEMO_RUN_NOTE = "Demo mode: every provider result in this run is a fixture."
 RECURSION_LIMIT = 12  # four linear stages; no cycles exist, so this only guards against misuse
-QLOO_CODES: dict[str, ErrorCode] = {
-    "QLOO_TIMEOUT": "PROVIDER_TIMEOUT",
-    "QLOO_NOT_CONFIGURED": "PROVIDER_NOT_CONFIGURED",
-    "QLOO_WORKFLOW_UNAVAILABLE": "UNSUPPORTED_CAPABILITY",
-}
 
 
 def utcnow() -> datetime:
@@ -83,11 +68,6 @@ def llm_error(exc: LLMError, stage: str, saved: str) -> RunError:
     if not exc.retryable:
         saved = saved.replace("; retrying is safe", "").replace(" Retrying is safe.", "")
     return RunError(code=exc.code, message=f"{exc.message} {saved}".strip(), stage=stage, retryable=exc.retryable)
-
-
-def qloo_error(error: Any, stage: str, message: str) -> RunError:
-    code = QLOO_CODES.get(getattr(error, "code", "") or "", "PROVIDER_ERROR")
-    return RunError(code=code, message=message, stage=stage, retryable=bool(getattr(error, "retryable", False)))
 
 
 def evidence_from_draft(draft: Any, *, project_id: UUID, run_id: UUID, now: datetime) -> EvidenceRecord:

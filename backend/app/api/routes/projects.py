@@ -19,7 +19,7 @@ async def create_project(body: ProjectCreate, user: RegisteredUser) -> Project:
 async def create_demo_project(user: CurrentUser) -> Project:
     """Create a demo-mode project seeded with the fixture brand, campaign, and study.
 
-    Every run in a demo project uses labeled fixtures; it never calls Qloo or an LLM provider.
+    Every run in a demo project uses labeled fixtures; it never calls a provider.
     Demo scope rules (what returns 409) are in contracts/README.md section 5.
     """
     return await projects.create_demo_project(user.id)

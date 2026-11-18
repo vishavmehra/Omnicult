@@ -59,8 +59,8 @@ def rig(monkeypatch: pytest.MonkeyPatch) -> Rig:
     get_settings.cache_clear()
     holder = Rig(llm=scripted_llm(standard), vision=FakeVision(SEEN))
 
-    def build(mode: str, settings: Any, *, qloo_cache: Any = None) -> WorkflowDeps:
-        return WorkflowDeps(qloo=None, llm=holder.llm, vision=holder.vision, media=holder.media or MediaPipeline(),  # type: ignore[arg-type]
+    def build(mode: str, settings: Any) -> WorkflowDeps:
+        return WorkflowDeps(llm=holder.llm, vision=holder.vision, media=holder.media or MediaPipeline(),  # type: ignore[arg-type]
                             transcribe=holder.transcribe)
 
     monkeypatch.setattr("app.workflows.build_workflow_deps", build)

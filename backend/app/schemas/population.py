@@ -28,7 +28,7 @@ PopulationSize = Annotated[int, Field(ge=20, le=2000, description="Requested par
 
 
 class InterestRef(ApiModel):
-    ref_id: str = Field(description="Qloo tag/entity id (live) or a fixture id (demo).")
+    ref_id: str = Field(description="Interest tag or entity id (live) or a fixture id (demo).")
     ref_kind: Literal["tag", "entity"]
     name: str
     weight: float = Field(

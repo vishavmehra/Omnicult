@@ -7,17 +7,11 @@ from sqlalchemy import text
 
 from app.core.config import Settings, get_settings
 from app.db.session import get_engine
-from app.integrations.qloo import get_qloo_service
 from app.llm.gateway import LLMGateway
 from app.schemas.health import Readiness, ReadinessCapabilities, ReadinessDependencies
 
 logger = logging.getLogger("omnicult.providers")
-DB_CHECK_TIMEOUT_SECONDS = 10  # a cold TLS connection to Supabase can take several seconds
-
-
-def qloo_configured(settings: Settings) -> bool:
-    """QLOO_API_KEY set and a runnable `qloo` command found (no subprocess is started)."""
-    return get_qloo_service("live", settings).is_configured()
+DB_CHECK_TIMEOUT_SECONDS = 10  # a cold TLS connection to a remote database can take several seconds
 
 
 def llm_configured(settings: Settings) -> bool:
@@ -47,8 +41,8 @@ def capability_statuses(settings: Settings) -> dict[str, str]:
 
 async def readiness() -> Readiness:
     settings = get_settings()
-    database, qloo, llm = await database_available(), qloo_configured(settings), llm_configured(settings)
-    live = database and qloo and llm
+    database, llm = await database_available(), llm_configured(settings)
+    live = database and llm
     capabilities = capability_statuses(settings)
 
     def status(capability: str) -> str:
@@ -59,7 +53,6 @@ async def readiness() -> Readiness:
         dependencies=ReadinessDependencies(
             database="available" if database else "unavailable",
             llm_provider="configured" if llm else "not_configured",
-            qloo="configured" if qloo else "not_configured",
         ),
         capabilities=ReadinessCapabilities(
             embeddings=status("embeddings"), vision=status("vision"),  # type: ignore[arg-type]

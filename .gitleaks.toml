@@ -7,6 +7,5 @@ useDefault = true
 description = "Labeled dummy credentials in tests"
 paths = [
   '''backend/tests/security/test_secrets\.py''',
-  '''backend/tests/unit/qloo/test_qloo_executor\.py''',
   '''ops/firebase-web-config\.json''',  # the Firebase web API key is a public identifier that ships in the browser bundle
 ]

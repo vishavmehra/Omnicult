@@ -33,7 +33,7 @@ async def test_health_needs_no_auth(qa_client: httpx.AsyncClient) -> None:
 
 async def test_ready_reports_configuration_without_providers(qa_client: httpx.AsyncClient) -> None:
     ready = parse(Readiness, await qa_client.get("/ready"))
-    assert ready.dependencies.llm_provider == "not_configured" and ready.dependencies.qloo == "not_configured"
+    assert ready.dependencies.llm_provider == "not_configured"
     caps = ready.capabilities
     assert (caps.embeddings, caps.vision, caps.reranking) == ("not_configured",) * 3
     assert ready.live_mode_available is False and ready.demo_mode_available is True
@@ -121,23 +121,6 @@ async def test_input_limits_are_enforced(qa_client: httpx.AsyncClient, alice: di
     )
     empty = {**LIVE_CAMPAIGN, "original_content": {"call_to_action": "Shop"}}
     expect_error(await qa_client.post(campaigns, json=empty, headers=alice), 422, "VALIDATION_ERROR")
-    campaign = await create_live_campaign(qa_client, alice, project.id)
-    studies = f"{API}/projects/{project.id}/studies"
-    study = {"campaign_id": str(campaign.id), "name": "Limits", "market": JAPAN, "research_questions": ["Clear?"]}
-    for config in ({"response_count": 25}, {"response_count": 2}, {"response_count": 3, "segment_count": 4}):
-        expect_error(
-            await qa_client.post(studies, json={**study, "simulation_config": config}, headers=alice), 422, "VALIDATION_ERROR"
-        )
-    mismatched = {**study, "segments": [{"label": "A", "description": "One segment"}], "simulation_config": {"segment_count": 2}}
-    expect_error(await qa_client.post(studies, json=mismatched, headers=alice), 422, "VALIDATION_ERROR")
-    discoveries = f"{API}/projects/{project.id}/discoveries"
-    base = {"product_category": "apparel", "market": JAPAN, "research_question": "What matters?"}
-    for bad in (
-        {"reference_terms": [f"term {i}" for i in range(11)]},
-        {"discovery_options": {"max_references": 21}},
-        {"market": {"country_code": "jp", "display_name": "Japan"}},
-    ):
-        expect_error(await qa_client.post(discoveries, json={**base, **bad}, headers=alice), 422, "VALIDATION_ERROR")
 
 
 # --------------------------------------------------------------------------- pagination (§3)

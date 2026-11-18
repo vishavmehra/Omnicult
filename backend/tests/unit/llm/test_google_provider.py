@@ -6,11 +6,21 @@ from types import SimpleNamespace
 import httpx
 import pytest
 from google.genai import errors
+from pydantic import BaseModel, ConfigDict, Field
 
-from app.agents.voice import variants_schema
 from app.llm import google
 from app.llm.gateway import ChatRequest, ProviderError
 from tests.unit.llm.genai_fakes import FakeClient, api_error, blocked_prompt, reply, settings
+
+
+class _Variant(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    text: str = Field(default="x", min_length=1, max_length=100, pattern="^.+$")
+
+
+class _Variants(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    variants: list[_Variant] = Field(min_length=1, max_length=3)
 
 
 def request(**overrides) -> ChatRequest:
@@ -46,7 +56,7 @@ async def test_messages_map_to_system_instruction_and_model_role():
 
 
 async def test_json_schema_is_sent_stripped_of_keywords_gemini_rejects():
-    schema = variants_schema(2).model_json_schema()  # a real agent schema: $defs, bounds, forbid-extra
+    schema = _Variants.model_json_schema()  # like the agents' schemas: $defs, bounds, forbid-extra
     p, client = provider(reply("{}"))
     await p.complete(request(json_schema=schema))
     sent = client.calls[0].config

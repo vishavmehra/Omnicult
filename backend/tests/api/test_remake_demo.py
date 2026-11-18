@@ -15,7 +15,7 @@ from app.fixtures import remake_demo
 from app.media import textrender
 from tests.api.omnicult_support import seeded  # noqa: F401
 from tests.api.remake_support import API, LINES, build_world, elements, finish, output_of, png_bytes, start, wav_bytes
-from tests.api.test_demo_journey import offline  # noqa: F401  (blocks outbound HTTP and subprocesses)
+from tests.api.offline import offline  # noqa: F401  (blocks outbound HTTP and subprocesses)
 
 pytestmark = pytest.mark.usefixtures("seeded")
 

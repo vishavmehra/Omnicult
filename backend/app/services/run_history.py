@@ -27,7 +27,6 @@ from app.schemas.proof import (
 )
 from app.schemas.runs import RunStatus, RunType
 from app.services.common import get_owned
-from app.services.runs import V3_RUNS, _has_checkpoint
 
 OPERATIONS = {
     "market_discovery": "Market discovery",
@@ -136,10 +135,6 @@ async def _events_by_run(s: AsyncSession, run_ids: list[UUID]) -> dict[UUID, lis
     return by_run
 
 
-async def _resumable(s: AsyncSession, run: m.AgentRun) -> bool:
-    return run.run_type in V3_RUNS and run.status in ("failed", "cancelled") and await _has_checkpoint(s, run)
-
-
 async def load_history(
     s: AsyncSession, campaign_id: UUID, workspace_id: UUID | None, *, run_type: str | None = None,
     status: str | None = None,
@@ -153,7 +148,7 @@ async def load_history(
         stmt = stmt.where(m.AgentRun.status == status)
     runs = list((await s.execute(stmt.order_by(m.AgentRun.created_at.desc(), m.AgentRun.id))).scalars())
     events = await _events_by_run(s, [r.id for r in runs])
-    items = [history_item(r, events.get(r.id, []), workspace_id, resumable=await _resumable(s, r)) for r in runs]
+    items = [history_item(r, events.get(r.id, []), workspace_id, resumable=False) for r in runs]
     orphans = (await s.execute(
         select(func.count(m.AiUsageEvent.id), func.coalesce(func.sum(m.AiUsageEvent.estimated_cost_usd), 0.0))
         .where(m.AiUsageEvent.campaign_id == campaign_id, m.AiUsageEvent.run_id.is_(None))
@@ -174,8 +169,7 @@ async def run_history_detail(user_id: UUID, run_id: UUID) -> RunHistoryDetail:
     async with read_session() as s:
         run, project = await get_owned(s, m.AgentRun, run_id, user_id, "Run")
         events = (await _events_by_run(s, [run.id])).get(run.id, [])
-        resumable = await _resumable(s, run)
-    item = history_item(run, events, project.workspace_id, resumable=resumable)
+    item = history_item(run, events, project.workspace_id, resumable=False)
     inputs = run.inputs or {}
     version_id = inputs.get("content_version_id")
     return RunHistoryDetail(

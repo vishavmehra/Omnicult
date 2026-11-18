@@ -22,7 +22,7 @@ from app.schemas.common import DimensionScores, Market, RiskFlag
 from app.schemas.evaluations import CandidateResult, DimensionRationales, EvaluationResult
 from app.schemas.evidence import EvidenceRecord
 
-FIXTURES = Path(__file__).resolve().parents[4] / "contracts" / "fixtures"
+FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "northstar"
 JP = Market(country_code="JP", display_name="Japan")
 CONTENT = CampaignContent(headline="Find your next great escape")
 

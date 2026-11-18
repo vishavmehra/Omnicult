@@ -14,7 +14,7 @@ from app.workflows import WorkflowDeps
 from tests.api.media_support import FakeTranscribe, ScriptedProvider
 from tests.api.omnicult_support import add_member, client_for, seeded, workspace_of  # noqa: F401
 from tests.api.test_crud import make_campaign, make_project
-from tests.api.test_demo_journey import offline  # noqa: F401  (blocks outbound HTTP and subprocesses)
+from tests.api.offline import offline  # noqa: F401  (blocks outbound HTTP and subprocesses)
 from tests.api.test_studio_ai import DEMO_ELEMENTS, demo_studio, element_values, respond
 from tests.conftest import BOB, wait_for_run
 from tests.unit.workflows.scenario import offline_settings
@@ -380,8 +380,8 @@ def live(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
     get_settings.cache_clear()
     rig: dict[str, Any] = {"provider": ScriptedProvider(lambda request: "{}"), "transcribe": Speech([(0, 1500, "Make the headline warmer")])}
 
-    def build(mode: str, settings: Any, *, qloo_cache: Any = None) -> WorkflowDeps:
-        return WorkflowDeps(qloo=None, llm=LLMGateway(offline_settings(), provider=rig["provider"]), transcribe=rig["transcribe"])  # type: ignore[arg-type]
+    def build(mode: str, settings: Any) -> WorkflowDeps:
+        return WorkflowDeps(llm=LLMGateway(offline_settings(), provider=rig["provider"]), transcribe=rig["transcribe"])  # type: ignore[arg-type]
 
     monkeypatch.setattr("app.workflows.build_workflow_deps", build)
     return rig

@@ -9,7 +9,13 @@ import re
 from typing import Any
 
 from app.schemas.proof import ProofReport
-from app.services.reports import DEMO_BANNER, _cell
+
+DEMO_BANNER = "DEMO DATA: fixture results, not live research."
+
+
+def _cell(value: Any) -> str:
+    return str("n/a" if value is None else value).replace("|", "\\|").replace("\n", " ")
+
 
 Block = tuple  # ("h1"|"h2"|"h3"|"p"|"note", text) | ("ul", [text]) | ("table", [header], [[cell]])
 

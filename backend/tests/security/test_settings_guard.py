@@ -24,13 +24,13 @@ def test_production_accepts_firebase_auth() -> None:
     assert settings.auth_mode == "firebase"
 
 
-def test_supabase_auth_mode_is_gone() -> None:
+def test_an_unknown_auth_mode_is_refused() -> None:
     with pytest.raises(ValidationError):
-        Settings(_env_file=None, auth_mode="supabase")  # type: ignore[arg-type]
+        Settings(_env_file=None, auth_mode="legacy")  # type: ignore[arg-type]
 
 
 def test_secrets_are_masked_in_settings_repr() -> None:
-    settings = Settings(_env_file=None, gemini_api_key=DUMMY, qloo_api_key=DUMMY)
+    settings = Settings(_env_file=None, gemini_api_key=DUMMY, youtube_api_key=DUMMY)
     if DUMMY in repr(settings) or DUMMY in str(settings.model_dump()):
         pytest.fail("a secret is visible in Settings repr/model_dump", pytrace=False)
 
@@ -43,8 +43,8 @@ def test_settings_error_does_not_echo_secrets() -> None:
             app_env="production",
             auth_mode="dev",
             gemini_api_key=DUMMY,
-            qloo_api_key=DUMMY,
-            supabase_secret_key=DUMMY,
+            youtube_api_key=DUMMY,
+            data_gov_in_api_key=DUMMY,
         )
     if DUMMY in str(caught.value) or DUMMY in repr(caught.value.errors()):
         pytest.fail("the settings ValidationError echoes a configured secret", pytrace=False)

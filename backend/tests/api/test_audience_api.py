@@ -25,7 +25,7 @@ from app.schemas.common import Usage
 from app.services import audience as service
 from tests.api.omnicult_support import add_member, client_for, draft, put_claims, seeded, source, workspace_of  # noqa: F401
 from tests.api.test_crud import make_campaign, make_project
-from tests.api.test_runs import demo_setup
+from tests.api.run_support import demo_setup
 from tests.conftest import BOB
 
 API = "/api/v1"

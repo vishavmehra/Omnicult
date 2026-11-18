@@ -31,7 +31,7 @@ def inp(kind: str = "video", mode: str = "live", **kwargs: Any) -> XRayInput:
 
 def deps(*, llm: Any = None, media: Any = None, vision: Any = "default", transcribe: Any = None) -> WorkflowDeps:
     return WorkflowDeps(
-        qloo=None, llm=llm or scripted_llm(standard),  # type: ignore[arg-type]
+        llm=llm or scripted_llm(standard),  # type: ignore[arg-type]
         vision=FakeVision(SEEN) if vision == "default" else vision, media=media or FakeMedia(), transcribe=transcribe,
     )
 
@@ -211,7 +211,7 @@ async def test_demo_mode_never_sends_an_upload_to_a_model() -> None:
     from tests.unit.workflows.scenario import offline_settings
 
     outcome = await run_creative_xray(
-        inp(mode="demo"), WorkflowDeps(qloo=None, llm=LLMGateway(offline_settings(), fixture=True), vision=vision,  # type: ignore[arg-type]
+        inp(mode="demo"), WorkflowDeps(llm=LLMGateway(offline_settings(), fixture=True), vision=vision,  # type: ignore[arg-type]
                                        media=FakeMedia(), transcribe=transcribe))
     assert vision.calls == 0 and transcribe.calls == []
     assert outcome.vision.status == "unavailable" and outcome.transcribe.status == "unavailable"

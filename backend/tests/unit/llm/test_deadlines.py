@@ -9,9 +9,8 @@ import pytest
 from app.core.config import Settings
 from app.llm.gateway import CAPABILITY_LIMITS, Completion, DeadlinedCapability, LLMError, LLMGateway
 from app.llm.smoke import SmokeOut
-from app.workflows import RiskScanInput, WorkflowDeps, run_risk_scan
 from app.llm.fixture import FixtureLLMProvider
-from tests.unit.workflows.scenario import CONTENT, JP, context, demo_deps, offline_settings
+from tests.unit.workflows.scenario import offline_settings
 
 
 class Slow:
@@ -77,26 +76,6 @@ def test_capabilities_get_their_own_request_timeout():
     assert wrapper.client._settings.llm_request_timeout_seconds == 30.0  # the adapter's SDK timeout
     assert LLMGateway(settings, fixture=True).capability("embeddings") is None  # demo never reaches a provider
     assert LLMGateway(offline_settings()).capability("vision") is None  # not configured: reported, never substituted
-
-
-class HangingVision:
-    def is_configured(self) -> bool:
-        return True
-
-    async def observe(self, asset_id, image, content_type, *, stage, agent):
-        await asyncio.sleep(1)
-
-
-async def test_vision_deadline_fails_vision_but_keeps_the_text_analysis():
-    from app.workflows import AssetBlob
-
-    slow = DeadlinedCapability("vision", HangingVision(), request_timeout=20, deadline=0.01, provider="google", model="vl")
-    deps = WorkflowDeps(qloo=demo_deps().qloo, llm=LLMGateway(offline_settings(), provider=FixtureLLMProvider()), vision=slow)
-    inp = RiskScanInput(context=context("live"), scan_id=uuid4(), market=JP, source_kind="content_version", content=CONTENT,
-                        assets=[AssetBlob(asset_id=uuid4(), media_type="image/png", data=b"\x89PNG")])
-    out = await run_risk_scan(inp, deps)
-    assert out.vision.status == "failed" and "did not finish" in out.vision.message
-    assert out.findings and out.visual_observations == []
 
 
 def test_every_capability_deadline_outlasts_its_request_timeout_so_a_fast_failure_can_be_retried():

@@ -80,7 +80,7 @@ async def test_oversize_files_are_rejected(
         assert response.status_code in (413, 422), f"big.png: {response.status_code}"
         expect_error(response, response.status_code, "VALIDATION_ERROR")
         assert parse(AssetPage, await app.client.get(f"{API}/projects/{project.id}/assets", headers=alice)).total == 1
-    assert stored_files(qa_env) == [], "bytes live in ASSET_STORAGE_BACKEND (database/supabase), never on local disk"
+    assert stored_files(qa_env) == [], "bytes live in ASSET_STORAGE_BACKEND (database/gcs/local), never on local disk"
 
 
 @pytest.mark.parametrize(
