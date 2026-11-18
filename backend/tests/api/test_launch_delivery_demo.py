@@ -9,9 +9,12 @@ from uuid import UUID
 
 import httpx
 import pytest
+from sqlalchemy import select
 
 from app.core.auth import dev_user_id
 from app.core.errors import Conflict
+from app.db import models as m
+from app.db.session import read_session
 from app.services import delivery_demo
 from tests.api.delivery_support import TN, add_version, campaign_of
 from tests.api.omnicult_support import API, seeded  # noqa: F401
@@ -24,10 +27,14 @@ async def test_the_hook_populates_review_links_the_region_plan_and_the_asset_pac
     campaign_id = (await client.get(f"{API}/projects/{project['id']}/campaigns")).json()["items"][0]["id"]
     base = f"{API}/campaigns/{campaign_id}"
     with no_network():
-        first = await delivery_demo.seed_launch_delivery(dev_user_id("alice"), UUID(campaign_id))
-        again = await delivery_demo.seed_launch_delivery(dev_user_id("alice"), UUID(campaign_id))
-        assert first == {"rights_confirmed": 6, "approvals": 2, "review_links": 1, "review_responses": 2}
-        assert again == {"rights_confirmed": 0, "approvals": 0, "review_links": 0, "review_responses": 0}
+        # the demo journey runs the hook itself (after the verdicts), so the tabs are already populated: a call now, or two, adds nothing
+        nothing = {"rights_confirmed": 0, "approvals": 0, "review_links": 0, "review_responses": 0}
+        assert await delivery_demo.seed_launch_delivery(dev_user_id("alice"), UUID(campaign_id)) == nothing
+        assert await delivery_demo.seed_launch_delivery(dev_user_id("alice"), UUID(campaign_id)) == nothing
+        # ...and the journey's own run is on record: the creatives and the Brand Kit images had their rights confirmed
+        async with read_session() as s:
+            audit = (await s.scalars(select(m.AuditLog).where(m.AuditLog.action == "delivery.demo_rights_confirmed", m.AuditLog.target_id == campaign_id))).all()
+        assert [a.detail["assets"] for a in audit] == [6]
 
         plan = (await client.get(f"{base}/region-plan")).json()
         states = {r["region_code"]: (r["ready"]["state"], r["version"]["state"], r["pack_available"]) for r in plan["regions"]}

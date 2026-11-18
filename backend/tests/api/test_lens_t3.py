@@ -45,7 +45,17 @@ async def aamod_campaign(client: httpx.AsyncClient) -> tuple[dict[str, Any], str
 # --- demo: the recording, no network ------------------------------------------------------------------------------------
 
 
-async def test_the_demo_trend_radar_reads_the_recording_and_keeps_history(aamod: httpx.AsyncClient) -> None:
+@pytest.fixture
+def unseeded(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The demo journey fills both views itself (its lens hook). The tests that exercise the refresh start from a demo campaign
+    nobody has refreshed yet, so the journey's hook is switched off for them."""
+    async def nothing(*_: Any, **__: Any) -> None:
+        return None
+
+    monkeypatch.setattr(shared, "seed_lens_t3_demo", nothing)
+
+
+async def test_the_demo_trend_radar_reads_the_recording_and_keeps_history(aamod: httpx.AsyncClient, unseeded: None) -> None:
     client = aamod
     with no_network():
         project, base = await aamod_campaign(client)
@@ -96,6 +106,7 @@ async def test_the_demo_hook_fills_both_views_once_and_a_viewer_cannot_refresh(a
         project, base = await aamod_campaign(client)
         campaign_id = UUID(base.split("/campaigns/")[1].split("/")[0])
         user_id = dev_user_id("alice")
+        assert (await client.get(f"{base}/trend-radar")).json()["summary"]["items"] > 0, "the journey ran the hook itself"
         await seed_lens_t3_demo(user_id, campaign_id)
         await seed_lens_t3_demo(user_id, campaign_id)  # idempotent
         radar = (await client.get(f"{base}/trend-radar")).json()
@@ -113,7 +124,7 @@ async def test_the_demo_hook_fills_both_views_once_and_a_viewer_cannot_refresh(a
     assert (await bob.post(f"{base}/category-shelf/refresh", json={})).status_code == 403
 
 
-async def test_the_demo_category_shelf_lists_what_wikidata_records_and_leaves_the_rest_unknown(aamod: httpx.AsyncClient) -> None:
+async def test_the_demo_category_shelf_lists_what_wikidata_records_and_leaves_the_rest_unknown(aamod: httpx.AsyncClient, unseeded: None) -> None:
     client = aamod
     with no_network():
         _, base = await aamod_campaign(client)
