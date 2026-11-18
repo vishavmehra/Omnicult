@@ -43,18 +43,21 @@ STAGES: dict[str, tuple[str, ...]] = {
     "creative_xray": ("probing_media", "extracting_media", "transcribing", "observing_frames", "structuring_scenes"),
     "remake_visual": ("loading_context", "generating_scene", "rendering_text", "checking_locked_regions"),
     "remake_sound": ("loading_context", "speaking_lines", "making_jingle", "assembling_track"),
+    "remake_video": ("loading_context", "generating_video", "adding_voiceover", "checking_clip"),
 }
 LABELS = {
     "transcreate": "transcreation",
     "creative_xray": "Creative X-Ray",
     "remake_visual": "Remake: Visuals",
     "remake_sound": "Remake: Sound",
+    "remake_video": "Remake: Video",
 }
 ENTRY_POINTS = {
     "transcreate": "run_transcreate",
     "creative_xray": "run_creative_xray",
     "remake_visual": "run_remake_visual",
     "remake_sound": "run_remake_sound",
+    "remake_video": "run_remake_video",
 }
 MAX_CONCURRENT_RUNS = 4  # per-process semaphore; a worker queue if runs must survive restarts
 RUN_TIMEOUT_SECONDS = 900
@@ -301,7 +304,7 @@ async def _build_input(run_id: UUID) -> tuple[Any, Any]:
             from app.services import xray
 
             workflow_input = await xray.build_input(s, run, types, context, grounding)
-        elif run.run_type in ("remake_visual", "remake_sound"):
+        elif run.run_type in ("remake_visual", "remake_sound", "remake_video"):
             from app.services import remake
 
             workflow_input = await remake.build_input(s, run, types, context, grounding)
@@ -393,7 +396,7 @@ async def _persist(run_id: UUID, outcome: Any) -> None:
             from app.services import xray
 
             payload, ref = await xray.persist(s, run, outcome, new_ids, now)
-        elif run.run_type in ("remake_visual", "remake_sound"):
+        elif run.run_type in ("remake_visual", "remake_sound", "remake_video"):
             from app.services import remake
 
             payload, ref = await remake.persist(s, run, outcome, new_ids, now)

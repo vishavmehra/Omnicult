@@ -28,10 +28,11 @@ def test_the_committed_manifest_matches_its_files_and_stays_small():
     manifest = remake_demo.manifest()
     folder = FIXTURES / "remake"
     assert manifest["visual"].keys() == {"IN-TN"} and remake_demo.demo_regions() == ["IN-TN"]
-    files = [manifest["visual"]["IN-TN"], *manifest["speech"]]
+    assert manifest["video"].keys() == {"IN-TN"}  # Remake: Video: one Veo clip, checked in tests/api/test_remake_video_demo.py
+    files = [manifest["visual"]["IN-TN"], *manifest["speech"], manifest["video"]["IN-TN"]]
     for entry in files:
         assert hashlib.sha256((folder / entry["file"]).read_bytes()).hexdigest() == entry["sha256"], entry["file"]
-    assert sum(p.stat().st_size for p in folder.iterdir()) < 3 * 1024 * 1024
+    assert sum(p.stat().st_size for p in folder.iterdir()) < 5 * 1024 * 1024  # 1.1 MB of stills and speech, 2.6 MB for the one clip
     assert [e["language"] for e in manifest["speech"]] == ["ta"] * 4 and {e["voice"] for e in manifest["speech"]} == {"Sulafat"}
     assert all(e["model"] == "gemini-3.8-flash-tts" and e["location"] == "global" for e in manifest["speech"])
     assert manifest["visual"]["IN-TN"]["model"] == "gemini-3.1-flash-image" and manifest["visual"]["IN-TN"]["generated_at"]

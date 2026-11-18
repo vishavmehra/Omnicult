@@ -44,6 +44,7 @@ OPERATIONS = {
     "voice_direct": "Voice Director",
     "remake_visual": "Remake: Visuals",
     "remake_sound": "Remake: Sound",
+    "remake_video": "Remake: Video",
 }
 
 

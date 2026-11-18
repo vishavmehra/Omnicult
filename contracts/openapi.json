@@ -25768,6 +25768,47 @@
         "title": "LockedRegion",
         "type": "object"
       },
+      "LockedRegionPreview": {
+        "additionalProperties": false,
+        "properties": {
+          "bbox": {
+            "items": {
+              "type": "number"
+            },
+            "title": "Bbox",
+            "type": "array"
+          },
+          "element_id": {
+            "title": "Element Id",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "lock",
+              "brand_kit_never_change"
+            ],
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "element_id",
+          "label",
+          "kind",
+          "source",
+          "bbox"
+        ],
+        "title": "LockedRegionPreview",
+        "type": "object"
+      },
       "LockedRegionResult": {
         "additionalProperties": false,
         "properties": {
@@ -34354,6 +34395,15 @@
             "title": "Demo Regions",
             "type": "array"
           },
+          "demo_video_regions": {
+            "default": [],
+            "description": "Regions the demonstration clip covers (demo projects only).",
+            "items": {
+              "type": "string"
+            },
+            "title": "Demo Video Regions",
+            "type": "array"
+          },
           "image": {
             "$ref": "#/components/schemas/CapabilityStatus"
           },
@@ -34387,6 +34437,34 @@
             "title": "Text Shaping",
             "type": "string"
           },
+          "video": {
+            "$ref": "#/components/schemas/CapabilityStatus",
+            "description": "Remake: Video. `estimated_cost_usd` is for the default length."
+          },
+          "video_default_seconds": {
+            "title": "Video Default Seconds",
+            "type": "integer"
+          },
+          "video_price_per_second_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The price-table rate per generated second (720p, no model audio).",
+            "title": "Video Price Per Second Usd"
+          },
+          "video_seconds": {
+            "description": "The clip lengths the model accepts.",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Video Seconds",
+            "type": "array"
+          },
           "voices": {
             "items": {
               "type": "string"
@@ -34405,7 +34483,12 @@
           "max_voice_lines",
           "run_budget_usd",
           "daily_budget_usd",
-          "demo_regions"
+          "demo_regions",
+          "video",
+          "video_seconds",
+          "video_default_seconds",
+          "video_price_per_second_usd",
+          "demo_video_regions"
         ],
         "title": "RemakeCapabilities",
         "type": "object"
@@ -34444,7 +34527,8 @@
           "kind": {
             "enum": [
               "visual",
-              "sound"
+              "sound",
+              "video"
             ],
             "title": "Kind",
             "type": "string"
@@ -34519,6 +34603,16 @@
             "title": "Source Version Id",
             "type": "string"
           },
+          "video": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VideoRemake"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "visual": {
             "anyOf": [
               {
@@ -34546,7 +34640,8 @@
           "passed",
           "limitations",
           "visual",
-          "sound"
+          "sound",
+          "video"
         ],
         "title": "RemakeOutput",
         "type": "object"
@@ -34662,6 +34757,264 @@
           "language"
         ],
         "title": "RemakeSoundRequest",
+        "type": "object"
+      },
+      "RemakeVideoPreview": {
+        "additionalProperties": false,
+        "description": "What a run would do, with the exact prompt and the cost, before any paid call. Makes no model call and costs nothing.",
+        "properties": {
+          "blocked_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blocked Reason"
+          },
+          "can_run": {
+            "title": "Can Run",
+            "type": "boolean"
+          },
+          "estimated_cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Seconds times the price-table rate. An estimate, not a billed amount; 0 for demo projects.",
+            "title": "Estimated Cost Usd"
+          },
+          "kept_regions": {
+            "items": {
+              "$ref": "#/components/schemas/LockedRegionPreview"
+            },
+            "title": "Kept Regions",
+            "type": "array"
+          },
+          "language": {
+            "title": "Language",
+            "type": "string"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "mode": {
+            "enum": [
+              "live",
+              "demo"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "negative_prompt": {
+            "title": "Negative Prompt",
+            "type": "string"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "price_per_second_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Per Second Usd"
+          },
+          "prompt": {
+            "title": "Prompt",
+            "type": "string"
+          },
+          "prompt_version": {
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "region_code": {
+            "title": "Region Code",
+            "type": "string"
+          },
+          "resolution": {
+            "title": "Resolution",
+            "type": "string"
+          },
+          "run_budget_usd": {
+            "title": "Run Budget Usd",
+            "type": "number"
+          },
+          "seconds": {
+            "title": "Seconds",
+            "type": "integer"
+          },
+          "source_version_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Version Id"
+          },
+          "start_frame": {
+            "$ref": "#/components/schemas/VideoStartFrame"
+          },
+          "voiceover": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VideoVoiceoverPlan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "within_budget": {
+            "title": "Within Budget",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "mode",
+          "can_run",
+          "blocked_reason",
+          "source_version_id",
+          "region_code",
+          "language",
+          "start_frame",
+          "prompt",
+          "negative_prompt",
+          "prompt_version",
+          "model",
+          "location",
+          "seconds",
+          "resolution",
+          "price_per_second_usd",
+          "estimated_cost_usd",
+          "run_budget_usd",
+          "within_budget",
+          "kept_regions",
+          "voiceover",
+          "notes"
+        ],
+        "title": "RemakeVideoPreview",
+        "type": "object"
+      },
+      "RemakeVideoRequest": {
+        "additionalProperties": false,
+        "description": "One clip of the regional key visual. `confirm_cost` must be true for a live project: the Veo call costs money (the\nestimate is on the preview and on GET /campaigns/{id}/remakes/capabilities) and is made once, never retried by the app.\nThe start frame is, in this order: `start_asset_id`; the generated scene of a Remake: Visuals result in the version (its\nlocked regions restored from the original, no text); otherwise the clip is made from the prompt alone.",
+        "properties": {
+          "add_voiceover": {
+            "default": true,
+            "description": "Join the version's Remake: Sound voice-over when it fits the clip.",
+            "title": "Add Voiceover",
+            "type": "boolean"
+          },
+          "confirm_cost": {
+            "default": false,
+            "title": "Confirm Cost",
+            "type": "boolean"
+          },
+          "direction": {
+            "anyOf": [
+              {
+                "maxLength": 400,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Art direction written by the person, shown to the model as theirs.",
+            "title": "Direction"
+          },
+          "language": {
+            "pattern": "^[a-z]{2,3}$",
+            "title": "Language",
+            "type": "string"
+          },
+          "region_code": {
+            "pattern": "^[A-Z]{2}-[A-Z0-9]{1,3}$",
+            "title": "Region Code",
+            "type": "string"
+          },
+          "seconds": {
+            "default": 6,
+            "description": "Clip length. Billed per second at the model's published rate.",
+            "enum": [
+              4,
+              6,
+              8
+            ],
+            "title": "Seconds",
+            "type": "integer"
+          },
+          "start_asset_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "An image asset of the project to use as the start frame.",
+            "title": "Start Asset Id"
+          },
+          "version_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The version to remake from. Default: the newest.",
+            "title": "Version Id"
+          }
+        },
+        "required": [
+          "region_code",
+          "language"
+        ],
+        "title": "RemakeVideoRequest",
         "type": "object"
       },
       "RemakeVisualRequest": {
@@ -37082,7 +37435,8 @@
               "creative_xray",
               "voice_direct",
               "remake_visual",
-              "remake_sound"
+              "remake_sound",
+              "remake_video"
             ],
             "title": "Run Type",
             "type": "string"
@@ -37166,7 +37520,8 @@
               "creative_xray",
               "voice_direct",
               "remake_visual",
-              "remake_sound"
+              "remake_sound",
+              "remake_video"
             ],
             "title": "Run Type",
             "type": "string"
@@ -37487,7 +37842,8 @@
               "creative_xray",
               "voice_direct",
               "remake_visual",
-              "remake_sound"
+              "remake_sound",
+              "remake_video"
             ],
             "title": "Run Type",
             "type": "string"
@@ -37790,7 +38146,8 @@
               "creative_xray",
               "voice_direct",
               "remake_visual",
-              "remake_sound"
+              "remake_sound",
+              "remake_video"
             ],
             "title": "Run Type",
             "type": "string"
@@ -44824,6 +45181,428 @@
           "value"
         ],
         "title": "VersionValue",
+        "type": "object"
+      },
+      "VideoCheck": {
+        "additionalProperties": false,
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "passed": {
+            "description": "Computed in code from the delivered file.",
+            "title": "Passed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "passed",
+          "detail"
+        ],
+        "title": "VideoCheck",
+        "type": "object"
+      },
+      "VideoRemake": {
+        "additionalProperties": false,
+        "properties": {
+          "aspect_ratio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aspect Ratio"
+          },
+          "audio_generated_by_model": {
+            "default": false,
+            "description": "Always false: the model is asked for no audio.",
+            "title": "Audio Generated By Model",
+            "type": "boolean"
+          },
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/VideoCheck"
+            },
+            "title": "Checks",
+            "type": "array"
+          },
+          "direction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Direction"
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Ms"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "kept_regions": {
+            "description": "Regions carried into the start frame from the original. A video model cannot guarantee they stay unchanged.",
+            "items": {
+              "$ref": "#/components/schemas/LockedRegionPreview"
+            },
+            "title": "Kept Regions",
+            "type": "array"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "negative_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Negative Prompt"
+          },
+          "operation_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The provider's operation id, for the billing report.",
+            "title": "Operation Id"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          },
+          "prompt_version": {
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "resolution": {
+            "title": "Resolution",
+            "type": "string"
+          },
+          "seconds": {
+            "description": "The length asked for; `duration_ms` is what the file holds.",
+            "title": "Seconds",
+            "type": "integer"
+          },
+          "silent_asset_id": {
+            "description": "The clip as the model delivered it (no audio).",
+            "format": "uuid",
+            "title": "Silent Asset Id",
+            "type": "string"
+          },
+          "silent_url": {
+            "title": "Silent Url",
+            "type": "string"
+          },
+          "size_bytes": {
+            "title": "Size Bytes",
+            "type": "integer"
+          },
+          "source": {
+            "enum": [
+              "provider",
+              "demo_fixture"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "start_frame_asset_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Frame Asset Id"
+          },
+          "start_frame_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Frame Url"
+          },
+          "start_source": {
+            "enum": [
+              "remake_scene",
+              "asset",
+              "demo_fixture",
+              "none"
+            ],
+            "title": "Start Source",
+            "type": "string"
+          },
+          "video_asset_id": {
+            "description": "The file to play: with the voice-over when one was joined.",
+            "format": "uuid",
+            "title": "Video Asset Id",
+            "type": "string"
+          },
+          "video_url": {
+            "title": "Video Url",
+            "type": "string"
+          },
+          "voiceover_asset_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voiceover Asset Id"
+          },
+          "voiceover_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voiceover Ms"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
+          },
+          "with_voiceover": {
+            "title": "With Voiceover",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "video_asset_id",
+          "video_url",
+          "silent_asset_id",
+          "silent_url",
+          "start_frame_asset_id",
+          "start_frame_url",
+          "start_source",
+          "source",
+          "with_voiceover",
+          "voiceover_asset_id",
+          "voiceover_ms",
+          "model",
+          "location",
+          "operation_id",
+          "prompt",
+          "negative_prompt",
+          "prompt_version",
+          "direction",
+          "seconds",
+          "aspect_ratio",
+          "resolution",
+          "width",
+          "height",
+          "duration_ms",
+          "size_bytes",
+          "audio_generated_by_model",
+          "kept_regions",
+          "checks"
+        ],
+        "title": "VideoRemake",
+        "type": "object"
+      },
+      "VideoStartFrame": {
+        "additionalProperties": false,
+        "properties": {
+          "aspect_ratio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aspect Ratio"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "preview_jpeg_base64": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A reduced JPEG of the exact start frame, base64. Null when there is none.",
+            "title": "Preview Jpeg Base64"
+          },
+          "source": {
+            "enum": [
+              "remake_scene",
+              "asset",
+              "demo_fixture",
+              "none"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
+          }
+        },
+        "required": [
+          "source",
+          "description",
+          "aspect_ratio",
+          "width",
+          "height",
+          "preview_jpeg_base64"
+        ],
+        "title": "VideoStartFrame",
+        "type": "object"
+      },
+      "VideoVoiceoverPlan": {
+        "additionalProperties": false,
+        "properties": {
+          "asset_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Asset Id"
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Ms"
+          },
+          "element_id": {
+            "title": "Element Id",
+            "type": "string"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "will_join": {
+            "title": "Will Join",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "element_id",
+          "asset_id",
+          "duration_ms",
+          "will_join",
+          "note"
+        ],
+        "title": "VideoVoiceoverPlan",
         "type": "object"
       },
       "VisionStatus": {
@@ -67440,7 +68219,8 @@
                 {
                   "enum": [
                     "visual",
-                    "sound"
+                    "sound",
+                    "video"
                   ],
                   "type": "string"
                 },
@@ -67905,6 +68685,324 @@
           }
         ],
         "summary": "Start Remake Sound",
+        "tags": [
+          "remake"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/remakes/video": {
+      "post": {
+        "description": "One short clip with Veo (run_type remake_video). A live project must set `confirm_cost`; 409 when the `remake-video`\nelement is locked, the clip is estimated above the per-run AI budget, or (demo) the region has no saved clip; 503 when no\nvideo model is configured. At most one clip per request.",
+        "operationId": "start_remake_video",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemakeVideoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunAccepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Start Remake Video",
+        "tags": [
+          "remake"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/remakes/video/preview": {
+      "post": {
+        "description": "The start frame, the exact prompt, the cost and the voice-over plan of a clip, before any paid call. Makes no model\ncall and costs nothing; `confirm_cost` is ignored here.",
+        "operationId": "preview_remake_video",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemakeVideoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemakeVideoPreview"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Preview Remake Video",
         "tags": [
           "remake"
         ]
@@ -69762,7 +70860,8 @@
                     "creative_xray",
                     "voice_direct",
                     "remake_visual",
-                    "remake_sound"
+                    "remake_sound",
+                    "remake_video"
                   ],
                   "type": "string"
                 },
@@ -75830,7 +76929,8 @@
                     "creative_xray",
                     "voice_direct",
                     "remake_visual",
-                    "remake_sound"
+                    "remake_sound",
+                    "remake_video"
                   ],
                   "type": "string"
                 },

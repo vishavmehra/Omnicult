@@ -10,19 +10,21 @@ import { cn } from "@/lib/utils";
 
 import { useRemakeCapabilities, useRemakes, useVersionList } from "./api";
 import { SoundPanel } from "./sound-panel";
+import { VideoPanel } from "./video-panel";
 import { VisualPanel } from "./visual-panel";
 
 const VIEWS = [
   { key: "visuals", label: "Visuals", note: "Regional scene, locked regions kept, text drawn in code" },
   { key: "sound", label: "Sound", note: "Voice-over of the transcreated lines" },
+  { key: "video", label: "Video", note: "A short regional clip from the remade key visual, made with Veo" },
 ] as const;
 
-/** Remake: a regional key visual (Visuals) and a spoken voice-over (Sound) for one version of the campaign. */
+/** Remake: a regional key visual (Visuals), a spoken voice-over (Sound) and a short clip (Video) for one version of the campaign. */
 export function RemakeWorkspace() {
   const { campaign, project } = useCampaign();
   const router = useRouter();
   const params = useSearchParams();
-  const view = params.get("view") === "sound" ? "sound" : "visuals";
+  const view = VIEWS.find((v) => v.key === params.get("view"))?.key ?? "visuals";
   const caps = useRemakeCapabilities(campaign.id);
   const versions = useVersionList(campaign.id);
   const remakes = useRemakes(campaign.id);
@@ -68,6 +70,8 @@ export function RemakeWorkspace() {
           <ErrorState error={error} onRetry={() => { void caps.refetch(); void versions.refetch(); void remakes.refetch(); }} />
         ) : !caps.data || !versions.data || !remakes.data ? (
           <LoadingState label="Loading Remake…" />
+        ) : view === "video" ? (
+          <VideoPanel campaignId={campaign.id} projectId={project.id} demo={demo} caps={caps.data} versions={versions.data} outputs={remakes.data} />
         ) : view === "sound" ? (
           <SoundPanel campaignId={campaign.id} demo={demo} caps={caps.data} versions={versions.data} outputs={remakes.data} />
         ) : (

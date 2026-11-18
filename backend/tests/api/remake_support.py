@@ -108,6 +108,11 @@ def rig(monkeypatch: pytest.MonkeyPatch) -> Rig:
         return WorkflowDeps(llm=holder.llm)  # type: ignore[arg-type]
 
     monkeypatch.setattr("app.workflows.build_workflow_deps", build)
+
+    async def no_indexing(**kwargs: Any) -> None:  # a finished live run would embed the project with the real client (network, and a
+        return None  # hang at teardown on a machine with Google credentials); nothing here needs the search index
+
+    monkeypatch.setattr("app.services.runs.index_project", no_indexing)
     return holder
 
 

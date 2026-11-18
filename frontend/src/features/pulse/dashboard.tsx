@@ -10,6 +10,7 @@ import { DEFAULT_FILTERS, useSummary, type Filters } from "./api";
 import { CompareSection } from "./compare-section";
 import { FilterRow } from "./filters";
 import { REGION_FALLBACK } from "./logic";
+import { RegionCards } from "./region-cards";
 import { RegionLedger } from "./region-ledger";
 import { TrendSection } from "./trend-section";
 import { PULSE_THEME } from "./ui";
@@ -26,6 +27,7 @@ export function Dashboard({ campaignId, status }: { campaignId: string; status: 
   return (
     <div className={cn("space-y-8", PULSE_THEME)}>
       <FilterRow status={status} value={filters} onChange={setFilters} names={names} />
+      <RegionCards campaignId={campaignId} filters={filters} names={names} onRegion={(region) => setFilters((f) => ({ ...f, region }))} />
       {summary.error && !summary.data ? (
         <ErrorState error={summary.error} onRetry={() => void summary.refetch()} />
       ) : !summary.data ? (

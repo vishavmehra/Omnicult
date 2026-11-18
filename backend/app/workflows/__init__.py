@@ -10,6 +10,8 @@ from app.schemas.common import DataMode
 from app.workflows.followup import answer_followup, answer_group_question
 from app.workflows.remake import run_remake_sound, run_remake_visual
 from app.workflows.transcreate import run_transcreate
+from app.workflows.remake_video import run_remake_video
+from app.workflows.xray import run_creative_xray
 from app.workflows.types import (
     AssetBlob,
     BrandContext,
@@ -18,7 +20,6 @@ from app.workflows.types import (
     WorkflowContext,
     WorkflowDeps,
 )
-from app.workflows.xray import run_creative_xray
 
 
 def _transcribe_capability(llm: LLMGateway):  # type: ignore[no-untyped-def]
@@ -57,6 +58,7 @@ __all__ = [
     "run_creative_xray",
     "run_remake_visual",
     "run_remake_sound",
+    "run_remake_video",
     "answer_followup",
     "answer_group_question",
 ]

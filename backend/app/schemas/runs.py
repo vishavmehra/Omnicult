@@ -22,6 +22,7 @@ RunType = Literal[
     "voice_direct",
     "remake_visual",
     "remake_sound",
+    "remake_video",
 ]
 RunStatus = Literal["queued", "running", "completed", "partial", "failed", "cancelled"]
 TERMINAL_RUN_STATUSES: frozenset[str] = frozenset({"completed", "partial", "failed", "cancelled"})

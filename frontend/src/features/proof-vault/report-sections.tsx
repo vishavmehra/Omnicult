@@ -4,6 +4,7 @@ import { Bot, ChevronRight, CircleCheck, Hand, Info, OctagonAlert, TriangleAlert
 import { createContext, useContext, type ReactNode } from "react";
 
 import { ConflictCard, type ConflictSide } from "@/components/evidence/conflict-card";
+import { Reveal, RingGauge } from "@/components/creative";
 import { EvidenceMeter } from "@/components/evidence/evidence-meter";
 import type { ClaimKind } from "@/components/evidence/evidence-row";
 import { RunStatusBadge } from "@/components/workflow/run-status";
@@ -197,11 +198,21 @@ function MeterBody({ c }: { c: Content<"evidence_meter"> }) {
               </h4>
               <StrengthStamp strength={m.strength} />
             </div>
-            {block ? (
-              <EvidenceMeter counts={counts} independentGroups={groups} conflicts={m.open_conflicts} scopeLabel={m.region_name} />
-            ) : (
-              <p className="text-[13px] text-ink-secondary">The claims behind this meter are not in the snapshot, so the kinds are not broken out.</p>
-            )}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              {(m.claims > 0 || m.categories_total > 0) && (
+                <div className="flex gap-4">
+                  {m.claims > 0 && <RingGauge value={m.supported_claims} max={m.claims} size={84} tone="proof" label={`Supported claims in ${m.region_name}`} caption="supported" />}
+                  {m.categories_total > 0 && <RingGauge value={m.categories_covered} max={m.categories_total} size={84} tone="proof" label={`Categories covered in ${m.region_name}`} caption="categories" />}
+                </div>
+              )}
+              <div className="min-w-[16rem] flex-1">
+                {block ? (
+                  <EvidenceMeter counts={counts} independentGroups={groups} conflicts={m.open_conflicts} scopeLabel={m.region_name} />
+                ) : (
+                  <p className="text-[13px] text-ink-secondary">The claims behind this meter are not in the snapshot, so the kinds are not broken out.</p>
+                )}
+              </div>
+            </div>
             {m.strength_reasons.length > 0 && (
               <ul className="list-disc space-y-0.5 pl-5 text-[13px] text-ink-body marker:text-ink-muted">
                 {m.strength_reasons.map((r, i) => (
@@ -211,12 +222,6 @@ function MeterBody({ c }: { c: Content<"evidence_meter"> }) {
             )}
             <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:grid-cols-4">
               <Fact label="Distinct sources">{m.sources}</Fact>
-              <Fact label="Supported claims">
-                {m.supported_claims} of {m.claims}
-              </Fact>
-              <Fact label="Categories covered">
-                {m.categories_covered} of {m.categories_total}
-              </Fact>
               <Fact label="Needing review">{m.needs_review_claims}</Fact>
               <Fact label="Open conflicts">{m.open_conflicts}</Fact>
               <Fact label="Stale claims">{m.stale_claims}</Fact>
@@ -672,12 +677,12 @@ function Body({ section }: { section: ProofSection }) {
 }
 
 /** One section of the report: its title, what kinds of content it holds, then its typed content or an honest absence. */
-export function ReportSection({ section, wired }: { section: ProofSection; wired: boolean | undefined }) {
+export function ReportSection({ section, wired, index = 0 }: { section: ProofSection; wired: boolean | undefined; index?: number }) {
   const missing = section.status === "missing" || !section.content;
   // A section this build has no provider for is not shown at all (only what works is shown).
   if (missing && (wired === false || /not available in this build/i.test(section.missing_reason ?? ""))) return null;
   return (
-    <section id={`sec-${section.id}`} aria-labelledby={`h-${section.id}`} className="scroll-mt-20 space-y-3 py-6 first:pt-0 last:pb-0">
+    <Reveal as="section" index={index} id={`sec-${section.id}`} aria-labelledby={`h-${section.id}`} className="scroll-mt-20 space-y-3 py-6 first:pt-0 last:pb-0">
       <header className="space-y-1.5">
         <h3 id={`h-${section.id}`} className="text-[17px] font-semibold text-ink">
           {section.title}
@@ -702,6 +707,6 @@ export function ReportSection({ section, wired }: { section: ProofSection; wired
       ) : (
         <Body section={section} />
       )}
-    </section>
+    </Reveal>
   );
 }

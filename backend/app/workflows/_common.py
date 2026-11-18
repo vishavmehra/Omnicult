@@ -17,6 +17,7 @@ STAGES: dict[str, tuple[str, str, str, str]] = {
     "transcreate": ("loading_context", "transcreating_lines", "checking_terms", "checking_script"),
     "remake_visual": ("loading_context", "generating_scene", "rendering_text", "checking_locked_regions"),
     "remake_sound": ("loading_context", "speaking_lines", "making_jingle", "assembling_track"),
+    "remake_video": ("loading_context", "generating_video", "adding_voiceover", "checking_clip"),
 }
 DEMO_MARKET_CODE = "JP"  # contracts/README §5: demo projects describe one seeded scenario (Northstar, Japan)
 DEMO_UPLOADS_MESSAGE = "Demo projects do not analyze uploads"

@@ -1,5 +1,5 @@
-"""Remake: Visuals and Remake: Sound (features 21 and 22). Both start runs (202, Idempotency-Key honoured); the result of
-a run is one applied `remake` operation, read back here with its checks, costs and assets."""
+"""Remake: Visuals, Remake: Sound and Remake: Video (features 21 to 23). All start runs (202, Idempotency-Key honoured); the
+result of a run is one applied `remake` operation, read back here with its checks, costs and assets."""
 
 from typing import Annotated
 from uuid import UUID
@@ -9,7 +9,7 @@ from fastapi import APIRouter, Query, status
 from app.api.deps import CurrentUser, Limit, Offset
 from app.schemas import remake as r
 from app.schemas.runs import RunAccepted
-from app.services import remake
+from app.services import remake, remake_video
 
 router = APIRouter(tags=["remake"])
 
@@ -31,6 +31,21 @@ async def start_remake_visual(campaign_id: UUID, body: r.RemakeVisualRequest, us
 async def start_remake_sound(campaign_id: UUID, body: r.RemakeSoundRequest, user: CurrentUser) -> RunAccepted:
     """Speak a version's voiceover or caption lines (run_type remake_sound), optionally with a Lyria jingle."""
     return await remake.start_sound(user.id, campaign_id, body)
+
+
+@router.post("/campaigns/{campaign_id}/remakes/video/preview", response_model=r.RemakeVideoPreview)
+async def preview_remake_video(campaign_id: UUID, body: r.RemakeVideoRequest, user: CurrentUser) -> r.RemakeVideoPreview:
+    """The start frame, the exact prompt, the cost and the voice-over plan of a clip, before any paid call. Makes no model
+    call and costs nothing; `confirm_cost` is ignored here."""
+    return await remake_video.preview(user.id, campaign_id, body)
+
+
+@router.post("/campaigns/{campaign_id}/remakes/video", status_code=status.HTTP_202_ACCEPTED, response_model=RunAccepted)
+async def start_remake_video(campaign_id: UUID, body: r.RemakeVideoRequest, user: CurrentUser) -> RunAccepted:
+    """One short clip with Veo (run_type remake_video). A live project must set `confirm_cost`; 409 when the `remake-video`
+    element is locked, the clip is estimated above the per-run AI budget, or (demo) the region has no saved clip; 503 when no
+    video model is configured. At most one clip per request."""
+    return await remake_video.start(user.id, campaign_id, body)
 
 
 @router.get("/campaigns/{campaign_id}/remakes", response_model=r.RemakePage)

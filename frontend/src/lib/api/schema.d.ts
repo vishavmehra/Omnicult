@@ -2111,6 +2111,49 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/remakes/video": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start Remake Video
+         * @description One short clip with Veo (run_type remake_video). A live project must set `confirm_cost`; 409 when the `remake-video`
+         *     element is locked, the clip is estimated above the per-run AI budget, or (demo) the region has no saved clip; 503 when no
+         *     video model is configured. At most one clip per request.
+         */
+        post: operations["start_remake_video"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/remakes/video/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Remake Video
+         * @description The start frame, the exact prompt, the cost and the voice-over plan of a clip, before any paid call. Makes no model
+         *     call and costs nothing; `confirm_cost` is ignored here.
+         */
+        post: operations["preview_remake_video"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/remakes/visual": {
         parameters: {
             query?: never;
@@ -13261,6 +13304,22 @@ export interface components {
             /** Label */
             label: string;
         };
+        /** LockedRegionPreview */
+        LockedRegionPreview: {
+            /** Bbox */
+            bbox: number[];
+            /** Element Id */
+            element_id: string;
+            /** Kind */
+            kind: string;
+            /** Label */
+            label: string;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "lock" | "brand_kit_never_change";
+        };
         /** LockedRegionResult */
         LockedRegionResult: {
             /** Bbox */
@@ -16689,6 +16748,12 @@ export interface components {
              * @description Regions the demonstration fixtures cover (demo projects only).
              */
             demo_regions: string[];
+            /**
+             * Demo Video Regions
+             * @description Regions the demonstration clip covers (demo projects only).
+             * @default []
+             */
+            demo_video_regions: string[];
             image: components["schemas"]["CapabilityStatus"];
             /** Max Voice Lines */
             max_voice_lines: number;
@@ -16706,6 +16771,20 @@ export interface components {
              * @enum {string}
              */
             text_shaping: "raqm" | "basic";
+            /** @description Remake: Video. `estimated_cost_usd` is for the default length. */
+            video: components["schemas"]["CapabilityStatus"];
+            /** Video Default Seconds */
+            video_default_seconds: number;
+            /**
+             * Video Price Per Second Usd
+             * @description The price-table rate per generated second (720p, no model audio).
+             */
+            video_price_per_second_usd: number | null;
+            /**
+             * Video Seconds
+             * @description The clip lengths the model accepts.
+             */
+            video_seconds: number[];
             /** Voices */
             voices: string[];
         };
@@ -16736,7 +16815,7 @@ export interface components {
              * Kind
              * @enum {string}
              */
-            kind: "visual" | "sound";
+            kind: "visual" | "sound" | "video";
             /** Language */
             language: string;
             /** Limitations */
@@ -16765,6 +16844,7 @@ export interface components {
              * Format: uuid
              */
             source_version_id: string;
+            video: components["schemas"]["VideoRemake"] | null;
             visual: components["schemas"]["VisualRemake"] | null;
         };
         /** RemakePage */
@@ -16809,6 +16889,104 @@ export interface components {
              * @default Sulafat
              */
             voice: string;
+        };
+        /**
+         * RemakeVideoPreview
+         * @description What a run would do, with the exact prompt and the cost, before any paid call. Makes no model call and costs nothing.
+         */
+        RemakeVideoPreview: {
+            /** Blocked Reason */
+            blocked_reason: string | null;
+            /** Can Run */
+            can_run: boolean;
+            /**
+             * Estimated Cost Usd
+             * @description Seconds times the price-table rate. An estimate, not a billed amount; 0 for demo projects.
+             */
+            estimated_cost_usd: number | null;
+            /** Kept Regions */
+            kept_regions: components["schemas"]["LockedRegionPreview"][];
+            /** Language */
+            language: string;
+            /** Location */
+            location: string | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Model */
+            model: string | null;
+            /** Negative Prompt */
+            negative_prompt: string;
+            /** Notes */
+            notes: string[];
+            /** Price Per Second Usd */
+            price_per_second_usd: number | null;
+            /** Prompt */
+            prompt: string;
+            /** Prompt Version */
+            prompt_version: string;
+            /** Region Code */
+            region_code: string;
+            /** Resolution */
+            resolution: string;
+            /** Run Budget Usd */
+            run_budget_usd: number;
+            /** Seconds */
+            seconds: number;
+            /** Source Version Id */
+            source_version_id: string | null;
+            start_frame: components["schemas"]["VideoStartFrame"];
+            voiceover: components["schemas"]["VideoVoiceoverPlan"] | null;
+            /** Within Budget */
+            within_budget: boolean;
+        };
+        /**
+         * RemakeVideoRequest
+         * @description One clip of the regional key visual. `confirm_cost` must be true for a live project: the Veo call costs money (the
+         *     estimate is on the preview and on GET /campaigns/{id}/remakes/capabilities) and is made once, never retried by the app.
+         *     The start frame is, in this order: `start_asset_id`; the generated scene of a Remake: Visuals result in the version (its
+         *     locked regions restored from the original, no text); otherwise the clip is made from the prompt alone.
+         */
+        RemakeVideoRequest: {
+            /**
+             * Add Voiceover
+             * @description Join the version's Remake: Sound voice-over when it fits the clip.
+             * @default true
+             */
+            add_voiceover: boolean;
+            /**
+             * Confirm Cost
+             * @default false
+             */
+            confirm_cost: boolean;
+            /**
+             * Direction
+             * @description Art direction written by the person, shown to the model as theirs.
+             */
+            direction?: string | null;
+            /** Language */
+            language: string;
+            /** Region Code */
+            region_code: string;
+            /**
+             * Seconds
+             * @description Clip length. Billed per second at the model's published rate.
+             * @default 6
+             * @enum {integer}
+             */
+            seconds: 4 | 6 | 8;
+            /**
+             * Start Asset Id
+             * @description An image asset of the project to use as the start frame.
+             */
+            start_asset_id?: string | null;
+            /**
+             * Version Id
+             * @description The version to remake from. Default: the newest.
+             */
+            version_id?: string | null;
         };
         /**
          * RemakeVisualRequest
@@ -17782,7 +17960,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video";
             /** Started At */
             started_at: string | null;
             /**
@@ -17804,7 +17982,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video";
             /**
              * Status
              * @enum {string}
@@ -17930,7 +18108,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video";
             /** Started At */
             started_at: string | null;
             /**
@@ -18040,7 +18218,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video";
             /** Started At */
             started_at: string | null;
             /**
@@ -20679,6 +20857,138 @@ export interface components {
              * Format: uuid
              */
             version_id: string;
+        };
+        /** VideoCheck */
+        VideoCheck: {
+            /** Detail */
+            detail: string;
+            /** Name */
+            name: string;
+            /**
+             * Passed
+             * @description Computed in code from the delivered file.
+             */
+            passed: boolean;
+        };
+        /** VideoRemake */
+        VideoRemake: {
+            /** Aspect Ratio */
+            aspect_ratio: string | null;
+            /**
+             * Audio Generated By Model
+             * @description Always false: the model is asked for no audio.
+             * @default false
+             */
+            audio_generated_by_model: boolean;
+            /** Checks */
+            checks: components["schemas"]["VideoCheck"][];
+            /** Direction */
+            direction: string | null;
+            /** Duration Ms */
+            duration_ms: number | null;
+            /** Height */
+            height: number | null;
+            /**
+             * Kept Regions
+             * @description Regions carried into the start frame from the original. A video model cannot guarantee they stay unchanged.
+             */
+            kept_regions: components["schemas"]["LockedRegionPreview"][];
+            /** Location */
+            location: string | null;
+            /** Model */
+            model: string | null;
+            /** Negative Prompt */
+            negative_prompt: string | null;
+            /**
+             * Operation Id
+             * @description The provider's operation id, for the billing report.
+             */
+            operation_id: string | null;
+            /** Prompt */
+            prompt: string | null;
+            /** Prompt Version */
+            prompt_version: string;
+            /** Resolution */
+            resolution: string;
+            /**
+             * Seconds
+             * @description The length asked for; `duration_ms` is what the file holds.
+             */
+            seconds: number;
+            /**
+             * Silent Asset Id
+             * Format: uuid
+             * @description The clip as the model delivered it (no audio).
+             */
+            silent_asset_id: string;
+            /** Silent Url */
+            silent_url: string;
+            /** Size Bytes */
+            size_bytes: number;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "provider" | "demo_fixture";
+            /** Start Frame Asset Id */
+            start_frame_asset_id: string | null;
+            /** Start Frame Url */
+            start_frame_url: string | null;
+            /**
+             * Start Source
+             * @enum {string}
+             */
+            start_source: "remake_scene" | "asset" | "demo_fixture" | "none";
+            /**
+             * Video Asset Id
+             * Format: uuid
+             * @description The file to play: with the voice-over when one was joined.
+             */
+            video_asset_id: string;
+            /** Video Url */
+            video_url: string;
+            /** Voiceover Asset Id */
+            voiceover_asset_id: string | null;
+            /** Voiceover Ms */
+            voiceover_ms: number | null;
+            /** Width */
+            width: number | null;
+            /** With Voiceover */
+            with_voiceover: boolean;
+        };
+        /** VideoStartFrame */
+        VideoStartFrame: {
+            /** Aspect Ratio */
+            aspect_ratio: string | null;
+            /** Description */
+            description: string;
+            /** Height */
+            height: number | null;
+            /**
+             * Preview Jpeg Base64
+             * @description A reduced JPEG of the exact start frame, base64. Null when there is none.
+             */
+            preview_jpeg_base64: string | null;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "remake_scene" | "asset" | "demo_fixture" | "none";
+            /** Width */
+            width: number | null;
+        };
+        /** VideoVoiceoverPlan */
+        VideoVoiceoverPlan: {
+            /** Asset Id */
+            asset_id: string | null;
+            /** Duration Ms */
+            duration_ms: number | null;
+            /** Element Id */
+            element_id: string;
+            /** Note */
+            note: string;
+            /** Will Join */
+            will_join: boolean;
         };
         /** VisionStatus */
         VisionStatus: {
@@ -36901,7 +37211,7 @@ export interface operations {
                 limit?: number;
                 /** @description Number of records skipped. */
                 offset?: number;
-                kind?: ("visual" | "sound") | null;
+                kind?: ("visual" | "sound" | "video") | null;
                 run_id?: string | null;
             };
             header?: never;
@@ -37165,6 +37475,256 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RunAccepted"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_remake_video: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RemakeVideoRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunAccepted"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    preview_remake_video: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RemakeVideoRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemakeVideoPreview"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -38531,7 +39091,7 @@ export interface operations {
                 limit?: number;
                 /** @description Number of records skipped. */
                 offset?: number;
-                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound") | null;
+                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video") | null;
                 status?: ("queued" | "running" | "completed" | "partial" | "failed" | "cancelled") | null;
             };
             header?: never;
@@ -43106,7 +43666,7 @@ export interface operations {
                 limit?: number;
                 /** @description Number of records skipped. */
                 offset?: number;
-                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound") | null;
+                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video") | null;
                 campaign_id?: string | null;
                 study_id?: string | null;
                 status?: ("queued" | "running" | "completed" | "partial" | "failed" | "cancelled") | null;

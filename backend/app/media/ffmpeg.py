@@ -226,3 +226,19 @@ async def extract_audio(path: Path, out: Path, *, max_seconds: float) -> bytes:
     if done.returncode != 0 or not data:
         raise MediaProcessingFailed("The audio track could not be extracted.")
     return data
+
+
+async def mux_audio(video: Path, audio: Path, out: Path, *, max_seconds: float) -> bytes:
+    """The video stream copied untouched, with `audio` (any format ffmpeg reads) as AAC, as one MP4 no longer than `max_seconds`
+    (a shorter track just ends early; a caller that must not cut speech checks the lengths first)."""
+    exe = require("ffmpeg")
+    args = [
+        exe, "-nostdin", "-hide_banner", "-loglevel", "error", "-protocol_whitelist", "file", "-i", str(video), "-i", str(audio),
+        "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart",
+        "-t", f"{max_seconds:.3f}", "-y", str(out),
+    ]
+    done = await _run(args, timeout=get_settings().media_tool_timeout_seconds, what="Joining the voice-over")
+    data = out.read_bytes() if out.exists() else b""
+    if done.returncode != 0 or not data:
+        raise MediaProcessingFailed("The voice-over could not be joined to the clip.")
+    return data

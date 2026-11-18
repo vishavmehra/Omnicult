@@ -3,6 +3,7 @@
 import { GitCompareArrows, Gauge, Gavel, History } from "lucide-react";
 import { useState } from "react";
 
+import { Reveal, VerdictStamp } from "@/components/creative";
 import { Tag } from "@/components/evidence/badges";
 import { LimitationList } from "@/components/evidence/limitation-list";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ const CONFLICT_STATE = { open: "Open", review_requested: "Review requested", res
  * fired with their thresholds, open conflicts, confidence limitations, the score at that verdict and the human decision.
  */
 export function RegionPanel({
+  index = 0,
   campaignId,
   region,
   rules,
@@ -33,6 +35,8 @@ export function RegionPanel({
   onRecompute,
   onHistory,
 }: {
+  /** Position on the board: staggers the card's entrance and its stamp into one landing sequence. */
+  index?: number;
   campaignId: string;
   region: RegionReadiness;
   rules: ReadinessRules | undefined;
@@ -49,7 +53,7 @@ export function RegionPanel({
   const titleId = `region-${region.region_code}`;
 
   return (
-    <article aria-labelledby={titleId} className="clay overflow-hidden rounded-card border border-border">
+    <Reveal as="article" index={index} aria-labelledby={titleId} className="clay overflow-hidden rounded-card border border-border">
       <header className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border px-5 py-3.5">
         <h3 id={titleId} className="type-title text-[22px] text-ink">
           {region.region_name}
@@ -81,7 +85,7 @@ export function RegionPanel({
 
       <div className="grid gap-x-8 gap-y-4 px-5 py-5 lg:grid-cols-[13rem_minmax(0,1fr)]">
         <div className="space-y-2.5">
-          <Verdict value={v.verdict} size="lg" />
+          <VerdictStamp key={v.version_id} value={v.verdict} size="lg" delay={280 + index * 220} />
           <p className="max-w-[26ch] text-[12.5px] text-ink-secondary">{meaning}</p>
           <p className="type-meta" title={formatDateTime(v.computed_at)}>
             {v.score.label} · computed {formatRelative(v.computed_at)} · rules {v.rule_version}
@@ -201,6 +205,6 @@ export function RegionPanel({
       </Disclosure>
 
       <ApprovalDialog campaignId={campaignId} verdict={v} open={deciding} onOpenChange={setDeciding} />
-    </article>
+    </Reveal>
   );
 }

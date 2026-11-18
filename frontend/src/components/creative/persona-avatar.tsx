@@ -1,4 +1,4 @@
-import { CircleHelp, Frown, Meh, Smile, type LucideIcon } from "lucide-react";
+import { CircleHelp, Frown, Meh, Scale, Smile, type LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
  *   <PersonaAvatar seed={r.id} mood="positive" size={44} />
  *   <ReactionBubble quote={r.quote} lang="ta" mood="confused" persona={{ seed: r.id, caption: "Synthetic, 25-34, Chennai" }} />
  */
-export type Mood = "positive" | "neutral" | "negative" | "confused";
+export type Mood = "positive" | "mixed" | "neutral" | "negative" | "confused";
 
 function hash(seed: string) {
   let h = 0x811c9dc5;
@@ -41,6 +41,7 @@ export function PersonaAvatar({ seed, mood = "neutral", size = 40, label, classN
   const extra = (h >>> 15) % 6; // 0 glasses, 1 earrings, else nothing
   const mouth = {
     positive: "M25 41 Q32 47 39 41",
+    mixed: "M26 43 Q32 43 38 40",
     neutral: "M27 42 L37 42",
     negative: "M26 44 Q32 39 38 44",
     confused: "M26 43 Q29 40 32 43 T38 42",
@@ -104,6 +105,7 @@ export function PersonaAvatar({ seed, mood = "neutral", size = 40, label, classN
 
 const MOOD: Record<Mood, { label: string; Icon: LucideIcon; className: string }> = {
   positive: { label: "Positive", Icon: Smile, className: "text-success" },
+  mixed: { label: "Mixed", Icon: Scale, className: "text-ink-secondary" },
   neutral: { label: "Neutral", Icon: Meh, className: "text-ink-secondary" },
   negative: { label: "Negative", Icon: Frown, className: "text-danger" },
   confused: { label: "Confused", Icon: CircleHelp, className: "text-warning" },

@@ -20,7 +20,8 @@ from app.db import blobs
 from app.db import models as m
 from app.db.base import utcnow
 from app.db.session import read_session
-from app.llm.registry import capability_model, estimate_cost
+from app.llm.media import VIDEO_SECONDS
+from app.llm.registry import capability_model, estimate_cost, price_for
 from app.media import remake as pipeline
 from app.media import textrender
 from app.schemas import remake as r
@@ -35,15 +36,16 @@ from app.services.runs import _create_run
 from app.services.versions import active_locks, campaign_for, newest_node, node_in, record_operation
 from app.studio.engine import Edit, OpSpec
 from app.workflows.remake import (
-    SOUND_PROMPT_VERSION, VISUAL_PROMPT_VERSION, ClaimIn, LockedSpec, RemakeSoundInput, RemakeSoundOutcome, RemakeVisualInput,
-    RemakeVisualOutcome, TextSpec, VoiceLineIn,
+    SOUND_PROMPT_VERSION, VISUAL_PROMPT_VERSION, ClaimIn, LockedSpec, RemakeSoundInput, RemakeVisualInput, TextSpec, VoiceLineIn,
 )
 
 CLAIM_CATEGORIES = ("festival", "symbol", "colour", "food", "moment", "custom")
 MAX_PROMPT_CLAIMS = 5
 VOICE_KINDS = ("voiceover", "caption")
 SPEECH_ESTIMATE_SECONDS = 5.0  # a typical caption line, for the per-line estimate only
-ROLES = {"plate": "remake_plate", "visual": "remake_visual", "voiceover": "remake_voiceover", "music": "remake_music"}
+ROLES = {"plate": "remake_plate", "visual": "remake_visual", "voiceover": "remake_voiceover", "music": "remake_music",
+         "video": "remake_video", "frame": "remake_frame"}
+DEFAULT_VIDEO_SECONDS = 6  # 6 s at the Fast model's 720p rate fits the default per-run AI budget; 8 s needs AI_RUN_BUDGET_USD raised
 
 
 # --- starting runs -------------------------------------------------------------------------------------------
@@ -84,21 +86,9 @@ async def _source(s: AsyncSession, campaign: m.Campaign, version_id: UUID | None
     return source
 
 
-def plan_visual(elements: list[dict[str, Any]], plate_element_id: str | None, locks: set[str]) -> tuple[dict, list[LockedSpec], list[TextSpec]]:
-    """The scene element to replace, the locked regions around it and the text boxes to draw, from one version's elements."""
-    by_id = {e["id"]: e for e in elements}
-    if plate_element_id is not None:
-        plate = by_id.get(plate_element_id)
-        if plate is None:
-            raise conflict("plate_element_id", f"Element '{plate_element_id}' does not exist in this version.")
-        if plate["kind"] != "scene":
-            raise conflict("plate_element_id", f"Only a scene element can be remade; '{plate_element_id}' is a {plate['kind']}.")
-    else:
-        plate = next((e for e in elements if e["kind"] == "scene" and e["id"] not in locks), None)
-        if plate is None:
-            raise conflict("plate_element_id", "This version has no unlocked scene element to remake.")
-    if plate["id"] in locks:
-        raise conflict("plate_element_id", f"Element '{plate['id']}' is locked. Unlock it to remake it.")
+def regions_around(elements: list[dict[str, Any]], plate: dict, locks: set[str]) -> tuple[list[LockedSpec], list[TextSpec]]:
+    """The locked regions and the text boxes that share `plate`'s scene: what Remake: Visuals restores and draws, and what
+    Remake: Video carries into its start frame."""
     group = [e for e in elements if e.get("scene_id") == plate.get("scene_id") and e["id"] != plate["id"]]
     locked, texts = [], []
     for e in group:
@@ -111,7 +101,32 @@ def plan_visual(elements: list[dict[str, Any]], plate_element_id: str | None, lo
         elif e["kind"] in pipeline.TEXT_KINDS and isinstance(e.get("value"), str) and e["value"].strip():
             texts.append(TextSpec(element_id=e["id"], kind=e["kind"], text=e["value"], language=e.get("language"),
                                   script=e.get("script"), bbox=e["bbox"]))
+    return locked, texts
+
+
+def plan_visual(elements: list[dict[str, Any]], plate_element_id: str | None, locks: set[str]) -> tuple[dict, list[LockedSpec], list[TextSpec]]:
+    """The scene element to replace, the locked regions around it and the text boxes to draw, from one version's elements."""
+    by_id = {e["id"]: e for e in elements}
+    if plate_element_id is not None:
+        plate = by_id.get(plate_element_id)
+        if plate is None:
+            raise conflict("plate_element_id", f"Element '{plate_element_id}' does not exist in this version.")
+        if plate["kind"] != "scene" or is_video_element(plate):
+            raise conflict("plate_element_id", f"Only a scene element can be remade; '{plate_element_id}' is a "
+                           f"{'video clip' if is_video_element(plate) else plate['kind']}.")
+    else:
+        plate = next((e for e in elements if e["kind"] == "scene" and not is_video_element(e) and e["id"] not in locks), None)
+        if plate is None:
+            raise conflict("plate_element_id", "This version has no unlocked scene element to remake.")
+    if plate["id"] in locks:
+        raise conflict("plate_element_id", f"Element '{plate['id']}' is locked. Unlock it to remake it.")
+    locked, texts = regions_around(elements, plate, locks)
     return plate, locked, texts
+
+
+def is_video_element(element: dict[str, Any]) -> bool:
+    """The `scene` element Remake: Video writes holds a clip, not a still: Remake: Visuals never offers it."""
+    return isinstance(element.get("value"), dict) and element["value"].get("media") == "video"
 
 
 async def start_visual(user_id: UUID, campaign_id: UUID, body: r.RemakeVisualRequest) -> RunAccepted:
@@ -232,7 +247,11 @@ async def _bytes(s: AsyncSession, asset_id: str | None) -> bytes | None:
     return await blobs.read(row) if row is not None else None
 
 
-async def build_input(s: AsyncSession, run: m.AgentRun, types: Any, context: Any, grounding: Any) -> RemakeVisualInput | RemakeSoundInput:
+async def build_input(s: AsyncSession, run: m.AgentRun, types: Any, context: Any, grounding: Any) -> Any:
+    if run.run_type == "remake_video":
+        from app.services import remake_video
+
+        return await remake_video.build_input(s, run, context)
     d = run.inputs
     common = {"context": context, "source_version_id": UUID(d["source_version_id"]), "region_code": d["region_code"],
               "region_name": d["region_name"], "language": d["language"], "language_name": d["language_name"], "script": d["script"]}
@@ -275,8 +294,11 @@ def _fail_payload(run: m.AgentRun, outcome: Any) -> tuple[dict, tuple]:
     return {"operation_id": None, "version_id": None, "limitations": list(outcome.limitations), "_status": "failed"}, ("operation", [], "")
 
 
-async def persist(s: AsyncSession, run: m.AgentRun, outcome: RemakeVisualOutcome | RemakeSoundOutcome, new_ids: list[str],
-                  now: datetime) -> tuple[dict, tuple]:
+async def persist(s: AsyncSession, run: m.AgentRun, outcome: Any, new_ids: list[str], now: datetime) -> tuple[dict, tuple]:
+    if run.run_type == "remake_video":
+        from app.services import remake_video
+
+        return await remake_video.persist(s, run, outcome, now)
     visual = run.run_type == "remake_visual"
     produced = outcome.composite if visual else outcome.voiceover  # type: ignore[union-attr]
     if outcome.status == "failed" or not produced:
@@ -403,6 +425,7 @@ def to_output(op: m.Operation) -> r.RemakeOutput:
         passed=bool(p.get("passed")), limitations=list(p.get("limitations", [])),
         visual=r.VisualRemake.model_validate(p["visual"]) if p.get("visual") else None,
         sound=r.SoundRemake.model_validate(p["sound"]) if p.get("sound") else None,
+        video=r.VideoRemake.model_validate(p["video"]) if p.get("video") else None,
     )
 
 
@@ -445,7 +468,7 @@ async def capabilities(user_id: UUID, campaign_id: UUID) -> r.RemakeCapabilities
         return r.CapabilityStatus(configured=ok, model=model if ok else None, location=location if ok else None,
                                   estimated_cost_usd=estimate if ok else None)
 
-    image, tts, music = (capability_model(settings, n) for n in ("image_generation", "tts", "music"))  # type: ignore[arg-type]
+    image, tts, music, video = (capability_model(settings, n) for n in ("image_generation", "tts", "music", "video"))  # type: ignore[arg-type]
     return r.RemakeCapabilities(
         mode=project.mode,  # type: ignore[arg-type]
         image=status("image_generation", estimate_cost(image, input_tokens=3000, images=1).usd if image else None, "global"),
@@ -454,4 +477,8 @@ async def capabilities(user_id: UUID, campaign_id: UUID) -> r.RemakeCapabilities
         text_shaping=textrender.shaping_engine(), voices=list(r.GEMINI_VOICES), max_voice_lines=settings.remake_max_voice_lines,
         run_budget_usd=settings.ai_run_budget_usd, daily_budget_usd=settings.ai_daily_budget_usd,
         demo_regions=remake_demo.demo_regions() if demo else [],
+        video=status("video", estimate_cost(video, video_seconds=DEFAULT_VIDEO_SECONDS).usd if video else None, settings.google_video_location),
+        video_seconds=list(VIDEO_SECONDS), video_default_seconds=DEFAULT_VIDEO_SECONDS,
+        video_price_per_second_usd=price_for(video)[0].per_second if video and not demo else None,
+        demo_video_regions=remake_demo.demo_video_regions() if demo else [],
     )

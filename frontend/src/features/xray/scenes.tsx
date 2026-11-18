@@ -1,75 +1,47 @@
 "use client";
 
-import { useRef, type KeyboardEvent } from "react";
-
+import { FilmStrip } from "@/components/creative";
 import { humanize } from "@/lib/format";
-import { cn } from "@/lib/utils";
 
 import { useBlob, useObjectUrl, type Creative, type Scene } from "./api";
 import { Block, EvidenceIds, Phrases, ProvenanceTag, clock, span } from "./parts";
 import { plural } from "./media-file";
 
-function Thumb({ path }: { path: string | null }) {
+function FrameImg({ path, alt }: { path: string | null; alt: string }) {
   const blob = useBlob(path);
   const src = useObjectUrl(blob.data);
-  return (
-    <span className="clay-well grid h-28 w-full place-items-center overflow-hidden rounded-lg">
-      {src ? (
-        // eslint-disable-next-line @next/next/no-img-element -- authenticated blob
-        <img src={src} alt="" className="size-full object-contain" />
-      ) : (
-        <span className="px-1 text-center text-[11px] text-ink-muted">{path ? "Loading" : "No picture"}</span>
-      )}
-    </span>
+  return src ? (
+    // eslint-disable-next-line @next/next/no-img-element -- authenticated blob
+    <img src={src} alt={alt} draggable={false} className="size-full" />
+  ) : (
+    <span className="grid size-full place-items-center px-1 text-center text-[11px] text-ink-muted">{path ? "Loading" : "No picture"}</span>
   );
 }
 
 /**
- * The scene timeline. Each scene is as wide as it is long (with a floor so short scenes stay tappable) and shows its own
- * keyframe. The video is never seeked: scenes are read from keyframes and thumbnails the server extracted. Arrow keys move
- * between scenes.
+ * The scene timeline as a film strip of the keyframes the server extracted: move along it to scrub the frames, click or
+ * press Enter to select a scene (the stage and the player below follow the selection). The video is never seeked from
+ * here; scenes are read from keyframes and thumbnails. Arrow keys move between scenes. Wide strips scroll inside their
+ * own box, never the page.
  */
 export function SceneStrip({ scenes, selectedId, onSelect }: { scenes: Scene[]; selectedId: string | null; onSelect: (id: string) => void }) {
-  const listRef = useRef<HTMLOListElement>(null);
-
-  function onKeyDown(e: KeyboardEvent) {
-    const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-    if (!step) return;
-    const at = scenes.findIndex((s) => s.id === selectedId);
-    const next = scenes[Math.min(scenes.length - 1, Math.max(0, at + step))];
-    if (!next) return;
-    e.preventDefault();
-    onSelect(next.id);
-    listRef.current?.querySelector<HTMLElement>(`[data-scene="${next.id}"]`)?.focus();
-  }
-
   return (
-    <ol ref={listRef} aria-label="Scenes in time order" onKeyDown={onKeyDown} className="flex gap-2 overflow-x-auto pb-1.5">
-      {scenes.map((s, i) => {
-        const selected = s.id === selectedId;
-        const length = s.end_ms == null ? 1000 : Math.max(500, s.end_ms - s.start_ms);
-        return (
-          <li key={s.id} style={{ flex: `${length} 1 0`, minWidth: "6.5rem" }}>
-            <button
-              type="button"
-              data-scene={s.id}
-              aria-current={selected ? "true" : undefined}
-              onClick={() => onSelect(s.id)}
-              className={cn(
-                "clay block w-full space-y-1.5 rounded-xl border p-1.5 text-left",
-                selected ? "border-primary" : "border-border hover:border-border-strong",
-              )}
-            >
-              <Thumb path={s.keyframe_url} />
-              <span className="type-ledger flex items-baseline justify-between gap-1 px-0.5 text-[12px]">
-                <span className="font-medium text-ink">Scene {i + 1}</span>
-                <span className="text-ink-secondary">{clock(s.start_ms)}</span>
-              </span>
-            </button>
-          </li>
-        );
-      })}
-    </ol>
+    <div className="overflow-x-auto pb-1.5">
+      <div style={{ minWidth: `${scenes.length * 5.25}rem` }}>
+        <FilmStrip
+          ariaLabel="Scenes in time order"
+          preview={false}
+          selectedId={selectedId}
+          onSelect={onSelect}
+          frames={scenes.map((s, i) => ({
+            id: s.id,
+            at: clock(s.start_ms),
+            label: `Scene ${i + 1}`,
+            media: <FrameImg path={s.keyframe_url} alt="" />,
+          }))}
+        />
+      </div>
+    </div>
   );
 }
 

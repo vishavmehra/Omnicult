@@ -22,7 +22,7 @@ from app.core.config import Settings
 
 Tier = Literal["fast", "default", "reasoning"]
 Capability = Literal[
-    "chat", "embeddings", "vision", "transcribe", "image_generation", "tts", "live", "grounded_research", "music"
+    "chat", "embeddings", "vision", "transcribe", "image_generation", "tts", "live", "grounded_research", "music", "video"
 ]
 TaskClass = Literal[
     "extraction",
@@ -37,7 +37,7 @@ TaskClass = Literal[
 ]
 
 ROUTING_POLICY_VERSION = "routing-v2"
-PRICE_TABLE_VERSION = "prices-2026-11-17"  # bump when any number below changes
+PRICE_TABLE_VERSION = "prices-2026-11-18"  # bump when any number below changes
 
 # docs/05 section 6.3: small, deterministic task -> tier table.
 TASK_TIERS: dict[TaskClass, Tier] = {
@@ -76,7 +76,7 @@ class Price:
     input_per_m: float = 0.0
     output_per_m: float = 0.0  # includes thinking tokens
     per_image: float | None = None  # image models: flat estimate per generated image
-    per_second: float | None = None  # audio models: per generated second (tokens are 25 per second)
+    per_second: float | None = None  # audio and video models: per generated second (audio tokens are 25 per second)
     long_input_threshold: int | None = None  # prompts above this many tokens bill at the long_* rates
     long_input_per_m: float | None = None
     long_output_per_m: float | None = None
@@ -161,6 +161,14 @@ MODELS: dict[str, ModelSpec] = {
         _spec("gemini-3.8-live", "live", Price(0.75, 3.75)),
         # Music (Lyria 2 on Vertex, 30 s WAV clips at $0.06; exercised by scripts/verify_google_models.py only).
         _spec("lyria-002", "music", Price(per_second=0.06 / 30), locations=("us-central1",), verified="2026-11-17"),
+        # Video (Veo 3.1 on Vertex AI, us-central1 only, reached over REST `predictLongRunning`). `per_second` is the
+        # video-only 720p rate, the only mode Remake: Video requests (audio is joined in code). Published rates per second
+        # (https://cloud.google.com/vertex-ai/generative-ai/pricing, read 2026-11-18; the unit there reads "1 count"):
+        # Fast 720p $0.08 video-only, $0.10 with audio, 1080p $0.10 and $0.12; Lite $0.03 and $0.05 (1080p $0.05 and $0.08);
+        # standard $0.20 and $0.40. The page is script-rendered, so check the billing report before relying on them.
+        _spec("veo-3.1-fast-generate-001", "video", Price(per_second=0.08), locations=("us-central1",), note="GA"),
+        _spec("veo-3.1-lite-generate-001", "video", Price(per_second=0.03), locations=("us-central1",), note="preview"),
+        _spec("veo-3.1-generate-001", "video", Price(per_second=0.20), locations=("us-central1",), note="GA"),
         # Embeddings (input tokens only).
         # Verified 2026-11-17 on Vertex at `global`: gemini-embedding-001 answers 404 (not available to this project there);
         # gemini-embedding-2 works, folds a list of inputs into ONE vector (so one text per request) and ignores task_type.
@@ -231,6 +239,7 @@ def capability_model(settings: Settings, capability: Capability) -> str | None:
         "tts": settings.gemini_model_tts,
         "live": settings.gemini_model_live,
         "music": settings.gemini_model_music,
+        "video": settings.gemini_model_video,
         "embeddings": settings.gemini_embedding_model,
     }[capability] or None
 
@@ -248,10 +257,11 @@ class CostBreakdown:
 
 def estimate_cost(
     model_id: str, *, input_tokens: int | None = None, output_tokens: int | None = None, images: int = 0,
-    audio_seconds: float = 0.0, grounded_requests: int = 0, on: date | None = None,
+    audio_seconds: float = 0.0, video_seconds: float = 0.0, grounded_requests: int = 0, on: date | None = None,
 ) -> CostBreakdown:
     """Estimated USD for one call. `output_tokens` must include thinking tokens. Image models bill the flat per-image
-    figure (output tokens are then only the text part); audio models bill `audio_seconds` when no token count exists."""
+    figure (output tokens are then only the text part); audio models bill `audio_seconds` when no token count exists;
+    video models bill `video_seconds` of generated video at the per-second rate."""
     price, known = price_for(model_id, on)
     in_rate, out_rate = price.input_per_m, price.output_per_m
     if price.long_input_threshold and (input_tokens or 0) > price.long_input_threshold:
@@ -260,8 +270,8 @@ def estimate_cost(
     cost = (input_tokens or 0) * in_rate / 1e6
     if images and price.per_image is not None:
         cost += images * price.per_image  # image output tokens are inside the flat figure
-    elif audio_seconds and price.per_second is not None and not output_tokens:
-        cost += audio_seconds * price.per_second
+    elif (audio_seconds or video_seconds) and price.per_second is not None and not output_tokens:
+        cost += (audio_seconds + video_seconds) * price.per_second
     else:
         cost += (output_tokens or 0) * out_rate / 1e6
     cost += grounded_requests * GROUNDING_USD_PER_REQUEST

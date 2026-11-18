@@ -1,4 +1,5 @@
 import type { CreativeElement } from "./api";
+import { isVideoClip } from "./video-api";
 
 /** Mirrors the server's rule (app/media/remake.py): these kinds are never-change zones even when nobody locked them. */
 export const NEVER_CHANGE_KINDS = new Set(["logo", "packshot", "product", "tagline"]);
@@ -18,7 +19,7 @@ export const isText = (e: CreativeElement) => typeof e.value === "string" && e.v
 
 /** What a visual remake of `plateId` would do to this version: the scene it replaces, the regions it keeps, the text it draws. */
 export function planVisual(elements: CreativeElement[], plateId: string | null, locks: Set<string>): VisualPlan {
-  const scenes = elements.filter((e) => e.kind === "scene");
+  const scenes = elements.filter((e) => e.kind === "scene" && !isVideoClip(e));
   const plate = scenes.find((e) => e.id === plateId) ?? scenes.find((e) => !locks.has(e.id)) ?? null;
   if (!plate) return { plate: null, locked: [], texts: [], blocked: "This version has no scene element to remake." };
   const group = elements.filter((e) => e.scene_id === plate.scene_id && e.id !== plate.id && e.bbox);

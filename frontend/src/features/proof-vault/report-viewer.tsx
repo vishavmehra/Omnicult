@@ -123,8 +123,8 @@ export function ReportViewer({
       <article aria-label={report.title} className="rounded-card border border-border bg-surface px-4 py-6 sm:px-8 sm:py-8">
         <DocumentHeader report={report} />
         <div className="divide-y divide-border pt-6">
-          {report.sections.map((s) => (
-            <ReportSection key={s.id} section={s} wired={info.isSuccess ? wired.get(s.id) : undefined} />
+          {report.sections.map((s, i) => (
+            <ReportSection key={s.id} section={s} index={i} wired={info.isSuccess ? wired.get(s.id) : undefined} />
           ))}
         </div>
         <footer className="mt-6 border-t border-border pt-4">

@@ -10,6 +10,8 @@ What it does: probes candidate Gemini ids at one location (a call that returns t
 production gateway and adapters once each: structured output with realistic agent schemas (all three tiers), embeddings
 (batch and dimensions), vision (a generated test PNG), image generation, text to speech, and Google Search grounding.
 Every request goes through the gateway's meter, so a budget guard capped at --max-usd stops the run before it overspends.
+The `video` step (one 4 s Veo 3.1 Fast clip through the production adapter, about $0.32) is opt-in: it is not in the default
+--steps. Run it alone:  --steps video --max-usd 0.5
 Cost figures are estimates from app/llm/registry.py, not billed amounts. Error lines show the HTTP status and the API's
 status word only, never request bodies or credentials.
 """
@@ -334,6 +336,27 @@ async def music(gateway: Any, report: Report, settings: Any, location: str) -> N
                note=f"{prediction.get('mimeType')} {len(audio)} bytes (about 30 s, 48 kHz), field {field}")
 
 
+async def video(gateway: Any, report: Report, settings: Any) -> None:
+    """One 4 s, 720p, text-only Veo clip through the production adapter (`predictLongRunning`, then polling). Opt-in."""
+    from app.llm.gateway import LLMError
+    from app.llm.media import VideoClient
+
+    client = VideoClient(settings, meter=gateway.meter)
+    if not client.is_configured():
+        report.add("video", settings.gemini_model_video, "skip", location=settings.google_video_location, note="Vertex AI only")
+        return
+    started = time.perf_counter()
+    try:
+        clip = await client.generate("A brass lamp flickers on a teal wooden table at dusk, a slow camera push-in. No people, no text.",
+                                     seconds=4, aspect_ratio="9:16", stage="verify", agent="verify")
+    except LLMError as exc:
+        report.add("video", client.model or "-", "fail", location=settings.google_video_location, usage=exc.trace.usage,
+                   latency_ms=int((time.perf_counter() - started) * 1000), note=f"{exc.code}: {exc.message}")
+        return
+    report.add("video", clip.model, "ok", location=clip.location, latency_ms=int((time.perf_counter() - started) * 1000),
+               usage=clip.trace.usage, note=f"{clip.mime_type} {len(clip.video)} bytes, {clip.seconds} s at {clip.resolution}, operation {clip.operation_id}")
+
+
 async def run(args: argparse.Namespace) -> int:
     from app.core.config import Settings
     from app.llm import google
@@ -371,7 +394,8 @@ async def run(args: argparse.Namespace) -> int:
     plan = {"structured": lambda: structured(gateway, report), "embeddings": lambda: embeddings(gateway, report, settings),
             "vision": lambda: vision(gateway, report), "image": lambda: image_generation(gateway, report, settings),
             "tts": lambda: tts(gateway, report, settings), "grounding": lambda: grounding(gateway, report),
-            "music": lambda: music(gateway, report, settings, args.music_location)}
+            "music": lambda: music(gateway, report, settings, args.music_location),
+            "video": lambda: video(gateway, report, settings)}
     for name, step in plan.items():
         if name not in steps:
             continue
@@ -396,7 +420,7 @@ def main() -> int:
     parser.add_argument("--max-usd", type=float, default=0.25, help="estimated-spend ceiling for the whole run")
     parser.add_argument("--out", default=None, help="write the markdown table here")
     parser.add_argument("--steps", default="chat,structured,embeddings,vision,image,tts,grounding,music",
-                        help="comma-separated subset to run (each step costs money)")
+                        help="comma-separated subset to run (each step costs money; `video` is opt-in and costs about $0.32)")
     parser.add_argument("--music-location", default="us-central1", help="Vertex location for the Lyria clip")
     parser.add_argument("--tiers", default=None, help="skip the chat probe: fast,default,reasoning model ids")
     args = parser.parse_args()

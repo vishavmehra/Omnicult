@@ -3,6 +3,7 @@
 import { CalendarCheck, GitCompareArrows } from "lucide-react";
 import { useId, useState } from "react";
 
+import { TimelineRibbon, roleColor } from "@/components/creative";
 import { Button } from "@/components/ui/button";
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
 import { SectionTitle } from "@/features/workspaces/parts";
@@ -188,8 +189,9 @@ export function CalendarView({
   const data = cal.data;
   const thisYear = new Date().getFullYear();
   const years = Array.from(new Set([...(data?.years_available ?? []), thisYear, thisYear + 1, ...(year ? [year] : [])])).sort();
-  const moment = data?.months.flatMap((m) => m.dated).find((d) => d.key === selected) ?? null;
-  const total = data?.months.reduce((n, m) => n + m.dated.length, 0) ?? 0;
+  const dated = data?.months.flatMap((m) => m.dated) ?? [];
+  const moment = dated.find((d) => d.key === selected) ?? null;
+  const total = dated.length;
 
   return (
     <div className="space-y-6">
@@ -240,6 +242,24 @@ export function CalendarView({
               <p className="text-[13px] text-ink-secondary">
                 Comparing with the campaign window {dayLabel(data.window.date_from)} to {dayLabel(data.window.date_to)}. Moments inside it are marked.
               </p>
+            )}
+            {total > 0 && (
+              <TimelineRibbon
+                ariaLabel={`Dated moments in ${data.year}, in date order. Arrow keys move; Enter selects.`}
+                scale="time"
+                formatAt={dayLabel}
+                value={selected ?? dated[0]?.key ?? null}
+                onChange={setSelected}
+                onActivate={setSelected}
+                items={dated.map((d) => ({
+                  id: d.key,
+                  at: d.date,
+                  label: d.name,
+                  detail: [BASIS[d.date_basis], d.in_window === true ? "inside the campaign window" : d.in_window === false ? "outside the campaign window" : null].filter(Boolean).join(", "),
+                  color: d.in_window ? roleColor("lens", true) : undefined,
+                }))}
+                className="pb-1"
+              />
             )}
             <MonthGrid calendar={data} selected={selected} onSelect={setSelected} />
             {moment ? <DatedDetail moment={moment} /> : total > 0 && <p className="text-[13px] text-ink-muted">Select a moment to see its source, date and confidence.</p>}

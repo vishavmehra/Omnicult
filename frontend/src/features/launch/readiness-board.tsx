@@ -98,9 +98,10 @@ export function ReadinessTab() {
           />
         ) : (
           <div className="space-y-5">
-            {board.data?.regions.map((region) => (
+            {board.data?.regions.map((region, i) => (
               <RegionPanel
                 key={region.region_code}
+                index={i}
                 campaignId={campaign.id}
                 region={region}
                 rules={rules.data}

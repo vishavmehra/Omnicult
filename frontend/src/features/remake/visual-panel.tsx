@@ -3,6 +3,7 @@
 import { Check, TriangleAlert } from "lucide-react";
 import { useState } from "react";
 
+import { CompareSlider } from "@/components/creative";
 import { Field } from "@/components/forms/fields";
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ import {
 } from "./api";
 import { AiTag, AuthImage, CostConfirm, LockChip, Notice, RunProgress, SELECT, SourceLine, usd } from "./parts";
 import { planVisual, suggestAssets } from "./plan";
+import { isVideoClip } from "./video-api";
 
 const LOCK_SOURCE = { lock: "Locked in Studio", brand_kit_never_change: "Brand Kit never-change zone" } as const;
 
@@ -121,7 +123,7 @@ export function VisualPanel({
 
         <Field label="Scene to replace" htmlFor="rv-scene" required>
           <select id="rv-scene" className={SELECT} value={plan?.plate?.id ?? ""} onChange={(e) => setPlateId(e.target.value)} disabled={!detail.data}>
-            {(detail.data?.elements ?? []).filter((e) => e.kind === "scene").map((e) => (
+            {(detail.data?.elements ?? []).filter((e) => e.kind === "scene" && !isVideoClip(e)).map((e) => (
               <option key={e.id} value={e.id}>
                 {e.id}{locks.data?.has(e.id) ? " (locked)" : ""}
               </option>
@@ -227,6 +229,18 @@ function VisualResult({ output }: { output: RemakeOutput }) {
           {v.source === "demo_fixture" ? "" : ` · ${usd(output.estimated_cost_usd)}`}
         </SourceLine>
       </div>
+
+      {v.original_url && (
+        <div className="max-w-md space-y-1.5">
+          <p className="type-meta">Drag, or use the arrow keys on the handle, to compare the source with the finished creative.</p>
+          <CompareSlider
+            beforeLabel="Source creative"
+            afterLabel="Finished creative"
+            before={<AuthImage url={v.original_url} alt="The source creative" className="rounded-none border-0" />}
+            after={<AuthImage url={v.output_url} alt="The finished creative: generated scene, locked regions and text rendered in code" className="rounded-none border-0" />}
+          />
+        </div>
+      )}
 
       <div className={cn("grid gap-3", v.original_url ? "sm:grid-cols-3" : "sm:grid-cols-2")}>
         {v.original_url && <Figure label="Source creative"><AuthImage url={v.original_url} alt="The source creative" /></Figure>}

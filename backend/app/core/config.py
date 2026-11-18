@@ -161,6 +161,10 @@ class Settings(BaseSettings):
     gemini_model_music: str = "lyria-002"  # Vertex AI only; reached over REST `predict`, not the Gen AI SDK
     google_music_location: str = "us-central1"  # Lyria is offered in us-central1 (verified 2026-11-17)
     remake_max_voice_lines: int = 8  # speech calls one Remake: Sound run may make (one per line), a hard bound
+    # Remake: Video. Veo 3.1 Fast is GA and offered in us-central1 only (verified 2026-11-18, docs/remake-video NOTES); the
+    # Gen AI SDK is not used: the adapter calls REST `predictLongRunning` and `fetchPredictOperation` like the music adapter.
+    gemini_model_video: str = "veo-3.1-fast-generate-001"
+    google_video_location: str = "us-central1"
 
     # --- pulse-t3 (Live Pulse Tier 3: Alerts run by Cloud Scheduler) ---
     # POST /api/v1/internal/pulse/evaluate-alerts accepts only a Google OIDC ID token minted for this service account and

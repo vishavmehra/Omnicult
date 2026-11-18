@@ -1,6 +1,7 @@
 "use client";
 
 import { CircleDashed } from "lucide-react";
+import { useState } from "react";
 
 import { LimitationList } from "@/components/evidence/limitation-list";
 import { cn } from "@/lib/utils";
@@ -143,6 +144,35 @@ export function tradeOffs(comparison: ScoreComparison) {
 }
 
 /**
+ * One version's bar for a dimension. It grows from its left edge when the block first paints and again each time the pointer
+ * enters the row (remounting the fill replays the transform-only `grow-x`). The width is the API's value on the 0 to 100 scale.
+ */
+function VersionBar({ label, k, value }: { label: string; k: number; value: number | null }) {
+  const [replay, setReplay] = useState(0);
+  return (
+    <li className="group/bar flex items-center gap-2.5" onPointerEnter={() => setReplay((n) => n + 1)}>
+      <VersionChip index={k} />
+      <span className="sr-only">{label}: </span>
+      {value === null ? (
+        <span className="flex h-2.5 min-w-0 flex-1 items-center rounded-[4px] border border-dashed border-border-strong/60" aria-hidden />
+      ) : (
+        <span aria-hidden className="relative flex h-2.5 min-w-0 flex-1 items-center rounded-r-[4px] bg-surface-muted">
+          <span className="absolute inset-y-0 left-1/2 w-px bg-border-strong/40" />
+          <span
+            key={replay}
+            className="grow-x relative h-full origin-left rounded-r-[4px] transition-transform duration-200 ease-out group-hover/bar:scale-y-[1.6]"
+            style={{ width: `${Math.max(0, Math.min(100, value))}%`, background: `var(--s${k + 1})`, animationDelay: replay === 0 ? `${k * 80}ms` : "0ms" }}
+          />
+        </span>
+      )}
+      <span className={cn("type-ledger w-[5.5rem] shrink-0 text-right text-[13px] tabular-nums", value === null ? "text-ink-muted" : "text-ink")}>
+        {value === null ? "Not assessed" : points(value)}
+      </span>
+    </li>
+  );
+}
+
+/**
  * The per-dimension breakdown: one block per dimension, one horizontal bar per version on a shared 0 to 100 scale, the value at
  * each bar's tip, and a disclosure with the rules and inputs behind every number. A dimension without input shows as not assessed.
  */
@@ -186,26 +216,9 @@ export function DimensionBars({ comparison }: { comparison: ScoreComparison }) {
               </div>
               <div className="min-w-0 space-y-3">
                 <ul className="space-y-1.5">
-                  {cards.map((c, k) => {
-                    const d = row[k];
-                    return (
-                      <li key={c.version_id} className="flex items-center gap-2.5">
-                        <VersionChip index={k} />
-                        <span className="sr-only">{c.label}: </span>
-                        {d.value === null ? (
-                          <span className="flex h-2.5 min-w-0 flex-1 items-center rounded-[4px] border border-dashed border-border-strong/60" aria-hidden />
-                        ) : (
-                          <span aria-hidden className="relative flex h-2.5 min-w-0 flex-1 items-center rounded-r-[4px] bg-surface-muted">
-                            <span className="absolute inset-y-0 left-1/2 w-px bg-border-strong/40" />
-                            <span className="relative h-full rounded-r-[4px]" style={{ width: `${Math.max(0, Math.min(100, d.value))}%`, background: `var(--s${k + 1})` }} />
-                          </span>
-                        )}
-                        <span className={cn("type-ledger w-[5.5rem] shrink-0 text-right text-[13px] tabular-nums", d.value === null ? "text-ink-muted" : "text-ink")}>
-                          {d.value === null ? "Not assessed" : points(d.value)}
-                        </span>
-                      </li>
-                    );
-                  })}
+                  {cards.map((c, k) => (
+                    <VersionBar key={c.version_id} label={c.label} k={k} value={row[k].value} />
+                  ))}
                 </ul>
                 <details>
                   <summary className="cursor-pointer text-[12.5px] text-ink-secondary hover:text-ink">Rules and inputs behind these values</summary>

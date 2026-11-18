@@ -1,7 +1,7 @@
 """One list of run types, kept in step everywhere it is written down.
 
 `schemas.runs.RunType` is the source of truth. The agent_runs CHECK (models and the migrated database), the run engine's
-tables, the Run History labels, the frontend maps and the generated frontend types must all hold exactly the same fifteen
+tables, the Run History labels, the frontend maps and the generated frontend types must all hold exactly the same sixteen
 names. A type added in one place and forgotten in another fails here. `voice_direct` is recorded synchronously (one planning
 call, no queue), so it has no run-engine tables. The ten types from earlier versions stay in the list because stored runs of
 those types remain valid, but this build no longer executes them.
@@ -36,8 +36,8 @@ def names(text: str) -> set[str]:
 
 
 def test_the_list_is_the_retired_types_plus_transcreate_creative_xray_voice_direct_and_remakes() -> None:
-    added = {"transcreate", "creative_xray", "voice_direct", "remake_visual", "remake_sound"}
-    assert len(RUN_TYPES) == 15
+    added = {"transcreate", "creative_xray", "voice_direct", "remake_visual", "remake_sound", "remake_video"}
+    assert len(RUN_TYPES) == 16
     assert RUN_TYPES >= added
     assert len(RUN_TYPES - added) == 10
 

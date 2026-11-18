@@ -62,7 +62,7 @@ export function RegionLedger({ data, stale }: { data: Summary; stale: boolean })
         <span>Platforms: {data.platform ? platformList([data.platform]) : platformList(first?.groups[0]?.metrics[0]?.platforms ?? [])}</span>
         {anyProvisional && <span>Dotted underline: includes provisional days</span>}
       </p>
-      <div className={cn("overflow-x-auto rounded-card border border-border bg-surface transition-opacity", stale && "opacity-60")} aria-busy={stale}>
+      <div className={cn("relative overflow-x-auto rounded-card border border-border bg-surface transition-opacity", stale && "opacity-60")} aria-busy={stale}>
         <table className="type-ledger w-full min-w-[34rem] text-left text-[13px]">
           <caption className="sr-only">
             Metrics by region for {formatSpan(data.date_from, data.date_to)}. {data.label}.

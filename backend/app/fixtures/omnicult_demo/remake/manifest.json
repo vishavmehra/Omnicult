@@ -63,5 +63,28 @@
    "element_id_when_recorded": "mh-vid-cap-4",
    "sha256": "88efcd22a6a1b7357ef767e6a164437031ff81d43a4bd9fecf6ad1b1eac59e68"
   }
- ]
+ ],
+ "video": {
+  "IN-TN": {
+   "file": "tn_video.mp4",
+   "mime_type": "video/mp4",
+   "model": "veo-3.1-fast-generate-001",
+   "location": "us-central1",
+   "prompt_version": "remake-video-v1",
+   "generated_at": "2026-11-18",
+   "seconds": 6,
+   "aspect_ratio": "9:16",
+   "resolution": "720p",
+   "width": 720,
+   "height": 1280,
+   "size_bytes": 2606631,
+   "estimated_cost_usd": 0.48,
+   "operation_id": "8fc5cdeb-73b2-4b9e-b24c-b62a5a54dcd8",
+   "prompt": "A short, calm festive advertising shot for an audience in Tamil Nadu (Tamil-speaking). Product: Aamod Festive Tin. A reusable peacock-teal tin with a brass-gold lid holding about 750 g of traditional festive sweets and savouries. The assortment follows the region; the tin is the same everywhere. The campaign says: Home-style festive sweets, ready to gift and delivered before the festival day. Pacing follows the original film (its settings: A balcony of an apartment building at dusk, decorated for Diwali; A dark teal tabletop with a Diwali snack spread and lamps; A home dining table in the evening); the first frame, not the film, decides what is shown. The first frame is the finished scene. Keep the product tin, the logo and the tagline exactly as they appear in it: sharp, undistorted and in the same place. Keep the framing and the composition. Gentle, natural motion only: a slow camera push-in, flickering lamp light, a soft breeze moving garlands and flowers, a little steam. No new people appear. No text, letters, subtitles, captions or watermarks anywhere. Photographic and realistic, warm light consistent with the first frame.",
+   "start_frame": "tn_scene.jpg (the Remake: Visuals scene) with the logo, tin and tagline of keyvisual.png restored, contained on a 720x1280 canvas",
+   "observed": "Reviewed frame by frame after generation: the camera pushes in slowly, the lamp flame flickers and jasmine petals fall. The model did not keep the locked brand elements steady: a garbled copy of the tagline appears under the logo at about 1.5 s and the logo has faded out by about 4.5 s; the round label on the tin flickers once. The tagline at the bottom stays readable.",
+   "note": "The file is the model's MP4 exactly as delivered (no audio, 24 fps), not re-encoded.",
+   "sha256": "9cd81e3fce6933144dbf9b7c5a1d645d8ebd6a3ef0b1669a2c6cb3902470541f"
+  }
+ }
 }

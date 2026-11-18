@@ -8,6 +8,7 @@ import { humanize } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { Disclosure } from "./lab-parts";
+import { PanelGrid, type PanelFace } from "./panel-grid";
 import { REACTIONS, REACTION_LABEL, SURVIVAL_LABEL, isGrounded, langFor } from "./labels";
 import type { GroundedPoint, GroundingClaim, PanelParticipant, QuickReadParticipant, ReactionCategory, StudyParticipant } from "./types";
 
@@ -89,8 +90,17 @@ function ShowAll({ total, all, onToggle }: { total: number; all: boolean; onTogg
 export function QuickReadParticipants({ participants, claims, onAsk }: { participants: QuickReadParticipant[]; claims: GroundingClaim[]; onAsk(id: string): void }) {
   const [all, setAll] = useState(false);
   const rows = all ? participants : participants.slice(0, SHOWN);
+  const faces: PanelFace[] = participants.map((p) => ({
+    id: p.id,
+    ordinal: p.ordinal,
+    persona: p.persona,
+    lang: langFor(p.response?.first_reaction, p.language),
+    mood: p.response?.sentiment ?? null,
+    quote: p.response?.first_reaction ?? null,
+  }));
   return (
-    <div>
+    <div className="space-y-4">
+      <PanelGrid faces={faces} onAsk={onAsk} ariaLabel="The synthetic panel" />
       <ul className="ledger-rules">
         {rows.map((p) => {
           const r = p.response;
@@ -141,8 +151,21 @@ export function QuickReadParticipants({ participants, claims, onAsk }: { partici
 export function StudyParticipants({ participants, onAsk }: { participants: StudyParticipant[]; onAsk(id: string): void }) {
   const [all, setAll] = useState(false);
   const rows = all ? participants : participants.slice(0, SHOWN);
+  const faces: PanelFace[] = participants.map((p) => {
+    const first = p.interview?.status === "completed" ? p.interview.answers[0] : undefined;
+    return {
+      id: p.id,
+      ordinal: p.ordinal,
+      persona: p.persona,
+      lang: langFor(first?.answer, p.language),
+      mood: p.interview?.status === "completed" ? (p.interview.reaction ?? null) : null,
+      quote: first?.answer ?? null,
+      footer: first ? <span className="text-ink-muted">Asked: {first.question}</span> : undefined,
+    };
+  });
   return (
-    <div>
+    <div className="space-y-4">
+      <PanelGrid faces={faces} onAsk={onAsk} ariaLabel="The synthetic panel" />
       <ul className="ledger-rules">
         {rows.map((p) => {
           const iv = p.interview;

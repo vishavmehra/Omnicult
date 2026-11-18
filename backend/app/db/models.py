@@ -19,10 +19,11 @@ from app.db.base import Base, utcnow
 RUN_TYPES = (
     "'market_discovery', 'campaign_rehearsal', 'campaign_adaptation', 'campaign_evaluation', "
     "'cultural_profile', 'campaign_arena', 'risk_scan', 'market_comparison', 'population_study', 'social_simulation', "
-    "'transcreate', 'creative_xray', 'voice_direct', 'remake_visual', 'remake_sound'"
+    "'transcreate', 'creative_xray', 'voice_direct', 'remake_visual', 'remake_sound', 'remake_video'"
 )
 DERIVED_ROLES = (
-    "'keyframe', 'thumbnail', 'audio_track', 'remake_plate', 'remake_visual', 'remake_voiceover', 'remake_music'"
+    "'keyframe', 'thumbnail', 'audio_track', 'remake_plate', 'remake_visual', 'remake_voiceover', 'remake_music', "
+    "'remake_video', 'remake_frame'"
 )
 RUN_STATUSES = "'queued', 'running', 'completed', 'partial', 'failed', 'cancelled'"
 

@@ -20,6 +20,7 @@ export const RUN_TYPE_META: Record<RunType, { label: string; page: string | null
   voice_direct: { label: "Voice Director", page: "studio" },
   remake_visual: { label: "Remake: Visuals", page: "studio/remake" },
   remake_sound: { label: "Remake: Sound", page: "studio/remake" },
+  remake_video: { label: "Remake: Video", page: "studio/remake" },
 };
 
 /** The workspace page that shows a run's result, or null when the run belongs to no current page or to no campaign. */
