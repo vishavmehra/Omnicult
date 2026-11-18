@@ -11,7 +11,6 @@ import { computeLayout, MAX_NODES, type LayoutKind, type Point } from "@/compone
 import { Card } from "@/components/layout/page-parts";
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
 import { Button } from "@/components/ui/button";
-import type { components } from "@/lib/api/schema";
 import { humanize } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -31,31 +30,6 @@ export type CanvasEdge = { id: string; source: string; target: string; relation:
 export type LegendEntry = { kind: string; label: string; description?: string; color?: string; Icon?: LucideIcon };
 
 const PALETTE = ["#4f46e5", "#e5484d", "#14b8a6", "#f97316", "#2563eb", "#8b5cf6", "#10b981", "#f59e0b", "#0ea5e9", "#475569", "#db2777"];
-
-type GraphView = components["schemas"]["GraphView"];
-
-/**
- * Adapter for the v3 graph views (audience_landscape, reaction_map, campaign_comparison, social_diffusion).
- * `href` maps a node's resource to a page; pass a resolver for your view.
- */
-export function fromGraphView(view: GraphView, href?: (node: GraphView["nodes"][number]) => string | null) {
-  return {
-    nodes: view.nodes.map<CanvasNode>((n) => ({
-      id: n.id,
-      label: n.label,
-      kind: n.kind,
-      region: n.region,
-      facts: n.facts,
-      isDemo: n.is_demo,
-      isSynthetic: n.is_synthetic,
-      href: href?.(n) ?? null,
-    })),
-    edges: view.edges.map<CanvasEdge>((e) => ({ id: e.id, source: e.source, target: e.target, relation: e.relation, weight: e.weight, weightDefinition: e.weight_definition, provenance: e.provenance })),
-    legend: view.legend.map<LegendEntry>((l) => ({ kind: l.kind, label: l.label, description: l.description })),
-    truncated: view.truncated,
-    limitations: view.limitations,
-  };
-}
 
 type Density = "all" | "key" | "none";
 type NodeData = { node: CanvasNode; color: string; Icon?: LucideIcon; showLabel: boolean; dimmed: boolean };
@@ -107,12 +81,7 @@ export type GraphCanvasProps = {
  * a node detail panel (facts, relations with weight definitions and provenance, related nodes, Open), keyboard
  * traversal (arrows move between neighbours, Enter opens), and loading / empty / partial / error states.
  *
- * Usage (v3 view):
- *   const view = useQuery(…GET /campaigns/{id}/population-comparison…);
- *   const g = view.data && fromGraphView(view.data, (n) => n.resource ? `/projects/${pid}/audience` : null);
- *   <GraphCanvas label="Reaction map" isLoading={view.isPending} error={view.error} onRetry={view.refetch}
- *     nodes={g?.nodes ?? []} edges={g?.edges ?? []} legend={g?.legend ?? []} truncated={g?.truncated} limitations={g?.limitations}
- *     filters={<FilterCard>…</FilterCard>} />
+ * Feed it `nodes`, `edges` and `legend` (see the Proof evidence map).
  */
 export function GraphCanvas(props: GraphCanvasProps) {
   return (
