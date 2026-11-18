@@ -11,7 +11,7 @@ import httpx
 
 from app.integrations.youtube import YoutubeClient
 
-KEY = "test-youtube-api-key"
+KEY = "test-youtube-api-key-not-real"
 VIDEO = "dQw4w9WgXcQ"
 OTHER_VIDEO = "9bZkp7q19f0"
 AUTHOR = "Priya Subramaniam"
