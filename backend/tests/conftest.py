@@ -5,12 +5,14 @@ holds real keys (environment variables take precedence over the .env file).
 """
 
 import asyncio
+import contextlib
 from collections.abc import AsyncIterator, Iterator
 from typing import Any
 
 import httpx
 import pytest
 from fastapi import FastAPI
+from google.auth.exceptions import DefaultCredentialsError
 
 from app.core.config import get_settings
 from app.db.base import Base
@@ -35,6 +37,33 @@ def fresh_usage_sink() -> Iterator[None]:
     set_default_usage_sink(original)
 
 
+class FakeCredentials:
+    """Stands in for Application Default Credentials. It holds no token and cannot be refreshed, so a Google call that gets as
+    far as authenticating fails at once with the error a missing credential gives, before any socket is opened."""
+
+    token = None
+    expired = True
+    valid = False
+
+    def refresh(self, _request: Any) -> None:
+        raise DefaultCredentialsError("tests never use real Google credentials")
+
+
+@pytest.fixture(autouse=True)
+def no_real_google_credentials(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No test reads this machine's Application Default Credentials, runs the gcloud CLI, or reaches Google with the
+    developer's token. A test that configures a Google project (to run live workflows against fake models) makes the app load
+    credentials at startup, and `google.auth.default()` shells out to gcloud (minutes). Every credential lookup now ends in
+    FakeCredentials, which fails at once. The credential cache is process-wide, so it starts empty for every test."""
+    from app.llm import google
+
+    monkeypatch.setattr(google, "_credentials", None)
+    monkeypatch.delenv("GOOGLE_APPLICATION_CREDENTIALS", raising=False)  # a test that reads a credentials file brings its own
+    monkeypatch.setattr(google, "_well_known_credentials_path", lambda: None)  # gcloud's file in the user's profile
+    monkeypatch.setattr(google, "_default_credentials", FakeCredentials)
+    monkeypatch.setattr("google.auth.default", lambda *_, **__: (FakeCredentials(), "test-project"))
+
+
 def pytest_configure(config: pytest.Config) -> None:
     config.addinivalue_line("markers", "postgres: opt-in checks against a real Postgres (NATIVEPROOF_TEST_POSTGRES_URL)")
 
@@ -57,9 +86,25 @@ def test_settings(monkeypatch: pytest.MonkeyPatch, tmp_path: Any) -> Iterator[No
     monkeypatch.setenv("DEMO_SEED", "legacy")  # the pre-Omnicult workflow tests are written for the Northstar seed; Aamod tests opt in
     for name in BLANKED:
         monkeypatch.setenv(name, "")
+    # A zero-dimension embedding space is not usable, which switches the post-run search indexing off. Tests that configure a
+    # Google project to run live workflows would otherwise start real embedding calls that outlive the test (search tests bring
+    # their own fake embedder).
+    monkeypatch.setenv("GEMINI_EMBEDDING_DIMENSIONS", "0")
     get_settings.cache_clear()
     yield
     get_settings.cache_clear()
+
+
+async def settle_background_runs(timeout: float = 5.0) -> None:
+    """Let runs still in flight finish on their own before the app shuts down. A run keeps working after it reads as finished
+    (its search indexing comes last), and cancelling it in the middle of a query leaves SQLAlchemy a connection to terminate
+    that the aiosqlite worker never answers: the event loop's close then waits for it forever."""
+    from app.services import audience, runs
+
+    with contextlib.suppress(TimeoutError):
+        async with asyncio.timeout(timeout):
+            await runs.wait_idle()
+            await audience.wait_idle()
 
 
 @pytest.fixture
@@ -71,6 +116,7 @@ async def app(test_settings: None) -> AsyncIterator[FastAPI]:
     application = create_app()
     async with application.router.lifespan_context(application):
         yield application
+        await settle_background_runs()
     await dispose_engine()
 
 
