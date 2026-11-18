@@ -21,6 +21,9 @@ export const RUN_TYPE_META: Record<RunType, { label: string; page: string | null
   remake_visual: { label: "Remake: Visuals", page: "studio/remake" },
   remake_sound: { label: "Remake: Sound", page: "studio/remake" },
   remake_video: { label: "Remake: Video", page: "studio/remake" },
+  generate_image: { label: "Generate: Image", page: "studio/generate" },
+  generate_voice: { label: "Generate: Voice-over", page: "studio/generate" },
+  generate_jingle: { label: "Generate: Jingle", page: "studio/generate" },
 };
 
 /** The workspace page that shows a run's result, or null when the run belongs to no current page or to no campaign. */

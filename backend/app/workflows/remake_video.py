@@ -233,7 +233,7 @@ async def loading_context(state: GState, config: RunnableConfig) -> dict:
         update["client"] = client
     notes = [INTERPRETATION_NOTE, NO_TEXT_NOTE, *([LOCK_NOTE] if frame else []), *([OWN_FRAME_NOTE] if source == "asset" else []),
              *([NO_FRAME_NOTE] if source == "none" else [])]
-    update.update(frame=frame, aspect=aspect, source=source, limitations=notes, steps=[local_step(V1, VIDEO, "nativeproof", started)])
+    update.update(frame=frame, aspect=aspect, source=source, limitations=notes, steps=[local_step(V1, VIDEO, "omnicult", started)])
     return update
 
 
@@ -263,7 +263,7 @@ async def adding_voiceover(state: GState, config: RunnableConfig) -> dict:
     inp, started, notes = state["inp"], time.perf_counter(), list(state["limitations"])
     raw = state["raw"]
     if not inp.voiceover:
-        return {"final": raw, "joined": False, "steps": [*state["steps"], local_step(V3, VIDEO, "nativeproof", started)]}
+        return {"final": raw, "joined": False, "steps": [*state["steps"], local_step(V3, VIDEO, "omnicult", started)]}
     try:
         facts = await pipeline.inspect_clip(raw)
         clip_ms = facts.duration_ms or inp.seconds * 1000
@@ -271,12 +271,12 @@ async def adding_voiceover(state: GState, config: RunnableConfig) -> dict:
         if not pipeline.voiceover_fits(vo_ms, clip_ms):
             notes.append(f"The voice-over runs {vo_ms / 1000:.1f} s and the clip {clip_ms / 1000:.1f} s, so it was not joined: speech is "
                          "never cut. Speak fewer lines in Remake: Sound, or make a longer clip.")
-            return {"final": raw, "joined": False, "limitations": notes, "steps": [*state["steps"], local_step(V3, VIDEO, "nativeproof", started)]}
+            return {"final": raw, "joined": False, "limitations": notes, "steps": [*state["steps"], local_step(V3, VIDEO, "omnicult", started)]}
         final = await pipeline.join_voiceover(raw, inp.voiceover, clip_ms)
     except (ffmpeg.MediaToolMissing, ffmpeg.MediaProcessingFailed, ffmpeg.MediaUnreadable, ValueError) as exc:
         notes.append(f"The voice-over was not joined: {getattr(exc, 'message', None) or str(exc)}")  # the silent clip is kept
-        return {"final": raw, "joined": False, "limitations": notes, "steps": [*state["steps"], local_step(V3, VIDEO, "nativeproof", started)]}
-    return {"final": final, "joined": True, "limitations": [*notes, UNREVIEWED_NOTE], "steps": [*state["steps"], local_step(V3, VIDEO, "nativeproof", started)]}
+        return {"final": raw, "joined": False, "limitations": notes, "steps": [*state["steps"], local_step(V3, VIDEO, "omnicult", started)]}
+    return {"final": final, "joined": True, "limitations": [*notes, UNREVIEWED_NOTE], "steps": [*state["steps"], local_step(V3, VIDEO, "omnicult", started)]}
 
 
 async def checking_clip(state: GState, config: RunnableConfig) -> dict:
@@ -291,7 +291,7 @@ async def checking_clip(state: GState, config: RunnableConfig) -> dict:
     except ffmpeg.MediaUnreadable:
         return _fail(state, RunError(code="RUN_FAILED", stage=V4, retryable=False,
                                      message="The delivered file could not be read as video. Nothing was saved."),
-                     local_step(V4, VIDEO, "nativeproof", started, status="failed", error_code="RUN_FAILED"))
+                     local_step(V4, VIDEO, "omnicult", started, status="failed", error_code="RUN_FAILED"))
     if facts is not None:
         checks.append(_check("readable video", facts.has_video, f"{facts.container or 'unknown container'}, {facts.video_codec or 'unknown codec'}"
                              if facts.has_video else "The file has no video stream."))
@@ -306,8 +306,8 @@ async def checking_clip(state: GState, config: RunnableConfig) -> dict:
                              "The voice-over is the only audio." if state["joined"] else "No audio: the model was asked for none."))
         if not facts.has_video:
             return _fail(state, RunError(code="RUN_FAILED", stage=V4, retryable=False, message="The delivered file has no video. Nothing was saved."),
-                         local_step(V4, VIDEO, "nativeproof", started, status="failed", error_code="RUN_FAILED"))
-    return {"facts": facts, "checks": checks, "limitations": notes, "steps": [*state["steps"], local_step(V4, VIDEO, "nativeproof", started)]}
+                         local_step(V4, VIDEO, "omnicult", started, status="failed", error_code="RUN_FAILED"))
+    return {"facts": facts, "checks": checks, "limitations": notes, "steps": [*state["steps"], local_step(V4, VIDEO, "omnicult", started)]}
 
 
 VIDEO_GRAPH = linear_graph(GState, [(V1, loading_context), (V2, generating_video), (V3, adding_voiceover), (V4, checking_clip)])

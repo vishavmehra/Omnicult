@@ -8,6 +8,7 @@ from app.core.config import Settings
 from app.llm.gateway import LLMGateway
 from app.schemas.common import DataMode
 from app.workflows.followup import answer_followup, answer_group_question
+from app.workflows.generate import run_generate_image, run_generate_jingle, run_generate_voice
 from app.workflows.remake import run_remake_sound, run_remake_visual
 from app.workflows.transcreate import run_transcreate
 from app.workflows.remake_video import run_remake_video
@@ -59,6 +60,9 @@ __all__ = [
     "run_remake_visual",
     "run_remake_sound",
     "run_remake_video",
+    "run_generate_image",
+    "run_generate_voice",
+    "run_generate_jingle",
     "answer_followup",
     "answer_group_question",
 ]

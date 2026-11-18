@@ -12,7 +12,11 @@ from app.schemas.common import ApiModel, Page
 AssetKind = Literal["image", "video", "audio"]
 UploadStatus = Literal["stored", "failed"]
 ProcessingStatus = Literal["not_required", "pending", "processing", "ready", "failed"]
-DerivedRole = Literal["keyframe", "thumbnail", "audio_track"]
+DerivedRole = Literal[
+    "keyframe", "thumbnail", "audio_track",
+    "remake_plate", "remake_visual", "remake_voiceover", "remake_music",
+    "generate_image", "generate_voice", "generate_jingle",
+]  # mirrors DERIVED_ROLES in app/db/models.py
 
 
 class Asset(ApiModel):

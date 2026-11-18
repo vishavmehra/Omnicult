@@ -774,6 +774,145 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/generate/capabilities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Generate Capabilities
+         * @description The generator registry (which generators exist here, their model and estimated cost), the formats, voices, languages and
+         *     jingle options, and what the Brand Kit and brief give the generators. Makes no model call.
+         */
+        get: operations["generate_capabilities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/generate/image": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start Generate Image
+         * @description A key visual or social post for a region and format (run_type generate_image).
+         */
+        post: operations["start_generate_image"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/generate/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Generated Items
+         * @description Finished generate runs, newest first: what each made, its provenance and cost, or the error of a run that failed.
+         */
+        get: operations["list_generated_items"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/generate/items/{run_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Generated Item */
+        get: operations["get_generated_item"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/generate/items/{run_id}/use-in-studio": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Use Generated Item In Studio
+         * @description Add the output to a Studio version as a new element: a new version node, the source untouched. 409 when the campaign has
+         *     no version, the run made no file, or the output is already an element of that version.
+         */
+        post: operations["use_generated_item_in_studio"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/generate/jingle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start Generate Jingle
+         * @description A short instrumental jingle from Lyria (run_type generate_jingle; Vertex AI only).
+         */
+        post: operations["start_generate_jingle"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/generate/voice": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start Generate Voice
+         * @description A voice-over of the given lines, joined into one track with timings (run_type generate_voice).
+         */
+        post: operations["start_generate_voice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/glossary": {
         parameters: {
             query?: never;
@@ -4420,7 +4559,7 @@ export interface components {
              */
             derived_at_ms: number | null;
             /** Derived Role */
-            derived_role: ("keyframe" | "thumbnail" | "audio_track") | null;
+            derived_role: ("keyframe" | "thumbnail" | "audio_track" | "remake_plate" | "remake_visual" | "remake_voiceover" | "remake_music" | "generate_image" | "generate_voice" | "generate_jingle") | null;
             /**
              * Duration Ms
              * @description Video and audio length; null for images.
@@ -8320,7 +8459,7 @@ export interface components {
              * Role
              * @enum {string}
              */
-            role: "keyframe" | "thumbnail" | "audio_track";
+            role: "keyframe" | "thumbnail" | "audio_track" | "remake_plate" | "remake_visual" | "remake_voiceover" | "remake_music" | "generate_image" | "generate_voice" | "generate_jingle";
             /** Size Bytes */
             size_bytes: number;
         };
@@ -10687,6 +10826,633 @@ export interface components {
              * @default false
              */
             synthetic: boolean;
+        };
+        /** GenerateAssetRef */
+        GenerateAssetRef: {
+            /**
+             * Asset Id
+             * Format: uuid
+             */
+            asset_id: string;
+            /** Content Type */
+            content_type: string;
+            /** Duration Ms */
+            duration_ms: number | null;
+            /** Filename */
+            filename: string;
+            /** Height */
+            height: number | null;
+            /**
+             * Url
+             * @description API path of the file; it needs the same token as every other call.
+             */
+            url: string;
+            /** Width */
+            width: number | null;
+        };
+        /** GenerateBrandColour */
+        GenerateBrandColour: {
+            /** Hex */
+            hex: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+        };
+        /** GenerateBrandImage */
+        GenerateBrandImage: {
+            /** Asset Id */
+            asset_id: string | null;
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /** Url */
+            url: string | null;
+        };
+        /**
+         * GenerateBrandInfo
+         * @description What the generators read from the Brand Kit and the brief, so it can be shown beside the controls.
+         */
+        GenerateBrandInfo: {
+            /** Colours */
+            colours: components["schemas"]["GenerateBrandColour"][];
+            /** Festival Hooks */
+            festival_hooks: string[];
+            /** Logos */
+            logos: components["schemas"]["GenerateBrandImage"][];
+            /** Name */
+            name: string;
+            /** Objective */
+            objective: string | null;
+            /** Primary Message */
+            primary_message: string | null;
+            /** Product Name */
+            product_name: string | null;
+            /** Products */
+            products: components["schemas"]["GenerateBrandImage"][];
+            /** Tagline */
+            tagline: string | null;
+            /** Tone */
+            tone: string[];
+        };
+        /** GenerateCapabilities */
+        GenerateCapabilities: {
+            brand: components["schemas"]["GenerateBrandInfo"];
+            /** Daily Budget Usd */
+            daily_budget_usd: number;
+            /** Formats */
+            formats: components["schemas"]["GenerateFormat"][];
+            /** Generators */
+            generators: components["schemas"]["GeneratorInfo"][];
+            /** Idea Chips */
+            idea_chips: string[];
+            jingle: components["schemas"]["GenerateJingleOptions"];
+            /**
+             * Languages
+             * @description Languages a headline can be drawn in: those whose script has a bundled font.
+             */
+            languages: components["schemas"]["GenerateLanguage"][];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Purposes */
+            purposes: ("key_visual" | "social_post")[];
+            /** Run Budget Usd */
+            run_budget_usd: number;
+            /** Scripts */
+            scripts: string[];
+            /**
+             * Text Shaping
+             * @enum {string}
+             */
+            text_shaping: "raqm" | "basic";
+            voice: components["schemas"]["GenerateVoiceOptions"];
+        };
+        /**
+         * GenerateCheck
+         * @description One check computed in code (never by a model).
+         */
+        GenerateCheck: {
+            /** Detail */
+            detail: string | null;
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /** Passed */
+            passed: boolean;
+        };
+        /** GenerateFormat */
+        GenerateFormat: {
+            /** Height */
+            height: number;
+            /**
+             * Id
+             * @enum {string}
+             */
+            id: "1:1" | "4:5" | "9:16" | "16:9";
+            /** Label */
+            label: string;
+            /** Width */
+            width: number;
+        };
+        /** GenerateImageDetail */
+        GenerateImageDetail: {
+            /** Checks */
+            checks: components["schemas"]["GenerateCheck"][];
+            /** Claim Ids */
+            claim_ids: string[];
+            /**
+             * Format
+             * @enum {string}
+             */
+            format: "1:1" | "4:5" | "9:16" | "16:9";
+            headline: components["schemas"]["GenerateTextResult"] | null;
+            /** Height */
+            height: number;
+            /**
+             * Palette
+             * @description Brand Kit colours given to the model as direction (hex).
+             */
+            palette: string[];
+            /** Placements */
+            placements: components["schemas"]["GeneratePlacement"][];
+            /**
+             * Purpose
+             * @enum {string}
+             */
+            purpose: "key_visual" | "social_post";
+            reference: components["schemas"]["GenerateAssetRef"] | null;
+            /** @description The image model's scene alone, before anything was composited. */
+            scene: components["schemas"]["GenerateAssetRef"];
+            /** Shaping Engine */
+            shaping_engine: string;
+            /** Width */
+            width: number;
+        };
+        /**
+         * GenerateImageRequest
+         * @description A key visual or social post for one region and format. Lettering is drawn in code in the region's script, the logo and
+         *     product image are placed in code. `confirm_cost` must be true for a live project: the image call costs money.
+         */
+        GenerateImageRequest: {
+            /**
+             * Confirm Cost
+             * @default false
+             */
+            confirm_cost: boolean;
+            /**
+             * Format
+             * @default 4:5
+             * @enum {string}
+             */
+            format: "1:1" | "4:5" | "9:16" | "16:9";
+            /**
+             * Headline
+             * @description Optional headline, drawn in code in the language's script.
+             */
+            headline?: string | null;
+            /**
+             * Idea
+             * @description The scene and mood, in the person's words. Shown to the model as theirs.
+             */
+            idea: string;
+            /**
+             * Include Logo
+             * @default true
+             */
+            include_logo: boolean;
+            /**
+             * Include Product
+             * @default true
+             */
+            include_product: boolean;
+            /** Language */
+            language: string;
+            /**
+             * Purpose
+             * @default key_visual
+             * @enum {string}
+             */
+            purpose: "key_visual" | "social_post";
+            /**
+             * Reference Asset Id
+             * @description A stored image of the project (a Brand Kit product image, an upload or a generated image).
+             */
+            reference_asset_id?: string | null;
+            /** Region Code */
+            region_code: string;
+            /**
+             * Use Brand Colours
+             * @default true
+             */
+            use_brand_colours: boolean;
+            /**
+             * Use Region Claims
+             * @default true
+             */
+            use_region_claims: boolean;
+        };
+        /**
+         * GenerateItem
+         * @description One generate run and what it made. `id` is the run id. A failed run keeps its error here so it is never hidden.
+         */
+        GenerateItem: {
+            asset: components["schemas"]["GenerateAssetRef"] | null;
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            error: components["schemas"]["RunError"] | null;
+            /**
+             * Estimated Cost Usd
+             * @description Price-table estimate for the calls this run made; not a billed amount.
+             */
+            estimated_cost_usd: number | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            image: components["schemas"]["GenerateImageDetail"] | null;
+            jingle: components["schemas"]["GenerateJingleDetail"] | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "image" | "voice" | "jingle";
+            /** Language */
+            language: string;
+            /** Latency Ms */
+            latency_ms: number | null;
+            /** Limitations */
+            limitations: string[];
+            /** Location */
+            location: string | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Model */
+            model: string | null;
+            /**
+             * Prompt
+             * @description The prompt sent to the model, exactly. Null for speech.
+             */
+            prompt: string | null;
+            /** Prompt Version */
+            prompt_version: string;
+            /** Region Code */
+            region_code: string;
+            /**
+             * Request
+             * @description The validated request, without the cost confirmation.
+             */
+            request: {
+                [key: string]: unknown;
+            };
+            /** Source */
+            source: ("provider" | "demo_fixture") | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "completed" | "partial" | "failed";
+            /**
+             * Studio Version Ids
+             * @description Versions this output was added to as an element.
+             * @default []
+             */
+            studio_version_ids: string[];
+            /** Title */
+            title: string;
+            voice: components["schemas"]["GenerateVoiceDetail"] | null;
+        };
+        /** GenerateItemPage */
+        GenerateItemPage: {
+            /** Items */
+            items: components["schemas"]["GenerateItem"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** GenerateJingleDetail */
+        GenerateJingleDetail: {
+            /** Channels */
+            channels: number;
+            /** Duration Ms */
+            duration_ms: number;
+            /** Festival */
+            festival: string | null;
+            /**
+             * Generated Seconds
+             * @description Length of the clip as the model made it.
+             */
+            generated_seconds: number;
+            /** Instruments */
+            instruments: string[];
+            /** Mood */
+            mood: string;
+            /** Peaks */
+            peaks: number[];
+            /** Requested Seconds */
+            requested_seconds: number;
+            /** Sample Rate */
+            sample_rate: number;
+        };
+        /** GenerateJingleOptions */
+        GenerateJingleOptions: {
+            /**
+             * Clip Seconds
+             * @description The length the model makes; a shorter length is cut in code.
+             */
+            clip_seconds: number;
+            /** Instruments */
+            instruments: string[];
+            /** Moods */
+            moods: string[];
+            /** Seconds */
+            seconds: number[];
+        };
+        /**
+         * GenerateJingleRequest
+         * @description A short instrumental from Lyria. The model makes a fixed-length clip; a shorter length is cut in code with a fade.
+         */
+        GenerateJingleRequest: {
+            /**
+             * Confirm Cost
+             * @default false
+             */
+            confirm_cost: boolean;
+            /** Festival */
+            festival?: string | null;
+            /**
+             * Instruments
+             * @default []
+             */
+            instruments: string[];
+            /** Mood */
+            mood: string;
+            /** Region Code */
+            region_code: string;
+            /**
+             * Seconds
+             * @default 30
+             * @enum {integer}
+             */
+            seconds: 10 | 15 | 30;
+        };
+        /** GenerateLanguage */
+        GenerateLanguage: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Script */
+            script: string;
+        };
+        /** GenerateLineResult */
+        GenerateLineResult: {
+            /**
+             * Back Translation
+             * @description English back-translation from the transcreation, when one is recorded.
+             */
+            back_translation: string | null;
+            /** Duration Ms */
+            duration_ms: number;
+            /** End Ms */
+            end_ms: number;
+            /** Index */
+            index: number;
+            /** Language */
+            language: string;
+            /** Problems */
+            problems: string[];
+            /** Spoken */
+            spoken: boolean;
+            /** Start Ms */
+            start_ms: number;
+            /** Text */
+            text: string;
+        };
+        /** GeneratePlacement */
+        GeneratePlacement: {
+            /** Asset Id */
+            asset_id: string | null;
+            /**
+             * Bbox
+             * @description [x, y, width, height], each from 0 to 1 of the finished image.
+             */
+            bbox: number[];
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "logo" | "product";
+            /** Label */
+            label: string;
+            /** Width Px */
+            width_px: number;
+        };
+        /** GenerateTextResult */
+        GenerateTextResult: {
+            /** Bbox */
+            bbox: number[];
+            /** Color */
+            color: string;
+            /** Contrast Ratio */
+            contrast_ratio: number;
+            /** Fits */
+            fits: boolean;
+            /** Font Size */
+            font_size: number;
+            /** Language */
+            language: string | null;
+            /** Lines */
+            lines: string[];
+            /** Low Contrast */
+            low_contrast: boolean;
+            /** Problems */
+            problems: string[];
+            /** Script */
+            script: string;
+            /** Script Ok */
+            script_ok: boolean;
+            /** Text */
+            text: string;
+        };
+        /** GenerateUseInStudioRequest */
+        GenerateUseInStudioRequest: {
+            /**
+             * Version Id
+             * @description The version to add the element to. Default: the newest.
+             */
+            version_id?: string | null;
+        };
+        /** GenerateUsed */
+        GenerateUsed: {
+            /** Element Id */
+            element_id: string;
+            /**
+             * Operation Id
+             * Format: uuid
+             */
+            operation_id: string;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** GenerateVoiceDetail */
+        GenerateVoiceDetail: {
+            /** Language Code */
+            language_code: string;
+            /** Lines */
+            lines: components["schemas"]["GenerateLineResult"][];
+            /**
+             * Native Speaker Reviewed
+             * @default false
+             */
+            native_speaker_reviewed: boolean;
+            /**
+             * Pace
+             * @enum {string}
+             */
+            pace: "slow" | "normal" | "brisk";
+            /**
+             * Pace Applied
+             * @description True when the clips were retimed in code; false when the pace was normal.
+             */
+            pace_applied: boolean;
+            /**
+             * Peaks
+             * @description Loudness of the joined track in 96 equal slices, 0 to 100, computed from the audio.
+             */
+            peaks: number[];
+            /** Total Duration Ms */
+            total_duration_ms: number;
+            /** Voice */
+            voice: string;
+        };
+        /** GenerateVoiceInfo */
+        GenerateVoiceInfo: {
+            /** Name */
+            name: string;
+            /**
+             * Style
+             * @description The style label in Google's published voice list.
+             */
+            style: string | null;
+        };
+        /** GenerateVoiceLineIn */
+        GenerateVoiceLineIn: {
+            /**
+             * Element Id
+             * @description The Studio element this line came from; used to find its English back-translation.
+             */
+            element_id?: string | null;
+            /**
+             * Language
+             * @description Overrides the request language for this line.
+             */
+            language?: string | null;
+            /** Text */
+            text: string;
+        };
+        /** GenerateVoiceOptions */
+        GenerateVoiceOptions: {
+            /** Languages */
+            languages: components["schemas"]["GenerateLanguage"][];
+            /** Max Line Chars */
+            max_line_chars: number;
+            /** Max Lines */
+            max_lines: number;
+            /**
+             * Pace Supported
+             * @description False when the server cannot retime audio; the pace control is then not shown.
+             */
+            pace_supported: boolean;
+            /** Paces */
+            paces: ("slow" | "normal" | "brisk")[];
+            /**
+             * Sample Lines
+             * @description Lines the demonstration recordings cover (demo projects only).
+             */
+            sample_lines: string[];
+            /** Voices */
+            voices: components["schemas"]["GenerateVoiceInfo"][];
+        };
+        /** GenerateVoiceRequest */
+        GenerateVoiceRequest: {
+            /**
+             * Confirm Cost
+             * @default false
+             */
+            confirm_cost: boolean;
+            /** Language */
+            language: string;
+            /** Lines */
+            lines: components["schemas"]["GenerateVoiceLineIn"][];
+            /**
+             * Pace
+             * @description Applied in code to the spoken clips (pitch is kept).
+             * @default normal
+             * @enum {string}
+             */
+            pace: "slow" | "normal" | "brisk";
+            /** Region Code */
+            region_code: string;
+            /**
+             * Voice
+             * @default Sulafat
+             */
+            voice: string;
+        };
+        /**
+         * GeneratorInfo
+         * @description One entry of the generator registry. The studio shows only the generators the server lists, and only an `available`
+         *     one can run.
+         */
+        GeneratorInfo: {
+            /** Available */
+            available: boolean;
+            /**
+             * Estimated Cost Usd
+             * @description One run, price-table estimate; speech is per line. Not a billed amount.
+             */
+            estimated_cost_usd: number | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "image" | "voice" | "jingle";
+            /** Label */
+            label: string;
+            /** Location */
+            location: string | null;
+            /** Model */
+            model: string | null;
+            /** Note */
+            note: string | null;
+            /**
+             * Run Type
+             * @enum {string}
+             */
+            run_type: "generate_image" | "generate_voice" | "generate_jingle";
         };
         /** GlossaryTerm */
         GlossaryTerm: {
@@ -17960,7 +18726,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video" | "generate_image" | "generate_voice" | "generate_jingle";
             /** Started At */
             started_at: string | null;
             /**
@@ -17982,7 +18748,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video" | "generate_image" | "generate_voice" | "generate_jingle";
             /**
              * Status
              * @enum {string}
@@ -18108,7 +18874,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video" | "generate_image" | "generate_voice" | "generate_jingle";
             /** Started At */
             started_at: string | null;
             /**
@@ -18218,7 +18984,7 @@ export interface components {
              * Run Type
              * @enum {string}
              */
-            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video";
+            run_type: "market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video" | "generate_image" | "generate_voice" | "generate_jingle";
             /** Started At */
             started_at: string | null;
             /**
@@ -18393,7 +19159,7 @@ export interface components {
              * Resource
              * @enum {string}
              */
-            resource: "discovery" | "rehearsal" | "adaptations" | "evaluation" | "cultural_profile" | "arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "version" | "operation" | "creative_xray" | "voice_plan";
+            resource: "discovery" | "rehearsal" | "adaptations" | "evaluation" | "cultural_profile" | "arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "version" | "operation" | "creative_xray" | "voice_plan" | "generation";
             /**
              * Url
              * @description API path of the result resource, e.g. /api/v1/projects/{id}/discoveries/{run_id}.
@@ -27377,6 +28143,877 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FormatFitPlans"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    generate_capabilities: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenerateCapabilities"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_generate_image: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GenerateImageRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunAccepted"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_generated_items: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+                kind?: ("image" | "voice" | "jingle") | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenerateItemPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_generated_item: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenerateItem"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    use_generated_item_in_studio: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["GenerateUseInStudioRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GenerateUsed"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_generate_jingle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GenerateJingleRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunAccepted"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_generate_voice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GenerateVoiceRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunAccepted"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -39091,7 +40728,7 @@ export interface operations {
                 limit?: number;
                 /** @description Number of records skipped. */
                 offset?: number;
-                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video") | null;
+                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video" | "generate_image" | "generate_voice" | "generate_jingle") | null;
                 status?: ("queued" | "running" | "completed" | "partial" | "failed" | "cancelled") | null;
             };
             header?: never;
@@ -43666,7 +45303,7 @@ export interface operations {
                 limit?: number;
                 /** @description Number of records skipped. */
                 offset?: number;
-                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video") | null;
+                run_type?: ("market_discovery" | "campaign_rehearsal" | "campaign_adaptation" | "campaign_evaluation" | "cultural_profile" | "campaign_arena" | "risk_scan" | "market_comparison" | "population_study" | "social_simulation" | "transcreate" | "creative_xray" | "voice_direct" | "remake_visual" | "remake_sound" | "remake_video" | "generate_image" | "generate_voice" | "generate_jingle") | null;
                 campaign_id?: string | null;
                 study_id?: string | null;
                 status?: ("queued" | "running" | "completed" | "partial" | "failed" | "cancelled") | null;

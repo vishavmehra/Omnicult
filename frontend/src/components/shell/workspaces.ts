@@ -49,6 +49,7 @@ const at = (key: WorkspaceKey, query = "") => (campaignId: string) => `${workspa
 const TODAY = () => "/app";
 const XRAY = (campaignId: string) => `${workspaceHref(campaignId, "studio")}/xray`;
 const REMAKE = (campaignId: string) => `${workspaceHref(campaignId, "studio")}/remake`;
+const GENERATE = (campaignId: string) => `${workspaceHref(campaignId, "studio")}/generate`;
 const SETTINGS = () => "/app/settings";
 const USAGE = () => "/app/usage";
 
@@ -100,12 +101,13 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
       { id: 20, name: "Lock and Edit", tier: 1, status: "built", href: at("studio", "?tab=elements"), note: "Lock logos, product areas and taglines; every operation respects the locks." },
       { id: 21, name: "Remake: Visuals", tier: 2, status: "built", href: REMAKE, note: "A regional key visual from an image model, with Indic text set in code, never drawn by the model." },
       { id: 22, name: "Remake: Sound", tier: 2, status: "built", href: REMAKE, note: "A regional voice-over generated with text-to-speech, confirmed before it runs." },
-      { id: 23, name: "Remake: Video", tier: 3, status: "roadmap", note: "Regional video cuts." },
+      { id: 23, name: "Remake: Video", tier: 2, status: "built", href: REMAKE, note: "A short regional clip from the remade key visual with Veo, cost confirmed before it runs." },
       { id: 24, name: "Format Fit", tier: 3, status: "built", href: at("studio", "?tab=format"), note: "Resize for every placement." },
       { id: 25, name: "Version Tree", tier: 1, status: "built", href: at("studio"), note: "Every operation creates a version; the original is never overwritten." },
       { id: 26, name: "Voice Director", tier: 2, status: "built", href: at("studio", "?tab=direct"), note: "Direct the edit by speaking." },
       { id: 27, name: "Claim Guard", tier: 3, status: "built", href: at("studio", "?tab=claims"), note: "Checks product claims against what the brand can substantiate." },
       { id: 28, name: "Script Check", tier: 3, status: "built", href: at("studio", "?tab=script"), note: "Checks rendered Indic script for shaping errors." },
+      { id: 59, name: "Generate", tier: 2, status: "built", href: GENERATE, note: "A new image, voice-over or jingle made from the brief and Brand Kit, stored with its model, prompt version and cost." },
     ],
   },
   lab: {

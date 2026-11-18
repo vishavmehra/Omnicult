@@ -45,6 +45,9 @@ OPERATIONS = {
     "remake_visual": "Remake: Visuals",
     "remake_sound": "Remake: Sound",
     "remake_video": "Remake: Video",
+    "generate_image": "Generate: Image",
+    "generate_voice": "Generate: Voice-over",
+    "generate_jingle": "Generate: Jingle",
 }
 
 

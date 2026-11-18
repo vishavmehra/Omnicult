@@ -44,6 +44,9 @@ STAGES: dict[str, tuple[str, ...]] = {
     "remake_visual": ("loading_context", "generating_scene", "rendering_text", "checking_locked_regions"),
     "remake_sound": ("loading_context", "speaking_lines", "making_jingle", "assembling_track"),
     "remake_video": ("loading_context", "generating_video", "adding_voiceover", "checking_clip"),
+    "generate_image": ("loading_brief", "generating_image", "compositing", "checking_output"),
+    "generate_voice": ("loading_lines", "speaking_lines", "assembling_track", "checking_timings"),
+    "generate_jingle": ("loading_hints", "composing_jingle", "shaping_clip", "checking_clip"),
 }
 LABELS = {
     "transcreate": "transcreation",
@@ -51,6 +54,9 @@ LABELS = {
     "remake_visual": "Remake: Visuals",
     "remake_sound": "Remake: Sound",
     "remake_video": "Remake: Video",
+    "generate_image": "Generate: Image",
+    "generate_voice": "Generate: Voice-over",
+    "generate_jingle": "Generate: Jingle",
 }
 ENTRY_POINTS = {
     "transcreate": "run_transcreate",
@@ -58,6 +64,9 @@ ENTRY_POINTS = {
     "remake_visual": "run_remake_visual",
     "remake_sound": "run_remake_sound",
     "remake_video": "run_remake_video",
+    "generate_image": "run_generate_image",
+    "generate_voice": "run_generate_voice",
+    "generate_jingle": "run_generate_jingle",
 }
 MAX_CONCURRENT_RUNS = 4  # per-process semaphore; a worker queue if runs must survive restarts
 RUN_TIMEOUT_SECONDS = 900
@@ -308,6 +317,10 @@ async def _build_input(run_id: UUID) -> tuple[Any, Any]:
             from app.services import remake
 
             workflow_input = await remake.build_input(s, run, types, context, grounding)
+        elif run.run_type.startswith("generate_"):
+            from app.services import generate
+
+            workflow_input = await generate.build_input(s, run, context)
         else:
             raise ValueError(f"Run type {run.run_type!r} is not executed by the run engine.")
         mode = run.mode
@@ -401,6 +414,11 @@ async def _persist(run_id: UUID, outcome: Any) -> None:
 
             payload, ref = await remake.persist(s, run, outcome, new_ids, now)
             status = payload.pop("_status", status)  # a refused operation (a lock set meanwhile) is a failed run
+        elif run.run_type.startswith("generate_"):
+            from app.services import generate
+
+            payload, ref = await generate.persist(s, run, outcome, now)
+            status = payload.pop("_status", status)
         else:
             raise ValueError(f"Run type {run.run_type!r} is not executed by the run engine.")
 

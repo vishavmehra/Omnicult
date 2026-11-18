@@ -53,9 +53,13 @@ def test_added_elements_must_be_valid_and_new(add):
     assert refused.value.code == "INVALID"
 
 
-def test_only_a_remake_may_add_elements_and_an_unchanged_remake_is_refused():
-    with pytest.raises(OperationRejected):
-        apply_operation(snapshot(), OpSpec("manual_edit", edits=[Edit("plate", {"value": "n"})], adds=[{"id": "n", "kind": "scene", "value": "x"}]), set())
+def test_only_a_remake_or_a_manual_edit_may_add_elements_and_an_unchanged_remake_is_refused():
+    for kind in ("replace_text", "apply_chip", "swap_reference"):
+        with pytest.raises(OperationRejected):
+            apply_operation(snapshot(), OpSpec(kind, edits=[Edit("plate", {"value": "n"})], adds=[{"id": "n", "kind": "scene", "value": "x"}]), set())
+    # Generate adds a generated asset to a version as a manual edit; the public manual_edit request still has no way to add
+    added = apply_operation(snapshot(), OpSpec("manual_edit", adds=[{"id": "n", "kind": "scene", "value": "x"}]), set())
+    assert added.target_ids == ["n"] and any(e["id"] == "n" for e in added.snapshot.elements)
     with pytest.raises(OperationRejected) as same:
         apply_operation(snapshot(), OpSpec("remake", edits=[Edit("plate", {"value": "old.jpg"})]), set())
     assert same.value.code == "INVALID"

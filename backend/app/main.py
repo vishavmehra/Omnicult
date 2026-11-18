@@ -21,6 +21,7 @@ from app.api.routes import (
     direct,
     digest,
     evidence,
+    generate,
     graph,
     health,
     lab_t3,
@@ -81,6 +82,7 @@ ROUTERS = (
     country_packs,
     direct,
     remake,
+    generate,
     studio_t3,
 )
 

@@ -31,7 +31,7 @@ EDIT_RULES: dict[str, tuple[frozenset[str], bool]] = {
     "swap_reference": (frozenset({"value"}), False),
     "remake": (frozenset({"value", "language", "script"}), False),  # a generated asset replaces (or is added next to) an element
 }
-ADDABLE_KINDS = frozenset({"remake"})  # operations that may add elements
+ADDABLE_KINDS = frozenset({"remake", "manual_edit"})  # operations that may add elements (manual_edit: Generate adds a generated asset)
 _ELEMENT_ID = re.compile(r"^[A-Za-z0-9_.:-]{1,64}$")
 
 

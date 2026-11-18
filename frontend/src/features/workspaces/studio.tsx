@@ -1,6 +1,6 @@
 "use client";
 
-import { BookMarked, Bot, Crop, GitCompareArrows, History, Languages, Layers, ScanSearch, ShieldAlert, SpellCheck, User, Wand2 } from "lucide-react";
+import { BookMarked, Bot, Crop, GitCompareArrows, History, Languages, Layers, ScanSearch, ShieldAlert, Sparkles, SpellCheck, User, Wand2 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -40,6 +40,16 @@ function XRayLink({ campaignId, className }: { campaignId: string; className?: s
     <Link href={`/app/c/${campaignId}/studio/xray`} className={cn(buttonVariants({ variant: "outline" }), className)}>
       <ScanSearch aria-hidden />
       Creative X-Ray
+    </Link>
+  );
+}
+
+/** One link into Generate, where new images, voice-overs and jingles are made from the brief and Brand Kit. */
+function GenerateLink({ campaignId, className }: { campaignId: string; className?: string }) {
+  return (
+    <Link href={`/app/c/${campaignId}/studio/generate`} className={cn(buttonVariants({ variant: "outline" }), className)}>
+      <Sparkles aria-hidden />
+      Generate
     </Link>
   );
 }
@@ -230,7 +240,7 @@ export function StudioWorkspace() {
 
   return (
     <StudioProvider value={ctx}>
-      <WorkspaceHeader workspace="studio" actions={<XRayLink campaignId={campaignId} />}>
+      <WorkspaceHeader workspace="studio" actions={<><XRayLink campaignId={campaignId} /><GenerateLink campaignId={campaignId} /></>}>
         <p className="type-ledger flex flex-wrap gap-x-4 gap-y-1 pt-1 text-[12.5px] text-ink-muted">
           <span>
             <span className="text-ink-body">{campaign.name}</span> · {project.brand.name}
