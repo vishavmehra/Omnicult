@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from sqlalchemy import func, select
 
 from app.core.config import get_settings
-from app.core.scheduler_auth import NOT_CONFIGURED, get_verifier, google_oidc_verifier
+from app.core.scheduler_auth import INVALID_TOKEN, NOT_CONFIGURED, get_verifier, google_oidc_verifier
 from app.db import models as m
 from app.db.session import read_session
 from app.services import digest as digest_service
@@ -88,7 +88,7 @@ async def test_a_token_that_does_not_verify_or_names_another_identity_is_refused
     assert (await client.post(URL)).status_code == 401  # no token at all
     bad = use(app, FakeVerifier(error=ValueError("Token expired")))
     refused = await client.post(URL, headers=TOKEN)
-    assert refused.status_code == 401 and "could not be verified" in refused.json()["error"]["message"]
+    assert refused.status_code == 401 and refused.json()["error"]["message"] == INVALID_TOKEN  # the shared scheduler wording; no detail leaks
     assert bad.calls == [("fake-google-id-token", AUDIENCE)], "the token is checked against the configured audience"
     use(app, FakeVerifier(error=ValueError("Token expired")))
     assert (await client.post(URL, headers={"Authorization": "Bearer dev-alice"})).status_code == 401, "a dev or user token is not accepted"

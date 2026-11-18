@@ -11,7 +11,7 @@ from app.core.config import Settings, get_settings
 from app.core.scheduler_auth import require_scheduler
 
 HTTP_METHODS = {"get", "head", "post", "put", "patch", "delete"}
-SCHEDULER_PATH = "/internal/pulse/evaluate-alerts"
+SCHEDULER_PATHS = {"/internal/pulse/evaluate-alerts", "/internal/digest/generate-weekly"}  # Cloud Scheduler's two calls
 PROD = {
     "APP_ENV": "production",
     "AUTH_MODE": "firebase",
@@ -59,14 +59,17 @@ def test_production_serves_only_contract_routes(production: pytest.MonkeyPatch) 
     app = create_app()
     assert [r.path for r in app.routes if hasattr(r, "path")] == []  # no docs, redoc, or openapi.json routes
     routes = [route for module in (*ROUTERS, health) for route in module.router.routes]
-    assert all(isinstance(route, APIRoute) and route.include_in_schema for route in routes)  # nothing hidden
-    scheduler = [r for r in routes if r.path == SCHEDULER_PATH]  # the one internal route: Cloud Scheduler, behind its OIDC dependency
-    assert len(scheduler) == 1 and any(d.call is require_scheduler for d in scheduler[0].dependant.dependencies)
-    for route in routes:
-        if route.path != SCHEDULER_PATH:
-            assert not any(word in route.path for word in ("debug", "admin", "internal", "test")), route.path
+    # the only internal routes are Cloud Scheduler's calls, each exactly once and behind the OIDC dependency
+    scheduler = [r for r in routes if r.path in SCHEDULER_PATHS]
+    assert sorted(r.path for r in scheduler) == sorted(SCHEDULER_PATHS)
+    assert all(isinstance(r, APIRoute) and any(d.call is require_scheduler for d in r.dependant.dependencies) for r in scheduler)
+    others = [r for r in routes if r.path not in SCHEDULER_PATHS]
+    assert all(isinstance(route, APIRoute) and route.include_in_schema for route in others)  # nothing else is hidden
+    for route in others:
+        assert not any(word in route.path for word in ("debug", "admin", "internal", "test")), route.path
+    published = [r for r in routes if r.include_in_schema]  # the digest call is deliberately kept out of the published schema
     schema_paths = set(app.openapi()["paths"])
     assert all(p in {"/health", "/ready"} or p.startswith("/api/v1/") for p in schema_paths)
     contract = json.loads((Path(__file__).resolve().parents[3] / "contracts" / "openapi.json").read_text(encoding="utf-8"))
     operations = sum(1 for item in contract["paths"].values() for method in item if method in HTTP_METHODS)
-    assert sum(len(route.methods) for route in routes) == operations  # exactly the committed contract's operations
+    assert sum(len(route.methods) for route in published) == operations  # exactly the committed contract's operations

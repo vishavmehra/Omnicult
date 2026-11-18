@@ -14,9 +14,11 @@ def tables(db: Path) -> set[str]:
     return {r[0] for r in rows(db, "SELECT name FROM sqlite_master WHERE type = 'table'")}
 
 
-def test_0022_is_the_single_head_and_upgrades_and_downgrades(tmp_path: Path) -> None:
+def test_0022_is_in_the_single_head_chain_and_upgrades_and_downgrades(tmp_path: Path) -> None:
     cfg = config(tmp_path / "settings.db")
-    assert ScriptDirectory.from_config(cfg).get_heads() == ["0022"]
+    script = ScriptDirectory.from_config(cfg)
+    (head,) = script.get_heads()  # one head: the streams' migrations form a single chain, whichever one is last
+    assert "0022" in {rev.revision for rev in script.walk_revisions("base", head)}  # and the Settings migration is part of it
     command.upgrade(cfg, "head")
     assert {"workspace_invites", "workspace_settings"} <= tables(tmp_path / "settings.db")
     command.downgrade(cfg, "0017")
