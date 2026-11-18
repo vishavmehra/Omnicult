@@ -41,6 +41,23 @@
   --color-tint-sky: var(--tint-sky);
   --color-tint-butter: var(--tint-butter);
   --color-tint-rose: var(--tint-rose);
+  --color-tint-aqua: var(--tint-aqua);
+  --color-tint-lavender: var(--tint-lavender);
+  /* Workspace colour roles (CREATIVE_DIRECTION.md): identity only, never status or action. */
+  --color-role-desk: var(--role-desk);
+  --color-role-lens: var(--role-lens);
+  --color-role-studio: var(--role-studio);
+  --color-role-lab: var(--role-lab);
+  --color-role-launch: var(--role-launch);
+  --color-role-pulse: var(--role-pulse);
+  --color-role-proof: var(--role-proof);
+  --color-role-desk-strong: var(--role-desk-strong);
+  --color-role-lens-strong: var(--role-lens-strong);
+  --color-role-studio-strong: var(--role-studio-strong);
+  --color-role-lab-strong: var(--role-lab-strong);
+  --color-role-launch-strong: var(--role-launch-strong);
+  --color-role-pulse-strong: var(--role-pulse-strong);
+  --color-role-proof-strong: var(--role-proof-strong);
   --color-rose: var(--rose);
   --color-rose-soft: var(--rose-soft);
   --color-brass: var(--brass);
@@ -146,6 +163,7 @@
   --radius-3xl: 20px;
   --radius-4xl: 24px;
   --radius-card: 14px;
+  --radius-bento: 18px;
   --radius-stamp: 3px;
 
   --shadow-card: var(--clay-flat);
@@ -167,16 +185,17 @@
  */
 :root {
   color-scheme: light;
-  --canvas: #eceef2;
-  --surface: #f7f8fa;
+  /* Refined claymorphism after the owner's reference: pale lilac-grey ground, white clay, pastel clay tiles, violet ink. */
+  --canvas: #edeaf3;
+  --surface: #f8f6fc;
   --surface-raised: #ffffff;
-  --surface-muted: #e2e5eb; /* wells, tracks, table heads */
-  --ink: #1b1d22;
-  --ink-body: #33363d;
-  --ink-secondary: #4e535c;
-  --ink-muted: #626872; /* metadata only, 4.8:1 on the canvas */
-  --border: #d6dae1;
-  --border-strong: #8a909b; /* control boundaries, 3.2:1 on white */
+  --surface-muted: #e4e0ee; /* wells, tracks, table heads */
+  --ink: #352c47; /* 13:1 on white, 8:1 on the strongest pastel */
+  --ink-body: #3f3654;
+  --ink-secondary: #4f4766; /* 7.3:1 on the canvas, 5:1 or better on every pastel tile */
+  --ink-muted: #625a78; /* metadata only, 5.4:1 on the canvas; remapped to ink-secondary inside pastel tiles */
+  --border: #dad5e6;
+  --border-strong: #8f88a6; /* control boundaries, 3.4:1 on white */
   --pop: #c2410c; /* white text on it 5.2:1 */
   --pop-ink: #ffffff;
   --pop-soft: #fde4d8;
@@ -186,13 +205,35 @@
   --rose-soft: #fde4d8;
   --brass: var(--ink-secondary); /* legacy name: receipts now read in neutral ink */
   --brass-soft: var(--surface-muted);
-  --plum: #dde3ec; /* selected rows (legacy name) */
+  --plum: #e7e2f1; /* selected rows (legacy name) */
 
-  --tint-peach: #fbe6da;
-  --tint-mint: #dff2e7;
-  --tint-sky: #deebf8;
-  --tint-butter: #fbf2d6;
-  --tint-rose: #f8e1e6;
+  /* Pastel clay tiles (about 72% of the reference pastels on white). */
+  --tint-peach: #f5d6c5;
+  --tint-mint: #cdeadd;
+  --tint-sky: #cfe2f2;
+  --tint-butter: #f3e2ae;
+  --tint-rose: #f3d0e0;
+  --tint-aqua: #caeaec;
+  --tint-lavender: #e2d5f1;
+
+  /* Workspace roles: the reference pastels for shapes and the ambient ground, -strong for small marks on white. */
+  --role-desk: #f0c6ae;
+  --role-lens: #b9e1cf;
+  --role-studio: #edbdd3;
+  --role-lab: #bcd7ec;
+  --role-launch: #ecd395;
+  --role-pulse: #b5e2e4;
+  --role-proof: #d5c3eb;
+  --role-desk-strong: #c8693f;
+  --role-lens-strong: #2f8a64;
+  --role-studio-strong: #c04a7f;
+  --role-lab-strong: #3b7cb8;
+  --role-launch-strong: #a87a0c;
+  --role-pulse-strong: #23878f;
+  --role-proof-strong: #7a5fae;
+  --ambient-blob-alpha: 0.55;
+  --ambient-motif-alpha: 0.7;
+  --ambient-ink: #352c47;
 
   --spine: var(--surface-raised);
   --spine-raised: var(--canvas);
@@ -201,7 +242,7 @@
   --spine-rule: var(--border);
 
   --mat: #ffffff;
-  --mat-ink: #1b1d22;
+  --mat-ink: #352c47;
 
   --success: #1f7a4d;
   --success-soft: #dcf1e5;
@@ -212,13 +253,13 @@
   --info: #1f5f9e;
   --info-soft: #dce9f7;
 
-  /* Clay, after the reference: inner top-left highlight, inner bottom-right shade, soft outer drop. */
-  --clay-flat: inset 1px 1px 0 rgb(255 255 255 / 0.9), 0 1px 2px rgb(28 36 52 / 0.06);
-  --clay-raised: inset 2px 2px 3px rgb(255 255 255 / 0.95), inset -3px -4px 8px rgb(28 36 52 / 0.07), 0 2px 4px rgb(28 36 52 / 0.06),
-    0 16px 32px -16px rgb(28 36 52 / 0.3);
-  --clay-pressed: inset 2px 2px 5px rgb(28 36 52 / 0.16), inset -2px -2px 4px rgb(255 255 255 / 0.75);
-  --clay-well: inset 3px 3px 7px rgb(28 36 52 / 0.12), inset -2px -2px 5px rgb(255 255 255 / 0.85);
-  --clay-float: 0 2px 6px rgb(28 36 52 / 0.08), 0 24px 48px -20px rgb(28 36 52 / 0.35);
+  /* Clay, after the reference: inner top-left highlight, inner bottom-right shade, soft outer drop, tinted by the ink. */
+  --clay-flat: inset 1px 1px 0 rgb(255 255 255 / 0.9), 0 1px 2px rgb(53 44 71 / 0.06);
+  --clay-raised: inset 2px 2px 3px rgb(255 255 255 / 0.95), inset -3px -4px 9px rgb(53 44 71 / 0.07), 0 2px 4px rgb(53 44 71 / 0.06),
+    0 18px 34px -18px rgb(53 44 71 / 0.32);
+  --clay-pressed: inset 2px 2px 5px rgb(53 44 71 / 0.16), inset -2px -2px 4px rgb(255 255 255 / 0.75);
+  --clay-well: inset 3px 3px 7px rgb(53 44 71 / 0.11), inset -2px -2px 5px rgb(255 255 255 / 0.85);
+  --clay-float: 0 2px 6px rgb(53 44 71 / 0.08), 0 26px 52px -22px rgb(53 44 71 / 0.38);
   --grain-opacity: 0.035;
   /* Butterflies (landing): deeper tones on the light ground. */
   /* Meadow (landing ground band) and motes: low contrast, never competing with text. */
@@ -259,16 +300,16 @@
   --bfly-spot: rgb(255 255 255 / 0.92);
   --bfly-body: #1b1d22;
   --bfly-eye: #4e535c;
-  --glow-a: rgb(251 190 160 / 0.45);
-  --glow-b: rgb(170 205 240 / 0.5);
-  --glow-c: rgb(200 236 215 / 0.35);
+  --glow-a: rgb(240 198 174 / 0.5);
+  --glow-b: rgb(188 215 236 / 0.55);
+  --glow-c: rgb(213 195 235 / 0.45);
 
   --primary: var(--pop);
   --primary-foreground: var(--pop-ink);
   --ring: #c2410c;
   --chart-1: #c2410c;
   --chart-2: #1f5f9e;
-  --chart-3: #4e535c;
+  --chart-3: #4f4766;
   --chart-4: #1f7a4d;
   --chart-5: #c7245c;
 }
@@ -294,11 +335,33 @@
   --rose-soft: #2a1710;
   --plum: #232730;
 
-  --tint-peach: #1c1917;
-  --tint-mint: #161b19;
-  --tint-sky: #161a20;
-  --tint-butter: #1b1a16;
-  --tint-rose: #1c1719;
+  /* A whisper of each role on graphite. */
+  --tint-peach: #1f1916;
+  --tint-mint: #141e1a;
+  --tint-sky: #141b23;
+  --tint-butter: #1e1c14;
+  --tint-rose: #20171c;
+  --tint-aqua: #131e21;
+  --tint-lavender: #191c23; /* silver in the dark theme: no purple on graphite */
+
+  /* Workspace roles as luminous clay on graphite (no purple: Proof Vault is silver here). */
+  --role-desk: #ffa584;
+  --role-lens: #6fd6b0;
+  --role-studio: #ff8fb8;
+  --role-lab: #7db8f5;
+  --role-launch: #f4c85e;
+  --role-pulse: #5ccfe0;
+  --role-proof: #b9c3d6;
+  --role-desk-strong: var(--role-desk);
+  --role-lens-strong: var(--role-lens);
+  --role-studio-strong: var(--role-studio);
+  --role-lab-strong: var(--role-lab);
+  --role-launch-strong: var(--role-launch);
+  --role-pulse-strong: var(--role-pulse);
+  --role-proof-strong: var(--role-proof);
+  --ambient-blob-alpha: 0.15;
+  --ambient-motif-alpha: 0.75;
+  --ambient-ink: #e8e4dc;
 
   --mat: #1d2026;
   --mat-ink: #f4f2ef;
@@ -374,6 +437,16 @@
 .dark {
   --radius: 9px;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Motion system (CREATIVE_DIRECTION.md section 2). Exits take about 70% of the entrance. */
+  --dur-1: 120ms; /* press, hover colour, copy confirmation */
+  --dur-2: 200ms; /* toggles, chip indicator, tab ink */
+  --dur-3: 320ms; /* overlays, layout swaps, page enter */
+  --dur-4: 520ms; /* tile entrance, stamp, ring fill */
+  --dur-5: 720ms; /* one focal moment per view */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-pop: cubic-bezier(0.34, 1.4, 0.64, 1); /* stamps and toggle thumbs only */
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --background: var(--canvas);
   --foreground: var(--ink);
   --card: var(--surface);
@@ -524,21 +597,189 @@
     box-shadow: var(--clay-raised);
     border-color: color-mix(in oklab, var(--border) 70%, transparent);
   }
-  /* Pastel tints for bento cards: soft in the light theme, a whisper of hue on graphite. */
-  .tint-peach {
+  /* Bento tile: the dashboard container. Clay raised, 18px corners; lists inside sit in a .clay-well. */
+  .bento {
+    position: relative;
+    border-radius: var(--radius-bento);
+    background-color: var(--surface);
+    border: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
+    box-shadow: var(--clay-raised);
+    padding: 18px;
+  }
+  @media (min-width: 640px) {
+    .bento {
+      padding: 20px 22px;
+    }
+  }
+
+  /* Pastel clay tiles, one per workspace role: pastel in the light theme, a whisper of hue on graphite. */
+  .tint-peach,
+  .tint-desk {
     background-color: var(--tint-peach);
   }
-  .tint-mint {
+  .tint-mint,
+  .tint-lens {
     background-color: var(--tint-mint);
   }
-  .tint-sky {
+  .tint-sky,
+  .tint-lab {
     background-color: var(--tint-sky);
   }
-  .tint-butter {
+  .tint-butter,
+  .tint-launch {
     background-color: var(--tint-butter);
   }
-  .tint-rose {
+  .tint-rose,
+  .tint-studio {
     background-color: var(--tint-rose);
+  }
+  .tint-aqua,
+  .tint-pulse {
+    background-color: var(--tint-aqua);
+  }
+  .tint-lavender,
+  .tint-proof {
+    background-color: var(--tint-lavender);
+  }
+
+  /* Hover lift for pressable tiles and rows (transform only). */
+  .lift {
+    transition:
+      transform var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out);
+  }
+  @media (hover: hover) {
+    .lift:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  /* Clay dough: the loading shimmer for a shape that is about to arrive. Transform-only sweep. */
+  .dough {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--surface-muted);
+  }
+  .dough::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.38) 50%, transparent 70%);
+    transform: translateX(-100%);
+    animation: dough 1.6s var(--ease-in-out) infinite;
+  }
+
+  /* TiltCard (components/creative/tilt-card.tsx): perspective tilt and a moving glare, both transforms. */
+  .tilt {
+    transform: perspective(1100px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition: transform var(--dur-4) var(--ease-out);
+  }
+  .tilt[data-tilting] {
+    transition-duration: 90ms;
+    will-change: transform;
+  }
+  .tilt-glare {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .tilt-glare::before {
+    content: "";
+    position: absolute;
+    left: -50%;
+    top: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.16), transparent 34%);
+    transform: translate(var(--glare-x, 0px), var(--glare-y, 0px));
+    opacity: 0;
+    transition: opacity var(--dur-3) var(--ease-out);
+  }
+  .tilt[data-tilting] .tilt-glare::before {
+    opacity: 1;
+  }
+
+  /* Ember ink under the active tab (TabInk): an underline wiped into place with clip-path. */
+  .tab-ink {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc(var(--active-tab-left) + var(--active-tab-width) + var(--active-tab-right));
+    height: calc(var(--active-tab-top) + var(--active-tab-height) + var(--active-tab-bottom));
+    background: var(--pop);
+    clip-path: inset(
+      calc(var(--active-tab-top) + var(--active-tab-height) - 2px) var(--active-tab-right) var(--active-tab-bottom)
+        var(--active-tab-left) round 2px
+    );
+    transition: clip-path var(--dur-3) var(--ease-out);
+    pointer-events: none;
+  }
+
+  /* Entrances. Content is visible by default; these only play the arrival. */
+  .reveal {
+    animation: reveal var(--dur-4) var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+  .stagger > * {
+    animation: reveal var(--dur-4) var(--ease-out) both;
+    animation-delay: calc(var(--n, 0) * 40ms);
+  }
+  .stagger > :nth-child(2) {
+    --n: 1;
+  }
+  .stagger > :nth-child(3) {
+    --n: 2;
+  }
+  .stagger > :nth-child(4) {
+    --n: 3;
+  }
+  .stagger > :nth-child(5) {
+    --n: 4;
+  }
+  .stagger > :nth-child(6) {
+    --n: 5;
+  }
+  .stagger > :nth-child(7) {
+    --n: 6;
+  }
+  .stagger > :nth-child(8) {
+    --n: 7;
+  }
+  .stagger > :nth-child(n + 9) {
+    --n: 8;
+  }
+  .page-enter {
+    animation: page-enter var(--dur-3) var(--ease-out) both;
+  }
+  .float-idle {
+    animation: float-idle 5.5s var(--ease-in-out) infinite;
+  }
+
+  /* VerdictStamp: lands with a slight overshoot and an ink ring. */
+  .stamp-in {
+    animation: stamp-in var(--dur-4) var(--ease-pop) both;
+  }
+  .stamp-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    border: 2px solid currentColor;
+    opacity: 0;
+    pointer-events: none;
+    animation: stamp-ring var(--dur-5) var(--ease-out) both;
+  }
+
+  /* RingGauge arc: fills from empty on arrival (a small SVG, paint only). */
+  .ring-fill {
+    animation: ring-fill var(--dur-5) var(--ease-out) both;
+  }
+  /* A bar that grows from its left edge on arrival (transform only). */
+  .grow-x {
+    transform-origin: left center;
+    animation: grow-x var(--dur-5) var(--ease-out) both;
   }
   .clay {
     background-color: var(--surface-raised);
@@ -725,6 +966,85 @@ html.lenis body {
     clip-path: inset(0 0 0 0);
   }
 }
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+}
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes dough {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes float-idle {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.9) rotate(-14deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.94) rotate(var(--stamp-rot, -3deg));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(var(--stamp-rot, -3deg));
+  }
+}
+@keyframes stamp-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  35% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+@keyframes ring-fill {
+  from {
+    stroke-dashoffset: var(--ring-length);
+  }
+}
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/*
+ * Light theme inside pastel tiles: muted text takes the secondary ink so it keeps 4.5:1 on every pastel, and wells turn
+ * to translucent white clay (a grey well on a pastel reads as mud).
+ */
+:root:not(.dark)
+  :is(.tint-peach, .tint-desk, .tint-mint, .tint-lens, .tint-sky, .tint-lab, .tint-butter, .tint-launch, .tint-rose, .tint-studio, .tint-aqua, .tint-pulse, .tint-lavender, .tint-proof) {
+  --ink-muted: var(--ink-secondary);
+}
+:root:not(.dark)
+  :is(.tint-peach, .tint-desk, .tint-mint, .tint-lens, .tint-sky, .tint-lab, .tint-butter, .tint-launch, .tint-rose, .tint-studio, .tint-aqua, .tint-pulse, .tint-lavender, .tint-proof)
+  .clay-well {
+  background: rgb(255 255 255 / 0.55);
+}
+.dark .dough::after {
+  background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.06) 50%, transparent 70%);
+}
+.dark .tilt-glare::before {
+  background: radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.07), transparent 34%);
+}
 
 /*
  * Focus indicator for every interactive element: 2px ring colour with a 2px offset (WCAG 2.4.7, 2.4.11).
@@ -740,6 +1060,7 @@ html.lenis body {
   ::before,
   ::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important; /* a staggered entrance must not leave content invisible for its delay */
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;

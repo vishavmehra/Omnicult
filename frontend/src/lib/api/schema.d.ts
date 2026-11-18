@@ -1684,6 +1684,49 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/pulse/comments/youtube": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Fetch Youtube Comments
+         * @description Fetch the public comments of one YouTube video for a campaign version and region (live project, owner or editor).
+         *     Server side, with the server's API key: at most the configured number of pages of 100 comments, and the same video not
+         *     again before the configured interval. Stores the comment text, day, likes and reply count, never the author. A video that
+         *     is gone, has comments off, or a spent YouTube quota each come back as their own error.
+         */
+        post: operations["fetch_youtube_comments"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/pulse/comments/youtube/{source_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove Youtube Source
+         * @description Disconnect a video: its stored comments are removed. With no video left, Comment Pulse shows the sample again.
+         */
+        delete: operations["remove_youtube_source"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/pulse/connections": {
         parameters: {
             query?: never;
@@ -8429,12 +8472,8 @@ export interface components {
             date_from: string | null;
             /** Date To */
             date_to: string | null;
-            /**
-             * Is Sample
-             * @default true
-             * @constant
-             */
-            is_sample: true;
+            /** Is Sample */
+            is_sample: boolean;
             /** Label */
             label: string;
             /** Languages */
@@ -8449,12 +8488,15 @@ export interface components {
             regions: string[];
             /**
              * Source Kind
-             * @default sample
-             * @constant
+             * @enum {string}
              */
-            source_kind: "sample";
+            source_kind: "sample" | "youtube";
+            /** Source Line */
+            source_line: string;
             /** Versions */
             versions: string[];
+            /** @description Present in a live project on a server that has a YouTube key; otherwise null and nothing is offered. */
+            youtube: components["schemas"]["YoutubeStatus"] | null;
         };
         /** CommentFilters */
         CommentFilters: {
@@ -8552,21 +8594,20 @@ export interface components {
             dataset_version: string;
             /**
              * Is Sample
-             * @default true
-             * @constant
+             * @description True for the labelled sample, false for comments fetched from YouTube.
              */
-            is_sample: true;
+            is_sample: boolean;
             /** Items */
             items: components["schemas"]["CommentItem"][];
             /**
              * Label
-             * @description Always 'Sample comments, not from a connected channel'.
+             * @description 'Sample comments, not from a connected channel' or 'YouTube comments'.
              */
             label: string;
             /**
              * Last Updated At
              * Format: date-time
-             * @description When the sample was written (a fixed instant), not when it was loaded.
+             * @description Sample: when it was written (a fixed instant). YouTube: when the newest comment was fetched.
              */
             last_updated_at: string;
             /** Limit */
@@ -8577,10 +8618,14 @@ export interface components {
             offset: number;
             /**
              * Source Kind
-             * @default sample
-             * @constant
+             * @enum {string}
              */
-            source_kind: "sample";
+            source_kind: "sample" | "youtube";
+            /**
+             * Source Line
+             * @description The one quiet line that says where the figures come from, for example 'Source: YouTube comments on <video title>'.
+             */
+            source_line: string;
             /** Total */
             total: number;
         };
@@ -8674,13 +8719,12 @@ export interface components {
             filters: components["schemas"]["CommentFilters"];
             /**
              * Is Sample
-             * @default true
-             * @constant
+             * @description True for the labelled sample, false for comments fetched from YouTube.
              */
-            is_sample: true;
+            is_sample: boolean;
             /**
              * Label
-             * @description Always 'Sample comments, not from a connected channel'.
+             * @description 'Sample comments, not from a connected channel' or 'YouTube comments'.
              */
             label: string;
             /** Languages */
@@ -8688,7 +8732,7 @@ export interface components {
             /**
              * Last Updated At
              * Format: date-time
-             * @description When the sample was written (a fixed instant), not when it was loaded.
+             * @description Sample: when it was written (a fixed instant). YouTube: when the newest comment was fetched.
              */
             last_updated_at: string;
             /** Limitations */
@@ -8698,10 +8742,14 @@ export interface components {
             slices: components["schemas"]["CommentSlice"][];
             /**
              * Source Kind
-             * @default sample
-             * @constant
+             * @enum {string}
              */
-            source_kind: "sample";
+            source_kind: "sample" | "youtube";
+            /**
+             * Source Line
+             * @description The one quiet line that says where the figures come from, for example 'Source: YouTube comments on <video title>'.
+             */
+            source_line: string;
             totals: components["schemas"]["CommentTotals"];
             /** Weekly */
             weekly: components["schemas"]["WeekTrend"][];
@@ -8750,29 +8798,32 @@ export interface components {
             filters: components["schemas"]["CommentFilters"];
             /**
              * Is Sample
-             * @default true
-             * @constant
+             * @description True for the labelled sample, false for comments fetched from YouTube.
              */
-            is_sample: true;
+            is_sample: boolean;
             /**
              * Label
-             * @description Always 'Sample comments, not from a connected channel'.
+             * @description 'Sample comments, not from a connected channel' or 'YouTube comments'.
              */
             label: string;
             /**
              * Last Updated At
              * Format: date-time
-             * @description When the sample was written (a fixed instant), not when it was loaded.
+             * @description Sample: when it was written (a fixed instant). YouTube: when the newest comment was fetched.
              */
             last_updated_at: string;
             /** Limitations */
             limitations: string[];
             /**
              * Source Kind
-             * @default sample
-             * @constant
+             * @enum {string}
              */
-            source_kind: "sample";
+            source_kind: "sample" | "youtube";
+            /**
+             * Source Line
+             * @description The one quiet line that says where the figures come from, for example 'Source: YouTube comments on <video title>'.
+             */
+            source_line: string;
             /** Themes */
             themes: components["schemas"]["CommentTheme"][];
             /**
@@ -25206,6 +25257,146 @@ export interface components {
             /** Title */
             title: string;
         };
+        /** YoutubeFetchRequest */
+        YoutubeFetchRequest: {
+            /**
+             * Order
+             * @description relevance: YouTube's own ranking. time: newest first.
+             * @default relevance
+             * @enum {string}
+             */
+            order: "relevance" | "time";
+            /**
+             * Region Code
+             * @description ISO 3166-2 code of the region the video ran in, for example IN-TN.
+             */
+            region_code: string;
+            /**
+             * Version Label
+             * @description One of `youtube.versions` from the status.
+             */
+            version_label: string;
+            /**
+             * Video
+             * @description A public YouTube video link or its 11-character id.
+             */
+            video: string;
+        };
+        /** YoutubeFetchResult */
+        YoutubeFetchResult: {
+            /** Added */
+            added: number;
+            /**
+             * Fetched
+             * @description Distinct comments YouTube returned in this fetch.
+             */
+            fetched: number;
+            /**
+             * Replaced Video Id
+             * @description The video this version and region used before; its stored comments were removed.
+             */
+            replaced_video_id: string | null;
+            /**
+             * Skipped
+             * @description Items YouTube returned that were not a readable comment, or that had no text.
+             */
+            skipped: number;
+            source: components["schemas"]["YoutubeSourceInfo"];
+            /**
+             * Updated
+             * @description Comments already stored (same YouTube comment id) whose likes, replies and text were refreshed.
+             */
+            updated: number;
+        };
+        /** YoutubeRegionOption */
+        YoutubeRegionOption: {
+            /** Code */
+            code: string;
+            /**
+             * In Campaign
+             * @description The campaign names this region among its target markets.
+             */
+            in_campaign: boolean;
+            /** Name */
+            name: string;
+        };
+        /**
+         * YoutubeSourceInfo
+         * @description A video whose public comments were fetched for one campaign version and region.
+         */
+        YoutubeSourceInfo: {
+            /**
+             * Comments
+             * @description Comments stored from this video.
+             */
+            comments: number;
+            /**
+             * Fetched At
+             * Format: date-time
+             */
+            fetched_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Next Fetch At
+             * @description Earliest time this video can be fetched again; null once that time has passed.
+             */
+            next_fetch_at: string | null;
+            /**
+             * Order
+             * @enum {string}
+             */
+            order: "relevance" | "time";
+            /** Pages Fetched */
+            pages_fetched: number;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Truncated
+             * @description The page cap stopped the last fetch while the video had more comments.
+             */
+            truncated: boolean;
+            /** Version Label */
+            version_label: string;
+            /** Video Id */
+            video_id: string;
+            /** Video Title */
+            video_title: string | null;
+            /** Video Url */
+            video_url: string;
+        };
+        /**
+         * YoutubeStatus
+         * @description What a live project can do with YouTube comments. Absent (null on the status) in a demo project and on a server with no key.
+         */
+        YoutubeStatus: {
+            /** Max Comments */
+            max_comments: number;
+            /**
+             * Max Pages
+             * @description Pages of 100 comments one fetch reads at most.
+             */
+            max_pages: number;
+            /**
+             * Min Interval Seconds
+             * @description Least time between two fetches of the same video.
+             */
+            min_interval_seconds: number;
+            /** Regions */
+            regions: components["schemas"]["YoutubeRegionOption"][];
+            /** Sources */
+            sources: components["schemas"]["YoutubeSourceInfo"][];
+            /**
+             * Versions
+             * @description Version labels a video can be attached to: the campaign's Creative Studio versions.
+             */
+            versions: string[];
+        };
     };
     responses: never;
     parameters: never;
@@ -37646,7 +37837,7 @@ export interface operations {
                 region?: string | null;
                 /** @description A version label exactly as Live Pulse lists it. */
                 version?: string | null;
-                /** @description ISO 639-1 code, for example ta. */
+                /** @description ISO 639-1 code, for example ta, und for text whose language the code did not decide, or zxx for emoji and symbols only. */
                 language?: string | null;
                 /** @description First day, inclusive. */
                 date_from?: string | null;
@@ -38154,7 +38345,7 @@ export interface operations {
                 region?: string | null;
                 /** @description A version label exactly as Live Pulse lists it. */
                 version?: string | null;
-                /** @description ISO 639-1 code, for example ta. */
+                /** @description ISO 639-1 code, for example ta, und for text whose language the code did not decide, or zxx for emoji and symbols only. */
                 language?: string | null;
                 /** @description First day, inclusive. */
                 date_from?: string | null;
@@ -38286,7 +38477,7 @@ export interface operations {
                 region?: string | null;
                 /** @description A version label exactly as Live Pulse lists it. */
                 version?: string | null;
-                /** @description ISO 639-1 code, for example ta. */
+                /** @description ISO 639-1 code, for example ta, und for text whose language the code did not decide, or zxx for emoji and symbols only. */
                 language?: string | null;
                 /** @description First day, inclusive. */
                 date_from?: string | null;
@@ -38309,6 +38500,251 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["CommentThemes"];
                 };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    fetch_youtube_comments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["YoutubeFetchRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["YoutubeFetchResult"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    remove_youtube_source: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                source_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description UNAUTHENTICATED */
             401: {

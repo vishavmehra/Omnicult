@@ -20,14 +20,25 @@ export function EmptyState({
   description,
   needs,
   action,
+  illustration,
   className,
 }: {
   title: string;
   description: ReactNode;
   needs?: Need[];
   action?: ReactNode;
+  /** A small clay scene (components/creative EmptyIllustration) set beside the text from 640px, above it on phones. */
+  illustration?: ReactNode;
   className?: string;
 }) {
+  if (illustration) {
+    return (
+      <div className={cn("flex flex-col items-start gap-4 rounded-card border border-dashed border-border-strong/50 bg-surface-muted/50 px-5 py-5 sm:flex-row sm:items-center sm:gap-6", className)}>
+        {illustration}
+        <EmptyState title={title} description={description} needs={needs} action={action} className="border-0 bg-transparent p-0" />
+      </div>
+    );
+  }
   return (
     <div className={cn("flex flex-col items-start gap-3 rounded-card border border-dashed border-border-strong/50 bg-surface-muted/50 px-5 py-5", className)}>
       <div className="max-w-prose space-y-1">

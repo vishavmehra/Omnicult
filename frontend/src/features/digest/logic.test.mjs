@@ -66,6 +66,9 @@ test("the sample run is cut into seven-day weeks from its first day", () => {
   ]);
   assert.equal(runWeeks("2026-10-27", "2026-11-12").at(-1).to, "2026-11-12");
   assert.deepEqual(runWeeks(null, null), []);
+  const long = runWeeks("2024-01-01", "2026-11-16"); // a years-old video keeps its latest weeks only
+  assert.equal(long.length, 12);
+  assert.equal(long.at(-1).to, "2026-11-16");
 });
 
 test("a digest source leads to the record behind it", () => {

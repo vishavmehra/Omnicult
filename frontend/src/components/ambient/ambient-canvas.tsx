@@ -60,6 +60,9 @@ export function AmbientCanvas() {
     let h = 0;
     let t = 0;
     let grass = zone.current === "landing" ? 1 : 0;
+    // Inside /app the creative AmbientBackground owns the ground; these motes fade out there and stay on landing and sign-in.
+    let moteLevel = zone.current === "app" ? 0 : 1;
+    let blank = false;
 
     const build = () => {
       w = canvas.width = window.innerWidth;
@@ -90,13 +93,19 @@ export function AmbientCanvas() {
     };
 
     const draw = () => {
+      if (moteLevel < 0.01 && grass < 0.01) {
+        if (!blank) ctx.clearRect(0, 0, w, h);
+        blank = true;
+        return;
+      }
+      blank = false;
       ctx.clearRect(0, 0, w, h);
       const app = zone.current !== "landing";
-      // Motes: fewer and dimmer inside the app.
+      // Motes: fewer and dimmer on the sign-in cover, gone inside the app.
       const visibleMotes = app ? Math.ceil(motes.length * 0.55) : motes.length;
       for (let i = 0; i < visibleMotes; i++) {
         const m = motes[i];
-        const a = (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * m.flicker + m.phase))) * (app ? 0.35 : 0.6);
+        const a = (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * m.flicker + m.phase))) * (app ? 0.35 : 0.6) * moteLevel;
         const size = m.r * 9;
         ctx.globalAlpha = a;
         ctx.drawImage(sprite, m.x - size / 2, m.y - size / 2, size, size);
@@ -134,6 +143,7 @@ export function AmbientCanvas() {
       const app = zone.current !== "landing";
       t += dt * (app ? 0.6 : 1);
       grass += ((app ? 0 : 1) - grass) * Math.min(1, dt * 2.5);
+      moteLevel += ((zone.current === "app" ? 0 : 1) - moteLevel) * Math.min(1, dt * 1.5);
       const speed = app ? 0.55 : 1;
       for (const m of motes) {
         m.x += m.vx * dt * speed;
@@ -148,6 +158,7 @@ export function AmbientCanvas() {
     const refreshColors = () => {
       colors = readColors();
       sprite = moteSprite(colors.mote || "rgb(255 176 110 / 0.9)");
+      blank = false;
       draw();
     };
     const theme = new MutationObserver(refreshColors);
@@ -160,6 +171,7 @@ export function AmbientCanvas() {
     redraw.current = () => {
       if (still) {
         grass = zone.current === "landing" ? 1 : 0;
+        moteLevel = zone.current === "app" ? 0 : 1;
         draw();
       }
     };

@@ -57,7 +57,9 @@ export function sentimentRead(counts: SentimentCounts | null | undefined): Senti
 
 export const shareText = (share: number | null | undefined) => (share === null || share === undefined ? "n/a" : `${Math.round(share * 100)}%`);
 
-export const LANGUAGE_NAME: Record<string, string> = { mr: "Marathi", ta: "Tamil", ml: "Malayalam", bn: "Bengali", en: "English" };
+export const LANGUAGE_NAME: Record<string, string> = {
+  mr: "Marathi", ta: "Tamil", ml: "Malayalam", bn: "Bengali", en: "English", hi: "Hindi", te: "Telugu", kn: "Kannada", gu: "Gujarati", pa: "Punjabi", or: "Odia", und: "Not told apart", zxx: "Emoji or symbols only",
+};
 
 export const CONFIDENCE_LEVEL = { low: "low", moderate: "moderate" } as const;
 
@@ -109,7 +111,9 @@ export function weekChoices(current: { start: string; end: string }, count = 6):
   });
 }
 
-/** Seven-day periods of the sample run, from its first day: the "weeks" the comment trend is bucketed in. */
+const MAX_RUN_WEEKS = 12;
+
+/** Seven-day periods of the run, from its first day: the "weeks" the comment trend is bucketed in. A years-old video keeps its latest weeks only. */
 export function runWeeks(first: string | null, last: string | null): { key: string; label: string; from: string; to: string }[] {
   if (!first || !last) return [];
   const out = [];
@@ -117,7 +121,7 @@ export function runWeeks(first: string | null, last: string | null): { key: stri
     const to = addDays(from, 6);
     out.push({ key: `w${i}`, label: `Week ${i}`, from, to: to > last ? last : to });
   }
-  return out;
+  return out.slice(-MAX_RUN_WEEKS);
 }
 
 // ---------------------------------------------------------------- where a digest line leads

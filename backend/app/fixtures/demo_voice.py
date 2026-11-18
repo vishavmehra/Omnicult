@@ -55,7 +55,7 @@ def _elements(ctx: Context, *, kind: str, language: str | None = None) -> list[M
 
 
 def direct_plan(ctx: Context) -> dict[str, Any]:
-    """`voice-direct-v1` for the Aamod demo instructions; the no-fixture answer for anything else."""
+    """`voice-direct-v2` for the Aamod demo instructions; the no-fixture answer for anything else."""
     n = _plain(ctx["instruction"])
     if "warmer" in n and "headline" in n:
         for headline in _elements(ctx, kind="headline", language="ta"):
@@ -107,4 +107,4 @@ def direct_plan(ctx: Context) -> dict[str, Any]:
     return _refusal()
 
 
-RESPONDERS = {"voice-direct-v1": direct_plan}
+RESPONDERS = {"voice-direct-v2": direct_plan}

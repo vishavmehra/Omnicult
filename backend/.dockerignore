@@ -12,7 +12,9 @@ __pycache__/
 *.db-wal
 /storage/
 /tests/
-/scripts/
+# scripts/ stays out of the image except the idempotent seed scripts (run as a Cloud Run job).
+/scripts/*
+!/scripts/seed_*.py
 /qloo/
 Dockerfile
 .dockerignore

@@ -69,6 +69,7 @@ async def test_a_video_goes_through_all_five_stages_and_only_verified_items_are_
     assert [t.id for t in first.transcript] == ["t1"] and [t.id for t in third.transcript] == ["t2"]
     assert second.cultural_observations[0].evidence == ["f2"] and second.cultural_interpretations[0].based_on == ["o2.1"]
     assert all(s.music_mood == "festive, upbeat" for s in outcome.scenes)
+    assert sum(len(s.transcript) for s in outcome.scenes) == 2  # a scene takes a line by its start and end, so both lines reached a scene
     assert outcome.dropped == {"on_screen_text": 1, "claims": 1}
     assert any("could not be verified were removed" in note for note in outcome.limitations)
 
@@ -79,11 +80,9 @@ async def test_the_gateways_transcribe_capability_gives_a_live_video_its_transcr
     from app.workflows import _transcribe_capability
     from tests.unit.llm.genai_fakes import FakeClient, reply, settings
 
-    speech = {"segments": [
-        {"start": "00:00.0", "end": "00:02.0", "text": "Celebrate Ganesh Chaturthi with us", "language": "mr"},
-        {"start": "00:07.0", "end": "00:09.0", "text": "Free delivery across Maharashtra"}], "music_mood": "festive, upbeat"}
+    speech = "\n".join(["00:00.0 [mr] Celebrate Ganesh Chaturthi with us", "00:07.0 Free delivery across Maharashtra", "MUSIC: festive, upbeat"])
     sink = InMemoryUsageSink()
-    gateway = LLMGateway(settings(), client=FakeClient([reply(json.dumps(speech), prompt=400, out=60)]), usage_sink=sink)
+    gateway = LLMGateway(settings(), client=FakeClient([reply(speech, prompt=400, out=60)]), usage_sink=sink)
     transcribe = _transcribe_capability(gateway)  # how build_workflow_deps wires it
     assert transcribe is not None and transcribe.is_configured()
 
@@ -92,11 +91,11 @@ async def test_the_gateways_transcribe_capability_gives_a_live_video_its_transcr
     assert outcome.status == "completed" and outcome.transcribe.status == "transcribed"
     assert (outcome.transcribe.provider, outcome.transcribe.model_id) == ("google", "gemini-3.8-flash")
     assert [(t.id, t.start_ms, t.end_ms, t.source, t.language, t.text) for t in outcome.transcript] == [
-        ("t1", 0, 2000, "transcription", "mr", "Celebrate Ganesh Chaturthi with us"),
-        ("t2", 7000, 9000, "transcription", "mr", "Free delivery across Maharashtra")]  # ids are the workflow's, the language the declared one
+        ("t1", 0, 7000, "transcription", "mr", "Celebrate Ganesh Chaturthi with us"),  # the end is estimated: the next line's start
+        ("t2", 7000, 9000, "transcription", "mr", "Free delivery across Maharashtra")]  # the last line ends with the clip  # ids are the workflow's, the language the declared one
     assert all(s.music_mood == "festive, upbeat" for s in outcome.scenes)
     step = next(s for s in outcome.steps if s.stage == "transcribing")
-    assert (step.status, step.provider, step.prompt_version, step.usage.input_tokens) == ("completed", "google", "transcribe-v1", 400)
+    assert (step.status, step.provider, step.prompt_version, step.usage.input_tokens) == ("completed", "google", "transcribe-v2", 400)
     assert [(e.capability, e.stage, e.agent) for e in sink.events] == [("transcribe", "transcribing", "transcribe")]
     assert _transcribe_capability(LLMGateway(settings(google_cloud_project=None))) is None  # not configured: reported unavailable
 

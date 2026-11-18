@@ -4,6 +4,7 @@ import { BookA, CircleAlert, CircleCheck, ImageOff, Lock, PencilLine, TriangleAl
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 
+import { Swatch, TiltCard } from "@/components/creative";
 import { Tag } from "@/components/evidence/badges";
 import { workspaceHref } from "@/components/shell/workspaces";
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
@@ -14,8 +15,9 @@ import { formatRelative } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { useBrandKit } from "./api";
+import { LockupCard, TypeSpecimen } from "./desk-visuals";
 import { KitEditor } from "./kit-editor";
-import { languageName, scriptName, type BrandKit, type KitContrast } from "./types";
+import { languageName, type BrandKit, type KitContrast } from "./types";
 
 const Muted = ({ children }: { children: ReactNode }) => <span className="text-ink-muted">{children}</span>;
 
@@ -64,31 +66,33 @@ const GRADE = {
   fail: { Icon: CircleAlert, className: "text-danger", note: "Fails: not for text" },
 } as const;
 
-function ContrastRow({ c, names }: { c: KitContrast; names: Map<string, string> }) {
+/** One contrast pair from the API, set as a live specimen: the text colour on its background, then the ratio and grade. */
+function ContrastCard({ c, names, sample, dim }: { c: KitContrast; names: Map<string, string>; sample: string; dim: boolean }) {
   const g = GRADE[c.grade];
   return (
-    <tr>
-      <td className="px-3.5 py-2.5">
-        <span className="inline-flex items-center gap-2.5">
-          <span aria-hidden className="inline-flex h-8 w-12 items-center justify-center rounded-md border border-border text-[14px] font-semibold" style={{ backgroundColor: c.background_hex, color: c.text_hex }}>
-            Aa
-          </span>
-          <span className="text-ink-body">
-            {names.get(c.text) ?? c.text} on {names.get(c.background) ?? c.background}
-          </span>
+    <li className={cn("lift overflow-hidden rounded-xl border border-border/70 bg-surface shadow-clay transition-opacity duration-200", dim && "opacity-40")}>
+      <div className="flex h-24 flex-col justify-center gap-1.5 px-4" style={{ backgroundColor: c.background_hex, color: c.text_hex }}>
+        <span aria-hidden className="text-[30px] leading-none font-semibold">
+          Aa
         </span>
-      </td>
-      <td className="type-ledger px-3.5 py-2.5 tabular-nums text-ink">{c.ratio.toFixed(2)}:1</td>
-      <td className="px-3.5 py-2.5">
-        <span className={cn("inline-flex items-center gap-1.5 text-[13px]", g.className)}>
-          <g.Icon aria-hidden className="size-4" />
-          <span className="text-ink-body">
-            <span className="font-medium">{c.grade}</span>. {g.note}
+        <span className="truncate text-[13px]">{sample}</span>
+      </div>
+      <div className="space-y-1 px-3.5 py-2.5">
+        <p className="text-[13px] text-ink-body">
+          {names.get(c.text) ?? c.text} on {names.get(c.background) ?? c.background}
+        </p>
+        <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[13px]">
+          <span className="type-ledger font-semibold text-ink tabular-nums">{c.ratio.toFixed(2)}:1</span>
+          <span className={cn("inline-flex items-center gap-1", g.className)}>
+            <g.Icon aria-hidden className="size-4" />
+            <span className="text-ink-body">
+              <span className="font-medium">{c.grade}</span>. {g.note}
+            </span>
           </span>
-        </span>
-        {c.note && <span className="block text-[12px] text-ink-muted">{c.note}</span>}
-      </td>
-    </tr>
+        </p>
+        {c.note && <p className="text-[12px] text-ink-muted">{c.note}</p>}
+      </div>
+    </li>
   );
 }
 
@@ -107,6 +111,8 @@ function KitImage({ assetId, path, alt, className }: { assetId: string | null; p
 /** The Brand Kit, read: identity, logo, colours with calculated contrast, fonts by script, tone, never-change zones, terms. */
 export function BrandKitView({ kit, campaignId }: { kit: BrandKit; campaignId: string }) {
   const d = kit.design;
+  // Hovering a colour lights the contrast pairs it belongs to.
+  const [lit, setLit] = useState<string | null>(null);
   const colourName = new Map(d.colours.map((c) => [c.id, c.name]));
   const fixture = kit.provenance.source === "demo_fixture";
   const empty = !kit.saved;
@@ -163,15 +169,11 @@ export function BrandKitView({ kit, campaignId }: { kit: BrandKit; campaignId: s
       )}
 
       {d.logo.lockups.length > 0 && (
-        <Block id="k-logo" title="Logo" meta={`${d.logo.lockups.length} lockups`}>
+        <Block id="k-logo" title="Logo" meta={`${d.logo.lockups.length} lockups · preview each on the brand colours`}>
           {d.logo.description && <p className="max-w-[68ch] text-[13.5px] text-ink-secondary">{d.logo.description}</p>}
-          <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {d.logo.lockups.map((l) => (
-              <li key={l.id} className="space-y-2 rounded-card border border-border bg-surface p-3">
-                <KitImage assetId={l.asset_id} path={l.source_path} alt={`${kit.name} logo, ${l.id} lockup`} className="h-24 w-full" />
-                <p className="text-[13.5px] font-medium text-ink">{l.id}</p>
-                <p className="text-[12.5px] text-ink-secondary">{l.use}</p>
-              </li>
+              <LockupCard key={l.id} lockup={l} kitName={kit.name} colours={d.colours} />
             ))}
           </ul>
           {(d.logo.clear_space || Object.keys(d.logo.min_width_px).length > 0) && (
@@ -185,73 +187,37 @@ export function BrandKitView({ kit, campaignId }: { kit: BrandKit; campaignId: s
       )}
 
       {d.colours.length > 0 && (
-        <Block id="k-colours" title="Colours" meta="Contrast is calculated from the hex values (WCAG 2.x)">
-          <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <Block id="k-colours" title="Colours" meta="Click a colour to copy its hex · contrast is calculated from the hex values (WCAG 2.x)">
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
             {d.colours.map((c) => (
-              <li key={c.id} className="flex items-stretch gap-3 rounded-card border border-border bg-surface p-2.5">
-                <span aria-hidden className="w-14 shrink-0 rounded-lg border border-border" style={{ backgroundColor: c.hex }} />
-                <span className="min-w-0 space-y-0.5">
-                  <span className="block text-[13.5px] font-medium text-ink">{c.name}</span>
-                  <span className="block font-mono text-[11.5px] text-ink-secondary">{c.hex.toUpperCase()}</span>
-                  {c.role && <span className="block text-[12px] text-ink-secondary">{c.role}</span>}
-                </span>
+              <li
+                key={c.id}
+                onPointerEnter={() => setLit(c.id)}
+                onPointerLeave={() => setLit(null)}
+                onFocus={() => setLit(c.id)}
+                onBlur={() => setLit(null)}
+              >
+                <Swatch hex={c.hex} name={c.name} role={c.role} className="h-full" />
               </li>
             ))}
           </ul>
           {kit.contrast.length > 0 && (
-            <div className="overflow-x-auto rounded-card border border-border bg-surface">
-              <table aria-label="Colour contrast" className="type-ledger w-full min-w-[32rem] text-left text-[13.5px]">
-                <thead className="bg-surface-muted text-[11.5px] text-ink-muted">
-                  <tr>
-                    <th scope="col" className="px-3.5 py-2 font-medium">Pair</th>
-                    <th scope="col" className="px-3.5 py-2 font-medium">Ratio</th>
-                    <th scope="col" className="px-3.5 py-2 font-medium">Use</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {kit.contrast.map((c) => (
-                    <ContrastRow key={`${c.text}-${c.background}`} c={c} names={colourName} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <ul aria-label="Colour contrast" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {kit.contrast.map((c) => (
+                <ContrastCard key={`${c.text}-${c.background}`} c={c} names={colourName} sample={d.tagline?.text ?? kit.name} dim={lit !== null && lit !== c.text && lit !== c.background} />
+              ))}
+            </ul>
           )}
         </Block>
       )}
 
       {d.fonts.length > 0 && (
-        <Block id="k-fonts" title="Fonts by script">
-          <div className="overflow-x-auto rounded-card border border-border bg-surface">
-            <table aria-label="Fonts by script" className="type-ledger w-full min-w-[34rem] text-left text-[13.5px]">
-              <thead className="bg-surface-muted text-[11.5px] text-ink-muted">
-                <tr>
-                  <th scope="col" className="px-3.5 py-2 font-medium">Script</th>
-                  <th scope="col" className="px-3.5 py-2 font-medium">Family</th>
-                  <th scope="col" className="px-3.5 py-2 font-medium">Weights</th>
-                  <th scope="col" className="px-3.5 py-2 font-medium">Role</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {d.fonts.map((f) => (
-                  <tr key={f.family}>
-                    <td className="px-3.5 py-2.5 text-ink-body">{f.scripts.map(scriptName).join(", ")}</td>
-                    <td className="px-3.5 py-2.5 font-medium text-ink">
-                      {f.source ? (
-                        <a href={f.source} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                          {f.family}
-                        </a>
-                      ) : (
-                        f.family
-                      )}
-                      {f.license && <span className="type-meta ml-1.5">{f.license}</span>}
-                    </td>
-                    <td className="px-3.5 py-2.5 tabular-nums text-ink-body">{f.weights.join(", ") || <Muted>Not set</Muted>}</td>
-                    <td className="px-3.5 py-2.5 text-ink-secondary">{f.role ?? <Muted>Not set</Muted>}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <Block id="k-fonts" title="Fonts by script" meta="Change the weight and size to test each face">
+          <ul className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+            {d.fonts.map((f) => (
+              <TypeSpecimen key={f.family} font={f} sample={d.tagline?.language === "en" ? d.tagline.text : null} />
+            ))}
+          </ul>
           {d.typography_rules.length > 0 && <Bullets items={d.typography_rules} empty="" />}
         </Block>
       )}
@@ -353,12 +319,12 @@ export function BrandKitView({ kit, campaignId }: { kit: BrandKit; campaignId: s
         <Block id="k-images" title="Product images">
           <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {d.product_images.map((p) => (
-              <li key={p.id} className="space-y-2 rounded-card border border-border bg-surface p-3">
-                <KitImage assetId={p.asset_id} path={p.source_path} alt={p.description ?? `${kit.name} product image ${p.id}`} className="h-40 w-full" />
-                <p className="text-[13.5px] font-medium text-ink">{p.id.replace(/[_-]/g, " ")}</p>
+              <TiltCard as="li" key={p.id} max={4} className="bento space-y-2 p-3">
+                <KitImage assetId={p.asset_id} path={p.source_path} alt={p.description ?? `${kit.name} product image ${p.id}`} className="h-44 w-full" />
+                <p className="text-[13.5px] font-medium text-ink capitalize">{p.id.replace(/[_-]/g, " ")}</p>
                 {p.description && <p className="text-[12.5px] text-ink-secondary">{p.description}</p>}
                 {p.provenance && <p className="text-[11.5px] text-ink-muted">{p.provenance}</p>}
-              </li>
+              </TiltCard>
             ))}
           </ul>
         </Block>

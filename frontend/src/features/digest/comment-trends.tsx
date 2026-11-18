@@ -233,7 +233,7 @@ export function SlicesTable({ summary, stale }: { summary: Summary; stale: boole
         </table>
       </div>
       <p className="max-w-[78ch] text-[12.5px] leading-snug text-ink-secondary">
-        Sentiment is a model&apos;s label of each comment, and the shares count only the comments it labelled. A slice with few comments is a thin signal; comments written for this demo never rate above Moderate.
+        Sentiment is a model&apos;s label of each comment, and the shares count only the comments it labelled. A slice with few comments is a thin signal; {summary.is_sample ? "comments written for this demo" : "public comments"} never rate above Moderate.
       </p>
     </Section>
   );

@@ -108,6 +108,26 @@ async def test_safety_blocks_are_blocked_provider_errors(response):
     assert caught.value.blocked and not caught.value.transient and len(client.calls) == 1
 
 
+async def test_a_block_logs_its_reason_and_flagged_categories_but_never_the_text(caplog):
+    from google.genai import types
+
+    answer = reply("secret answer text", finish="SAFETY")
+    answer.candidates[0].safety_ratings = [
+        types.SafetyRating(category="HARM_CATEGORY_HARASSMENT", probability="HIGH", blocked=True),
+        types.SafetyRating(category="HARM_CATEGORY_HATE_SPEECH", probability="NEGLIGIBLE", blocked=False),
+    ]
+    p, _ = provider(answer)
+    with caplog.at_level("WARNING", logger="app.llm.google"), pytest.raises(ProviderError):
+        await p.complete(request())
+    record = next(r for r in caplog.records if r.getMessage() == "provider blocked")
+    assert record.block_reason == "SAFETY" and record.flagged_categories == ["HARM_CATEGORY_HARASSMENT"]
+    assert "secret answer text" not in repr(vars(record))
+    p, _ = provider(blocked_prompt("PROHIBITED_CONTENT"))
+    with caplog.at_level("WARNING", logger="app.llm.google"), pytest.raises(ProviderError):
+        await p.complete(request())
+    assert [r.block_reason for r in caplog.records if r.getMessage() == "provider blocked"] == ["SAFETY", "PROHIBITED_CONTENT"]
+
+
 async def test_empty_reply_without_a_reason_is_transient_and_max_tokens_is_not_a_block():
     from google.genai import types
 

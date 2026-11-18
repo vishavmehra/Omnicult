@@ -176,7 +176,7 @@ async def test_capability_calls_are_recorded_and_a_provider_failure_is_still_an_
     campaign = await make_campaign(client, project["id"])
     where = UsageContext(workspace_id=await workspace_of("alice"), project_id=UUID(project["id"]),
                          campaign_id=UUID(campaign["id"]), user_id=dev_user_id("alice"))
-    speech = json.dumps({"segments": [{"start": "0:00", "end": "0:02", "text": "hello"}], "music_mood": None})
+    speech = "00:00.0 [mr] hello"
     seen = json.dumps({"observations": [{"kind": "object", "description": "a lamp", "location": None}]})
     grounded = types.GroundingMetadata(
         web_search_queries=["pongal"], grounding_chunks=[types.GroundingChunk(web=types.GroundingChunkWeb(uri="https://a.example/x", title="a"))])
@@ -199,7 +199,7 @@ async def test_capability_calls_are_recorded_and_a_provider_failure_is_still_an_
     assert {(r.workspace_id, r.project_id, r.user_id, r.provider) for r in rows} == {
         (where.workspace_id, where.project_id, where.user_id, "google")} and {r.run_id for r in rows} == {None}
     transcribe, *_, search, embedding = rows
-    assert (transcribe.model, transcribe.prompt_version, transcribe.input_tokens, transcribe.output_tokens) == ("gemini-3.8-flash", "transcribe-v1", 500, 40)
+    assert (transcribe.model, transcribe.prompt_version, transcribe.input_tokens, transcribe.output_tokens) == ("gemini-3.8-flash", "transcribe-v2", 500, 40)
     assert all(r.estimated_cost_usd == 0 and r.input_tokens == 0 for r in rows[1:4])  # failed attempts bill nothing
     assert search.estimated_cost_usd >= 0.014  # the grounding fee is inside the stored cost
     assert embedding.model == "gemini-embedding-2" and embedding.input_tokens == 7 and embedding.estimated_cost_usd > 0

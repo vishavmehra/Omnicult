@@ -17,6 +17,7 @@ import { CommentThemes } from "./comment-themes";
 import { SlicesTable, VolumeSection } from "./comment-trends";
 import { COMMENT_SOURCE, LANGUAGE_NAME, runWeeks } from "./logic";
 import { ModelTag, SourceLine } from "./ui";
+import { YoutubeSourcePanel } from "./youtube-source";
 
 type Status = components["schemas"]["CommentDatasetStatus"];
 type Summary = components["schemas"]["CommentSummary"];
@@ -32,12 +33,13 @@ export function CommentPulse({ campaignId }: { campaignId: string }) {
         <p className="max-w-[68ch] text-[14.5px] text-ink-secondary">
           What viewers say under the campaign&apos;s videos, by region, language and version. Counts and trends are calculated; sentiment and themes are read by a model and marked as such.
         </p>
-        <SourceLine>{COMMENT_SOURCE}</SourceLine>
+        <SourceLine>{status.data?.source_line ?? COMMENT_SOURCE}</SourceLine>
       </header>
+      {status.data?.youtube && <YoutubeSourcePanel campaignId={campaignId} youtube={status.data.youtube} />}
       {status.error ? (
         <ErrorState error={status.error} onRetry={() => void status.refetch()} />
       ) : !status.data ? (
-        <LoadingState label="Checking the sample comments…" />
+        <LoadingState label="Checking the comments…" />
       ) : loaded ? (
         <Loaded campaignId={campaignId} status={status.data} />
       ) : (
@@ -136,7 +138,7 @@ function FilterRow({ status, value, onChange }: { status: Status; value: Comment
         className="w-56"
         value={value.version ?? ""}
         onChange={(v) => onChange({ ...value, version: v || null })}
-        options={[{ value: "", label: "All versions" }, ...status.versions.map((v) => ({ value: v, label: `${shortVersion(v)} (${v.split(" ")[0]})` }))]}
+        options={[{ value: "", label: "All versions" }, ...status.versions.map((v) => ({ value: v, label: /^v\d+\s/.test(v) ? `${shortVersion(v)} (${v.split(" ")[0]})` : v }))]}
       />
       <SelectField
         label="Language"
@@ -161,10 +163,10 @@ function Facts({ summary, stale }: { summary: Summary; stale: boolean }) {
   const t = summary.totals;
   const c = summary.coverage;
   const rows: { label: string; value: string; note: string }[] = [
-    { label: "Comments in view", value: String(c.comments_in_view), note: c.comments_in_view === c.comments_in_dataset ? "the whole sample" : `of ${c.comments_in_dataset} in the sample` },
+    { label: "Comments in view", value: String(c.comments_in_view), note: c.comments_in_view === c.comments_in_dataset ? (summary.is_sample ? "the whole sample" : "all fetched") : `of ${c.comments_in_dataset} ${summary.is_sample ? "in the sample" : "fetched"}` },
     { label: "Languages", value: String(c.languages_in_view), note: summary.languages.map((l) => l.language_name).join(", ") || "none" },
     { label: "Claim mentions", value: String(t.claim_mentions), note: "match a watch term in the text" },
-    { label: "Festival mentions", value: String(t.cultural_mentions), note: "name a different festival" },
+    { label: "Festival mentions", value: String(t.cultural_mentions), note: summary.is_sample ? "name a different festival" : "name a festival on the watch list" },
   ];
   return (
     <dl aria-busy={stale} className={cn("grid divide-y divide-border rounded-card border border-border bg-surface sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-4 lg:divide-x", stale && "opacity-60")}>

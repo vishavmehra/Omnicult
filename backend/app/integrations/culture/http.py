@@ -75,9 +75,9 @@ class HttpFetcher:
                         raise last  # waiting that long inside one request is not bounded; the caller sees a typed error
                 continue
             if response.status_code in (401, 403):
-                raise SourceAuthError(self.source, operation, f"HTTP {response.status_code}", status_code=response.status_code)
+                raise _with_payload(SourceAuthError(self.source, operation, f"HTTP {response.status_code}", status_code=response.status_code), response)
             if response.status_code >= 400:
-                raise SourceHttpError(self.source, operation, f"HTTP {response.status_code}", status_code=response.status_code)
+                raise _with_payload(SourceHttpError(self.source, operation, f"HTTP {response.status_code}", status_code=response.status_code), response)
             try:
                 return response.json()
             except ValueError as exc:
@@ -96,6 +96,15 @@ class HttpFetcher:
         if hinted is not None:
             return min(hinted, MAX_RETRY_AFTER_SECONDS)
         return self.backoff * (2 ** (attempt - 1))
+
+
+def _with_payload(error: CultureSourceError, response: httpx.Response) -> CultureSourceError:
+    """Keep the provider's error body (for example Google's `error.errors[].reason`) for callers that tell failures apart."""
+    try:
+        error.payload = response.json()
+    except ValueError:
+        error.payload = None
+    return error
 
 
 def _retry_after(response: httpx.Response) -> float | None:

@@ -34,6 +34,9 @@ RUN python -c "from PIL import features; assert features.check('raqm'), 'Pillow 
 COPY alembic.ini ./
 COPY migrations ./migrations
 COPY app ./app
+# The seed scripts (omnicult-seed job: `python -m scripts.seed_all` runs seed_reference_data, then seed_demo_claims when
+# the build has it); no other script ships.
+COPY scripts/seed_*.py ./scripts/
 USER app
 EXPOSE 8080
 # Cloud Run terminates TLS and forwards the client address in X-Forwarded-*; it sends SIGTERM 10 s before it stops us.

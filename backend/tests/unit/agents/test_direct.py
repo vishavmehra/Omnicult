@@ -145,6 +145,51 @@ def test_repeats_and_surplus_steps_are_dropped_with_a_note() -> None:
         StepOut(kind="navigate", rationale="r", sudo=True)  # type: ignore[call-arg]  # unknown keys are invalid output
 
 
+def test_the_schema_shown_to_the_model_requires_every_key_but_validation_stays_lenient() -> None:
+    schema = DirectOut.model_json_schema()
+    assert schema["required"] == ["supported", "summary", "refusal", "steps"]
+    assert schema["$defs"]["StepOut"]["required"] == list(schema["$defs"]["StepOut"]["properties"])  # element_id, new_value, ... too
+    from app.llm.google import to_gemini_schema
+
+    sent = to_gemini_schema(schema)
+    assert sent["required"] == ["supported", "summary", "refusal", "steps"] and "maxItems" not in repr(sent)  # the API gets the requirement
+    assert DirectOut.model_validate({"supported": False}).steps == []  # a refusal may leave keys out
+    assert StepOut(kind="navigate", rationale="r").element_id is None  # as may a step
+
+
+def test_a_supported_plan_without_steps_is_invalid_output_so_the_gateway_repairs_it() -> None:
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError, match="steps must list at least one step"):
+        DirectOut(supported=True, summary="Warm up the headline.", steps=[])
+    assert DirectOut(supported=False, refusal="Publishing is not possible.").steps == []
+
+
+async def test_the_plan_call_carries_the_required_schema_a_bounded_budget_and_its_prompt_version() -> None:
+    import json
+
+    from app.agents.direct import MAX_PLAN_TOKENS, PROMPT_VERSION, propose_plan
+    from app.llm.gateway import Completion, LLMGateway
+    from app.llm.registry import spec_for
+    from tests.unit.llm.genai_fakes import settings
+
+    seen = []
+
+    class Provider:
+        name = "capture"
+
+        async def complete(self, request):
+            seen.append(request)
+            return Completion(text=json.dumps({"supported": True, "summary": "Warm it.", "refusal": None,
+                                               "steps": [{"kind": "lock_element", "rationale": "Asked.", "element_id": "cta"}]}))
+
+    result = await propose_plan(LLMGateway(settings(), provider=Provider()), stage="planning", view=model_view(context(), "lock the button", "Tamil", 1))
+    (request,) = seen
+    assert [s.kind for s in result.value.steps] == ["lock_element"] and result.trace.prompt_version == PROMPT_VERSION == "voice-direct-v2"
+    assert request.max_tokens == MAX_PLAN_TOKENS + spec_for(request.model).thinking_headroom
+    assert '"required":["supported","summary","refusal","steps"]' in request.messages[0]["content"]
+
+
 def test_the_model_sees_handles_and_text_but_not_the_value_of_non_text_elements() -> None:
     view = model_view(context({"logo"}), "Make it warmer", "Tamil Nadu final", 4)
     assert view["selected_version"] == {"handle": "V4", "label": "Tamil Nadu final", "region_code": "IN-TN"}
@@ -168,7 +213,7 @@ def demo_view(
 
 
 def ask(instruction: str, **kwargs: Any) -> DirectOut:
-    return DirectOut.model_validate(RESPONDERS["voice-direct-v1"](demo_view(instruction, **kwargs)))
+    return DirectOut.model_validate(RESPONDERS["voice-direct-v2"](demo_view(instruction, **kwargs)))
 
 
 def test_every_demo_example_gets_a_plan_that_survives_the_real_validation() -> None:

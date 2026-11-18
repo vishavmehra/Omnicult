@@ -95,3 +95,61 @@ async def test_music_failures_are_typed_and_a_bad_clip_is_not_returned():
 
 def test_wav_info_derives_the_duration_from_the_bytes():
     assert media.wav_info(wav_bytes(1.5, rate=24000, channels=1)) == (24000, 1, 1.5)
+
+
+async def test_music_reads_the_documented_audio_content_field_as_well():
+    async def poster(url, body, headers):
+        return {"predictions": [{"audioContent": base64.b64encode(wav_bytes(1.0)).decode(), "mimeType": "audio/wav"}],
+                "model": "lyria-002"}
+
+    clip = await media.MusicClient(vertex(), poster=poster, backoff_seconds=0).generate("festive")
+    assert (clip.duration_seconds, clip.model) == (1.0, "lyria-002")
+    assert clip.wav.startswith(b"RIFF")  # the bytes are stored as they came: a WAV
+
+
+async def test_music_asks_the_shared_credentials_for_its_token_and_never_runs_a_new_lookup(monkeypatch):
+    class Credentials:
+        valid, token, refreshed = False, None, 0
+
+        def refresh(self, request):
+            self.refreshed += 1
+            self.token, self.valid = "token-from-refresh", True
+
+    shared = Credentials()
+    monkeypatch.setattr(media.google, "load_credentials", lambda: shared)
+
+    def no_lookup(*args, **kwargs):  # google.auth.default() runs the gcloud CLI (48 to 200 s)
+        raise AssertionError("a fresh Application Default Credentials lookup was started")
+
+    monkeypatch.setattr("google.auth.default", no_lookup)
+    first = await media.MusicClient._headers()
+    second = await media.MusicClient._headers()
+    assert first["Authorization"] == "Bearer token-from-refresh" and first["Content-Type"] == "application/json"
+    assert second == first and shared.refreshed == 1  # a valid token is reused, not refreshed per call
+
+
+async def test_music_http_statuses_become_typed_errors_and_the_api_message_is_logged_not_shown(caplog):
+    import respx
+
+    url = "https://us-central1-aiplatform.googleapis.com/v1/projects/test-project/locations/us-central1/publishers/google/models/lyria-002:predict"
+    client = media.MusicClient(vertex(llm_max_retries=0), backoff_seconds=0)
+
+    async def headers():
+        return {}
+
+    client._headers = headers  # no token: the HTTP layer is what is under test
+    with respx.mock:
+        route = respx.post(url)
+        route.respond(400, json={"error": {"status": "INVALID_ARGUMENT", "message": "prompt rejected: names an artist"}})
+        with caplog.at_level("WARNING", logger="app.llm.media"), pytest.raises(LLMError) as caught:
+            await client.generate("in the style of someone")
+        assert caught.value.code == "PROVIDER_ERROR" and not caught.value.retryable
+        assert "artist" not in caught.value.message
+        record = next(r for r in caplog.records if r.getMessage() == "provider error")
+        assert record.provider_http == 400 and record.provider_status == "INVALID_ARGUMENT" and "artist" in record.provider_detail
+        route.respond(504, text="gateway timeout")
+        with pytest.raises(LLMError) as caught:
+            await client.generate("x")
+        assert caught.value.code == "PROVIDER_TIMEOUT" and caught.value.retryable
+        route.respond(200, json={"predictions": [{"audioContent": base64.b64encode(wav_bytes(1.0)).decode()}]})
+        assert (await client.generate("x")).duration_seconds == 1.0

@@ -91,6 +91,11 @@ class Settings(BaseSettings):
     # Both optional: the adapters that need them are reported as not configured, never faked.
     data_gov_in_api_key: SecretStr | None = None
     youtube_api_key: SecretStr | None = None
+    # Comment Pulse reads public YouTube comments with this key (YouTube Data API v3, commentThreads.list: 1 quota unit a page of
+    # 100, 10,000 units a day for the whole app). A fetch stops at this many pages, and the same video is not fetched again
+    # before the interval has passed.
+    youtube_max_pages: int = Field(default=5, ge=1, le=10)
+    youtube_min_fetch_interval_seconds: int = Field(default=900, ge=0)
     # --- proof stream (Phase 2 contract) ---
     # How long a report export's download link works. The link carries a random token (only its hash is stored).
     proof_export_url_ttl_seconds: int = Field(default=300, ge=30, le=3600)

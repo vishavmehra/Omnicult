@@ -40,6 +40,7 @@ class CultureSourceError(Exception):
 
     kind = "error"
     retryable = False
+    payload: Any = None  # the provider's JSON error body when it sent one (HttpFetcher sets it on a non-retried 4xx), else None
 
     def __init__(self, source: str, operation: str, message: str, *, status_code: int | None = None) -> None:
         super().__init__(f"{source}.{operation}: {message}")

@@ -4,9 +4,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, Coins, LayoutList, LogOut, Menu, PanelRightClose, PanelRightOpen, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Fragment, createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
+import { roleColor } from "@/components/creative/motion";
 import { ModeBadge } from "@/components/evidence/badges";
 import { EvidenceInspectorProvider } from "@/components/evidence/evidence-inspector";
 import { arrivingFromOutside } from "@/components/field/transition";
@@ -105,10 +106,48 @@ function AccountMenu() {
 type PlatformPage = "today" | "settings" | "usage" | "roadmap";
 const inCampaign = (active: WorkspaceKey | PlatformPage): active is WorkspaceKey => active in WORKSPACES;
 
+/**
+ * A halo that rides the workflow line to the active station, so moving between workspaces reads as travelling along the
+ * line. Positioned by transform from a measurement after layout (and again when feature lists open or close); the first
+ * placement skips the transition.
+ */
+function useStationHalo(active: string, deps: unknown) {
+  const line = useRef<HTMLOListElement>(null);
+  const halo = useRef<HTMLSpanElement>(null);
+  const placed = useRef(false);
+  useLayoutEffect(() => {
+    const list = line.current;
+    const ring = halo.current;
+    if (!list || !ring) return;
+    const place = () => {
+      const station = list.querySelector<HTMLElement>("[data-station-active]");
+      if (!station) {
+        ring.style.opacity = "0";
+        return;
+      }
+      const top = station.getBoundingClientRect().top - list.getBoundingClientRect().top + station.offsetHeight / 2 - 15;
+      if (!placed.current) ring.style.transition = "none";
+      ring.style.opacity = "1";
+      ring.style.transform = `translateY(${top}px)`;
+      if (!placed.current) {
+        void ring.offsetWidth;
+        ring.style.transition = "";
+        placed.current = true;
+      }
+    };
+    place();
+    const ro = new ResizeObserver(place);
+    ro.observe(list);
+    return () => ro.disconnect();
+  }, [active, deps]);
+  return { line, halo };
+}
+
 function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; active: WorkspaceKey | PlatformPage; onNavigate?: () => void }) {
-  const item = "flex h-10 items-center gap-2.5 rounded-xl px-3 text-[14px] transition-[background-color,color,box-shadow] duration-200";
+  const item = "group/item flex h-10 items-center gap-2.5 rounded-xl px-3 text-[14px] transition-[background-color,color,box-shadow] duration-200";
   const on = "bg-surface-raised font-medium text-ink shadow-clay";
   const off = "text-ink-secondary hover:bg-surface-muted/70 hover:text-ink";
+  const nudge = "transition-[translate] duration-200 ease-out group-hover/item:translate-x-0.5";
   const activeIds = useActiveFeatureIds(campaignId);
   // The open workspace starts expanded and the others collapsed; a person's own choice wins until they leave.
   const [chosen, setChosen] = useState<Record<string, boolean>>({});
@@ -116,6 +155,7 @@ function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; 
   const toggle = (key: string, fallback: boolean) => setChosen((c) => ({ ...c, [key]: !(c[key] ?? fallback) }));
   const chevron = (open: boolean) => <ChevronRight aria-hidden className={cn("size-4 transition-transform duration-200 motion-reduce:transition-none", open && "rotate-90")} />;
   const featureList = "mt-0.5 mb-1 space-y-px";
+  const { line, halo } = useStationHalo(active, chosen);
   return (
     <div className="flex h-full flex-col">
       <div className="px-4 pt-5 pb-5 text-ink">
@@ -123,12 +163,17 @@ function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; 
       </div>
       <nav aria-label="Workspaces" className="flex-1 overflow-y-auto px-2.5 pb-5">
         <Link href="/app" onClick={onNavigate} aria-current={active === "today" ? "page" : undefined} className={cn(item, "mb-4", active === "today" ? on : off)}>
-          <LayoutList aria-hidden className={cn("size-[18px]", active === "today" && "text-pop")} />
+          <LayoutList aria-hidden className={cn("size-[18px]", nudge, active === "today" && "text-pop")} />
           Today
         </Link>
-        <ol className="relative space-y-3.5">
-          {/* The workflow line: stations sit on it in the order work moves. */}
+        <ol ref={line} className="relative space-y-3.5">
+          {/* The workflow line: stations sit on it in the order work moves; the halo marks where you are. */}
           <span aria-hidden className="absolute top-3 bottom-3 left-[23.5px] w-px bg-border" />
+          <span
+            ref={halo}
+            aria-hidden
+            className="pointer-events-none absolute top-0 left-[8.5px] z-20 size-[30px] rounded-full border-2 border-pop/45 opacity-0 shadow-[0_0_0_4px_color-mix(in_oklab,var(--pop)_12%,transparent)] transition-[transform,opacity] duration-500 ease-out"
+          />
           {STAGES.map((stage) => (
             <li key={stage.key}>
               <p className="relative mb-1 ml-10 text-[11px] font-semibold tracking-[0.08em] text-ink-muted uppercase">{stage.label}</p>
@@ -141,14 +186,16 @@ function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; 
                     <>
                       <span
                         aria-hidden
+                        data-station-active={isActive ? "" : undefined}
                         className={cn(
                           "relative z-10 flex size-[22px] shrink-0 items-center justify-center rounded-full font-mono text-[10.5px] tabular-nums",
-                          isActive ? "bg-pop text-pop-ink" : "border border-border-strong/60 bg-surface text-ink-muted",
+                          isActive ? "bg-pop text-pop-ink" : "border-[1.5px] bg-surface text-ink-secondary",
                         )}
+                        style={isActive ? undefined : { borderColor: roleColor(key, true) }}
                       >
                         {ws.number}
                       </span>
-                      <ws.Icon aria-hidden className={cn("size-4 shrink-0", isActive ? "text-pop" : "text-ink-muted")} />
+                      <ws.Icon aria-hidden className={cn("size-4 shrink-0", nudge, isActive ? "text-pop" : "text-ink-muted")} />
                       <span className="truncate">{ws.label}</span>
                     </>
                   );
@@ -239,6 +286,9 @@ export function WorkspaceShell({
   const [panelOpen, setPanelOpen] = useState(false);
   const docked = useMediaQuery("(min-width: 1280px)");
   const pageKey = useRemountOnFeatureNav();
+  const pathname = usePathname();
+  // The header carries the place's colour role as a thin light strip: ember on Today, the workspace's role inside one.
+  const strip = inCampaign(active) ? roleColor(active, true) : active === "today" ? "var(--pop)" : "var(--role-proof-strong)";
   const register = useCallback(() => {
     setPanelCount((n) => n + 1);
     return () => setPanelCount((n) => n - 1);
@@ -275,7 +325,12 @@ export function WorkspaceShell({
 
           <div className="lg:pl-[256px]">
             <header className="arrive-1 sticky top-3 z-20 mx-3 sm:mx-4 lg:mr-4 lg:ml-0">
-              <div className="clay-panel flex h-14 items-center gap-2.5 border border-border/60 px-2.5 sm:px-3">
+              <div className="clay-panel relative flex h-14 items-center gap-2.5 border border-border/60 px-2.5 sm:px-3">
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-8 -bottom-px h-[2px] rounded-full opacity-80 transition-[background] duration-500"
+                  style={{ background: `linear-gradient(90deg, transparent, ${strip} 30%, ${strip} 70%, transparent)` }}
+                />
                 <button
                   type="button"
                   onClick={() => setNavOpen(true)}
@@ -308,7 +363,10 @@ export function WorkspaceShell({
 
             <div className={cn("xl:grid xl:items-start", hasPanel && "xl:grid-cols-[minmax(0,1fr)_340px]")}>
               <main id="main" className="arrive-2 min-w-0 px-3 pt-6 pb-16 sm:px-4 lg:pr-4 lg:pl-1">
-                <Fragment key={pageKey}>{children}</Fragment>
+                {/* Each page enters over the persistent ground; tab and filter changes (query only) do not replay it. */}
+                <div key={`${pathname}:${pageKey}`} className="page-enter">
+                  {children}
+                </div>
               </main>
               {drawerOpen && <div aria-hidden className="fixed inset-0 z-30 bg-black/45 xl:hidden" onClick={() => setPanelOpen(false)} />}
               <aside

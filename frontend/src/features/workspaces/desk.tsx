@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
+import { CompareSlider, TabInk } from "@/components/creative";
 import { ContextPanel } from "@/components/shell/workspace-shell";
 import { workspaceHref } from "@/components/shell/workspaces";
 import { ErrorState, LoadingState } from "@/components/states";
@@ -16,13 +17,13 @@ import { BriefEditor } from "@/features/desk/brief-editor";
 import { BriefDocument, VersionBar } from "@/features/desk/brief-view";
 import { CommandBarButton } from "@/features/desk/command-bar";
 import { CopyEditor } from "@/features/desk/copy-editor";
+import { BriefGlance, CreativeAssets, WeightsBar } from "@/features/desk/desk-visuals";
 import type { BriefContent } from "@/features/desk/types";
 import { formatDateTime, formatRelative } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { useCampaign } from "./campaign-context";
-import { CampaignFacts, CreativeMat, LedgerList, SectionTitle, WorkspaceHeader } from "./parts";
-import { WEIGHT_FIELDS } from "@/features/project/campaign-form";
+import { CampaignFacts, CreativeMat, SectionTitle, WorkspaceHeader, versionsOldestFirst } from "./parts";
 
 type TabKey = "brief" | "brand-kit" | "creative";
 const TABS: { key: TabKey; label: string }[] = [
@@ -135,6 +136,9 @@ export function DeskWorkspace() {
   const [editingCopy, setEditingCopy] = useState(false);
 
   const brief = briefQ.data;
+  // The original copy's language (the origin region's first language), so its script gets the right Noto face.
+  const origin = brief?.content.regions.origin;
+  const copyLang = origin ? brief?.content.languages[origin]?.[0] : undefined;
   const setTab = (next: TabKey) => router.replace(next === "brief" ? pathname : `${pathname}?tab=${next}`, { scroll: false });
   const content = campaign.current_version.content;
   const canEditBrief = Boolean(brief?.editable);
@@ -159,9 +163,10 @@ export function DeskWorkspace() {
       </WorkspaceHeader>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
-        <TabsList variant="line" className="h-10 max-w-full justify-start overflow-x-auto">
+        <TabsList variant="line" className="relative h-10 max-w-full justify-start overflow-x-auto">
+          <TabInk />
           {TABS.map((t) => (
-            <TabsTrigger key={t.key} value={t.key} className="h-9 flex-none px-3">
+            <TabsTrigger key={t.key} value={t.key} className="h-9 flex-none px-3 after:hidden">
               {t.label}
             </TabsTrigger>
           ))}
@@ -182,6 +187,13 @@ export function DeskWorkspace() {
             />
           ) : (
             <>
+              {(viewing === null || older.data) && (
+                <BriefGlance
+                  completeness={viewing === null ? brief.completeness : undefined}
+                  content={viewing !== null && older.data ? older.data.content : brief.content}
+                  regions={regionsQ.data}
+                />
+              )}
               <VersionBar brief={brief} viewing={viewing !== null && older.data ? { version: older.data.version, createdAt: older.data.created_at, note: older.data.change_note } : undefined} />
               <p className="max-w-[72ch] text-[12.5px] text-ink-secondary">
                 Saving the brief writes its objective and target regions to the campaign record, which Proof Vault and the evidence graph read. The rest is kept in this versioned brief for every workspace to read.
@@ -220,12 +232,24 @@ export function DeskWorkspace() {
           {editingCopy ? (
             <CopyEditor campaign={campaign} demo={demo} onCancel={() => setEditingCopy(false)} onDone={() => setEditingCopy(false)} />
           ) : (
+            <>
+            <CreativeAssets campaign={campaign} lang={copyLang} />
             <div className="grid gap-8 2xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
               <section aria-labelledby="creative">
                 <SectionTitle id="creative" meta={`v${campaign.current_version.version_number} · saved ${formatDateTime(campaign.current_version.created_at)}`}>
-                  Original creative, current version
+                  Original copy, current version
                 </SectionTitle>
-                <CreativeMat content={content} />
+                {campaign.versions.length > 1 ? (
+                  <CompareSlider
+                    beforeLabel={`v${versionsOldestFirst(campaign)[0].version_number}, first`}
+                    afterLabel={`v${campaign.current_version.version_number}, current`}
+                    layerClassName="bg-mat"
+                    before={<CreativeMat content={versionsOldestFirst(campaign)[0].content} lang={copyLang} className="shadow-none" />}
+                    after={<CreativeMat content={content} lang={copyLang} className="shadow-none" />}
+                  />
+                ) : (
+                  <CreativeMat content={content} lang={copyLang} />
+                )}
                 {content.reference_terms.length > 0 && (
                   <div className="mt-3 space-y-1.5">
                     <p className="type-meta">Cultural references in the copy</p>
@@ -243,16 +267,7 @@ export function DeskWorkspace() {
                 <SectionTitle id="weights" meta="Weights must total 1.000; never rescaled">
                   Scoring weights
                 </SectionTitle>
-                <LedgerList
-                  rows={WEIGHT_FIELDS.map((f) => ({
-                    label: f.label,
-                    value: (
-                      <span className="type-ledger tabular-nums">
-                        {campaign.evaluation_criteria[f.key].toFixed(2)} <span className="text-ink-muted">· {f.help}</span>
-                      </span>
-                    ),
-                  }))}
-                />
+                <WeightsBar criteria={campaign.evaluation_criteria} />
                 <div className="mt-4">
                   <Button variant="outline" onClick={() => setEditingCopy(true)}>
                     <PencilLine aria-hidden />
@@ -261,6 +276,7 @@ export function DeskWorkspace() {
                 </div>
               </section>
             </div>
+            </>
           )}
         </TabsContent>
       </Tabs>

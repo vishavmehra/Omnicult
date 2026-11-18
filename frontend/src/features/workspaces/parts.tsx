@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { RoleMark } from "@/components/creative/role-mark";
 import { WorkspaceFeatureChips } from "@/components/shell/feature-links";
 import { WORKSPACES, type WorkspaceKey } from "@/components/shell/workspaces";
 import { sectionHref } from "@/features/project/workflow";
@@ -22,7 +23,11 @@ export function WorkspaceHeader({ workspace, children, actions }: { workspace: W
   return (
     <header className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b border-border pb-5">
       <div className="min-w-0 space-y-1.5">
-        <h1 className="type-title text-[30px] text-ink sm:text-[34px]">{ws.label}</h1>
+        <div className="flex items-center gap-3">
+          {/* The workspace's clay mark in its colour role: the same hue as its ambient ground and spine station. */}
+          <RoleMark workspace={workspace} size="md" />
+          <h1 className="type-title text-[30px] text-ink sm:text-[34px]">{ws.label}</h1>
+        </div>
         <p className="max-w-[68ch] text-[14.5px] text-ink-secondary">{ws.purpose}</p>
         {children}
         <WorkspaceFeatureChips workspace={workspace} />

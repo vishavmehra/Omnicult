@@ -10867,8 +10867,6 @@
             "title": "Date To"
           },
           "is_sample": {
-            "const": true,
-            "default": true,
             "title": "Is Sample",
             "type": "boolean"
           },
@@ -10911,9 +10909,15 @@
             "type": "array"
           },
           "source_kind": {
-            "const": "sample",
-            "default": "sample",
+            "enum": [
+              "sample",
+              "youtube"
+            ],
             "title": "Source Kind",
+            "type": "string"
+          },
+          "source_line": {
+            "title": "Source Line",
             "type": "string"
           },
           "versions": {
@@ -10922,6 +10926,17 @@
             },
             "title": "Versions",
             "type": "array"
+          },
+          "youtube": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/YoutubeStatus"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Present in a live project on a server that has a YouTube key; otherwise null and nothing is offered."
           }
         },
         "required": [
@@ -10929,6 +10944,8 @@
           "is_sample",
           "label",
           "source_kind",
+          "source_line",
+          "youtube",
           "dataset_version",
           "last_updated_at",
           "comment_count",
@@ -11196,8 +11213,7 @@
             "type": "string"
           },
           "is_sample": {
-            "const": true,
-            "default": true,
+            "description": "True for the labelled sample, false for comments fetched from YouTube.",
             "title": "Is Sample",
             "type": "boolean"
           },
@@ -11209,12 +11225,12 @@
             "type": "array"
           },
           "label": {
-            "description": "Always 'Sample comments, not from a connected channel'.",
+            "description": "'Sample comments, not from a connected channel' or 'YouTube comments'.",
             "title": "Label",
             "type": "string"
           },
           "last_updated_at": {
-            "description": "When the sample was written (a fixed instant), not when it was loaded.",
+            "description": "Sample: when it was written (a fixed instant). YouTube: when the newest comment was fetched.",
             "format": "date-time",
             "title": "Last Updated At",
             "type": "string"
@@ -11235,9 +11251,16 @@
             "type": "integer"
           },
           "source_kind": {
-            "const": "sample",
-            "default": "sample",
+            "enum": [
+              "sample",
+              "youtube"
+            ],
             "title": "Source Kind",
+            "type": "string"
+          },
+          "source_line": {
+            "description": "The one quiet line that says where the figures come from, for example 'Source: YouTube comments on <video title>'.",
+            "title": "Source Line",
             "type": "string"
           },
           "total": {
@@ -11249,6 +11272,7 @@
           "is_sample",
           "label",
           "source_kind",
+          "source_line",
           "dataset_version",
           "last_updated_at",
           "limitations",
@@ -11483,13 +11507,12 @@
             "$ref": "#/components/schemas/CommentFilters"
           },
           "is_sample": {
-            "const": true,
-            "default": true,
+            "description": "True for the labelled sample, false for comments fetched from YouTube.",
             "title": "Is Sample",
             "type": "boolean"
           },
           "label": {
-            "description": "Always 'Sample comments, not from a connected channel'.",
+            "description": "'Sample comments, not from a connected channel' or 'YouTube comments'.",
             "title": "Label",
             "type": "string"
           },
@@ -11501,7 +11524,7 @@
             "type": "array"
           },
           "last_updated_at": {
-            "description": "When the sample was written (a fixed instant), not when it was loaded.",
+            "description": "Sample: when it was written (a fixed instant). YouTube: when the newest comment was fetched.",
             "format": "date-time",
             "title": "Last Updated At",
             "type": "string"
@@ -11531,9 +11554,16 @@
             "type": "array"
           },
           "source_kind": {
-            "const": "sample",
-            "default": "sample",
+            "enum": [
+              "sample",
+              "youtube"
+            ],
             "title": "Source Kind",
+            "type": "string"
+          },
+          "source_line": {
+            "description": "The one quiet line that says where the figures come from, for example 'Source: YouTube comments on <video title>'.",
+            "title": "Source Line",
             "type": "string"
           },
           "totals": {
@@ -11551,6 +11581,7 @@
           "is_sample",
           "label",
           "source_kind",
+          "source_line",
           "dataset_version",
           "last_updated_at",
           "limitations",
@@ -11672,18 +11703,17 @@
             "$ref": "#/components/schemas/CommentFilters"
           },
           "is_sample": {
-            "const": true,
-            "default": true,
+            "description": "True for the labelled sample, false for comments fetched from YouTube.",
             "title": "Is Sample",
             "type": "boolean"
           },
           "label": {
-            "description": "Always 'Sample comments, not from a connected channel'.",
+            "description": "'Sample comments, not from a connected channel' or 'YouTube comments'.",
             "title": "Label",
             "type": "string"
           },
           "last_updated_at": {
-            "description": "When the sample was written (a fixed instant), not when it was loaded.",
+            "description": "Sample: when it was written (a fixed instant). YouTube: when the newest comment was fetched.",
             "format": "date-time",
             "title": "Last Updated At",
             "type": "string"
@@ -11696,9 +11726,16 @@
             "type": "array"
           },
           "source_kind": {
-            "const": "sample",
-            "default": "sample",
+            "enum": [
+              "sample",
+              "youtube"
+            ],
             "title": "Source Kind",
+            "type": "string"
+          },
+          "source_line": {
+            "description": "The one quiet line that says where the figures come from, for example 'Source: YouTube comments on <video title>'.",
+            "title": "Source Line",
             "type": "string"
           },
           "themes": {
@@ -11718,6 +11755,7 @@
           "is_sample",
           "label",
           "source_kind",
+          "source_line",
           "dataset_version",
           "last_updated_at",
           "limitations",
@@ -54132,6 +54170,273 @@
         ],
         "title": "XRaySection",
         "type": "object"
+      },
+      "YoutubeFetchRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "order": {
+            "default": "relevance",
+            "description": "relevance: YouTube's own ranking. time: newest first.",
+            "enum": [
+              "relevance",
+              "time"
+            ],
+            "title": "Order",
+            "type": "string"
+          },
+          "region_code": {
+            "description": "ISO 3166-2 code of the region the video ran in, for example IN-TN.",
+            "pattern": "^[A-Z]{2}-[A-Z0-9]{1,3}$",
+            "title": "Region Code",
+            "type": "string"
+          },
+          "version_label": {
+            "description": "One of `youtube.versions` from the status.",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Version Label",
+            "type": "string"
+          },
+          "video": {
+            "description": "A public YouTube video link or its 11-character id.",
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Video",
+            "type": "string"
+          }
+        },
+        "required": [
+          "video",
+          "version_label",
+          "region_code"
+        ],
+        "title": "YoutubeFetchRequest",
+        "type": "object"
+      },
+      "YoutubeFetchResult": {
+        "additionalProperties": false,
+        "properties": {
+          "added": {
+            "title": "Added",
+            "type": "integer"
+          },
+          "fetched": {
+            "description": "Distinct comments YouTube returned in this fetch.",
+            "title": "Fetched",
+            "type": "integer"
+          },
+          "replaced_video_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The video this version and region used before; its stored comments were removed.",
+            "title": "Replaced Video Id"
+          },
+          "skipped": {
+            "description": "Items YouTube returned that were not a readable comment, or that had no text.",
+            "title": "Skipped",
+            "type": "integer"
+          },
+          "source": {
+            "$ref": "#/components/schemas/YoutubeSourceInfo"
+          },
+          "updated": {
+            "description": "Comments already stored (same YouTube comment id) whose likes, replies and text were refreshed.",
+            "title": "Updated",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "source",
+          "fetched",
+          "added",
+          "updated",
+          "skipped",
+          "replaced_video_id"
+        ],
+        "title": "YoutubeFetchResult",
+        "type": "object"
+      },
+      "YoutubeRegionOption": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "in_campaign": {
+            "description": "The campaign names this region among its target markets.",
+            "title": "In Campaign",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "in_campaign"
+        ],
+        "title": "YoutubeRegionOption",
+        "type": "object"
+      },
+      "YoutubeSourceInfo": {
+        "additionalProperties": false,
+        "description": "A video whose public comments were fetched for one campaign version and region.",
+        "properties": {
+          "comments": {
+            "description": "Comments stored from this video.",
+            "title": "Comments",
+            "type": "integer"
+          },
+          "fetched_at": {
+            "format": "date-time",
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "next_fetch_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Earliest time this video can be fetched again; null once that time has passed.",
+            "title": "Next Fetch At"
+          },
+          "order": {
+            "enum": [
+              "relevance",
+              "time"
+            ],
+            "title": "Order",
+            "type": "string"
+          },
+          "pages_fetched": {
+            "title": "Pages Fetched",
+            "type": "integer"
+          },
+          "region_code": {
+            "title": "Region Code",
+            "type": "string"
+          },
+          "region_name": {
+            "title": "Region Name",
+            "type": "string"
+          },
+          "truncated": {
+            "description": "The page cap stopped the last fetch while the video had more comments.",
+            "title": "Truncated",
+            "type": "boolean"
+          },
+          "version_label": {
+            "title": "Version Label",
+            "type": "string"
+          },
+          "video_id": {
+            "title": "Video Id",
+            "type": "string"
+          },
+          "video_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Video Title"
+          },
+          "video_url": {
+            "title": "Video Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "video_id",
+          "video_url",
+          "video_title",
+          "version_label",
+          "region_code",
+          "region_name",
+          "order",
+          "comments",
+          "pages_fetched",
+          "truncated",
+          "fetched_at",
+          "next_fetch_at"
+        ],
+        "title": "YoutubeSourceInfo",
+        "type": "object"
+      },
+      "YoutubeStatus": {
+        "additionalProperties": false,
+        "description": "What a live project can do with YouTube comments. Absent (null on the status) in a demo project and on a server with no key.",
+        "properties": {
+          "max_comments": {
+            "title": "Max Comments",
+            "type": "integer"
+          },
+          "max_pages": {
+            "description": "Pages of 100 comments one fetch reads at most.",
+            "title": "Max Pages",
+            "type": "integer"
+          },
+          "min_interval_seconds": {
+            "description": "Least time between two fetches of the same video.",
+            "title": "Min Interval Seconds",
+            "type": "integer"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/YoutubeRegionOption"
+            },
+            "title": "Regions",
+            "type": "array"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/YoutubeSourceInfo"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "versions": {
+            "description": "Version labels a video can be attached to: the campaign's Creative Studio versions.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Versions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "max_pages",
+          "max_comments",
+          "min_interval_seconds",
+          "versions",
+          "regions",
+          "sources"
+        ],
+        "title": "YoutubeStatus",
+        "type": "object"
       }
     },
     "securitySchemes": {
@@ -70709,21 +71014,21 @@
             }
           },
           {
-            "description": "ISO 639-1 code, for example ta.",
+            "description": "ISO 639-1 code, for example ta, und for text whose language the code did not decide, or zxx for emoji and symbols only.",
             "in": "query",
             "name": "language",
             "required": false,
             "schema": {
               "anyOf": [
                 {
-                  "pattern": "^[a-z]{2}$",
+                  "pattern": "^[a-z]{2,3}$",
                   "type": "string"
                 },
                 {
                   "type": "null"
                 }
               ],
-              "description": "ISO 639-1 code, for example ta.",
+              "description": "ISO 639-1 code, for example ta, und for text whose language the code did not decide, or zxx for emoji and symbols only.",
               "title": "Language"
             }
           },
@@ -71519,21 +71824,21 @@
             }
           },
           {
-            "description": "ISO 639-1 code, for example ta.",
+            "description": "ISO 639-1 code, for example ta, und for text whose language the code did not decide, or zxx for emoji and symbols only.",
             "in": "query",
             "name": "language",
             "required": false,
             "schema": {
               "anyOf": [
                 {
-                  "pattern": "^[a-z]{2}$",
+                  "pattern": "^[a-z]{2,3}$",
                   "type": "string"
                 },
                 {
                   "type": "null"
                 }
               ],
-              "description": "ISO 639-1 code, for example ta.",
+              "description": "ISO 639-1 code, for example ta, und for text whose language the code did not decide, or zxx for emoji and symbols only.",
               "title": "Language"
             }
           },
@@ -71763,21 +72068,21 @@
             }
           },
           {
-            "description": "ISO 639-1 code, for example ta.",
+            "description": "ISO 639-1 code, for example ta, und for text whose language the code did not decide, or zxx for emoji and symbols only.",
             "in": "query",
             "name": "language",
             "required": false,
             "schema": {
               "anyOf": [
                 {
-                  "pattern": "^[a-z]{2}$",
+                  "pattern": "^[a-z]{2,3}$",
                   "type": "string"
                 },
                 {
                   "type": "null"
                 }
               ],
-              "description": "ISO 639-1 code, for example ta.",
+              "description": "ISO 639-1 code, for example ta, und for text whose language the code did not decide, or zxx for emoji and symbols only.",
               "title": "Language"
             }
           },
@@ -71948,6 +72253,317 @@
           }
         ],
         "summary": "Get Comment Themes",
+        "tags": [
+          "digest"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/pulse/comments/youtube": {
+      "post": {
+        "description": "Fetch the public comments of one YouTube video for a campaign version and region (live project, owner or editor).\nServer side, with the server's API key: at most the configured number of pages of 100 comments, and the same video not\nagain before the configured interval. Stores the comment text, day, likes and reply count, never the author. A video that\nis gone, has comments off, or a spent YouTube quota each come back as their own error.",
+        "operationId": "fetch_youtube_comments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/YoutubeFetchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YoutubeFetchResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Fetch Youtube Comments",
+        "tags": [
+          "digest"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/pulse/comments/youtube/{source_id}": {
+      "delete": {
+        "description": "Disconnect a video: its stored comments are removed. With no video left, Comment Pulse shows the sample again.",
+        "operationId": "remove_youtube_source",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "source_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Source Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Remove Youtube Source",
         "tags": [
           "digest"
         ]

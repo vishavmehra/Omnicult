@@ -257,14 +257,25 @@ def _name(value: Any) -> str:
     return str(getattr(value, "value", value) or "")
 
 
+def _blocked(reason: str, response: Any) -> ProviderError:
+    """The ProviderError for a filtered reply. The reason (an enum name) and the rating categories that flagged it go to the
+    log, so a block is diagnosable; never the prompt or the answer."""
+    ratings = [
+        _name(r.category) for c in (response.candidates or [])[:1] for r in (c.safety_ratings or [])
+        if r.blocked or _name(r.probability) in ("MEDIUM", "HIGH")
+    ]
+    log.warning("provider blocked", extra={"block_reason": reason, "flagged_categories": ratings[:6]})
+    return ProviderError(f"blocked: {reason}", transient=False, blocked=True)
+
+
 def check_blocked(response: Any) -> None:
     """Raise ProviderError(blocked=True) when the prompt or the first candidate was stopped by a safety filter."""
     feedback = getattr(response, "prompt_feedback", None)
     if feedback is not None and feedback.block_reason:
-        raise ProviderError(f"blocked: {_name(feedback.block_reason)}", transient=False, blocked=True)
+        raise _blocked(_name(feedback.block_reason), response)
     candidates = response.candidates or []
     if candidates and _name(candidates[0].finish_reason) in BLOCKING_FINISH_REASONS:
-        raise ProviderError(f"blocked: {_name(candidates[0].finish_reason)}", transient=False, blocked=True)
+        raise _blocked(_name(candidates[0].finish_reason), response)
 
 
 def visible_text(response: Any) -> str:

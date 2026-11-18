@@ -10,6 +10,7 @@ only. Long-running video and music generation are out of scope for this module.
 
 import base64
 import io
+import logging
 import struct
 import time
 import wave
@@ -24,6 +25,7 @@ from app.llm.gateway import LLMError, ProviderError, budget_llm_error, failure_t
 from app.schemas.common import StepTrace, Usage
 from app.llm.registry import capability_model, estimate_cost, spec_for
 
+log = logging.getLogger(__name__)
 IMAGE_LOCATION = "global"  # Gemini image models are reachable at `global` on Vertex AI (docs/GOOGLE_ACCESS_AUDIT.md)
 ASPECT_RATIOS = frozenset({"1:1", "2:3", "3:2", "3:4", "4:3", "4:5", "5:4", "9:16", "16:9", "21:9"})
 NO_TEXT_DIRECTIVE = (
@@ -292,20 +294,29 @@ class MusicClient(_Adapter):
         async with httpx.AsyncClient(timeout=self._settings.llm_request_timeout_seconds) as http:
             response = await http.post(url, json=body, headers=headers)
         if response.status_code != 200:
+            try:  # the API's own words go to the log only (as map_exception does for the SDK), never to a user
+                error = response.json().get("error") or {}
+            except ValueError:
+                error = {}
+            log.warning("provider error", extra={
+                "provider_http": response.status_code, "provider_status": str(error.get("status") or "")[:40],
+                "provider_detail": " ".join(str(error.get("message") or "").split())[:400]})
             raise ProviderError(f"HTTP {response.status_code}", transient=response.status_code in (429, 500, 502, 503, 504),
                                 timeout=response.status_code in (408, 504))
         return response.json()
 
     @staticmethod
     async def _headers() -> dict[str, str]:
+        """A bearer token from the process-wide credentials (`google.load_credentials`), never from a fresh
+        `google.auth.default()` (that runs the gcloud CLI and took 48 to 200 s). Loaded and refreshed off the event loop."""
         import asyncio
 
-        import google.auth
-        import google.auth.transport.requests
+        from google.auth.transport import requests as transport
 
         def token() -> str:
-            credentials, _ = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
-            credentials.refresh(google.auth.transport.requests.Request())
+            credentials = google.load_credentials()
+            if not credentials.valid:
+                credentials.refresh(transport.Request())
             return credentials.token
 
         return {"Authorization": f"Bearer {await asyncio.to_thread(token)}", "Content-Type": "application/json"}

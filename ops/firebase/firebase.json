@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "site": "omnicult-app",
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      { "source": "**", "run": { "serviceId": "omnicult-web", "region": "asia-south1" } }
+    ]
+  }
+}

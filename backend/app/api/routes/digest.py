@@ -1,7 +1,8 @@
 """Live Pulse: Comment Pulse (feature 46), Weekly Digest (feature 48), and the Cloud Scheduler entry point of the digest.
 
-Comment Pulse runs on the labelled sample comments (no channel can be connected in this build); counts and trends are
-computed by code, sentiment and themes are a model interpretation. The Weekly Digest is generated from stored records,
+Comment Pulse runs on the labelled sample comments, or, in a live project, on the public comments of YouTube videos the user
+attached (fetched server side with the YouTube Data API); counts and trends are computed by code, sentiment and themes are a
+model interpretation. The Weekly Digest is generated from stored records,
 stored one per campaign and ISO week, and exported to Markdown or PDF. Nothing is sent outbound.
 """
 
@@ -9,13 +10,13 @@ from datetime import date
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, Response
+from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.api.deps import CurrentUser
 from app.core.scheduler_auth import require_scheduler
 from app.schemas import comment_pulse as cv
 from app.schemas import digest as dv
-from app.services import comment_pulse, digest
+from app.services import comment_pulse, comment_youtube, digest
 
 router = APIRouter(tags=["digest"])
 COMMENTS = "/campaigns/{campaign_id}/pulse/comments"
@@ -23,7 +24,7 @@ DIGESTS = "/campaigns/{campaign_id}/pulse/digests"
 
 Region = Annotated[str | None, Query(pattern=r"^[A-Z]{2}-[A-Z0-9]{1,3}$", description="ISO 3166-2 code, for example IN-TN.")]
 Version = Annotated[str | None, Query(max_length=120, description="A version label exactly as Live Pulse lists it.")]
-Language = Annotated[str | None, Query(pattern=r"^[a-z]{2}$", description="ISO 639-1 code, for example ta.")]
+Language = Annotated[str | None, Query(pattern=r"^[a-z]{2,3}$", description="ISO 639-1 code, for example ta, und for text whose language the code did not decide, or zxx for emoji and symbols only.")]
 DateFrom = Annotated[date | None, Query(description="First day, inclusive.")]
 DateTo = Annotated[date | None, Query(description="Last day, inclusive.")]
 
@@ -82,6 +83,22 @@ async def read_comments(campaign_id: UUID, user: CurrentUser, body: cv.CommentRe
     """Label sentiment and group themes: one model call in a live project, labelled fixtures in a demo project.
     The newest reading is reused unless `force` is set (owner or editor)."""
     return await comment_pulse.read(user.id, campaign_id, bool(body and body.force))
+
+
+@router.post(COMMENTS + "/youtube", response_model=cv.YoutubeFetchResult)
+async def fetch_youtube_comments(campaign_id: UUID, user: CurrentUser, body: cv.YoutubeFetchRequest) -> cv.YoutubeFetchResult:
+    """Fetch the public comments of one YouTube video for a campaign version and region (live project, owner or editor).
+    Server side, with the server's API key: at most the configured number of pages of 100 comments, and the same video not
+    again before the configured interval. Stores the comment text, day, likes and reply count, never the author. A video that
+    is gone, has comments off, or a spent YouTube quota each come back as their own error."""
+    return await comment_youtube.fetch(user.id, campaign_id, body)
+
+
+@router.delete(COMMENTS + "/youtube/{source_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def remove_youtube_source(campaign_id: UUID, source_id: UUID, user: CurrentUser) -> Response:
+    """Disconnect a video: its stored comments are removed. With no video left, Comment Pulse shows the sample again."""
+    await comment_youtube.remove(user.id, campaign_id, source_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 # --- Weekly Digest ---------------------------------------------------------------------------------------------

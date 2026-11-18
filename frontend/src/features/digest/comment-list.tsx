@@ -23,7 +23,7 @@ const PAGE = 20;
 
 /** The comments themselves. By default only those that match a watch term (the planted claim, a different festival), anchored to a version. */
 export function CommentList({ campaignId, filters, summary }: { campaignId: string; filters: CommentFilters; summary: Summary }) {
-  const [show, setShow] = useState<"flagged" | "all">("flagged");
+  const [show, setShow] = useState<"flagged" | "all">(summary.is_sample ? "flagged" : "all"); // real comments rarely match a watch term: show them all
   const [sentiment, setSentiment] = useState<ListOptions["sentiment"]>(null);
   const [theme, setTheme] = useState<string | null>(null);
   const [sort, setSort] = useState<ListOptions["sort"]>("likes");
