@@ -230,6 +230,33 @@ async def test_warm_credentials_runs_in_a_worker_thread_once_and_skips_the_api_k
     assert len(threads) == 1 and threads[0] != threading.get_ident()  # one lookup, never on the event loop's thread
 
 
+async def test_a_slow_credential_lookup_never_holds_up_shutdown_and_a_failure_reaches_the_caller(fresh_credentials, monkeypatch):
+    import threading
+
+    from google.auth.exceptions import DefaultCredentialsError
+
+    release = threading.Event()
+    monkeypatch.setattr(google, "_default_credentials", lambda: release.wait(30) or object())
+    waiting = asyncio.create_task(google.warm_credentials(settings()))
+    await asyncio.sleep(0.05)
+    waiting.cancel()  # shutdown: the caller stops waiting while the lookup (the gcloud CLI, minutes) is still running
+    with pytest.raises(asyncio.CancelledError):
+        await waiting
+    (lookup,) = [t for t in threading.enumerate() if t.name == "google-credentials"]
+    assert lookup.is_alive() and lookup.daemon  # a daemon: the loop's executor shutdown and interpreter exit never join it
+    release.set()
+    lookup.join(5)
+    assert not lookup.is_alive()
+
+    def missing():
+        raise DefaultCredentialsError("no credentials")
+
+    monkeypatch.setattr(google, "_credentials", None)
+    monkeypatch.setattr(google, "_default_credentials", missing)
+    with pytest.raises(DefaultCredentialsError):
+        await google.warm_credentials(settings())
+
+
 async def test_the_first_request_warms_credentials_before_it_builds_a_client(monkeypatch):
     order: list[str] = []
 

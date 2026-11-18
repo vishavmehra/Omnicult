@@ -114,11 +114,36 @@ def _well_known_credentials_path() -> str | None:
         return None
 
 
+async def _in_daemon_thread(work: Callable[[], Any]) -> Any:
+    """Run blocking `work` in a daemon thread and await its result. Unlike `asyncio.to_thread`, whose pool the loop joins when
+    it closes (up to 300 s), a slow credential lookup (the gcloud CLI can take minutes) never holds up shutdown: a cancelled
+    caller just stops waiting, and the thread ends with the process."""
+    loop = asyncio.get_running_loop()
+    done: asyncio.Future[Any] = loop.create_future()
+
+    def settle(result: Any, error: Exception | None) -> None:
+        if not done.done():  # the caller may have been cancelled meanwhile
+            done.set_exception(error) if error else done.set_result(result)
+
+    def run() -> None:
+        try:
+            outcome = (work(), None)
+        except Exception as error:
+            outcome = (None, error)
+        try:
+            loop.call_soon_threadsafe(settle, *outcome)
+        except RuntimeError:  # the loop already closed: nobody is waiting
+            pass
+
+    threading.Thread(target=run, name="google-credentials", daemon=True).start()
+    return await done
+
+
 async def warm_credentials(settings: Settings) -> None:
-    """Load the credentials in a worker thread, never on the event loop. A no-op once loaded and for the API-key backend.
+    """Load the credentials in a daemon thread, never on the event loop. A no-op once loaded and for the API-key backend.
     Called from the app lifespan and again before a client is first built, so a request never waits on the lookup."""
     if settings.google_genai_backend == "vertex" and _credentials is None:
-        await asyncio.to_thread(load_credentials)
+        await _in_daemon_thread(load_credentials)
 
 
 def build_client(settings: Settings, *, location: str | None = None, timeout_seconds: float | None = None) -> Any:
