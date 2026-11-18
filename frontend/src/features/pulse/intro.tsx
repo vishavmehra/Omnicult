@@ -1,0 +1,53 @@
+"use client";
+
+import { Database, LoaderCircle } from "lucide-react";
+
+import { EmptyState, ErrorState } from "@/components/states";
+import { Button } from "@/components/ui/button";
+
+import { useLoadSample } from "./api";
+import { SAMPLE_LABEL } from "./logic";
+
+/**
+ * Before the sample is loaded: what Live Pulse is, that this build runs it on a labelled sample, and the one action that
+ * loads it. Nothing is drawn and no number is shown until the user asks for the sample.
+ */
+export function Intro({ campaignId }: { campaignId: string }) {
+  const load = useLoadSample(campaignId);
+  return (
+    <div className="space-y-3">
+      <EmptyState
+        title="Live Pulse is waiting for data"
+        description={
+          <div className="space-y-2">
+            <p>
+              Live Pulse shows how each version of a campaign is doing in each region: delivery, cost, response, video and outcome, with every figure carrying its platform,
+              date range, last-updated time and whether it is still provisional.
+            </p>
+            <p>
+              No ad account can be connected in this build, so Live Pulse runs on a generated sample: three weeks of daily results for four regions and three versions, across
+              Google Ads and YouTube. Everything it draws is labelled <span className="font-medium text-ink">&ldquo;{SAMPLE_LABEL}&rdquo;</span>, and none of it describes a real audience
+              or a real campaign.
+            </p>
+          </div>
+        }
+        needs={[
+          { label: "The labelled sample dataset: load it below", met: false },
+          { label: "A connected ad platform account: roadmap, not available in this build", met: false },
+        ]}
+        action={
+          <div className="space-y-2">
+            <Button size="lg" onClick={() => load.mutate()} disabled={load.isPending}>
+              {load.isPending ? <LoaderCircle aria-hidden className="animate-spin motion-reduce:animate-none" /> : <Database aria-hidden />}
+              {load.isPending ? "Loading the sample…" : "Load the sample dataset"}
+            </Button>
+            <p className="max-w-[60ch] text-[12.5px] text-ink-muted">
+              Loading writes the generated rows to this campaign as sample data. Loading again replaces them with an identical copy. Only an owner or editor can load it.
+            </p>
+          </div>
+        }
+      />
+      {load.error && <ErrorState error={load.error} onRetry={() => load.mutate()} />}
+    </div>
+  );
+}
