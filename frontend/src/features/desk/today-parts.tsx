@@ -25,7 +25,7 @@ import { ModeBadge, Tag } from "@/components/evidence/badges";
 import { WORKSPACES, workspaceHref, type WorkspaceKey } from "@/components/shell/workspaces";
 import { ErrorState } from "@/components/states";
 import { RunStatusBadge } from "@/components/workflow/run-status";
-import { RUN_TYPE_META, sectionHref } from "@/features/project/workflow";
+import { RUN_TYPE_META, runHref } from "@/features/project/workflow";
 import { useCreatives, useScenes, type CreativeSummary } from "@/features/xray/api";
 import { clock } from "@/features/xray/parts";
 import type { ProjectSummary, Run } from "@/lib/api/types";
@@ -600,22 +600,30 @@ export function RunsTile({ runs, pending, className }: { runs: { run: Run; brand
         <ol className="ledger-rules clay-well overflow-hidden rounded-xl">
           {shown.map(({ run, brand }) => {
             const meta = RUN_TYPE_META[run.run_type];
+            const href = runHref(run);
+            const rowClass = "grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 px-3.5 py-2.5 transition-colors duration-200 hover:bg-surface-raised/60 focus-visible:-outline-offset-2";
+            const row = (
+              <>
+                <span className="truncate text-[13.5px] font-medium text-ink">{meta.label}</span>
+                <RunStatusBadge status={run.status} />
+                <span className="truncate text-[12px] text-ink-muted">
+                  {brand.name}
+                  {run.mode === "demo" && " · demo fixture"}
+                </span>
+                <span className="type-meta text-right" title={formatDateTime(run.created_at)}>
+                  {formatRelative(run.created_at)}
+                </span>
+              </>
+            );
             return (
               <li key={run.id}>
-                <Link
-                  href={sectionHref(run.project_id, meta.segment, run.campaign_id)}
-                  className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 px-3.5 py-2.5 transition-colors duration-200 hover:bg-surface-raised/60 focus-visible:-outline-offset-2"
-                >
-                  <span className="truncate text-[13.5px] font-medium text-ink">{meta.label}</span>
-                  <RunStatusBadge status={run.status} />
-                  <span className="truncate text-[12px] text-ink-muted">
-                    {brand.name}
-                    {run.mode === "demo" && " · demo fixture"}
-                  </span>
-                  <span className="type-meta text-right" title={formatDateTime(run.created_at)}>
-                    {formatRelative(run.created_at)}
-                  </span>
-                </Link>
+                {href ? (
+                  <Link href={href} className={rowClass}>
+                    {row}
+                  </Link>
+                ) : (
+                  <div className={rowClass}>{row}</div>
+                )}
               </li>
             );
           })}

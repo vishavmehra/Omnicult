@@ -14,7 +14,7 @@ import { DELIVERY_TABS, RegionPlanTab, type DeliveryTab } from "@/features/launc
 import { ReviewLinksTab } from "@/features/launch/review-links";
 
 import { useCampaign } from "./campaign-context";
-import { CampaignFacts, EarlierTools, FeatureScope, WorkspaceHeader } from "./parts";
+import { CampaignFacts, FeatureScope, WorkspaceHeader } from "./parts";
 
 function RoleNote() {
   const caps = useCapabilities();
@@ -97,12 +97,6 @@ export function LaunchWorkspace() {
           <p className="text-ink-secondary">Go is a recommendation to seek human approval. Quick Read counts come from a simulated panel.</p>
         </div>
         <RoleNote />
-        <EarlierTools
-          tools={[
-            { segment: "loop", label: "Loop", note: "Evaluate original against candidates with a recommendation" },
-            { segment: "voice", label: "Voice", note: "Adaptations with change lists and revisions" },
-          ]}
-        />
         <FeatureScope workspace="launch" />
       </ContextPanel>
     </InputsProvider>

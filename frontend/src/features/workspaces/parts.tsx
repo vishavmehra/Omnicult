@@ -1,14 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowUpRight } from "lucide-react";
-import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { RoleMark } from "@/components/creative/role-mark";
 import { WorkspaceFeatureChips } from "@/components/shell/feature-links";
 import { WORKSPACES, type WorkspaceKey } from "@/components/shell/workspaces";
-import { sectionHref } from "@/features/project/workflow";
 import { api } from "@/lib/api/client";
 import { unwrap } from "@/lib/api/errors";
 import type { Campaign, CampaignContent, ContentVersion, RunType } from "@/lib/api/types";
@@ -119,35 +116,6 @@ export function useCampaignRuns(types?: RunType[], limit = 30) {
     select: (runs) => (types ? runs.filter((r) => types.includes(r.run_type)) : runs),
     refetchInterval: (q) => (q.state.data?.some((r) => r.status === "queued" || r.status === "running") ? 5000 : false),
   });
-}
-
-/** Links into the earlier Omnicult research pages for this campaign: real tools, kept working during the migration. */
-export function EarlierTools({ tools }: { tools: { segment: string; label: string; note: string }[] }) {
-  const { campaign } = useCampaign();
-  return (
-    <section aria-labelledby="earlier-tools" className="space-y-2">
-      <h3 id="earlier-tools" className="text-[13px] font-semibold text-ink">
-        Earlier research tools
-      </h3>
-      <p className="text-[12.5px] text-ink-muted">These pages still work on this campaign while their Omnicult versions are built.</p>
-      <ul className="ledger-rules rounded-card border border-border">
-        {tools.map((t) => (
-          <li key={t.segment}>
-            <Link
-              href={sectionHref(campaign.project_id, t.segment, campaign.id)}
-              className="group flex items-start gap-2 px-3 py-2.5 hover:bg-surface-muted focus-visible:-outline-offset-2"
-            >
-              <span className="min-w-0 flex-1">
-                <span className="block text-[13.5px] font-medium text-ink">{t.label}</span>
-                <span className="block text-[12px] text-ink-muted">{t.note}</span>
-              </span>
-              <ArrowUpRight aria-hidden className="mt-0.5 size-4 shrink-0 text-ink-muted group-hover:text-rose" />
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
 }
 
 /** The workspace's built features (only what exists is shown). */

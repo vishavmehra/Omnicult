@@ -13,14 +13,6 @@ const auth: Middleware = {
   },
 };
 
-async function mockTransport(request: Request) {
-  const { mockFetch } = await import("./mock");
-  return mockFetch(request);
-}
-
 /** Typed client for the Omnicult API (paths and bodies come from contracts/openapi.json). */
-export const api = createClient<paths>({
-  baseUrl: env.apiBaseUrl,
-  ...(env.apiMock ? { fetch: mockTransport } : {}),
-});
+export const api = createClient<paths>({ baseUrl: env.apiBaseUrl });
 api.use(auth);

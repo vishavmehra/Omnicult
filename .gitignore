@@ -36,13 +36,7 @@ test-results/
 Thumbs.db
 .idea/
 
-# Live Qloo responses (hackathon terms: never store response data in a public repository)
-qloo_live_smoke_report*.md
 
-# Demo recording sources and intermediate build files (the final video is committed)
-demo/raw/
-demo/build/
-demo/build-old-*/
 
 # Publish only the root README. Internal docs, notes, plans, screenshots and scratch files stay local
 # (they live in ../omnicult-docs, outside this repository).

@@ -18,7 +18,7 @@ import type { ProofView } from "@/features/proof-vault/types";
 import { useProofParams, VIEWS } from "@/features/proof-vault/use-proof-params";
 
 import { useCampaign } from "./campaign-context";
-import { CampaignFacts, EarlierTools, FeatureScope, WorkspaceHeader } from "./parts";
+import { CampaignFacts, FeatureScope, WorkspaceHeader } from "./parts";
 
 /**
  * Proof Vault: the record behind a decision. The Proof Report as a document with its exports, every run with its cost estimate,
@@ -84,7 +84,6 @@ export function ProofWorkspace() {
       {view !== "map" && (
         <ContextPanel title="Proof Vault">
           {view === "report" && report.data && <ReportToc report={report.data} />}
-          <EarlierTools tools={[{ segment: "proof", label: "Earlier reports", note: "Reports made before Proof Report v2, with their exports" }]} />
           <FeatureScope workspace="proof" />
         </ContextPanel>
       )}

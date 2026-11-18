@@ -1,29 +1,29 @@
 import type { RunType } from "@/lib/api/types";
 
-/** Run type → display label and the section (route segment) that owns it. */
-export const RUN_TYPE_META: Record<RunType, { label: string; segment: string }> = {
-  market_discovery: { label: "Market discovery", segment: "atlas" },
-  campaign_rehearsal: { label: "Campaign rehearsal", segment: "audience" },
-  campaign_adaptation: { label: "Campaign adaptation", segment: "voice" },
-  campaign_evaluation: { label: "Campaign evaluation", segment: "loop" },
-  cultural_profile: { label: "Cultural profile", segment: "cultural-dna" },
-  market_comparison: { label: "Market comparison", segment: "market-expansion" },
-  campaign_arena: { label: "Campaign arena", segment: "arena" },
-  risk_scan: { label: "Risk scan", segment: "risk-radar" },
-  // Contract v3: both run under a study; they link to Audience until v3 adds dedicated pages.
-  population_study: { label: "Population study", segment: "audience" },
-  social_simulation: { label: "Social simulation", segment: "audience" },
-  // Creative Studio (Phase 2): links to Voice until the Studio workspace page exists.
-  transcreate: { label: "Transcreation", segment: "voice" },
-  creative_xray: { label: "Creative X-Ray", segment: "voice" },
-  voice_direct: { label: "Voice Director", segment: "voice" },
-  // Remake (Phase 3): lives under the Creative Studio route studio/remake; the legacy section map has no such segment.
-  remake_visual: { label: "Remake: Visuals", segment: "voice" },
-  remake_sound: { label: "Remake: Sound", segment: "voice" },
+/**
+ * Run type → display label, and the Omnicult page that shows its result (null when the type has no page of its own).
+ * Run types from earlier versions of the product stay listed so that stored runs still read well in history.
+ */
+export const RUN_TYPE_META: Record<RunType, { label: string; page: string | null }> = {
+  market_discovery: { label: "Market discovery", page: null },
+  campaign_rehearsal: { label: "Campaign rehearsal", page: null },
+  campaign_adaptation: { label: "Campaign adaptation", page: null },
+  campaign_evaluation: { label: "Campaign evaluation", page: null },
+  cultural_profile: { label: "Cultural profile", page: null },
+  market_comparison: { label: "Market comparison", page: null },
+  campaign_arena: { label: "Campaign arena", page: null },
+  risk_scan: { label: "Risk scan", page: null },
+  population_study: { label: "Population study", page: null },
+  social_simulation: { label: "Social simulation", page: null },
+  transcreate: { label: "Transcreation", page: "studio" },
+  creative_xray: { label: "Creative X-Ray", page: "studio/xray" },
+  voice_direct: { label: "Voice Director", page: "studio" },
+  remake_visual: { label: "Remake: Visuals", page: "studio/remake" },
+  remake_sound: { label: "Remake: Sound", page: "studio/remake" },
 };
 
-/** Section href that keeps the active campaign in the URL. `segment` null is the Overview. */
-export function sectionHref(projectId: string, segment: string | null, campaignId?: string | null) {
-  const path = segment ? `/projects/${projectId}/${segment}` : `/projects/${projectId}`;
-  return campaignId ? `${path}?campaign=${encodeURIComponent(campaignId)}` : path;
+/** The workspace page that shows a run's result, or null when the run belongs to no current page or to no campaign. */
+export function runHref(run: { run_type: RunType; campaign_id?: string | null }): string | null {
+  const page = RUN_TYPE_META[run.run_type].page;
+  return page && run.campaign_id ? `/app/c/${run.campaign_id}/${page}` : null;
 }

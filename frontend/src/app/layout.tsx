@@ -15,12 +15,10 @@ import {
   Noto_Sans_Telugu,
 } from "next/font/google";
 
-import { MockBanner } from "@/components/app-shell/mock-banner";
 import { AmbientCanvas } from "@/components/ambient/ambient-canvas";
 import { ZoneMarker } from "@/components/field/zone-marker";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { env } from "@/lib/env";
 
 import { Providers } from "./providers";
 import "./globals.css";
@@ -63,7 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // suppressHydrationWarning: next-themes sets the theme class on <html> before hydration.
     <html lang="en" suppressHydrationWarning className={`${fontVars} dark h-full antialiased`}>
-      <body className="min-h-full" data-mock={env.apiMock ? "" : undefined}>
+      <body className="min-h-full">
         <template id="omnicult-direction" dangerouslySetInnerHTML={{ __html: DIRECTION_CONTRACT }} />
         <Providers>
           <Suspense fallback={null}>
@@ -73,7 +71,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <TooltipProvider>{children}</TooltipProvider>
           <Toaster />
         </Providers>
-        <MockBanner />
       </body>
     </html>
   );

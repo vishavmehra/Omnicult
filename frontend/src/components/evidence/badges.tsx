@@ -134,11 +134,6 @@ export function SyntheticLabel({ compact, children, className }: { compact?: boo
   );
 }
 
-/** Persistent disclosure for AI-generated reactions (legacy Omnicult pages). */
-export function SyntheticBadge() {
-  return <SyntheticLabel>AI-generated reaction, not a real participant</SyntheticLabel>;
-}
-
 /** Project/run mode. Demo data must never be confused with live results, so it stays as quiet muted text. */
 export function ModeBadge({ mode }: { mode: DataMode }) {
   if (mode === "demo") {

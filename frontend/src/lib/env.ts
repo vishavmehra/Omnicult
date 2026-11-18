@@ -10,6 +10,4 @@ export const env = {
     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? "",
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ?? "",
   },
-  // The mock transport is a development aid; it can never be enabled in a production build.
-  apiMock: process.env.NEXT_PUBLIC_API_MOCK === "1" && process.env.NODE_ENV !== "production",
 };

@@ -311,7 +311,7 @@ export function WorkspaceShell({
           <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-surface focus:px-3 focus:py-2 focus:text-sm">
             Skip to content
           </a>
-          <aside className="arrive-spine fixed top-3 bottom-[calc(0.75rem+var(--mock-offset,0px))] left-3 z-30 hidden w-[232px] lg:block">
+          <aside className="arrive-spine fixed top-3 bottom-3 left-3 z-30 hidden w-[232px] lg:block">
             <div className="clay-panel h-full border border-border/60">
               <Spine campaignId={campaignId} active={active} />
             </div>

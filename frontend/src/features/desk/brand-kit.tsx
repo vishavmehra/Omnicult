@@ -292,12 +292,7 @@ export function BrandKitView({ kit, campaignId }: { kit: BrandKit; campaignId: s
             <dd><Terms terms={kit.prohibited_terms} empty="None listed" /></dd>
           </div>
         </dl>
-        <p className="text-[12.5px] text-ink-muted">
-          Term lists are edited on the brand record.{" "}
-          <Link href={`/projects/${kit.project_id}/brand?campaign=${campaignId}`} className="font-medium text-rose hover:underline">
-            Edit the brand record
-          </Link>
-        </p>
+        <p className="text-[12.5px] text-ink-muted">Term lists belong to the brand record; the Brand Glossary holds the per-term rules.</p>
       </Block>
 
       {(d.claims_policy.allowed.length > 0 || d.claims_policy.forbidden.length > 0) && (
