@@ -248,14 +248,7 @@ export function StageCarousel() {
               </p>
             )}
             <p className="mt-auto pt-5 text-[12px] leading-relaxed text-ink-muted">
-              {c.roadmap.length ? (
-                <>
-                  <span className="font-medium text-ink-secondary">Roadmap: </span>
-                  {c.roadmap.join(", ")}
-                </>
-              ) : (
-                " "
-              )}
+              {" "}
             </p>
           </article>
         ))}

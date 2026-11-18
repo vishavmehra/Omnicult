@@ -56,7 +56,7 @@ function NotLoaded({ campaignId }: { campaignId: string }) {
         description={
           <div className="space-y-2">
             <p>
-              Comment Pulse reads public comments under a campaign&apos;s videos. No channel can be connected in this build, so it runs on a set of sample comments written in Marathi, Tamil, Malayalam, Bengali and English, some mixing the
+              Comment Pulse reads comments under a campaign&apos;s videos. It runs on a set of sample comments written in Marathi, Tamil, Malayalam, Bengali and English, some mixing the
               regional language with English.
             </p>
             <p>Counts, languages and trends are calculated from the comments. Sentiment and themes need a model to read them, and are marked as its interpretation.</p>
@@ -64,7 +64,6 @@ function NotLoaded({ campaignId }: { campaignId: string }) {
         }
         needs={[
           { label: "The sample comments: load them below", met: false },
-          { label: "A connected channel: roadmap, not available in this build", met: false },
         ]}
         action={
           <div className="space-y-2">

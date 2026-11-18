@@ -41,7 +41,7 @@ from app.services.claims import (
 from app.services.identity import require_workspace_role
 
 EXPIRED_SHARE = 0.5  # a source type is "expired" when at least this share of its claims is past expiry
-NOT_LOGGED = "Retrieval attempts and errors for this source are not logged in this build; only stored retrievals are visible."
+NOT_LOGGED = "Retrieval attempts and errors for this source are not logged for this source; only stored retrievals are visible."
 LIMITATIONS = [
     "Data Health reads stored copies; it never calls a source, so it cannot confirm that a source is reachable now.",
     "Freshness is judged per claim: past its stated expiry is expired; an observed-source date of two years or more is aging.",

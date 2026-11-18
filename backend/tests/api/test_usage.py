@@ -136,7 +136,7 @@ async def test_an_owner_sees_the_workspace_with_honest_costs(client: httpx.Async
     r = await report(client, filled["ws"], days=7)
     assert (r["scope"], r["mode"], r["calls"], r["failed_calls"], r["fixture_calls"]) == ("workspace", "live", 6, 1, 0)
     assert r["estimated_cost_usd"] == 0.522 and r["calls_without_cost"] == 2 and r["actual_cost_usd"] is None
-    assert any("Vertex trial credit" in n for n in r["notes"]) and any("estimates" in n for n in r["notes"])
+    assert any("estimates" in n for n in r["notes"]) and not any("this build" in n for n in r["notes"])
     assert [(x["key"], x["calls"]) for x in r["by_capability"]] == [("chat", 5), ("embeddings", 1)]
     models = {x["key"]: x for x in r["by_model"]}
     assert models["google / mystery-model"]["price_known"] is False and models["google / gemini-3.8-flash"]["price_known"] is True

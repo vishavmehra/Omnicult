@@ -467,7 +467,7 @@ async def live_performance(ctx: SectionContext) -> Provided | Missing:
     if not found:
         return Missing(
             "No performance data is loaded for this campaign" + (" in the target regions" if ctx.regions else "")
-            + ". Load the labelled sample dataset in Live Pulse; connecting an ad account is not available in this build.")
+            + ". Load the sample dataset in Live Pulse.")
     groups: dict[tuple[str, str, str], list[SeriesRow]] = {}
     versions: dict[str, str] = {}
     for kind, dataset, *row in found:  # one group per source, region and creative version: versions are never blended

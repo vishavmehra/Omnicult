@@ -29,7 +29,7 @@ function DisclosureLabel({ children }: { children: string }) {
 /** The one quiet source line: what the numbers are, and what they are not. */
 function sourceLine(report: UsageReport | undefined, mode: UsageMode) {
   if (mode === "demo") return "Demo project: these calls are saved fixtures. No model ran, so nothing was billed.";
-  return `Estimates from the gateway price table${report ? ` ${report.price_table_version}` : ""}, not invoices. The Vertex trial credit balance is not read: there is no billing API.`;
+  return `Estimates from the gateway price table${report ? ` ${report.price_table_version}` : ""}, not invoices.`;
 }
 
 function Summary({ report }: { report: UsageReport }) {

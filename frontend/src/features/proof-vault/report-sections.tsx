@@ -674,6 +674,8 @@ function Body({ section }: { section: ProofSection }) {
 /** One section of the report: its title, what kinds of content it holds, then its typed content or an honest absence. */
 export function ReportSection({ section, wired }: { section: ProofSection; wired: boolean | undefined }) {
   const missing = section.status === "missing" || !section.content;
+  // A section this build has no provider for is not shown at all (only what works is shown).
+  if (missing && (wired === false || /not available in this build/i.test(section.missing_reason ?? ""))) return null;
   return (
     <section id={`sec-${section.id}`} aria-labelledby={`h-${section.id}`} className="scroll-mt-20 space-y-3 py-6 first:pt-0 last:pb-0">
       <header className="space-y-1.5">

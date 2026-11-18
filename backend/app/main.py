@@ -48,6 +48,7 @@ from app.api.routes import (
     studies,
     studio,
     teams,
+    studio_t3,
     trends,
     workspaces,
 )
@@ -102,6 +103,7 @@ ROUTERS = (
     country_packs,
     direct,
     remake,
+    studio_t3,
 )
 
 API_PREFIX = "/api/v1"

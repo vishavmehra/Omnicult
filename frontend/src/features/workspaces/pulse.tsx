@@ -9,7 +9,7 @@ import { Dashboard } from "@/features/pulse/dashboard";
 import { useDatasetStatus } from "@/features/pulse/api";
 import { FreshnessPanel } from "@/features/pulse/freshness-panel";
 import { Intro } from "@/features/pulse/intro";
-import { MetricDefinitions, SourcesAndCalibration } from "@/features/pulse/sources";
+import { MetricDefinitions } from "@/features/pulse/sources";
 import { AlertsTab } from "@/features/pulse-t3/alerts-tab";
 import { FatigueTab } from "@/features/pulse-t3/fatigue-tab";
 import { PredictedActualTab } from "@/features/pulse-t3/predicted-actual";
@@ -54,7 +54,6 @@ export function PulseWorkspace() {
           ) : (
             <Intro campaignId={campaign.id} />
           )}
-          <SourcesAndCalibration campaignId={campaign.id} />
           <MetricDefinitions campaignId={campaign.id} open={!loaded} />
         </div>
       )}

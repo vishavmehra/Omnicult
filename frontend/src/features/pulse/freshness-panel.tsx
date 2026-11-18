@@ -55,7 +55,6 @@ export function FreshnessPanel({ campaignId, status }: { campaignId: string; sta
               <dt className="text-[13px] font-semibold text-ink">{s.label}</dt>
               <dd className="text-[12.5px] text-ink-secondary">{s.meaning}</dd>
               <dd className="text-[12.5px] text-ink-body">
-                <span className="font-medium">In this build: </span>
                 {s.here}
               </dd>
             </div>

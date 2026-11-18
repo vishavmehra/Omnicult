@@ -47,7 +47,6 @@ WORKSPACE_VIEW_ROLES = frozenset({"owner", "admin"})
 NO_KEY = "none"
 USAGE_NOTES = [
     "Costs are estimates calculated from the gateway's price table, not provider invoices.",
-    "Actual cost is not reported: provider billing is not read by this build, and neither is the Vertex trial credit balance (there is no billing API).",
     "Only calls the model gateway recorded for this workspace appear here. Calls made before recording began are not counted.",
     "A call with no recorded cost (a failed call, or one where the provider reported no usage) is counted but never priced as 0.",
 ]

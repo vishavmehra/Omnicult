@@ -149,6 +149,10 @@ async def _build(user_id: UUID, project_id: UUID) -> None:
         await claim_service.sync_conflicts(s, workspace_id, mode="demo")  # the genuine conflicts, recorded for this workspace
     async with _timed("version tree"):
         tree = await _version_tree(user_id, campaign_id, original, scenes)
+    async with _timed("claim guard"):
+        from app.services import studio_t3_demo  # noqa: PLC0415  (avoid import cycles)
+
+        await studio_t3_demo.seed_studio_t3_demo(user_id, campaign_id, tree["root"])
     async with _timed("audience and readiness"):
         await _audience_and_readiness(user_id, workspace_id, campaign_id, original, scenes, tree)
     async with _timed("pulse"):

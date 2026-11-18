@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import { BookMarked, Bot, GitCompareArrows, History, Languages, Layers, ScanSearch, User, Wand2 } from "lucide-react";
+import { BookMarked, Bot, Crop, GitCompareArrows, History, Languages, Layers, ScanSearch, ShieldAlert, SpellCheck, User, Wand2 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -21,14 +21,17 @@ import { MutationError, StudioProvider, useStudio, type StudioContextValue } fro
 import { TranscreatePanel } from "@/features/studio/transcreate";
 import type { Operation, RegionLanguage, VersionNode, VersionSummary } from "@/features/studio/types";
 import { VersionTree } from "@/features/studio/version-tree";
+import { ClaimGuardPanel } from "@/features/studio-t3/claim-guard";
+import { FormatFitPanel } from "@/features/studio-t3/format-fit";
+import { ScriptCheckPanel } from "@/features/studio-t3/script-check";
 import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { useCampaign } from "./campaign-context";
 import { WorkspaceHeader } from "./parts";
 
-type TabKey = "elements" | "transcreate" | "direct" | "compare" | "glossary";
-const TABS: readonly TabKey[] = ["elements", "transcreate", "direct", "compare", "glossary"];
+type TabKey = "elements" | "transcreate" | "direct" | "compare" | "glossary" | "format" | "claims" | "script";
+const TABS: readonly TabKey[] = ["elements", "transcreate", "direct", "compare", "glossary", "format", "claims", "script"];
 const asTab = (value: string | null): TabKey => (TABS as readonly string[]).includes(value ?? "") ? (value as TabKey) : "elements";
 
 /** One link into Creative X-Ray, the other half of the Studio (another stream builds that page). */
@@ -275,6 +278,18 @@ export function StudioWorkspace() {
               <BookMarked aria-hidden />
               Brand Glossary
             </TabsTrigger>
+            <TabsTrigger value="format" className="h-9 flex-none px-3">
+              <Crop aria-hidden />
+              Format Fit
+            </TabsTrigger>
+            <TabsTrigger value="claims" className="h-9 flex-none px-3">
+              <ShieldAlert aria-hidden />
+              Claim Guard
+            </TabsTrigger>
+            <TabsTrigger value="script" className="h-9 flex-none px-3">
+              <SpellCheck aria-hidden />
+              Script Check
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -366,6 +381,16 @@ export function StudioWorkspace() {
               </TabsContent>
               <TabsContent value="compare">
                 <DiffView key={current.id} versions={versions} numbers={numbers} selectedId={current.id} />
+              </TabsContent>
+              {/* Tier 3: these read the selected version; each fetches only while its tab is open. */}
+              <TabsContent value="format" className="space-y-4">
+                {node.data ? <FormatFitPanel campaignId={campaignId} version={node.data} /> : node.isError ? <ErrorState error={node.error} onRetry={() => void node.refetch()} /> : <LoadingState label="Loading the version…" />}
+              </TabsContent>
+              <TabsContent value="claims" className="space-y-4">
+                {node.data ? <ClaimGuardPanel key={current.id} campaignId={campaignId} version={node.data} demo={project.mode === "demo"} /> : node.isError ? <ErrorState error={node.error} onRetry={() => void node.refetch()} /> : <LoadingState label="Loading the version…" />}
+              </TabsContent>
+              <TabsContent value="script" className="space-y-4">
+                <ScriptCheckPanel key={current.id} campaignId={campaignId} versionId={current.id} />
               </TabsContent>
             </>
           )}

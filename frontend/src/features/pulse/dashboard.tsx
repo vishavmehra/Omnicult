@@ -6,7 +6,6 @@ import { ErrorState, LoadingState } from "@/components/states";
 import type { components } from "@/lib/api/schema";
 import { cn } from "@/lib/utils";
 
-import { AlertsSection } from "./alerts-section";
 import { DEFAULT_FILTERS, useSummary, type Filters } from "./api";
 import { CompareSection } from "./compare-section";
 import { FilterRow } from "./filters";
@@ -17,7 +16,7 @@ import { PULSE_THEME } from "./ui";
 
 type Status = components["schemas"]["DatasetStatus"];
 
-/** The loaded dashboard: one filter row, then the sections it scopes, then the alert preview with its own thresholds. */
+/** The loaded dashboard: one filter row, then the sections it scopes. */
 export function Dashboard({ campaignId, status }: { campaignId: string; status: Status }) {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const summary = useSummary(campaignId, filters, true);
@@ -36,7 +35,6 @@ export function Dashboard({ campaignId, status }: { campaignId: string; status: 
       )}
       <TrendSection campaignId={campaignId} filters={filters} names={names} />
       <CompareSection campaignId={campaignId} status={status} filters={filters} names={names} />
-      <AlertsSection campaignId={campaignId} names={names} />
       <p className="type-meta">Source: sample dataset {status.dataset_version}</p>
     </div>
   );

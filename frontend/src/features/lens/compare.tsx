@@ -91,7 +91,7 @@ function Table({ data, onOpen }: { data: LensCompare; onOpen(id: string): void }
           {data.regions.map((r) => (
             <div key={r.region.code} role="cell" className="type-ledger space-y-0.5 border-l border-border px-3 py-2.5 text-[12.5px] text-ink-body">
               {r.claims === 0 ? (
-                <p className="text-ink-muted">No claims{r.built ? " stored" : ": not built"}</p>
+                <p className="text-ink-muted">No claims{r.built ? " stored" : " yet"}</p>
               ) : (
                 <>
                   <p>

@@ -550,6 +550,68 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/claim-guard/checks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Claim Guard Checks
+         * @description Stored checks, newest first, with how many findings still wait for a person's review.
+         */
+        get: operations["claim_guard_checks"];
+        put?: never;
+        /**
+         * Claim Guard Run
+         * @description Find the claims in a version's copy (wording rules first; with `include_model_pass`, a model second pass whose quotes are
+         *     verified in code), grade each against the Brand Kit claims policy, the campaign's evidence and the ASCI index, and store the check.
+         */
+        post: operations["claim_guard_run"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/claim-guard/checks/{check_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Claim Guard Check */
+        get: operations["claim_guard_check"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/claim-guard/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Claim Guard Review
+         * @description Record a person's decision about one finding of a version. Replaces an earlier decision about the same finding.
+         */
+        put: operations["claim_guard_review"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/creative-xrays": {
         parameters: {
             query?: never;
@@ -770,6 +832,73 @@ export interface paths {
          * @description Ask the group something while it runs. The moderator relays it at the next turn boundary. 409 once the session has finished.
          */
         post: operations["interject_in_focus_group"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/format-fit/formats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Format Fit Formats
+         * @description The channel formats Format Fit plans for (1:1, 4:5, 9:16, 16:9) with their working safe zones, and the formats the
+         *     Campaign Brief's channels run in.
+         */
+        get: operations["format_fit_formats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/format-fit/outputs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Format Fit Outputs
+         * @description Pictures made by Format Fit, newest first.
+         */
+        get: operations["format_fit_outputs"];
+        put?: never;
+        /**
+         * Format Fit Apply
+         * @description Make the picture a plan describes and store it as a new asset. The plan is recomputed on the server. 409 when it would
+         *     cut a locked element, or has conflicts that were not acknowledged. The source asset is never changed.
+         */
+        post: operations["format_fit_apply"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/format-fit/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Format Fit Plans
+         * @description Plan a creative of this campaign for each format: crop window or padding, what is cut, safe-zone and text-size
+         *     problems, locked-region conflicts. For a video: cut-down suggestions from its scene timings. Deterministic, stores nothing.
+         */
+        post: operations["format_fit_plans"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2408,6 +2537,27 @@ export interface paths {
          * @description A new version that copies an earlier one. Refused (409) if it would change a locked element.
          */
         post: operations["restore_version"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/versions/{version_id}/script-check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Script Check Report
+         * @description Every text element of a version, checked in code for script, mixed scripts, numerals, joiners, Brand Glossary spellings
+         *     and protected or prohibited terms, with a character span for each issue. Nothing is stored and no model is called.
+         */
+        get: operations["script_check_report"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -7774,6 +7924,334 @@ export interface components {
             /** Notes */
             notes: string[];
         };
+        /** ClaimGuardBasis */
+        ClaimGuardBasis: {
+            /**
+             * Sourced
+             * @description Whether a source, sample size or date is shown near the named basis.
+             */
+            sourced: boolean;
+            /** Stated */
+            stated: boolean;
+            /** Wording */
+            wording: string | null;
+        };
+        /** ClaimGuardCheck */
+        ClaimGuardCheck: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            counts: components["schemas"]["ClaimGuardCounts"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By */
+            created_by: string | null;
+            /** Findings */
+            findings: components["schemas"]["ClaimGuardFinding"][];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Language */
+            language: string | null;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "rules" | "rules_model";
+            model: components["schemas"]["ClaimGuardModelRun"] | null;
+            policy: components["schemas"]["ClaimGuardPolicyView"];
+            /** Region Code */
+            region_code: string | null;
+            /** Rules Version */
+            rules_version: string;
+            /** Texts Checked */
+            texts_checked: number;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** ClaimGuardCheckPage */
+        ClaimGuardCheckPage: {
+            /** Items */
+            items: components["schemas"]["ClaimGuardCheckSummary"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** ClaimGuardCheckSummary */
+        ClaimGuardCheckSummary: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            counts: components["schemas"]["ClaimGuardCounts"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By */
+            created_by: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Language */
+            language: string | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "rules" | "rules_model";
+            /** Region Code */
+            region_code: string | null;
+            /** Rules Version */
+            rules_version: string;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** ClaimGuardCounts */
+        ClaimGuardCounts: {
+            /** Blocks Go */
+            blocks_go: number;
+            /** By Kind */
+            by_kind: {
+                [key: string]: number;
+            };
+            /** High */
+            high: number;
+            /** Low */
+            low: number;
+            /** Medium */
+            medium: number;
+            /**
+             * Review Complete
+             * @description True when every finding has a decision. Not clearance: it only means a person looked at each one.
+             */
+            review_complete: boolean;
+            /** Reviewed */
+            reviewed: number;
+            /** Total */
+            total: number;
+            /** Unreviewed */
+            unreviewed: number;
+        };
+        /** ClaimGuardEvidence */
+        ClaimGuardEvidence: {
+            /** Items */
+            items: components["schemas"]["ClaimGuardEvidenceItem"][];
+            /**
+             * Status
+             * @description found: related evidence is on file (a person decides whether it covers this wording); mismatch: a price differs from the brief; none.
+             * @enum {string}
+             */
+            status: "found" | "mismatch" | "none";
+        };
+        /** ClaimGuardEvidenceItem */
+        ClaimGuardEvidenceItem: {
+            /** Claim Id */
+            claim_id: string | null;
+            /** Confidence */
+            confidence: string | null;
+            /**
+             * Kind
+             * @description The evidence claim's kind (observed, calculated, ...), when it is a region claim.
+             */
+            kind: string | null;
+            /** Note */
+            note: string;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "campaign_brief" | "region_claim";
+            /** Statement */
+            statement: string;
+        };
+        /** ClaimGuardFinding */
+        ClaimGuardFinding: {
+            /** Ad Codes */
+            ad_codes: components["schemas"]["AdCodeRef"][];
+            anchor: components["schemas"]["Anchor-Output"];
+            basis: components["schemas"]["ClaimGuardBasis"];
+            /** Blocks Go */
+            blocks_go: boolean;
+            /**
+             * Confidence
+             * @description How sure the match is that this wording is a claim of this kind. A rule certainty, not a probability; a model reading is Low.
+             * @enum {string}
+             */
+            confidence: "low" | "moderate" | "high";
+            /** Element Id */
+            element_id: string;
+            /**
+             * Element Kind
+             * @enum {string}
+             */
+            element_kind: "headline" | "body" | "cta" | "tagline" | "logo" | "product" | "packshot" | "image_region" | "scene" | "voiceover" | "music" | "caption";
+            /** End */
+            end: number;
+            evidence: components["schemas"]["ClaimGuardEvidence"];
+            /** Explanation */
+            explanation: string;
+            /**
+             * Key
+             * @description Stable identity of the finding in its version; reviews are kept against it.
+             */
+            key: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "superiority" | "comparative" | "price" | "health" | "guarantee" | "financial";
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Phrase
+             * @description The clause the wording sits in.
+             */
+            phrase: string;
+            policy: components["schemas"]["ClaimGuardPolicy"];
+            /**
+             * Quote
+             * @description The matched wording, exactly as it is in the element.
+             */
+            quote: string;
+            /** @description The person's decision about this finding, when there is one. Every finding needs one before approval. */
+            review: components["schemas"]["ClaimGuardReview"] | null;
+            /** Rule Id */
+            rule_id: string | null;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "low" | "medium" | "high";
+            /** Severity Rules */
+            severity_rules: components["schemas"]["AppliedRuleView"][];
+            /**
+             * Source
+             * @description rule: a wording pattern matched in code. model: a second-pass model reading whose quote code verified (a model interpretation).
+             * @enum {string}
+             */
+            source: "rule" | "model";
+            /** Start */
+            start: number;
+        };
+        /** ClaimGuardModelRun */
+        ClaimGuardModelRun: {
+            /**
+             * Dropped
+             * @description Proposals removed in code: a quote not found in its element, an unknown element or kind, or a repeat of a rule finding.
+             */
+            dropped: number;
+            /** Error */
+            error: string | null;
+            /** Estimated Cost Usd */
+            estimated_cost_usd: number | null;
+            /** Kept */
+            kept: number;
+            /** Model Id */
+            model_id: string | null;
+            /** Prompt Version */
+            prompt_version: string;
+            /** Proposed */
+            proposed: number;
+            /** Provider */
+            provider: string | null;
+        };
+        /** ClaimGuardPolicy */
+        ClaimGuardPolicy: {
+            /**
+             * Rule
+             * @description The policy line or term that applies, when one does.
+             */
+            rule: string | null;
+            /** Source */
+            source: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "forbidden" | "not_listed" | "no_policy";
+        };
+        /** ClaimGuardPolicyView */
+        ClaimGuardPolicyView: {
+            /** Allowed */
+            allowed: string[];
+            /** Forbidden */
+            forbidden: string[];
+            /** Prohibited Terms */
+            prohibited_terms: string[];
+        };
+        /** ClaimGuardReview */
+        ClaimGuardReview: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "substantiated" | "revise" | "accepted" | "not_a_claim";
+            /** Finding Key */
+            finding_key: string;
+            /** Note */
+            note: string | null;
+            /**
+             * Reviewed At
+             * Format: date-time
+             */
+            reviewed_at: string;
+            /** Reviewed By */
+            reviewed_by: string | null;
+        };
+        /** ClaimGuardReviewRequest */
+        ClaimGuardReviewRequest: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "substantiated" | "revise" | "accepted" | "not_a_claim";
+            /** Finding Key */
+            finding_key: string;
+            /** Note */
+            note?: string | null;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** ClaimGuardRun */
+        ClaimGuardRun: {
+            /**
+             * Include Model Pass
+             * @description Add a second pass in which a model proposes implied claims. Its quotes are verified in code and tagged as model interpretation.
+             * @default false
+             */
+            include_model_pass: boolean;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
         /** ClaimScope */
         ClaimScope: {
             /** City Tier */
@@ -11560,6 +12038,394 @@ export interface components {
             offset: number;
             /** Total */
             total: number;
+        };
+        /** FormatFitApply */
+        FormatFitApply: {
+            /**
+             * Acknowledge Issues
+             * @description Needed when the plan has conflicts other than a cut locked element (which is always refused).
+             * @default false
+             */
+            acknowledge_issues: boolean;
+            /** Background */
+            background?: string | null;
+            /**
+             * Creative Id
+             * Format: uuid
+             */
+            creative_id: string;
+            /** Format Id */
+            format_id: string;
+            /**
+             * Strategy
+             * @enum {string}
+             */
+            strategy: "crop" | "pad" | "native";
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** FormatFitCatalogue */
+        FormatFitCatalogue: {
+            /** Channels */
+            channels: components["schemas"]["FormatFitChannel"][];
+            /** Formats */
+            formats: components["schemas"]["FormatFitFormat"][];
+            /** Tool Version */
+            tool_version: string;
+        };
+        /**
+         * FormatFitChannel
+         * @description A channel of the Campaign Brief and the format it runs in (matched by its id, else by a ratio in its format text).
+         */
+        FormatFitChannel: {
+            /**
+             * Format Id
+             * @description Null when the channel's format is not one of ours; it is then not planned for.
+             */
+            format_id: string | null;
+            /** Format Text */
+            format_text: string | null;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+        };
+        /** FormatFitCutdown */
+        FormatFitCutdown: {
+            /** Dropped */
+            dropped: components["schemas"]["FormatFitDropped"][];
+            /** Duration Ms */
+            duration_ms: number;
+            /** Notes */
+            notes: string[];
+            /** Score */
+            score: number;
+            /** Segments */
+            segments: components["schemas"]["FormatFitSegment"][];
+            /** Target Ms */
+            target_ms: number;
+        };
+        /** FormatFitDropped */
+        FormatFitDropped: {
+            /** Duration Ms */
+            duration_ms: number;
+            /** Position */
+            position: number;
+            /** Scene Id */
+            scene_id: string;
+            /** Summary */
+            summary: string | null;
+        };
+        /** FormatFitElement */
+        FormatFitElement: {
+            anchor: components["schemas"]["Anchor-Output"];
+            /**
+             * Bbox Output
+             * @description Normalised [x, y, w, h] in the output frame, clipped to the frame; null when unknown.
+             */
+            bbox_output: number[] | null;
+            /**
+             * Bbox Source
+             * @description Normalised [x, y, w, h] of the source picture; null when the element has no position.
+             */
+            bbox_source: number[] | null;
+            /** Element Id */
+            element_id: string;
+            /** In Safe Zone */
+            in_safe_zone: boolean | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "headline" | "body" | "cta" | "tagline" | "logo" | "product" | "packshot" | "image_region" | "scene" | "voiceover" | "music" | "caption";
+            /** Locked */
+            locked: boolean;
+            /** Min Text Px */
+            min_text_px: number | null;
+            /**
+             * Placement
+             * @enum {string}
+             */
+            placement: "kept" | "cut" | "outside" | "unknown";
+            /** Safe Overflow */
+            safe_overflow: ("top" | "right" | "bottom" | "left")[];
+            /** Text */
+            text: string | null;
+            /**
+             * Text Height Px
+             * @description Estimated height of one line of this text in the output, in pixels.
+             */
+            text_height_px: number | null;
+            /**
+             * Visible Share
+             * @description Share of the element's area that stays inside the output frame.
+             */
+            visible_share: number;
+        };
+        /** FormatFitFormat */
+        FormatFitFormat: {
+            /** Height */
+            height: number;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Ratio */
+            ratio: string;
+            safe_zone: components["schemas"]["FormatFitSafeZone"];
+            /** Used For */
+            used_for: string;
+            /** Width */
+            width: number;
+        };
+        /** FormatFitIssue */
+        FormatFitIssue: {
+            /** Code */
+            code: string;
+            /** Element Id */
+            element_id: string | null;
+            /** Message */
+            message: string;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "conflict" | "review" | "info";
+        };
+        /** FormatFitOutput */
+        FormatFitOutput: {
+            asset: components["schemas"]["Asset"];
+            /** Background */
+            background: string | null;
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By */
+            created_by: string | null;
+            /**
+             * Creative Id
+             * Format: uuid
+             */
+            creative_id: string;
+            /** Format Id */
+            format_id: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Issues */
+            issues: components["schemas"]["FormatFitIssue"][];
+            place: components["schemas"]["FormatFitRect"];
+            /** Scale */
+            scale: number;
+            /**
+             * Source Asset Id
+             * Format: uuid
+             */
+            source_asset_id: string;
+            /**
+             * Strategy
+             * @enum {string}
+             */
+            strategy: "crop" | "pad" | "native";
+            /** Tool Version */
+            tool_version: string;
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "clean" | "review" | "conflict";
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+            window: components["schemas"]["FormatFitRect"];
+        };
+        /** FormatFitOutputPage */
+        FormatFitOutputPage: {
+            /** Items */
+            items: components["schemas"]["FormatFitOutput"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** FormatFitPlan */
+        FormatFitPlan: {
+            format: components["schemas"]["FormatFitFormat"];
+            /**
+             * Recommended
+             * @description The plan with the fewest conflicts, then review items. A suggestion; the person chooses.
+             */
+            recommended: ("crop" | "pad" | "native") | null;
+            /** Strategies */
+            strategies: components["schemas"]["FormatFitStrategyPlan"][];
+        };
+        /** FormatFitPlanRequest */
+        FormatFitPlanRequest: {
+            /**
+             * Background
+             * @description Bar colour for a pad; default is the picture's own edge colour.
+             */
+            background?: string | null;
+            /**
+             * Creative Id
+             * Format: uuid
+             */
+            creative_id: string;
+            /**
+             * Format Ids
+             * @description Default: every format.
+             */
+            format_ids?: string[] | null;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** FormatFitPlans */
+        FormatFitPlans: {
+            /**
+             * Creative Id
+             * Format: uuid
+             */
+            creative_id: string;
+            /**
+             * Cutdowns
+             * @description Video only: scene selections for shorter lengths, from the X-Ray scene timings.
+             */
+            cutdowns: components["schemas"]["FormatFitCutdown"][];
+            /** Locked Element Ids */
+            locked_element_ids: string[];
+            /** Notes */
+            notes: string[];
+            /**
+             * Plans
+             * @description One per format for a picture; for a video, only the format it already has.
+             */
+            plans: components["schemas"]["FormatFitPlan"][];
+            source: components["schemas"]["FormatFitSource"];
+            /** Tool Version */
+            tool_version: string;
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /** FormatFitRect */
+        FormatFitRect: {
+            /** Height */
+            height: number;
+            /** Width */
+            width: number;
+            /** X */
+            x: number;
+            /** Y */
+            y: number;
+        };
+        /** FormatFitSafeZone */
+        FormatFitSafeZone: {
+            /**
+             * Basis
+             * @description What the numbers are: working defaults, not a platform's own specification.
+             */
+            basis: string;
+            /** Bottom */
+            bottom: number;
+            /** Left */
+            left: number;
+            /** Right */
+            right: number;
+            /**
+             * Top
+             * @description Share of the frame's height the platform interface usually covers at the top.
+             */
+            top: number;
+        };
+        /** FormatFitSegment */
+        FormatFitSegment: {
+            /** End Ms */
+            end_ms: number;
+            /** Position */
+            position: number;
+            /** Reasons */
+            reasons: string[];
+            /** Scene Id */
+            scene_id: string;
+            /** Start Ms */
+            start_ms: number;
+            /** Trimmed */
+            trimmed: boolean;
+        };
+        /** FormatFitSource */
+        FormatFitSource: {
+            /**
+             * Asset Id
+             * Format: uuid
+             */
+            asset_id: string;
+            /** Height */
+            height: number | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "image" | "video" | "audio";
+            /** Label */
+            label: string;
+            /** Sha256 */
+            sha256: string;
+            /** Width */
+            width: number | null;
+        };
+        /** FormatFitStrategyPlan */
+        FormatFitStrategyPlan: {
+            /**
+             * Applicable
+             * @description False when a locked element would be cut: such a plan cannot be applied.
+             */
+            applicable: boolean;
+            /** Background */
+            background: string | null;
+            /** Elements */
+            elements: components["schemas"]["FormatFitElement"][];
+            /** Issues */
+            issues: components["schemas"]["FormatFitIssue"][];
+            /** @description Where it lands in the output frame, in output pixels. */
+            place: components["schemas"]["FormatFitRect"];
+            /** Retained Share */
+            retained_share: number;
+            /** Scale */
+            scale: number;
+            /**
+             * Strategy
+             * @enum {string}
+             */
+            strategy: "crop" | "pad" | "native";
+            /**
+             * Verdict
+             * @description Computed in code: conflict (a locked or text element is cut), review (safe zone, small text, enlargement) or clean.
+             * @enum {string}
+             */
+            verdict: "clean" | "review" | "conflict";
+            /** @description The part of the source that is shown, in source pixels. */
+            window: components["schemas"]["FormatFitRect"];
         };
         /** FrameRecord */
         FrameRecord: {
@@ -21113,6 +21979,170 @@ export interface components {
              */
             version: "mvp-2";
         };
+        /** ScriptReport */
+        ScriptReport: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Check Version */
+            check_version: string;
+            counts: components["schemas"]["ScriptReportCounts"];
+            /** Elements */
+            elements: components["schemas"]["ScriptReportElement"][];
+            /** Glossary Terms */
+            glossary_terms: number;
+            /** Language */
+            language: string | null;
+            /** Limitations */
+            limitations: string[];
+            /** Region Code */
+            region_code: string | null;
+            /**
+             * Shaping Engine
+             * @description The server's text-shaping engine: raqm shapes Indic scripts for rendering.
+             * @enum {string}
+             */
+            shaping_engine: "raqm" | "basic";
+            /** Skipped */
+            skipped: components["schemas"]["ScriptReportSkipped"][];
+            /**
+             * Version Id
+             * Format: uuid
+             */
+            version_id: string;
+        };
+        /**
+         * ScriptReportBack
+         * @description The English back-translation a transcreation stored for this element, and whether it still describes the text.
+         */
+        ScriptReportBack: {
+            /**
+             * Clean
+             * @description Whether the protected and prohibited term checks pass on it; null when it no longer applies.
+             */
+            clean: boolean | null;
+            /**
+             * Operation Id
+             * Format: uuid
+             */
+            operation_id: string;
+            /**
+             * State
+             * @description edited: the text was changed after the transcreation, so the back-translation no longer applies.
+             * @enum {string}
+             */
+            state: "current" | "edited";
+            /** Text */
+            text: string;
+        };
+        /** ScriptReportCounts */
+        ScriptReportCounts: {
+            /** Issues */
+            issues: number;
+            /** Ok */
+            ok: number;
+            /** Problem */
+            problem: number;
+            /** Review */
+            review: number;
+        };
+        /** ScriptReportElement */
+        ScriptReportElement: {
+            anchor: components["schemas"]["Anchor-Output"];
+            back_translation: components["schemas"]["ScriptReportBack"] | null;
+            /** Declared Script */
+            declared_script: string | null;
+            /** Dominant Script */
+            dominant_script: string | null;
+            /** Element Id */
+            element_id: string;
+            /** Expected Script */
+            expected_script: string | null;
+            /** Issues */
+            issues: components["schemas"]["ScriptReportIssue"][];
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "headline" | "body" | "cta" | "tagline" | "logo" | "product" | "packshot" | "image_region" | "scene" | "voiceover" | "music" | "caption";
+            /** Language */
+            language: string | null;
+            /** Native Review Recommended */
+            native_review_recommended: boolean;
+            /**
+             * Shares
+             * @description Share of the letters in each script, after brand terms are set aside.
+             */
+            shares: {
+                [key: string]: number;
+            };
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ok" | "review" | "problem";
+            /** Terms */
+            terms: components["schemas"]["ScriptReportTerm"][];
+            /** Text */
+            text: string;
+        };
+        /** ScriptReportIssue */
+        ScriptReportIssue: {
+            anchor: components["schemas"]["Anchor-Output"];
+            /** Code */
+            code: string;
+            /** End */
+            end: number | null;
+            /** Excerpt */
+            excerpt: string | null;
+            /** Message */
+            message: string;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "problem" | "review" | "info";
+            /**
+             * Start
+             * @description Character offset of the span in the element's text; null when the issue is about the whole text.
+             */
+            start: number | null;
+        };
+        /** ScriptReportSkipped */
+        ScriptReportSkipped: {
+            /** Element Id */
+            element_id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "headline" | "body" | "cta" | "tagline" | "logo" | "product" | "packshot" | "image_region" | "scene" | "voiceover" | "music" | "caption";
+            /** Reason */
+            reason: string;
+        };
+        /**
+         * ScriptReportTerm
+         * @description A Brand Glossary term found in the text, with its pronunciation guidance.
+         */
+        ScriptReportTerm: {
+            /** End */
+            end: number;
+            /**
+             * Form
+             * @description The characters as they appear in the text.
+             */
+            form: string;
+            /** Pronunciation */
+            pronunciation: string | null;
+            /** Protected */
+            protected: boolean;
+            /** Start */
+            start: number;
+            /** Term */
+            term: string;
+        };
         /** SearchHit */
         SearchHit: {
             /** Claim Type */
@@ -28764,6 +29794,505 @@ export interface operations {
             };
         };
     };
+    claim_guard_checks: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+                version_id?: string | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClaimGuardCheckPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    claim_guard_run: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClaimGuardRun"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClaimGuardCheck"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    claim_guard_check: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                check_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClaimGuardCheck"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    claim_guard_review: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClaimGuardReviewRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClaimGuardReview"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     start_creative_xray: {
         parameters: {
             query?: never;
@@ -30282,6 +31811,504 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FocusGroupInterjectionView"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    format_fit_formats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FormatFitCatalogue"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    format_fit_outputs: {
+        parameters: {
+            query?: {
+                /** @description Maximum records returned. */
+                limit?: number;
+                /** @description Number of records skipped. */
+                offset?: number;
+                creative_id?: string | null;
+            };
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FormatFitOutputPage"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    format_fit_apply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FormatFitApply"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FormatFitOutput"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    format_fit_plans: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FormatFitPlanRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FormatFitPlans"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -42766,6 +44793,128 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OperationResult"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    script_check_report: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                version_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScriptReport"];
                 };
             };
             /** @description UNAUTHENTICATED */

@@ -24,14 +24,13 @@ export function Intro({ campaignId }: { campaignId: string }) {
               date range, last-updated time and whether it is still provisional.
             </p>
             <p>
-              No ad account can be connected in this build, so Live Pulse runs on a generated sample: three weeks of daily results for four regions and three versions, across
+              Live Pulse runs on a sample dataset: three weeks of daily results for four regions and three versions, across
               Google Ads and YouTube. None of it describes a real audience or a real campaign.
             </p>
           </div>
         }
         needs={[
           { label: "The sample dataset: load it below", met: false },
-          { label: "A connected ad platform account: roadmap, not available in this build", met: false },
         ]}
         action={
           <div className="space-y-2">

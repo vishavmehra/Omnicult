@@ -454,6 +454,10 @@ from app.fixtures.demo_studio import RESPONDERS as STUDIO_RESPONDERS  # noqa: E4
 
 RESPONDERS |= STUDIO_RESPONDERS
 
+from app.fixtures.demo_studio_t3 import RESPONDERS as STUDIO_T3_RESPONDERS  # noqa: E402
+
+RESPONDERS |= STUDIO_T3_RESPONDERS
+
 from app.fixtures import demo_aamod  # noqa: E402
 
 RESPONDERS |= {"xray-scenes-v1": demo_aamod.xray_scenes}  # the Aamod film only; any other creative gets "no demo fixture"

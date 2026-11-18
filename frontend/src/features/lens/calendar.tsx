@@ -200,7 +200,7 @@ export function CalendarView({
             {years.map((y) => (
               <option key={y} value={y}>
                 {y}
-                {data && !data.years_available.includes(y) ? " (not built)" : ""}
+                {data && !data.years_available.includes(y) ? " (no data yet)" : ""}
               </option>
             ))}
           </NativeSelect>

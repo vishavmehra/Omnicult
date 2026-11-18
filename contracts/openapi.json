@@ -9558,6 +9558,889 @@
         "title": "ChipsGenerated",
         "type": "object"
       },
+      "ClaimGuardBasis": {
+        "additionalProperties": false,
+        "properties": {
+          "sourced": {
+            "description": "Whether a source, sample size or date is shown near the named basis.",
+            "title": "Sourced",
+            "type": "boolean"
+          },
+          "stated": {
+            "title": "Stated",
+            "type": "boolean"
+          },
+          "wording": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wording"
+          }
+        },
+        "required": [
+          "stated",
+          "wording",
+          "sourced"
+        ],
+        "title": "ClaimGuardBasis",
+        "type": "object"
+      },
+      "ClaimGuardCheck": {
+        "additionalProperties": false,
+        "properties": {
+          "campaign_id": {
+            "format": "uuid",
+            "title": "Campaign Id",
+            "type": "string"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/ClaimGuardCounts"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/ClaimGuardFinding"
+            },
+            "title": "Findings",
+            "type": "array"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "mode": {
+            "enum": [
+              "rules",
+              "rules_model"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ClaimGuardModelRun"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "policy": {
+            "$ref": "#/components/schemas/ClaimGuardPolicyView"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Code"
+          },
+          "rules_version": {
+            "title": "Rules Version",
+            "type": "string"
+          },
+          "texts_checked": {
+            "title": "Texts Checked",
+            "type": "integer"
+          },
+          "version_id": {
+            "format": "uuid",
+            "title": "Version Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "campaign_id",
+          "version_id",
+          "region_code",
+          "language",
+          "mode",
+          "rules_version",
+          "counts",
+          "created_by",
+          "created_at",
+          "findings",
+          "texts_checked",
+          "policy",
+          "model",
+          "limitations"
+        ],
+        "title": "ClaimGuardCheck",
+        "type": "object"
+      },
+      "ClaimGuardCheckPage": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ClaimGuardCheckSummary"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "limit",
+          "offset",
+          "total"
+        ],
+        "title": "ClaimGuardCheckPage",
+        "type": "object"
+      },
+      "ClaimGuardCheckSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "campaign_id": {
+            "format": "uuid",
+            "title": "Campaign Id",
+            "type": "string"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/ClaimGuardCounts"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "mode": {
+            "enum": [
+              "rules",
+              "rules_model"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Code"
+          },
+          "rules_version": {
+            "title": "Rules Version",
+            "type": "string"
+          },
+          "version_id": {
+            "format": "uuid",
+            "title": "Version Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "campaign_id",
+          "version_id",
+          "region_code",
+          "language",
+          "mode",
+          "rules_version",
+          "counts",
+          "created_by",
+          "created_at"
+        ],
+        "title": "ClaimGuardCheckSummary",
+        "type": "object"
+      },
+      "ClaimGuardCounts": {
+        "additionalProperties": false,
+        "properties": {
+          "blocks_go": {
+            "title": "Blocks Go",
+            "type": "integer"
+          },
+          "by_kind": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "By Kind",
+            "type": "object"
+          },
+          "high": {
+            "title": "High",
+            "type": "integer"
+          },
+          "low": {
+            "title": "Low",
+            "type": "integer"
+          },
+          "medium": {
+            "title": "Medium",
+            "type": "integer"
+          },
+          "review_complete": {
+            "description": "True when every finding has a decision. Not clearance: it only means a person looked at each one.",
+            "title": "Review Complete",
+            "type": "boolean"
+          },
+          "reviewed": {
+            "title": "Reviewed",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "unreviewed": {
+            "title": "Unreviewed",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "high",
+          "medium",
+          "low",
+          "reviewed",
+          "unreviewed",
+          "blocks_go",
+          "by_kind",
+          "review_complete"
+        ],
+        "title": "ClaimGuardCounts",
+        "type": "object"
+      },
+      "ClaimGuardEvidence": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ClaimGuardEvidenceItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "status": {
+            "description": "found: related evidence is on file (a person decides whether it covers this wording); mismatch: a price differs from the brief; none.",
+            "enum": [
+              "found",
+              "mismatch",
+              "none"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "items"
+        ],
+        "title": "ClaimGuardEvidence",
+        "type": "object"
+      },
+      "ClaimGuardEvidenceItem": {
+        "additionalProperties": false,
+        "properties": {
+          "claim_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Claim Id"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The evidence claim's kind (observed, calculated, ...), when it is a region claim.",
+            "title": "Kind"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "campaign_brief",
+              "region_claim"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "statement": {
+            "title": "Statement",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "claim_id",
+          "statement",
+          "kind",
+          "confidence",
+          "note"
+        ],
+        "title": "ClaimGuardEvidenceItem",
+        "type": "object"
+      },
+      "ClaimGuardFinding": {
+        "additionalProperties": false,
+        "properties": {
+          "ad_codes": {
+            "items": {
+              "$ref": "#/components/schemas/AdCodeRef"
+            },
+            "title": "Ad Codes",
+            "type": "array"
+          },
+          "anchor": {
+            "$ref": "#/components/schemas/Anchor-Output"
+          },
+          "basis": {
+            "$ref": "#/components/schemas/ClaimGuardBasis"
+          },
+          "blocks_go": {
+            "title": "Blocks Go",
+            "type": "boolean"
+          },
+          "confidence": {
+            "description": "How sure the match is that this wording is a claim of this kind. A rule certainty, not a probability; a model reading is Low.",
+            "enum": [
+              "low",
+              "moderate",
+              "high"
+            ],
+            "title": "Confidence",
+            "type": "string"
+          },
+          "element_id": {
+            "title": "Element Id",
+            "type": "string"
+          },
+          "element_kind": {
+            "enum": [
+              "headline",
+              "body",
+              "cta",
+              "tagline",
+              "logo",
+              "product",
+              "packshot",
+              "image_region",
+              "scene",
+              "voiceover",
+              "music",
+              "caption"
+            ],
+            "title": "Element Kind",
+            "type": "string"
+          },
+          "end": {
+            "title": "End",
+            "type": "integer"
+          },
+          "evidence": {
+            "$ref": "#/components/schemas/ClaimGuardEvidence"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "key": {
+            "description": "Stable identity of the finding in its version; reviews are kept against it.",
+            "title": "Key",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "superiority",
+              "comparative",
+              "price",
+              "health",
+              "guarantee",
+              "financial"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "phrase": {
+            "description": "The clause the wording sits in.",
+            "title": "Phrase",
+            "type": "string"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/ClaimGuardPolicy"
+          },
+          "quote": {
+            "description": "The matched wording, exactly as it is in the element.",
+            "title": "Quote",
+            "type": "string"
+          },
+          "review": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ClaimGuardReview"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The person's decision about this finding, when there is one. Every finding needs one before approval."
+          },
+          "rule_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rule Id"
+          },
+          "severity": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "severity_rules": {
+            "items": {
+              "$ref": "#/components/schemas/AppliedRuleView"
+            },
+            "title": "Severity Rules",
+            "type": "array"
+          },
+          "source": {
+            "description": "rule: a wording pattern matched in code. model: a second-pass model reading whose quote code verified (a model interpretation).",
+            "enum": [
+              "rule",
+              "model"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "key",
+          "element_id",
+          "element_kind",
+          "kind",
+          "source",
+          "rule_id",
+          "quote",
+          "start",
+          "end",
+          "phrase",
+          "anchor",
+          "severity",
+          "blocks_go",
+          "confidence",
+          "severity_rules",
+          "policy",
+          "evidence",
+          "basis",
+          "ad_codes",
+          "explanation",
+          "limitations",
+          "review"
+        ],
+        "title": "ClaimGuardFinding",
+        "type": "object"
+      },
+      "ClaimGuardModelRun": {
+        "additionalProperties": false,
+        "properties": {
+          "dropped": {
+            "description": "Proposals removed in code: a quote not found in its element, an unknown element or kind, or a repeat of a rule finding.",
+            "title": "Dropped",
+            "type": "integer"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "estimated_cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimated Cost Usd"
+          },
+          "kept": {
+            "title": "Kept",
+            "type": "integer"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Id"
+          },
+          "prompt_version": {
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "proposed": {
+            "title": "Proposed",
+            "type": "integer"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          }
+        },
+        "required": [
+          "provider",
+          "model_id",
+          "prompt_version",
+          "estimated_cost_usd",
+          "proposed",
+          "kept",
+          "dropped",
+          "error"
+        ],
+        "title": "ClaimGuardModelRun",
+        "type": "object"
+      },
+      "ClaimGuardPolicy": {
+        "additionalProperties": false,
+        "properties": {
+          "rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The policy line or term that applies, when one does.",
+            "title": "Rule"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "status": {
+            "enum": [
+              "forbidden",
+              "not_listed",
+              "no_policy"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "rule",
+          "source"
+        ],
+        "title": "ClaimGuardPolicy",
+        "type": "object"
+      },
+      "ClaimGuardPolicyView": {
+        "additionalProperties": false,
+        "properties": {
+          "allowed": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Allowed",
+            "type": "array"
+          },
+          "forbidden": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Forbidden",
+            "type": "array"
+          },
+          "prohibited_terms": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prohibited Terms",
+            "type": "array"
+          }
+        },
+        "required": [
+          "forbidden",
+          "allowed",
+          "prohibited_terms"
+        ],
+        "title": "ClaimGuardPolicyView",
+        "type": "object"
+      },
+      "ClaimGuardReview": {
+        "additionalProperties": false,
+        "properties": {
+          "decision": {
+            "enum": [
+              "substantiated",
+              "revise",
+              "accepted",
+              "not_a_claim"
+            ],
+            "title": "Decision",
+            "type": "string"
+          },
+          "finding_key": {
+            "title": "Finding Key",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "reviewed_at": {
+            "format": "date-time",
+            "title": "Reviewed At",
+            "type": "string"
+          },
+          "reviewed_by": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewed By"
+          }
+        },
+        "required": [
+          "finding_key",
+          "decision",
+          "note",
+          "reviewed_by",
+          "reviewed_at"
+        ],
+        "title": "ClaimGuardReview",
+        "type": "object"
+      },
+      "ClaimGuardReviewRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "decision": {
+            "enum": [
+              "substantiated",
+              "revise",
+              "accepted",
+              "not_a_claim"
+            ],
+            "title": "Decision",
+            "type": "string"
+          },
+          "finding_key": {
+            "pattern": "^[0-9a-f]{16}$",
+            "title": "Finding Key",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "version_id": {
+            "format": "uuid",
+            "title": "Version Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version_id",
+          "finding_key",
+          "decision"
+        ],
+        "title": "ClaimGuardReviewRequest",
+        "type": "object"
+      },
+      "ClaimGuardRun": {
+        "additionalProperties": false,
+        "properties": {
+          "include_model_pass": {
+            "default": false,
+            "description": "Add a second pass in which a model proposes implied claims. Its quotes are verified in code and tagged as model interpretation.",
+            "title": "Include Model Pass",
+            "type": "boolean"
+          },
+          "version_id": {
+            "format": "uuid",
+            "title": "Version Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version_id"
+        ],
+        "title": "ClaimGuardRun",
+        "type": "object"
+      },
       "ClaimScope": {
         "additionalProperties": false,
         "properties": {
@@ -19475,6 +20358,1024 @@
           "total"
         ],
         "title": "FollowUpPage",
+        "type": "object"
+      },
+      "FormatFitApply": {
+        "additionalProperties": false,
+        "properties": {
+          "acknowledge_issues": {
+            "default": false,
+            "description": "Needed when the plan has conflicts other than a cut locked element (which is always refused).",
+            "title": "Acknowledge Issues",
+            "type": "boolean"
+          },
+          "background": {
+            "anyOf": [
+              {
+                "pattern": "^#[0-9a-fA-F]{6}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Background"
+          },
+          "creative_id": {
+            "format": "uuid",
+            "title": "Creative Id",
+            "type": "string"
+          },
+          "format_id": {
+            "pattern": "^[0-9]{1,2}x[0-9]{1,2}$",
+            "title": "Format Id",
+            "type": "string"
+          },
+          "strategy": {
+            "enum": [
+              "crop",
+              "pad",
+              "native"
+            ],
+            "title": "Strategy",
+            "type": "string"
+          },
+          "version_id": {
+            "format": "uuid",
+            "title": "Version Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "creative_id",
+          "version_id",
+          "format_id",
+          "strategy"
+        ],
+        "title": "FormatFitApply",
+        "type": "object"
+      },
+      "FormatFitCatalogue": {
+        "additionalProperties": false,
+        "properties": {
+          "channels": {
+            "items": {
+              "$ref": "#/components/schemas/FormatFitChannel"
+            },
+            "title": "Channels",
+            "type": "array"
+          },
+          "formats": {
+            "items": {
+              "$ref": "#/components/schemas/FormatFitFormat"
+            },
+            "title": "Formats",
+            "type": "array"
+          },
+          "tool_version": {
+            "title": "Tool Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "formats",
+          "channels",
+          "tool_version"
+        ],
+        "title": "FormatFitCatalogue",
+        "type": "object"
+      },
+      "FormatFitChannel": {
+        "additionalProperties": false,
+        "description": "A channel of the Campaign Brief and the format it runs in (matched by its id, else by a ratio in its format text).",
+        "properties": {
+          "format_id": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9]{1,2}x[0-9]{1,2}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Null when the channel's format is not one of ours; it is then not planned for.",
+            "title": "Format Id"
+          },
+          "format_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Format Text"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "format_text",
+          "format_id"
+        ],
+        "title": "FormatFitChannel",
+        "type": "object"
+      },
+      "FormatFitCutdown": {
+        "additionalProperties": false,
+        "properties": {
+          "dropped": {
+            "items": {
+              "$ref": "#/components/schemas/FormatFitDropped"
+            },
+            "title": "Dropped",
+            "type": "array"
+          },
+          "duration_ms": {
+            "title": "Duration Ms",
+            "type": "integer"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          },
+          "segments": {
+            "items": {
+              "$ref": "#/components/schemas/FormatFitSegment"
+            },
+            "title": "Segments",
+            "type": "array"
+          },
+          "target_ms": {
+            "title": "Target Ms",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "target_ms",
+          "duration_ms",
+          "score",
+          "segments",
+          "dropped",
+          "notes"
+        ],
+        "title": "FormatFitCutdown",
+        "type": "object"
+      },
+      "FormatFitDropped": {
+        "additionalProperties": false,
+        "properties": {
+          "duration_ms": {
+            "title": "Duration Ms",
+            "type": "integer"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "scene_id": {
+            "title": "Scene Id",
+            "type": "string"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          }
+        },
+        "required": [
+          "scene_id",
+          "position",
+          "summary",
+          "duration_ms"
+        ],
+        "title": "FormatFitDropped",
+        "type": "object"
+      },
+      "FormatFitElement": {
+        "additionalProperties": false,
+        "properties": {
+          "anchor": {
+            "$ref": "#/components/schemas/Anchor-Output"
+          },
+          "bbox_output": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Normalised [x, y, w, h] in the output frame, clipped to the frame; null when unknown.",
+            "title": "Bbox Output"
+          },
+          "bbox_source": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Normalised [x, y, w, h] of the source picture; null when the element has no position.",
+            "title": "Bbox Source"
+          },
+          "element_id": {
+            "title": "Element Id",
+            "type": "string"
+          },
+          "in_safe_zone": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "In Safe Zone"
+          },
+          "kind": {
+            "enum": [
+              "headline",
+              "body",
+              "cta",
+              "tagline",
+              "logo",
+              "product",
+              "packshot",
+              "image_region",
+              "scene",
+              "voiceover",
+              "music",
+              "caption"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "locked": {
+            "title": "Locked",
+            "type": "boolean"
+          },
+          "min_text_px": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Text Px"
+          },
+          "placement": {
+            "enum": [
+              "kept",
+              "cut",
+              "outside",
+              "unknown"
+            ],
+            "title": "Placement",
+            "type": "string"
+          },
+          "safe_overflow": {
+            "items": {
+              "enum": [
+                "top",
+                "right",
+                "bottom",
+                "left"
+              ],
+              "type": "string"
+            },
+            "title": "Safe Overflow",
+            "type": "array"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "text_height_px": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Estimated height of one line of this text in the output, in pixels.",
+            "title": "Text Height Px"
+          },
+          "visible_share": {
+            "description": "Share of the element's area that stays inside the output frame.",
+            "title": "Visible Share",
+            "type": "number"
+          }
+        },
+        "required": [
+          "element_id",
+          "kind",
+          "locked",
+          "text",
+          "bbox_source",
+          "bbox_output",
+          "visible_share",
+          "placement",
+          "in_safe_zone",
+          "safe_overflow",
+          "text_height_px",
+          "min_text_px",
+          "anchor"
+        ],
+        "title": "FormatFitElement",
+        "type": "object"
+      },
+      "FormatFitFormat": {
+        "additionalProperties": false,
+        "properties": {
+          "height": {
+            "title": "Height",
+            "type": "integer"
+          },
+          "id": {
+            "pattern": "^[0-9]{1,2}x[0-9]{1,2}$",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "ratio": {
+            "title": "Ratio",
+            "type": "string"
+          },
+          "safe_zone": {
+            "$ref": "#/components/schemas/FormatFitSafeZone"
+          },
+          "used_for": {
+            "title": "Used For",
+            "type": "string"
+          },
+          "width": {
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "ratio",
+          "width",
+          "height",
+          "used_for",
+          "safe_zone"
+        ],
+        "title": "FormatFitFormat",
+        "type": "object"
+      },
+      "FormatFitIssue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "element_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Element Id"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "conflict",
+              "review",
+              "info"
+            ],
+            "title": "Severity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "severity",
+          "message",
+          "element_id"
+        ],
+        "title": "FormatFitIssue",
+        "type": "object"
+      },
+      "FormatFitOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "$ref": "#/components/schemas/Asset"
+          },
+          "background": {
+            "anyOf": [
+              {
+                "pattern": "^#[0-9a-fA-F]{6}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Background"
+          },
+          "campaign_id": {
+            "format": "uuid",
+            "title": "Campaign Id",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "creative_id": {
+            "format": "uuid",
+            "title": "Creative Id",
+            "type": "string"
+          },
+          "format_id": {
+            "pattern": "^[0-9]{1,2}x[0-9]{1,2}$",
+            "title": "Format Id",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/FormatFitIssue"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "place": {
+            "$ref": "#/components/schemas/FormatFitRect"
+          },
+          "scale": {
+            "title": "Scale",
+            "type": "number"
+          },
+          "source_asset_id": {
+            "format": "uuid",
+            "title": "Source Asset Id",
+            "type": "string"
+          },
+          "strategy": {
+            "enum": [
+              "crop",
+              "pad",
+              "native"
+            ],
+            "title": "Strategy",
+            "type": "string"
+          },
+          "tool_version": {
+            "title": "Tool Version",
+            "type": "string"
+          },
+          "verdict": {
+            "enum": [
+              "clean",
+              "review",
+              "conflict"
+            ],
+            "title": "Verdict",
+            "type": "string"
+          },
+          "version_id": {
+            "format": "uuid",
+            "title": "Version Id",
+            "type": "string"
+          },
+          "window": {
+            "$ref": "#/components/schemas/FormatFitRect"
+          }
+        },
+        "required": [
+          "id",
+          "campaign_id",
+          "version_id",
+          "creative_id",
+          "format_id",
+          "strategy",
+          "asset",
+          "source_asset_id",
+          "verdict",
+          "issues",
+          "window",
+          "place",
+          "scale",
+          "background",
+          "tool_version",
+          "created_by",
+          "created_at"
+        ],
+        "title": "FormatFitOutput",
+        "type": "object"
+      },
+      "FormatFitOutputPage": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/FormatFitOutput"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "limit",
+          "offset",
+          "total"
+        ],
+        "title": "FormatFitOutputPage",
+        "type": "object"
+      },
+      "FormatFitPlan": {
+        "additionalProperties": false,
+        "properties": {
+          "format": {
+            "$ref": "#/components/schemas/FormatFitFormat"
+          },
+          "recommended": {
+            "anyOf": [
+              {
+                "enum": [
+                  "crop",
+                  "pad",
+                  "native"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The plan with the fewest conflicts, then review items. A suggestion; the person chooses.",
+            "title": "Recommended"
+          },
+          "strategies": {
+            "items": {
+              "$ref": "#/components/schemas/FormatFitStrategyPlan"
+            },
+            "title": "Strategies",
+            "type": "array"
+          }
+        },
+        "required": [
+          "format",
+          "strategies",
+          "recommended"
+        ],
+        "title": "FormatFitPlan",
+        "type": "object"
+      },
+      "FormatFitPlanRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "background": {
+            "anyOf": [
+              {
+                "pattern": "^#[0-9a-fA-F]{6}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Bar colour for a pad; default is the picture's own edge colour.",
+            "title": "Background"
+          },
+          "creative_id": {
+            "format": "uuid",
+            "title": "Creative Id",
+            "type": "string"
+          },
+          "format_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "pattern": "^[0-9]{1,2}x[0-9]{1,2}$",
+                  "type": "string"
+                },
+                "maxItems": 8,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Default: every format.",
+            "title": "Format Ids"
+          },
+          "version_id": {
+            "format": "uuid",
+            "title": "Version Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "creative_id",
+          "version_id"
+        ],
+        "title": "FormatFitPlanRequest",
+        "type": "object"
+      },
+      "FormatFitPlans": {
+        "additionalProperties": false,
+        "properties": {
+          "creative_id": {
+            "format": "uuid",
+            "title": "Creative Id",
+            "type": "string"
+          },
+          "cutdowns": {
+            "description": "Video only: scene selections for shorter lengths, from the X-Ray scene timings.",
+            "items": {
+              "$ref": "#/components/schemas/FormatFitCutdown"
+            },
+            "title": "Cutdowns",
+            "type": "array"
+          },
+          "locked_element_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Locked Element Ids",
+            "type": "array"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "plans": {
+            "description": "One per format for a picture; for a video, only the format it already has.",
+            "items": {
+              "$ref": "#/components/schemas/FormatFitPlan"
+            },
+            "title": "Plans",
+            "type": "array"
+          },
+          "source": {
+            "$ref": "#/components/schemas/FormatFitSource"
+          },
+          "tool_version": {
+            "title": "Tool Version",
+            "type": "string"
+          },
+          "version_id": {
+            "format": "uuid",
+            "title": "Version Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "creative_id",
+          "version_id",
+          "source",
+          "locked_element_ids",
+          "plans",
+          "cutdowns",
+          "notes",
+          "tool_version"
+        ],
+        "title": "FormatFitPlans",
+        "type": "object"
+      },
+      "FormatFitRect": {
+        "additionalProperties": false,
+        "properties": {
+          "height": {
+            "title": "Height",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "x": {
+            "title": "X",
+            "type": "number"
+          },
+          "y": {
+            "title": "Y",
+            "type": "number"
+          }
+        },
+        "required": [
+          "x",
+          "y",
+          "width",
+          "height"
+        ],
+        "title": "FormatFitRect",
+        "type": "object"
+      },
+      "FormatFitSafeZone": {
+        "additionalProperties": false,
+        "properties": {
+          "basis": {
+            "description": "What the numbers are: working defaults, not a platform's own specification.",
+            "title": "Basis",
+            "type": "string"
+          },
+          "bottom": {
+            "title": "Bottom",
+            "type": "number"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "right": {
+            "title": "Right",
+            "type": "number"
+          },
+          "top": {
+            "description": "Share of the frame's height the platform interface usually covers at the top.",
+            "title": "Top",
+            "type": "number"
+          }
+        },
+        "required": [
+          "top",
+          "right",
+          "bottom",
+          "left",
+          "basis"
+        ],
+        "title": "FormatFitSafeZone",
+        "type": "object"
+      },
+      "FormatFitSegment": {
+        "additionalProperties": false,
+        "properties": {
+          "end_ms": {
+            "title": "End Ms",
+            "type": "integer"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "scene_id": {
+            "title": "Scene Id",
+            "type": "string"
+          },
+          "start_ms": {
+            "title": "Start Ms",
+            "type": "integer"
+          },
+          "trimmed": {
+            "title": "Trimmed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "scene_id",
+          "position",
+          "start_ms",
+          "end_ms",
+          "trimmed",
+          "reasons"
+        ],
+        "title": "FormatFitSegment",
+        "type": "object"
+      },
+      "FormatFitSource": {
+        "additionalProperties": false,
+        "properties": {
+          "asset_id": {
+            "format": "uuid",
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "audio"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
+          }
+        },
+        "required": [
+          "asset_id",
+          "kind",
+          "width",
+          "height",
+          "sha256",
+          "label"
+        ],
+        "title": "FormatFitSource",
+        "type": "object"
+      },
+      "FormatFitStrategyPlan": {
+        "additionalProperties": false,
+        "properties": {
+          "applicable": {
+            "description": "False when a locked element would be cut: such a plan cannot be applied.",
+            "title": "Applicable",
+            "type": "boolean"
+          },
+          "background": {
+            "anyOf": [
+              {
+                "pattern": "^#[0-9a-fA-F]{6}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Background"
+          },
+          "elements": {
+            "items": {
+              "$ref": "#/components/schemas/FormatFitElement"
+            },
+            "title": "Elements",
+            "type": "array"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/FormatFitIssue"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "place": {
+            "$ref": "#/components/schemas/FormatFitRect",
+            "description": "Where it lands in the output frame, in output pixels."
+          },
+          "retained_share": {
+            "title": "Retained Share",
+            "type": "number"
+          },
+          "scale": {
+            "title": "Scale",
+            "type": "number"
+          },
+          "strategy": {
+            "enum": [
+              "crop",
+              "pad",
+              "native"
+            ],
+            "title": "Strategy",
+            "type": "string"
+          },
+          "verdict": {
+            "description": "Computed in code: conflict (a locked or text element is cut), review (safe zone, small text, enlargement) or clean.",
+            "enum": [
+              "clean",
+              "review",
+              "conflict"
+            ],
+            "title": "Verdict",
+            "type": "string"
+          },
+          "window": {
+            "$ref": "#/components/schemas/FormatFitRect",
+            "description": "The part of the source that is shown, in source pixels."
+          }
+        },
+        "required": [
+          "strategy",
+          "verdict",
+          "window",
+          "place",
+          "scale",
+          "retained_share",
+          "background",
+          "elements",
+          "issues",
+          "applicable"
+        ],
+        "title": "FormatFitStrategyPlan",
         "type": "object"
       },
       "FrameRecord": {
@@ -44047,6 +45948,469 @@
         "title": "ScoringMethodology",
         "type": "object"
       },
+      "ScriptReport": {
+        "additionalProperties": false,
+        "properties": {
+          "campaign_id": {
+            "format": "uuid",
+            "title": "Campaign Id",
+            "type": "string"
+          },
+          "check_version": {
+            "title": "Check Version",
+            "type": "string"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/ScriptReportCounts"
+          },
+          "elements": {
+            "items": {
+              "$ref": "#/components/schemas/ScriptReportElement"
+            },
+            "title": "Elements",
+            "type": "array"
+          },
+          "glossary_terms": {
+            "title": "Glossary Terms",
+            "type": "integer"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Code"
+          },
+          "shaping_engine": {
+            "description": "The server's text-shaping engine: raqm shapes Indic scripts for rendering.",
+            "enum": [
+              "raqm",
+              "basic"
+            ],
+            "title": "Shaping Engine",
+            "type": "string"
+          },
+          "skipped": {
+            "items": {
+              "$ref": "#/components/schemas/ScriptReportSkipped"
+            },
+            "title": "Skipped",
+            "type": "array"
+          },
+          "version_id": {
+            "format": "uuid",
+            "title": "Version Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version_id",
+          "campaign_id",
+          "region_code",
+          "language",
+          "check_version",
+          "shaping_engine",
+          "glossary_terms",
+          "counts",
+          "elements",
+          "skipped",
+          "limitations"
+        ],
+        "title": "ScriptReport",
+        "type": "object"
+      },
+      "ScriptReportBack": {
+        "additionalProperties": false,
+        "description": "The English back-translation a transcreation stored for this element, and whether it still describes the text.",
+        "properties": {
+          "clean": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether the protected and prohibited term checks pass on it; null when it no longer applies.",
+            "title": "Clean"
+          },
+          "operation_id": {
+            "format": "uuid",
+            "title": "Operation Id",
+            "type": "string"
+          },
+          "state": {
+            "description": "edited: the text was changed after the transcreation, so the back-translation no longer applies.",
+            "enum": [
+              "current",
+              "edited"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "text",
+          "clean",
+          "operation_id"
+        ],
+        "title": "ScriptReportBack",
+        "type": "object"
+      },
+      "ScriptReportCounts": {
+        "additionalProperties": false,
+        "properties": {
+          "issues": {
+            "title": "Issues",
+            "type": "integer"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "integer"
+          },
+          "problem": {
+            "title": "Problem",
+            "type": "integer"
+          },
+          "review": {
+            "title": "Review",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ok",
+          "review",
+          "problem",
+          "issues"
+        ],
+        "title": "ScriptReportCounts",
+        "type": "object"
+      },
+      "ScriptReportElement": {
+        "additionalProperties": false,
+        "properties": {
+          "anchor": {
+            "$ref": "#/components/schemas/Anchor-Output"
+          },
+          "back_translation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ScriptReportBack"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "declared_script": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Declared Script"
+          },
+          "dominant_script": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dominant Script"
+          },
+          "element_id": {
+            "title": "Element Id",
+            "type": "string"
+          },
+          "expected_script": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Script"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/ScriptReportIssue"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "kind": {
+            "enum": [
+              "headline",
+              "body",
+              "cta",
+              "tagline",
+              "logo",
+              "product",
+              "packshot",
+              "image_region",
+              "scene",
+              "voiceover",
+              "music",
+              "caption"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "native_review_recommended": {
+            "title": "Native Review Recommended",
+            "type": "boolean"
+          },
+          "shares": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "description": "Share of the letters in each script, after brand terms are set aside.",
+            "title": "Shares",
+            "type": "object"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "review",
+              "problem"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "terms": {
+            "items": {
+              "$ref": "#/components/schemas/ScriptReportTerm"
+            },
+            "title": "Terms",
+            "type": "array"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "element_id",
+          "kind",
+          "text",
+          "language",
+          "declared_script",
+          "expected_script",
+          "dominant_script",
+          "shares",
+          "status",
+          "native_review_recommended",
+          "issues",
+          "terms",
+          "back_translation",
+          "anchor"
+        ],
+        "title": "ScriptReportElement",
+        "type": "object"
+      },
+      "ScriptReportIssue": {
+        "additionalProperties": false,
+        "properties": {
+          "anchor": {
+            "$ref": "#/components/schemas/Anchor-Output"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          },
+          "excerpt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Excerpt"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "problem",
+              "review",
+              "info"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Character offset of the span in the element's text; null when the issue is about the whole text.",
+            "title": "Start"
+          }
+        },
+        "required": [
+          "code",
+          "severity",
+          "message",
+          "start",
+          "end",
+          "excerpt",
+          "anchor"
+        ],
+        "title": "ScriptReportIssue",
+        "type": "object"
+      },
+      "ScriptReportSkipped": {
+        "additionalProperties": false,
+        "properties": {
+          "element_id": {
+            "title": "Element Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "headline",
+              "body",
+              "cta",
+              "tagline",
+              "logo",
+              "product",
+              "packshot",
+              "image_region",
+              "scene",
+              "voiceover",
+              "music",
+              "caption"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "element_id",
+          "kind",
+          "reason"
+        ],
+        "title": "ScriptReportSkipped",
+        "type": "object"
+      },
+      "ScriptReportTerm": {
+        "additionalProperties": false,
+        "description": "A Brand Glossary term found in the text, with its pronunciation guidance.",
+        "properties": {
+          "end": {
+            "title": "End",
+            "type": "integer"
+          },
+          "form": {
+            "description": "The characters as they appear in the text.",
+            "title": "Form",
+            "type": "string"
+          },
+          "pronunciation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pronunciation"
+          },
+          "protected": {
+            "title": "Protected",
+            "type": "boolean"
+          },
+          "start": {
+            "title": "Start",
+            "type": "integer"
+          },
+          "term": {
+            "title": "Term",
+            "type": "string"
+          }
+        },
+        "required": [
+          "term",
+          "form",
+          "pronunciation",
+          "protected",
+          "start",
+          "end"
+        ],
+        "title": "ScriptReportTerm",
+        "type": "object"
+      },
       "SearchHit": {
         "additionalProperties": false,
         "properties": {
@@ -57733,6 +60097,673 @@
         ]
       }
     },
+    "/api/v1/campaigns/{campaign_id}/claim-guard/checks": {
+      "get": {
+        "description": "Stored checks, newest first, with how many findings still wait for a person's review.",
+        "operationId": "claim_guard_checks",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Maximum records returned.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "description": "Maximum records returned.",
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Number of records skipped.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "description": "Number of records skipped.",
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "version_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Version Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimGuardCheckPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Claim Guard Checks",
+        "tags": [
+          "creative-studio-tier3"
+        ]
+      },
+      "post": {
+        "description": "Find the claims in a version's copy (wording rules first; with `include_model_pass`, a model second pass whose quotes are\nverified in code), grade each against the Brand Kit claims policy, the campaign's evidence and the ASCI index, and store the check.",
+        "operationId": "claim_guard_run",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimGuardRun"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimGuardCheck"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Claim Guard Run",
+        "tags": [
+          "creative-studio-tier3"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/claim-guard/checks/{check_id}": {
+      "get": {
+        "operationId": "claim_guard_check",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "check_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Check Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimGuardCheck"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Claim Guard Check",
+        "tags": [
+          "creative-studio-tier3"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/claim-guard/reviews": {
+      "put": {
+        "description": "Record a person's decision about one finding of a version. Replaces an earlier decision about the same finding.",
+        "operationId": "claim_guard_review",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimGuardReviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimGuardReview"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Claim Guard Review",
+        "tags": [
+          "creative-studio-tier3"
+        ]
+      }
+    },
     "/api/v1/campaigns/{campaign_id}/creative-xrays": {
       "post": {
         "description": "Break an uploaded image, video or audio into scenes (run_type creative_xray).\n\nHonours Idempotency-Key. 409 for an asset of another project or a derived file; 503 when the language model\nprovider is not configured. The result is a creative with scenes: fetch it from the run's result URL.",
@@ -59861,6 +62892,664 @@
         "summary": "Interject In Focus Group",
         "tags": [
           "audience-lab"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/format-fit/formats": {
+      "get": {
+        "description": "The channel formats Format Fit plans for (1:1, 4:5, 9:16, 16:9) with their working safe zones, and the formats the\nCampaign Brief's channels run in.",
+        "operationId": "format_fit_formats",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormatFitCatalogue"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Format Fit Formats",
+        "tags": [
+          "creative-studio-tier3"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/format-fit/outputs": {
+      "get": {
+        "description": "Pictures made by Format Fit, newest first.",
+        "operationId": "format_fit_outputs",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Maximum records returned.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "Maximum records returned.",
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Number of records skipped.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "description": "Number of records skipped.",
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "creative_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Creative Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormatFitOutputPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Format Fit Outputs",
+        "tags": [
+          "creative-studio-tier3"
+        ]
+      },
+      "post": {
+        "description": "Make the picture a plan describes and store it as a new asset. The plan is recomputed on the server. 409 when it would\ncut a locked element, or has conflicts that were not acknowledged. The source asset is never changed.",
+        "operationId": "format_fit_apply",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FormatFitApply"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormatFitOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Format Fit Apply",
+        "tags": [
+          "creative-studio-tier3"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/format-fit/plans": {
+      "post": {
+        "description": "Plan a creative of this campaign for each format: crop window or padding, what is cut, safe-zone and text-size\nproblems, locked-region conflicts. For a video: cut-down suggestions from its scene timings. Deterministic, stores nothing.",
+        "operationId": "format_fit_plans",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FormatFitPlanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormatFitPlans"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Format Fit Plans",
+        "tags": [
+          "creative-studio-tier3"
         ]
       }
     },
@@ -77252,6 +80941,165 @@
         "summary": "Restore Version",
         "tags": [
           "creative-studio"
+        ]
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/versions/{version_id}/script-check": {
+      "get": {
+        "description": "Every text element of a version, checked in code for script, mixed scripts, numerals, joiners, Brand Glossary spellings\nand protected or prohibited terms, with a character span for each issue. Nothing is stored and no model is called.",
+        "operationId": "script_check_report",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "version_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Version Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScriptReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Script Check Report",
+        "tags": [
+          "creative-studio-tier3"
         ]
       }
     },
