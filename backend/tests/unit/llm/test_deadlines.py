@@ -100,7 +100,7 @@ async def test_vision_deadline_fails_vision_but_keeps_the_text_analysis():
 
 
 def test_every_capability_deadline_outlasts_its_request_timeout_so_a_fast_failure_can_be_retried():
-    assert set(CAPABILITY_LIMITS) == {"embeddings", "vision", "image_generation", "tts", "grounded_research", "transcribe"}
+    assert set(CAPABILITY_LIMITS) == {"embeddings", "vision", "image_generation", "tts", "grounded_research", "transcribe", "music"}
     for name, (request_timeout, deadline) in CAPABILITY_LIMITS.items():
         assert deadline > request_timeout, name
     assert CAPABILITY_LIMITS["vision"] == (40.0, 75.0) and CAPABILITY_LIMITS["transcribe"] == (60.0, 120.0)
