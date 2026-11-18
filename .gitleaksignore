@@ -1,0 +1,11 @@
+# Reviewed false positives (test fixtures and placeholders, no real secrets). Format: commit:file:rule:line
+ea42734943049d106e950dd3eb95a178eb0aa731:backend/tests/api/youtube_support.py:gcp-api-key:14
+3544421fdbfb9803b7733c26167e11977b644cbd:backend/tests/api/youtube_support.py:gcp-api-key:14
+88b72e72349bfa3e13fda38aa3efe614b5bbac57:backend/tests/api/test_studio_t3.py:generic-api-key:124
+45f231ad1d87db0d7e6112063061fd2badb048f3:backend/tests/api/test_studio_t3.py:generic-api-key:124
+f151df736580f8e01a30d94152f76c0b9ef8869e:backend/tests/unit/qloo/test_qloo_executor.py:generic-api-key:26
+f151df736580f8e01a30d94152f76c0b9ef8869e:e2e/scripts/scan_next.py:generic-api-key:24
+53f0ca00f5d99ba3ff59431fb500be125ef13370:backend/tests/unit/qloo/test_qloo_executor.py:generic-api-key:26
+53f0ca00f5d99ba3ff59431fb500be125ef13370:e2e/scripts/scan_next.py:generic-api-key:24
+e4e592f48820b4862c4e403d380aa287a9187857:backend/tests/unit/qloo/test_qloo_executor.py:generic-api-key:26
+e4e592f48820b4862c4e403d380aa287a9187857:e2e/scripts/scan_next.py:generic-api-key:24

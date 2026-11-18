@@ -69,8 +69,12 @@ async def test_rls_isolates_users_and_hides_everything_from_anon(fresh_db: str) 
         tables = await user_owned_tables(connection)
         rls = {row["relname"]: row["relrowsecurity"] for row in await connection.fetch(
             "SELECT relname, relrowsecurity FROM pg_class WHERE relnamespace = 'public'::regnamespace AND relkind = 'r'")}
-        missing = [t for t in [*tables, *BACKEND_ONLY] if t in rls and not rls[t]]
-        assert not missing, f"RLS disabled on user-owned tables: {missing}"
+        # Tables that carry the original row policies keep RLS on. Tables added later authorize in the API (migration
+        # 0012, decision M-07) and never enable RLS, so they are not expected here.
+        policy_tables = {row["tablename"] for row in await connection.fetch(
+            "SELECT DISTINCT tablename FROM pg_policies WHERE schemaname = 'public'")}
+        missing = [t for t in [*(set(tables) & policy_tables), *BACKEND_ONLY] if t in rls and not rls[t]]
+        assert not missing, f"RLS disabled on tables that carry row policies: {missing}"
 
         user_a, user_b = uuid.uuid4(), uuid.uuid4()
         project_a = await seed_user(connection, user_a)

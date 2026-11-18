@@ -218,8 +218,10 @@ async def test_other_workspaces_and_a_retried_start_with_the_same_key(seeded, cl
     panel = await panel_of(client, campaign["id"])
     body = {"panel_run_id": panel["id"], "speakers": 4, "guide": GUIDE[:1]}
     first = await post_run(client, campaign["id"], "focus-groups", body, headers={"Idempotency-Key": "fg-1"})
-    again = await post_run(client, campaign["id"], "focus-groups", body, headers={"Idempotency-Key": "fg-1"})
-    assert again["run_id"] == first["run_id"]
+    retried = await client.post(f"{API}/campaigns/{campaign['id']}/focus-groups", json=body, headers={"Idempotency-Key": "fg-1"})
+    assert retried.status_code == 202, retried.text
+    again = retried.json()  # the same run; on a fast machine it may already be running
+    assert again["run_id"] == first["run_id"] and again["status"] in ("queued", "running")
     await service.wait_idle()
     assert (await client.get(f"{API}/campaigns/{campaign['id']}/focus-groups")).json()["total"] == 1
     bob = client_for(BOB)
