@@ -494,7 +494,7 @@ cd ../e2e
 npm ci && npx playwright test                      # set E2E_BASE_URL (default http://localhost:3001) to a running web app
 ```
 
-Measured on 18 Nov 2026: **backend 1942 passed, 7 skipped, 0 failed**.
+Measured on 19 Nov 2026: **backend 1823 passed, 3 skipped, 0 failed**; frontend typecheck, lint and production build pass.
 
 The suites cover confidence and conflict rules, scoring, readiness and risk rules, the operation engine and locks, culture adapters on recorded responses, media and Indic text rendering, proof assembly, authorization and tenancy, prompt-injection and secret hygiene, upload limits, and Alembic migrations on PostgreSQL. GitHub Actions runs the backend suite, a PostgreSQL 17 job, the frontend checks and a secret scan. Live Vertex AI checks are opt-in (`scripts/verify_google_models.py --run`).
 
