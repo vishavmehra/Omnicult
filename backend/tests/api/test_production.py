@@ -11,7 +11,7 @@ from app.core.config import Settings, get_settings
 from app.core.scheduler_auth import require_scheduler
 
 HTTP_METHODS = {"get", "head", "post", "put", "patch", "delete"}
-SCHEDULER_PATHS = {"/internal/pulse/evaluate-alerts", "/internal/digest/generate-weekly"}  # Cloud Scheduler's two calls
+SCHEDULER_PATHS = {"/internal/pulse/evaluate-alerts", "/internal/digest/generate-weekly", "/internal/datagov/refresh"}  # Cloud Scheduler's calls
 PROD = {
     "APP_ENV": "production",
     "AUTH_MODE": "firebase",

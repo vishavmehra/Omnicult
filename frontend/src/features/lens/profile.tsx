@@ -16,6 +16,7 @@ import { ClaimEntry } from "./claim-entry";
 import { ConflictList } from "./conflicts";
 import { categoryLabel, languageName, scriptName } from "./format";
 import { SourcesPanel, StrengthTag, nf, strengthOf } from "./parts";
+import { StateFactsPanel } from "./state-facts";
 import { StateSelect } from "./state-select";
 
 export type LensView = "atlas" | "profile" | "calendar" | "compare" | "language-map";
@@ -143,6 +144,8 @@ export function ProfileView({
               {data.region.kind === "union_territory" ? "Union territory" : "State"} · {data.region.code} · principal language {languageName(data.region.primary_language)} ({scriptName(data.region.primary_script)} script)
             </p>
           </header>
+
+          <StateFactsPanel key={data.region.code} campaignId={campaignId} region={data.region.code} regionName={data.region.name} />
 
           {claims === 0 ? (
             <EmptyState

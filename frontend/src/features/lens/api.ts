@@ -25,6 +25,9 @@ export type LensSourceSummary = S["LensSourceSummary"];
 export type ClaimView = S["ClaimView"];
 export type Conflict = S["Conflict"];
 export type DataMode = S["LensAtlas"]["mode"];
+export type StateFacts = S["StateFacts"];
+export type StateFact = S["StateFact"];
+export type StateFactGroup = S["StateFactGroup"];
 
 export const lensKeys = {
   all: (campaignId: string) => ["lens", campaignId] as const,
@@ -33,6 +36,7 @@ export const lensKeys = {
   compare: (campaignId: string, regions: string[]) => ["lens", campaignId, "compare", regions.join(",")] as const,
   calendar: (campaignId: string, region: string, year: number | null, from: string | null, to: string | null) =>
     ["lens", campaignId, "calendar", region, year, from, to] as const,
+  stateFacts: (campaignId: string, region: string) => ["lens", campaignId, "state-facts", region] as const,
   languageMap: (campaignId: string) => ["lens", campaignId, "language-map"] as const,
   claim: (workspaceId: string, claimId: string) => ["lens", "claim", workspaceId, claimId] as const,
 };
@@ -52,6 +56,16 @@ export function useStateProfile(campaignId: string, region: string | null) {
     enabled: Boolean(region),
     queryFn: () =>
       unwrap(api.GET("/api/v1/campaigns/{campaign_id}/lens/regions/{region_code}/profile", { params: { path: { ...base(campaignId), region_code: region! } } })),
+  });
+}
+
+export function useStateFacts(campaignId: string, region: string | null) {
+  return useQuery({
+    queryKey: lensKeys.stateFacts(campaignId, region ?? ""),
+    enabled: Boolean(region),
+    staleTime: 10 * 60_000, // the figures are annual or quarterly: one read per visit is plenty
+    queryFn: () =>
+      unwrap(api.GET("/api/v1/campaigns/{campaign_id}/lens/regions/{region_code}/state-facts", { params: { path: { ...base(campaignId), region_code: region! } } })),
   });
 }
 
