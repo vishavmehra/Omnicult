@@ -484,7 +484,7 @@ async def _version_tree(user_id: UUID, campaign_id: UUID, original: dict, scenes
         node.elements = [{**e, "locked": e["id"] in locked} for e in node.elements]
     tree: dict[str, Any] = {"root": root.id, "locked": locked, "regions": {}}
     texts = [e for e in root.elements if e.kind in fx.TRANSCREATE_KINDS and isinstance(e.value, str) and e.id not in locked
-             and e.id not in fx.SMALL_PRINT_IDS and e.value != "Fictional brand · Omnicult demo creative"]
+             and e.id not in fx.SMALL_PRINT_IDS]
     for plan in fx.ADAPTATIONS:
         accepted = await transcreate.start_transcreate(user_id, campaign_id, vs.TranscreateRequest(
             version_id=root.id, region_code=plan.region, language=plan.language, element_ids=[e.id for e in texts],

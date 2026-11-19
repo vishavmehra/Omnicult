@@ -154,7 +154,6 @@ CTA_BUTTON = ("आजच ऑर्डर करा · Order now", "Order today �
 TAGLINE = ("Every bond, a little sweeter.", "Every bond, a little sweeter.")
 SMALL_PRINT = ("*ग्राहकांच्या पसंतीनुसार महाराष्ट्रातील सर्वोत्तम फराळ टिन.",
                "*Maharashtra's best faral tin, as per customer preference.")
-DEMO_LABEL = ("Fictional brand · Omnicult demo creative", "Fictional brand · Omnicult demo creative")
 KV_HEADLINE = ("दिवाळी म्हणजे फराळ!", "Diwali means faral!")
 KV_SUB = ("घरच्या चवीचा फराळ, आता एकाच टिनमध्ये", "Faral that tastes like home, now in one tin")
 

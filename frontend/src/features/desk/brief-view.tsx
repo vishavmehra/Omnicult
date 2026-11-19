@@ -23,6 +23,12 @@ import {
 
 const NOT_SET = "Not set";
 
+/** Seeded briefs name a channel's creative by an internal id. People read the creative's own name; any other reference is text someone wrote and is shown as written. */
+const CREATIVE_NAME: Record<string, string> = {
+  "demo-creative-aamod-mh-video": "Maharashtra film (Marathi), 29 s",
+  "demo-creative-aamod-mh-key-visual": "Maharashtra key visual (Marathi), feed post",
+};
+
 function Muted({ children }: { children: ReactNode }) {
   return <span className="text-ink-muted">{children}</span>;
 }
@@ -223,7 +229,9 @@ export function BriefDocument({ content, regions }: { content: BriefContent; reg
               <tr key={ch.id}>
                 <Cell className="font-medium text-ink">{ch.name}</Cell>
                 <Cell>{ch.format ?? <Muted>{NOT_SET}</Muted>}</Cell>
-                <Cell className="font-mono text-[11.5px] break-all text-ink-secondary">{ch.creative_ref ?? <Muted>None</Muted>}</Cell>
+                <Cell className={cn("break-all text-ink-secondary", !(ch.creative_ref && CREATIVE_NAME[ch.creative_ref]) && "font-mono text-[11.5px]")}>
+                  {ch.creative_ref ? (CREATIVE_NAME[ch.creative_ref] ?? ch.creative_ref) : <Muted>None</Muted>}
+                </Cell>
               </tr>
             ))}
           </Table>

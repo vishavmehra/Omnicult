@@ -86,7 +86,6 @@ _AAJI = "'Aaji' (grandmother) becomes the local word. "
 _NAME = "The product name is transliterated with the Brand Glossary spelling and never translated."
 _UNSOURCED = ("Carried over in meaning and moved to the region: the superiority claim still names no source, sample or date. "
               "Risk Check will flag it. Edit or remove it before launch.")
-_LABEL = "A label, rendered in the target script; the English brand words stay in Latin."
 
 PHRASEBOOK: dict[str, dict[str, Line]] = {
     "दिवाळी म्हणजे फराळ!": {
@@ -184,11 +183,6 @@ PHRASEBOOK: dict[str, dict[str, Line]] = {
         "ta": Line("*வாடிக்கையாளர் விருப்பத்தின்படி தமிழ்நாட்டின் சிறந்த பலகார டின்.", "*Tamil Nadu's best palagaram tin, per customer preference.", _UNSOURCED),
         "ml": Line("*ഉപഭോക്താക്കളുടെ ഇഷ്ടപ്രകാരം കേരളത്തിലെ ഏറ്റവും മികച്ച പലഹാര ടിൻ.", "*Kerala's best snack tin, by customers' preference.", _UNSOURCED),
         "bn": Line("*গ্রাহকদের পছন্দ অনুযায়ী পশ্চিমবঙ্গের সেরা মিষ্টির টিন।", "*West Bengal's best sweets tin, according to customers' preference.", _UNSOURCED),
-    },
-    "Fictional brand · Omnicult demo creative": {
-        "ta": Line("கற்பனை பிராண்ட் · Omnicult டெமோ படைப்பு", "Fictional brand · Omnicult demo creative", _LABEL),
-        "ml": Line("സാങ്കൽപ്പിക ബ്രാൻഡ് · Omnicult ഡെമോ ക്രിയേറ്റീവ്", "Fictional brand · Omnicult demo creative", _LABEL),
-        "bn": Line("কাল্পনিক ব্র্যান্ড · Omnicult ডেমো ক্রিয়েটিভ", "Fictional brand · Omnicult demo creative", _LABEL),
     },
 }
 HEADLINES = frozenset({"दिवाळी म्हणजे फराळ!", *(v.copy for v in PHRASEBOOK["दिवाळी म्हणजे फराळ!"].values())})

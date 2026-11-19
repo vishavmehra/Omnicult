@@ -51,7 +51,7 @@ def test_wording_is_found_in_english_and_the_five_market_languages(text: str, ki
 
 @pytest.mark.parametrize("text", [
     "दिवाळी म्हणजे फराळ!", "आजीच्या हातची चव", "घरच्या चवीचा फराळ, आता एकाच टिनमध्ये", "भाऊबीजेला द्या गोड भेट", "आजच ऑर्डर करा · Order now",
-    "Every bond, a little sweeter.", "Aamod Festive Tin*", "Best wishes this Diwali", "Fictional brand · Omnicult demo creative",
+    "Every bond, a little sweeter.", "Aamod Festive Tin*", "Best wishes this Diwali",
     "இந்தப் பண்டிகைக்கு இனிய பரிசைக் கொடுங்கள்", "ഈ ഉത്സവത്തിന് മധുരമുള്ള സമ്മാനം നൽകൂ", "এই উৎসবে মিষ্টি উপহার দিন", "*நிகர எடை 750 கிராம்.", "*নিট ওজন 750 গ্রাম।",
 ])
 def test_the_ordinary_copy_of_the_journey_raises_nothing(text: str) -> None:

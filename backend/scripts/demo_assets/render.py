@@ -226,9 +226,6 @@ def keyvisual() -> list[dict]:
     add("mh-kv-tagline", "tagline", spec.TAGLINE[0], tag, "en", "Latn", True)
     small = place(plate, text_layer([spec.SMALL_PRINT[0]], SMALL, 19, CREAM + (225,), align="left", shadow=None), 56, KH - 34, "lb")
     add("mh-kv-small-print", "body", spec.SMALL_PRINT[0], small)
-    demo = place(plate, text_layer([spec.DEMO_LABEL[0]], ("latin_sans",), 15, CREAM + (165,), align="right", shadow=None,
-                                   language="en"), KW - 56, KH - 34, "rb")
-    add("mh-kv-demo-label", "body", spec.DEMO_LABEL[0], demo, "en", "Latn")
     plate.convert("RGB").save(OUT / "keyvisual.png", optimize=True)
     els.insert(0, {"id": "mh-kv-plate", "kind": "scene", "value": REL(OUT / "keyvisual_plate.jpg"), "language": None,
                    "script": None, "bbox": [0, 0, 1, 1], "scene_id": None, "locked": False})
@@ -412,10 +409,8 @@ def video() -> dict:
     button = card_text("mh-vid-cta-button", "cta", spec.CTA_BUTTON[0], SANS, 42, CREAM, hook[3] + 44, delay=1.0, shadow=None,
                        pill=(KUMKUM + (255,), 40, 36, 20))
     tag = card_text("mh-vid-tagline", "tagline", spec.TAGLINE[0], DISPLAY, 46, MARIGOLD, button[3] + 40, "en", "Latn", 1.3, True)
-    small = card_text("mh-vid-small-print", "body", spec.SMALL_PRINT[0], SMALL, 26, CREAM + (225,), tag[3] + 26, delay=1.5,
-                      shadow=None)
-    card_text("mh-vid-demo-label", "body", spec.DEMO_LABEL[0], ("latin_sans",), 21, CREAM + (165,), small[3] + 14, "en", "Latn",
-              1.5, shadow=None)
+    card_text("mh-vid-small-print", "body", spec.SMALL_PRINT[0], SMALL, 26, CREAM + (225,), tag[3] + 26, delay=1.5,
+              shadow=None)
 
     def photo_frame(sid: str, t: float):
         s = next(x for x in scenes if x["id"] == sid)

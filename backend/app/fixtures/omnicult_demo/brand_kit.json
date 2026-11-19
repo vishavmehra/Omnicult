@@ -103,7 +103,7 @@
     {"id": "pack_reference", "path": "brand/pack_reference.png", "width": 1024, "height": 1024, "background": "white", "description": "The same tin with the emblem only and no lettering. Given to the image model as a reference so every generated scene shows the same pack.", "provenance": "Derived from the generated tin in code."}
   ],
   "claims_policy": {
-    "allowed": ["True product facts of the fictional product: contents, net weight (750 g), delivery window."],
+    "allowed": ["True product facts of the product: contents, net weight (750 g), delivery window."],
     "forbidden": ["Health, nutrition or wellness claims.", "Financial claims.", "Superiority, leadership or No. 1 claims without independent substantiation."]
   }
 }
