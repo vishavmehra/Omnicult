@@ -4,19 +4,25 @@ One short regional clip from Veo 3.1 on Vertex AI. Pure: no database. Images and
 assets) and the clip comes out as bytes (the service stores it as a derived asset and records the operation).
 
 The model is called through the gateway's `video` capability adapter, once per run, never retried by the app (a retry could
-start and bill a second clip), metered and budget-checked. The start frame is the regional key visual WITHOUT its text: any
-on-screen text is added in code after the clip, or the clip has none. Video models cannot guarantee that locked brand
-elements stay undistorted from frame to frame, so the run says so, and every check is computed in code from the delivered file
-(ffprobe), never by a model. In demo mode no provider is called: the committed demonstration clip is used and the start frame,
-the voice-over join and the checks still run in code.
+start and bill a second clip), metered and budget-checked. The start frame is the regional key visual WITHOUT its text and
+WITHOUT its logo and tagline: the generated scene (the plate) with those wiped out. A video model cannot keep brand elements
+undistorted from frame to frame, so it is never asked to draw them: the logo, tagline, product tin and headline are drawn in
+code on one transparent layer
+(Brand Kit files, text through the Indic renderer) that goes over every frame of the clip, and the finished clip is then sampled
+and each element is compared with that layer. Every check is computed in code from the delivered file (ffprobe, ffmpeg, Pillow),
+never by a model. In demo mode no provider is called: the committed demonstration clip is used and the start frame, the brand
+overlay, the voice-over join and the checks still run in code.
 """
 
 import asyncio
+import io
 import time
+from dataclasses import dataclass, field
 from typing import Any, Literal, TypedDict
 from uuid import UUID
 
 from langchain_core.runnables import RunnableConfig
+from PIL import Image
 from pydantic import BaseModel
 
 from app.core.errors import ValidationFailed
@@ -25,6 +31,7 @@ from app.llm.gateway import LLMError
 from app.llm.media import VIDEO_SECONDS
 from app.media import ffmpeg, textrender
 from app.media import remake_video as pipeline
+from app.media.remake_video import BrandSpec
 from app.media.remake import duration_ms as wav_ms
 from app.schemas.common import StepTrace
 from app.schemas.runs import RunError
@@ -34,17 +41,22 @@ from app.workflows.types import OutcomeStatus, WorkflowContext, WorkflowDeps
 
 VIDEO = "remake_video"
 V1, V2, V3, V4 = STAGES[VIDEO]
-VIDEO_PROMPT_VERSION = "remake-video-v1"
+VIDEO_PROMPT_VERSION = "remake-video-v2"
 NEGATIVE_PROMPT = "text, letters, subtitles, captions, watermark, extra logos, warped packaging, distorted product, blurry, low quality"
 INTERPRETATION_NOTE = "The clip is a model interpretation. Confirm props, symbols and motion with someone from the region."
-NO_TEXT_NOTE = "The clip has no on-screen text: the model is never asked to draw it, and any text would be added in code."
+NO_TEXT_NOTE = "The model is never asked to draw text: the clip has no model-made on-screen text, and any text shown is rendered in code."
 LOCK_NOTE = ("Video models cannot guarantee that the logo, the pack and the tagline stay undistorted from frame to frame. They are "
              "in the start frame and the prompt asks for them unchanged, but nothing here proves it: review the clip frame by frame "
              "before use.")
+PINNED_NOTE = ("The {names} are drawn in code over every frame of the clip, never by the model, and compared with that drawing in "
+               "every 0.5 s.")
+UNPINNED_NOTE = ("Locked regions that are not drawn in code ({names}) are in the start frame as the original holds them; a video model "
+                 "cannot guarantee they stay unchanged from frame to frame, so review the clip before use.")
 NO_FRAME_NOTE = "No remade key visual was available, so the clip was generated from the prompt alone: the logo and the pack are not in it."
 OWN_FRAME_NOTE = "The start frame is the image chosen for this run; locked regions are only as the image holds them."
 UNREVIEWED_NOTE = "The voice-over is machine speech; no native speaker has reviewed it."
 DEMO_VIDEO_NOTE = "Saved demonstration result: the clip is a committed fixture, not a live call. The start frame, the voice-over join and the checks ran live in code."
+BRAND_NAME = "Brand elements"
 DURATION_TOLERANCE_MS = 1000  # the delivered length may differ from the requested one by this much before the check is flagged
 StartSource = Literal["remake_scene", "asset", "demo_fixture", "none"]
 
@@ -59,6 +71,8 @@ class VideoPromptParts(BaseModel):
     settings: list[str] = []  # where the original film's scenes are set (not what they show: the first frame decides that)
     direction: str | None = None
     has_start_frame: bool = True
+    pinned: list[str] = []  # brand elements drawn in code over the clip (logo, tagline, tin, headline): the model never draws them
+    clear_bands: list[Literal["upper", "lower"]] = []  # the bands of the frame kept clear for them
 
 
 def _clip(text: str | None, limit: int) -> str:
@@ -86,11 +100,19 @@ def video_prompt(parts: VideoPromptParts) -> str:
         lines.append(f"Pacing follows the original film (its settings: {settings}); the first frame, not the film, decides what is shown.")
     elif settings:
         lines.append(f"The settings follow the original film: {settings}.")
-    if parts.has_start_frame:
+    pinned = parts.has_start_frame and bool(parts.pinned)
+    if pinned:
+        bands = " and ".join(parts.clear_bands)
+        lines.append("The first frame is the finished scene. Keep its framing and composition. The camera is locked off: no zoom, pan or tilt.")
+        lines.append((f"Keep the {bands} band{'s' if len(parts.clear_bands) > 1 else ''} of the frame clear and calm for brand graphics. "
+                      if bands else "")
+                     + "Brand graphics are added afterwards in editing: never draw or change any logo, label or lettering, and keep the "
+                       "product tin as it is.")
+    elif parts.has_start_frame:
         lines.append("The first frame is the finished scene. Keep the product tin, the logo and the tagline exactly as they appear in "
                      "it: sharp, undistorted and in the same place. Keep the framing and the composition.")
-    lines.append("Gentle, natural motion only: a slow camera push-in, flickering lamp light, a soft breeze moving garlands and flowers, "
-                 "a little steam. No new people appear.")
+    lines.append("Gentle, natural motion only: " + ("" if pinned else "a slow camera push-in, ")
+                 + "flickering lamp light, a soft breeze moving garlands and flowers, a little steam. No new people appear.")
     if parts.direction:
         lines.append(f"Art direction written by the campaign owner: {_clip(parts.direction, 400)}")
     lines.append("No text, letters, subtitles, captions or watermarks anywhere. Photographic and realistic, "
@@ -112,6 +134,8 @@ class RemakeVideoInput(BaseModel):
     original: bytes | None = None  # the finished source creative (locked regions are restored from it)
     scene: bytes | None = None  # the generated regional scene from Remake: Visuals
     start_image: bytes | None = None  # an image chosen for this run, used as it is
+    script: str = "Latn"  # the region language's script: the headline is rendered in it
+    brand: list[BrandSpec] = []  # elements drawn in code (wiped from the start frame, overlaid on the clip, checked)
     locked: list[LockedSpec] = []
     voiceover: bytes | None = None
     voiceover_asset_id: UUID | None = None
@@ -124,6 +148,9 @@ class VideoCheck(BaseModel):
     name: str
     passed: bool
     detail: str
+    element_id: str | None = None  # set for the brand-element checks
+    frames_checked: int | None = None  # brand checks: how many frames were compared
+    failed_at_ms: list[int] = []  # brand checks: the sampled frames in which the element did not match its drawing
 
 
 class RemakeVideoOutcome(BaseModel):
@@ -166,7 +193,12 @@ class GState(TypedDict, total=False):
     raw: bytes
     mime: str
     final: bytes
+    branded: bytes
     joined: bool
+    layout_size: tuple[int, int] | None
+    pinned: list[BrandSpec]
+    overlay: Any
+    brand_error: str | None
     facts: Any
     checks: list[VideoCheck]
     limitations: list[str]
@@ -179,13 +211,38 @@ def _fail(state: GState, error: RunError, trace: StepTrace | None = None) -> dic
     return {"steps": [*state.get("steps", []), *([trace] if trace else [])], "error": error, "stop": True}
 
 
-def _check(name: str, passed: bool, detail: str) -> VideoCheck:
-    return VideoCheck(name=name, passed=passed, detail=detail)
+def _check(name: str, passed: bool, detail: str, **extra: Any) -> VideoCheck:
+    return VideoCheck(name=name, passed=passed, detail=detail, **extra)
 
 
-async def prepare_frame(inp: RemakeVideoInput, demo: bool) -> tuple[bytes | None, str, StartSource]:
-    """(start frame PNG or None, aspect ratio, where it came from). Raises ValidationFailed for an image that cannot be read.
-    Shared with the preview, so what is shown is what a run would send."""
+def _times(ms: list[int]) -> str:
+    return ", ".join(f"{t / 1000:.1f} s" for t in ms[:4]) + (f" and {len(ms) - 4} more" if len(ms) > 4 else "")
+
+
+def _brand_check(result: pipeline.BrandResult) -> VideoCheck:
+    """One element's verdict from the frames checked: plain words and the timestamps of any frame that did not match."""
+    extra: dict[str, Any] = {"element_id": result.element_id, "frames_checked": result.sampled, "failed_at_ms": result.failed_ms}
+    if not result.checkable:
+        return _check(result.label, False, "Nothing was drawn in its box, so there was nothing to compare.", **extra)
+    if result.failed_ms:
+        return _check(result.label, False, f"drifted at {_times(result.failed_ms)} ({len(result.failed_ms)} of {result.sampled} frames)", **extra)
+    return _check(result.label, True, f"held for all {result.sampled} frames", **extra)
+
+
+@dataclass
+class StartFrame:
+    png: bytes | None
+    aspect: str
+    source: StartSource
+    layout_size: tuple[int, int] | None = None  # the key visual's size (what the brand bboxes refer to)
+    pinned: list[BrandSpec] = field(default_factory=list)  # elements drawn in code: wiped from the frame, overlaid on the clip
+
+
+async def prepare_start(inp: RemakeVideoInput, demo: bool) -> StartFrame:
+    """The start frame and what it was built from. Raises ValidationFailed for an image that cannot be read. Shared with the
+    preview, so what is shown is what a run would send. A key-visual frame is the generated scene (the plate) with the brand
+    marks wiped out, so the model is never shown, and never asked to draw, a logo or a tagline; a tin that is drawn in code
+    stays in the frame and the overlay covers it exactly."""
     source: StartSource = inp.start_source
     if demo:  # demo projects always start from the committed key visual and scene; their own choices would not match the saved clip
         original_bytes = inp.original or fixtures.demo_original()
@@ -193,16 +250,29 @@ async def prepare_frame(inp: RemakeVideoInput, demo: bool) -> tuple[bytes | None
         source = "demo_fixture"
     else:
         original_bytes, scene_bytes = inp.original, inp.scene
+    pinned: list[BrandSpec] = []
+    layout_size = None
     if source in ("remake_scene", "demo_fixture") and original_bytes:
         original = await asyncio.to_thread(textrender.load_image, original_bytes)
         scene = await asyncio.to_thread(textrender.load_image, scene_bytes) if scene_bytes else None
-        layout = await asyncio.to_thread(pipeline.build_layout, original, scene, [r.bbox for r in inp.locked])
+        pinned = list(inp.brand)
+        wiped = [b for b in pinned if b.role in pipeline.WIPED_ROLES]
+        wiped_ids = {b.element_id for b in wiped}
+        layout = await asyncio.to_thread(pipeline.build_layout, original, scene, [r.bbox for r in inp.locked if r.element_id not in wiped_ids],
+                                         [b.bbox for b in wiped])
+        layout_size = layout.size
     elif source == "asset" and inp.start_image:
         layout = await asyncio.to_thread(textrender.load_image, inp.start_image)
     else:
-        return None, "9:16", "none"
+        return StartFrame(None, "9:16", "none")
     frame, aspect, _ = await asyncio.to_thread(pipeline.start_frame, layout)
-    return frame, aspect, source
+    return StartFrame(frame, aspect, source, layout_size, pinned)
+
+
+async def prepare_frame(inp: RemakeVideoInput, demo: bool) -> tuple[bytes | None, str, StartSource]:
+    """(start frame PNG or None, aspect ratio, where it came from)."""
+    start = await prepare_start(inp, demo)
+    return start.png, start.aspect, start.source
 
 
 async def loading_context(state: GState, config: RunnableConfig) -> dict:
@@ -222,7 +292,7 @@ async def loading_context(state: GState, config: RunnableConfig) -> dict:
                                                  "only; use a live project for other regions. Nothing was generated."))
         update["fixture"] = fixture
     try:
-        frame, aspect, source = await prepare_frame(inp, demo)
+        start = await prepare_start(inp, demo)
     except ValidationFailed as exc:
         return _fail(state, RunError(code="VALIDATION_ERROR", stage=V1, retryable=False, message=f"{exc.message} Nothing was generated."))
     if not demo:
@@ -231,9 +301,17 @@ async def loading_context(state: GState, config: RunnableConfig) -> dict:
             return _fail(state, RunError(code="PROVIDER_NOT_CONFIGURED", stage=V1, retryable=False,
                                          message="No video model is configured on this server. Nothing was generated."))
         update["client"] = client
-    notes = [INTERPRETATION_NOTE, NO_TEXT_NOTE, *([LOCK_NOTE] if frame else []), *([OWN_FRAME_NOTE] if source == "asset" else []),
-             *([NO_FRAME_NOTE] if source == "none" else [])]
-    update.update(frame=frame, aspect=aspect, source=source, limitations=notes, steps=[local_step(V1, VIDEO, "omnicult", started)])
+    frame, aspect, source = start.png, start.aspect, start.source
+    pinned_ids = {b.element_id for b in start.pinned}
+    loose = sorted({r.label for r in inp.locked if r.element_id not in pinned_ids})  # locked regions the frame still carries as pixels
+    names = ", ".join(dict.fromkeys(pipeline.ROLE_LABELS[b.role].lower() for b in start.pinned))
+    notes = [INTERPRETATION_NOTE, NO_TEXT_NOTE,
+             *([PINNED_NOTE.format(names=names)] if start.pinned else []),
+             *([LOCK_NOTE] if frame and not start.pinned else []),
+             *([UNPINNED_NOTE.format(names=", ".join(loose))] if start.pinned and loose else []),
+             *([OWN_FRAME_NOTE] if source == "asset" else []), *([NO_FRAME_NOTE] if source == "none" else [])]
+    update.update(frame=frame, aspect=aspect, source=source, layout_size=start.layout_size, pinned=start.pinned, limitations=notes,
+                  steps=[local_step(V1, VIDEO, "omnicult", started)])
     return update
 
 
@@ -258,25 +336,68 @@ async def generating_video(state: GState, config: RunnableConfig) -> dict:
             "meta": {"source": "provider", "model": clip.model, "location": clip.location, "operation_id": clip.operation_id}}
 
 
-async def adding_voiceover(state: GState, config: RunnableConfig) -> dict:
-    await announce(config, VIDEO, 2, "Joining the voice-over." if state["inp"].voiceover else "No voice-over to join.")
-    inp, started, notes = state["inp"], time.perf_counter(), list(state["limitations"])
-    raw = state["raw"]
-    if not inp.voiceover:
-        return {"final": raw, "joined": False, "steps": [*state["steps"], local_step(V3, VIDEO, "omnicult", started)]}
+async def _pin_brand(state: GState, notes: list[str]) -> tuple[bytes, Any, str | None]:
+    """(the clip with the brand layer over every frame, the layer, a problem). On a problem the clip comes back as delivered."""
+    inp, raw = state["inp"], state["raw"]
     try:
         facts = await pipeline.inspect_clip(raw)
+        if not (facts.width and facts.height):
+            raise ValueError("The clip has no picture size.")
+        frame = await asyncio.to_thread(lambda: Image.open(io.BytesIO(state["frame"])).convert("RGB"))
+        original_bytes = inp.original or (fixtures.demo_original() if state["demo"] else None)
+        original = await asyncio.to_thread(textrender.load_image, original_bytes) if original_bytes else None
+        overlay = await asyncio.to_thread(pipeline.build_overlay, (facts.width, facts.height), state["layout_size"], state["aspect"], frame,
+                                          state["pinned"], original, inp.script)
+        notes.extend(overlay.notes)
+        if not overlay.placed:
+            return raw, None, "None of the brand elements could be drawn, so the clip has none of them."
+        return await pipeline.apply_overlay(raw, overlay), overlay, None
+    except (ffmpeg.MediaToolMissing, ffmpeg.MediaProcessingFailed, ValidationFailed, ValueError) as exc:  # MediaUnreadable is a ValidationFailed
+        return raw, None, f"The brand elements could not be drawn over the clip: {getattr(exc, 'message', None) or str(exc)}"
+
+
+async def adding_voiceover(state: GState, config: RunnableConfig) -> dict:
+    inp, started, notes = state["inp"], time.perf_counter(), list(state["limitations"])
+    pinned = bool(state.get("pinned")) and bool(state.get("frame"))
+    await announce(config, VIDEO, 2, ("Drawing the brand elements" + (" and joining the voice-over." if inp.voiceover else "."))
+                   if pinned else "Joining the voice-over." if inp.voiceover else "No voice-over to join.")
+    base, extra = state["raw"], {}
+    if pinned:
+        base, overlay, problem = await _pin_brand(state, notes)
+        extra = {"overlay": overlay, "brand_error": problem}
+    trace = local_step(V3, VIDEO, "omnicult", started)
+    if not inp.voiceover:
+        return {**extra, "final": base, "joined": False, "limitations": notes, "steps": [*state["steps"], trace]}
+    try:
+        facts = await pipeline.inspect_clip(base)
         clip_ms = facts.duration_ms or inp.seconds * 1000
         vo_ms = await asyncio.to_thread(wav_ms, inp.voiceover)
         if not pipeline.voiceover_fits(vo_ms, clip_ms):
             notes.append(f"The voice-over runs {vo_ms / 1000:.1f} s and the clip {clip_ms / 1000:.1f} s, so it was not joined: speech is "
                          "never cut. Speak fewer lines in Remake: Sound, or make a longer clip.")
-            return {"final": raw, "joined": False, "limitations": notes, "steps": [*state["steps"], local_step(V3, VIDEO, "omnicult", started)]}
-        final = await pipeline.join_voiceover(raw, inp.voiceover, clip_ms)
+            return {**extra, "final": base, "joined": False, "limitations": notes, "steps": [*state["steps"], trace]}
+        final = await pipeline.join_voiceover(base, inp.voiceover, clip_ms)
     except (ffmpeg.MediaToolMissing, ffmpeg.MediaProcessingFailed, ffmpeg.MediaUnreadable, ValueError) as exc:
         notes.append(f"The voice-over was not joined: {getattr(exc, 'message', None) or str(exc)}")  # the silent clip is kept
-        return {"final": raw, "joined": False, "limitations": notes, "steps": [*state["steps"], local_step(V3, VIDEO, "omnicult", started)]}
-    return {"final": final, "joined": True, "limitations": [*notes, UNREVIEWED_NOTE], "steps": [*state["steps"], local_step(V3, VIDEO, "omnicult", started)]}
+        return {**extra, "final": base, "joined": False, "limitations": notes, "steps": [*state["steps"], trace]}
+    return {**extra, "final": final, "joined": True, "limitations": [*notes, UNREVIEWED_NOTE], "steps": [*state["steps"], trace]}
+
+
+async def _brand_checks(state: GState, notes: list[str]) -> list[VideoCheck]:
+    """One check per brand element, from frames sampled out of the FINAL clip, plus one for any element that was wiped from the
+    start frame and could not be drawn."""
+    overlay, pinned = state.get("overlay"), state["pinned"]
+    if overlay is None:
+        return [_check(BRAND_NAME, False, state.get("brand_error") or "The brand elements were not drawn over the clip.")]
+    drawn = {item.element_id for item in overlay.placed}
+    checks = [_check(pipeline.ROLE_LABELS[b.role], False, "It was left out of the start frame and could not be drawn; see the notes.", element_id=b.element_id)
+              for b in pinned if b.element_id not in drawn and b.role in pipeline.WIPED_ROLES]
+    try:
+        results = await pipeline.check_brand(state["final"], overlay)
+    except (ffmpeg.MediaToolMissing, ffmpeg.MediaProcessingFailed) as exc:
+        notes.append(f"The brand elements were not compared with their drawing: {getattr(exc, 'message', None) or str(exc)}")
+        return checks
+    return [*checks, *(_brand_check(r) for r in results)]
 
 
 async def checking_clip(state: GState, config: RunnableConfig) -> dict:
@@ -288,6 +409,8 @@ async def checking_clip(state: GState, config: RunnableConfig) -> dict:
         facts = await pipeline.inspect_clip(state["final"])
     except ffmpeg.MediaToolMissing as exc:
         notes.append(f"The clip was not checked: {exc.message}")
+        if state.get("brand_error"):
+            notes.append(state["brand_error"])
     except ffmpeg.MediaUnreadable:
         return _fail(state, RunError(code="RUN_FAILED", stage=V4, retryable=False,
                                      message="The delivered file could not be read as video. Nothing was saved."),
@@ -307,6 +430,8 @@ async def checking_clip(state: GState, config: RunnableConfig) -> dict:
         if not facts.has_video:
             return _fail(state, RunError(code="RUN_FAILED", stage=V4, retryable=False, message="The delivered file has no video. Nothing was saved."),
                          local_step(V4, VIDEO, "omnicult", started, status="failed", error_code="RUN_FAILED"))
+        if state.get("pinned") and state.get("frame"):
+            checks.extend(await _brand_checks(state, notes))
     return {"facts": facts, "checks": checks, "limitations": notes, "steps": [*state["steps"], local_step(V4, VIDEO, "omnicult", started)]}
 
 
@@ -320,7 +445,9 @@ async def run_remake_video(inp: RemakeVideoInput, deps: WorkflowDeps, progress: 
         return RemakeVideoOutcome(status="failed", steps=steps, error=error, limitations=state.get("limitations", []), prompt=inp.prompt)
     meta, facts, checks = state["meta"], state.get("facts"), state["checks"]
     flagged = [c for c in checks if not c.passed]
+    wiped_ids = {b.element_id for b in state.get("pinned") or [] if b.role in pipeline.WIPED_ROLES}
     notes = [*state["limitations"], *([DEMO_RUN_NOTE] if state["demo"] else []),
+             *([c.detail if c.name == BRAND_NAME else f"{c.name} {c.detail}." for c in flagged if c.element_id or c.name == BRAND_NAME]),
              *([f"{len(flagged)} of {len(checks)} code checks were flagged; see the checks."] if flagged else [])]
     return RemakeVideoOutcome(
         status="partial" if flagged else "completed", clip=state["final"], silent_clip=state["raw"], joined=state["joined"],
@@ -329,6 +456,6 @@ async def run_remake_video(inp: RemakeVideoInput, deps: WorkflowDeps, progress: 
         width=facts.width if facts else None, height=facts.height if facts else None, duration_ms=facts.duration_ms if facts else None,
         size_bytes=len(state["final"]), seconds=inp.seconds, source=meta["source"], model=meta["model"], location=meta["location"],
         operation_id=meta["operation_id"], prompt=meta.get("prompt") or inp.prompt, negative_prompt=inp.negative_prompt,
-        locked_regions=[r.model_dump() for r in inp.locked] if state.get("frame") and state["source"] != "asset" else [],
+        locked_regions=[r.model_dump() for r in inp.locked if r.element_id not in wiped_ids] if state.get("frame") and state["source"] != "asset" else [],
         checks=checks, limitations=list(dict.fromkeys(notes)), steps=steps,
     )

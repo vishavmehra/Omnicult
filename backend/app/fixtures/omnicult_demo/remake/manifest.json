@@ -70,21 +70,22 @@
    "mime_type": "video/mp4",
    "model": "veo-3.1-fast-generate-001",
    "location": "us-central1",
-   "prompt_version": "remake-video-v1",
-   "generated_at": "2026-11-18",
+   "prompt_version": "remake-video-v2",
+   "generated_at": "2026-11-19",
    "seconds": 6,
    "aspect_ratio": "9:16",
    "resolution": "720p",
    "width": 720,
    "height": 1280,
-   "size_bytes": 2606631,
+   "size_bytes": 2171978,
    "estimated_cost_usd": 0.48,
-   "operation_id": "8fc5cdeb-73b2-4b9e-b24c-b62a5a54dcd8",
-   "prompt": "A short, calm festive advertising shot for an audience in Tamil Nadu (Tamil-speaking). Product: Aamod Festive Tin. A reusable peacock-teal tin with a brass-gold lid holding about 750 g of traditional festive sweets and savouries. The assortment follows the region; the tin is the same everywhere. The campaign says: Home-style festive sweets, ready to gift and delivered before the festival day. Pacing follows the original film (its settings: A balcony of an apartment building at dusk, decorated for Diwali; A dark teal tabletop with a Diwali snack spread and lamps; A home dining table in the evening); the first frame, not the film, decides what is shown. The first frame is the finished scene. Keep the product tin, the logo and the tagline exactly as they appear in it: sharp, undistorted and in the same place. Keep the framing and the composition. Gentle, natural motion only: a slow camera push-in, flickering lamp light, a soft breeze moving garlands and flowers, a little steam. No new people appear. No text, letters, subtitles, captions or watermarks anywhere. Photographic and realistic, warm light consistent with the first frame.",
-   "start_frame": "tn_scene.jpg (the Remake: Visuals scene) with the logo, tin and tagline of keyvisual.png restored, contained on a 720x1280 canvas",
-   "observed": "Reviewed frame by frame after generation: the camera pushes in slowly, the lamp flame flickers and jasmine petals fall. The model did not keep the locked brand elements steady: a garbled copy of the tagline appears under the logo at about 1.5 s and the logo has faded out by about 4.5 s; the round label on the tin flickers once. The tagline at the bottom stays readable.",
-   "note": "The file is the model's MP4 exactly as delivered (no audio, 24 fps), not re-encoded.",
-   "sha256": "9cd81e3fce6933144dbf9b7c5a1d645d8ebd6a3ef0b1669a2c6cb3902470541f"
+   "operation_id": "71c5b385-6874-4a76-8d8e-9250e4e55dd6",
+   "prompt": "A short, calm festive advertising shot for an audience in Tamil Nadu (Tamil-speaking). Product: Aamod Festive Tin. A reusable peacock-teal tin with a brass-gold lid holding about 750 g of traditional festive sweets and savouries. The assortment follows the region; the tin is the same everywhere. The campaign says: Home-style festive sweets, ready to gift and delivered before the festival day. Pacing follows the original film (its settings: A balcony of an apartment building at dusk, decorated for Diwali; A home dining table in the evening; A carved wooden table with lamps and marigolds); the first frame, not the film, decides what is shown. The first frame is the finished scene. Keep its framing and composition. The camera is locked off: no zoom, pan or tilt. Keep the upper and lower bands of the frame clear and calm for brand graphics. Brand graphics are added afterwards in editing: never draw or change any logo, label or lettering, and keep the product tin as it is. Gentle, natural motion only: flickering lamp light, a soft breeze moving garlands and flowers, a little steam. No new people appear. No text, letters, subtitles, captions or watermarks anywhere. Photographic and realistic, warm light consistent with the first frame.",
+   "negative_prompt": "text, letters, subtitles, captions, watermark, extra logos, warped packaging, distorted product, blurry, low quality",
+   "start_frame": "tn_scene.jpg (the Remake: Visuals scene) with the logo and tagline of keyvisual.png wiped out (a smooth fill from the pixels around), the tin of keyvisual.png kept, the legibility scrim applied, contained on a 720x1280 canvas",
+   "observed": "Reviewed at 0, 1.5, 3, 4.5 and 5.9 s: the camera stays locked, the lamp flames flicker and jasmine petals drift; no logo, tagline or lettering appears anywhere in the model's clip and the tin stays coherent. The logo, tagline, tin and Tamil headline are NOT in this file: a demo run draws them in code over every frame and compares them in frames sampled every 0.5 s (all four held for all 12 sampled frames in the live run that made this clip).",
+   "note": "The file is the model's MP4 exactly as delivered (no audio, 24 fps), not re-encoded and without the code-drawn brand elements.",
+   "sha256": "a1a854c21c646d98563879002f5dd71a919ecc30042aff66625e5d5918ce96f3"
   }
  }
 }

@@ -88,6 +88,8 @@ async def test_a_clip_starts_from_the_remade_scene_and_lands_in_a_new_version_wi
     assert (call["seconds"], call["aspect_ratio"], call["start_mime_type"]) == (6, "9:16", "image/png")
     assert Image.open(io.BytesIO(call["start_image"])).size == (720, 1280)
     assert "Tamil Nadu" in call["prompt"] and "Slow push-in on the lamp." in call["prompt"] and call["prompt"].isascii()
+    assert "Brand graphics are added afterwards" in call["prompt"] and "never draw or change any logo" in call["prompt"]  # the model is told to leave the brand elements to code
+    assert "exactly as they appear" not in call["prompt"] and not any(e["value"] in call["prompt"] for e in elements() if e["kind"] in ("headline", "cta"))
     # a NEW version: a `remake-video` scene element holds the clip; the source version is untouched
     new = (await client.get(f"{API}/campaigns/{world.campaign}/versions/{out['result_version_id']}")).json()
     old = (await client.get(f"{API}/campaigns/{world.campaign}/versions/{remade}")).json()
@@ -98,16 +100,19 @@ async def test_a_clip_starts_from_the_remade_scene_and_lands_in_a_new_version_wi
     assert len(new["elements"]) == len(old["elements"]) + 1
     # operation: actor ai, reason, prompt version and the estimated cost recorded; kind remake shows in the Version Tree as an AI proposal
     op = (await client.get(f"{API}/campaigns/{world.campaign}/operations/{out['id']}")).json()
-    assert (op["kind"], op["actor"], op["prompt_version"], op["status"]) == ("remake", "ai", "remake-video-v1", "applied")
+    assert (op["kind"], op["actor"], op["prompt_version"], op["status"]) == ("remake", "ai", "remake-video-v2", "applied")
     assert op["estimated_cost_usd"] == pytest.approx(0.48) and "Tamil Nadu" in op["reason"] and "6 s clip" in op["reason"]
     assert out["kind"] == "video" and out["passed"] and out["mode"] == "live" and out["estimated_cost_usd"] == pytest.approx(0.48)
     # what the clip says about itself
     assert (clip["source"], clip["start_source"], clip["model"], clip["location"]) == ("provider", "remake_scene", "veo-3.1-fast-generate-001", "us-central1")
     assert (clip["seconds"], clip["resolution"], clip["aspect_ratio"], clip["operation_id"]) == (6, "720p", "9:16", "op-1234")
     assert clip["audio_generated_by_model"] is False and not clip["with_voiceover"] and clip["video_asset_id"] == clip["silent_asset_id"]
-    assert [r["element_id"] for r in clip["kept_regions"]] == ["kv-logo", "kv-pack"]  # carried into the start frame, not guaranteed by the model
-    assert all(c["passed"] for c in clip["checks"]) and clip["prompt_version"] == "remake-video-v1"
-    assert any("cannot guarantee" in n for n in out["limitations"]) and any("no on-screen text" in n for n in out["limitations"])
+    assert [r["element_id"] for r in clip["kept_regions"]] == ["kv-pack"]  # the pack has no Brand Kit file here, so it stays in the frame as pixels
+    assert all(c["passed"] for c in clip["checks"]) and clip["prompt_version"] == "remake-video-v2"
+    brand = {c["name"]: c for c in clip["checks"] if c["element_id"]}  # the logo and headline are drawn in code over every frame, then measured
+    assert {c["element_id"] for c in brand.values()} == {"kv-logo", "kv-headline"} and all(c["frames_checked"] >= 10 and c["failed_at_ms"] == [] for c in brand.values())
+    assert all("held for all" in c["detail"] for c in brand.values())
+    assert any("drawn in code over every frame" in n for n in out["limitations"]) and any("never asked to draw text" in n for n in out["limitations"])
     # the files: the clip plays as video/mp4, the start frame is the PNG the model received
     file = await content(client, clip["video_url"])
     assert file.headers["content-type"].startswith("video/mp4") and file.content == mp4(6)
@@ -116,7 +121,7 @@ async def test_a_clip_starts_from_the_remade_scene_and_lands_in_a_new_version_wi
         rows = {r.derived_role: r for r in (await s.execute(select(m.Asset).where(m.Asset.derived_role.in_(["remake_video", "remake_frame"])))).scalars()}
     assert set(rows) == {"remake_video", "remake_frame"} and rows["remake_video"].kind == "video"
     info = rows["remake_video"].media_info["remake"]
-    assert (info["model"], info["prompt_version"], info["seconds"], info["ai_generated"]) == ("veo-3.1-fast-generate-001", "remake-video-v1", 6, True)
+    assert (info["model"], info["prompt_version"], info["seconds"], info["ai_generated"]) == ("veo-3.1-fast-generate-001", "remake-video-v2", 6, True)
     assert info["estimated_cost_usd"] == pytest.approx(0.48) and info["run_id"] == run["id"]
     assert rows["remake_frame"].parent_asset_id == UUID(world.original)  # the start frame descends from the finished creative
 
@@ -172,14 +177,14 @@ async def test_the_preview_shows_the_frame_the_prompt_and_the_cost_and_makes_no_
     plan = response.json()
     assert not video.calls and plan["can_run"] and plan["blocked_reason"] is None and plan["mode"] == "live"
     assert plan["source_version_id"] == remade and plan["model"] == "veo-3.1-fast-generate-001" and plan["location"] == "us-central1"
-    assert (plan["seconds"], plan["resolution"], plan["prompt_version"]) == (6, "720p", "remake-video-v1")
+    assert (plan["seconds"], plan["resolution"], plan["prompt_version"]) == (6, "720p", "remake-video-v2")
     assert plan["price_per_second_usd"] == pytest.approx(0.08) and plan["estimated_cost_usd"] == pytest.approx(0.48)
     assert plan["run_budget_usd"] == pytest.approx(0.50) and plan["within_budget"]
     frame = plan["start_frame"]
     assert (frame["source"], frame["aspect_ratio"], frame["width"], frame["height"]) == ("remake_scene", "9:16", 720, 1280)
     assert Image.open(io.BytesIO(base64.b64decode(frame["preview_jpeg_base64"]))).format == "JPEG"
     assert "Lamp glow." in plan["prompt"] and "Tamil Nadu" in plan["prompt"] and "text" in plan["negative_prompt"]
-    assert [x["element_id"] for x in plan["kept_regions"]] == ["kv-logo", "kv-pack"]
+    assert [x["element_id"] for x in plan["kept_regions"]] == ["kv-pack"] and any("drawn in code over every frame" in n for n in plan["notes"])
     # the preview never needs the confirmation; the run does
     refused = await start_video(client, world, {"region_code": "IN-TN", "language": "ta"})
     assert refused.status_code == 422 and refused.json()["error"]["details"][0]["field"] == "confirm_cost" and not video.calls
