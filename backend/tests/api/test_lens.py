@@ -204,7 +204,11 @@ async def test_the_calendar_dates_moments_with_sources_and_flags_a_campaign_wind
     assert shivaji["date"] == "2027-02-19" and shivaji["date_basis"] == "source_text" and shivaji["claim"]["sources"][0]["excerpt"]
     nothing = (await client.get(f"{base}/regions/IN-MH/calendar", params={"year": 2031})).json()
     assert all(d["date_basis"] == "source_text" for month in nothing["months"] for d in month["dated"])  # annual dates only, no holiday list
-    assert "2031" in nothing["gaps"][0] and "2026, 2027" in nothing["gaps"][0]
+    # No claim gives 2031 a public holiday, but the state's own list does: the calendar computes it, as data with its source.
+    assert nothing["years_available"] == [2026, 2027] and nothing["gaps"] == []
+    listed = [e for e in nothing["entries"] if e["kind"] == "public_holiday" and e["claim_id"] is None]
+    assert listed and all(e["date"].startswith("2031-") for e in listed)
+    assert any(s["label"].startswith("python-holidays") for e in listed for s in e["sources"])
     assert (await client.get(f"{base}/regions/IN-MH/calendar")).json()["window"] is None
 
 
@@ -224,9 +228,13 @@ async def test_the_language_map_labels_2011_and_keeps_disagreeing_shares(client:
     hindi = next(e for e in by_code["IN-WB"]["languages"] if e["code"] == "hi")
     assert hindi["disputed"] is True and [s["percent"] for s in hindi["shares"]] == [6.96, 5.0] and len(by_code["IN-WB"]["conflicts"]) == 1
     ka = by_code["IN-KA"]
-    assert by_code["IN-TN"]["has_census"] is False  # not built here: no shares, never a guess
-    assert ka["has_census"] is False and ka["languages"] and all(e["shares"] == [] for e in ka["languages"])
-    assert ka["languages"][0]["role"] == "primary" and ka["languages"][0]["script"] == "Knda"
+    # Not built here: no share claims, but the census table itself is shown as data (never as a claim, never a guess).
+    tn = by_code["IN-TN"]
+    assert tn["has_census"] is True and all(e["shares"] == [] for e in tn["languages"])
+    assert next(e for e in tn["languages"] if e["code"] == "ta")["census_share"] > 80
+    assert ka["has_census"] is True and ka["languages"] and all(e["shares"] == [] for e in ka["languages"])
+    assert ka["languages"][0]["role"] == "primary" and ka["languages"][0]["script"] == "Knda" and ka["languages"][0]["census_share"] == 66.54
+    assert by_code["IN-TS"]["has_census"] is False  # carved out of Andhra Pradesh in 2014: no 2011 figure is given to it
     assert any("2011" in text for text in body["limitations"]) and {s["source_type"] for s in body["sources"]} >= {"census_2011", "wikipedia"}
 
 
@@ -243,10 +251,14 @@ async def test_the_atlas_lists_every_state_with_its_evidence_strength(client: ht
     assert ka["strength_reasons"] and ka["name"] == "Karnataka" and ka["primary_script"] == "Knda"
     assert states["IN-MH"]["open_conflicts"] == 1 and states["IN-TN"]["open_conflicts"] == 0 and states["IN-KL"]["built"] is False
     assert empty["mode_label"] == "" and {s["source_type"] for s in empty["sources"]} >= {"census_2011", "holidays_package"}
-    await build(client, base, "IN-KA")  # a state with public holidays only stays weak: one category, no Moderate claim
+    # Every state carries its state data, built or not: published figures, languages and public holidays, never claims.
+    assert ka["data"]["figures"] and ka["data"]["holidays"] > 0 and ka["data"]["languages"][0]["name"] == "Kannada"
+    assert {"state_facts", "census_2011", "public_holidays", "reference"} <= set(ka["data"]["families"])
+    assert empty["summary"]["states_with_data"] == 36 and {d["key"] for d in empty["data_sources"]} >= {"state_facts", "census_2011"}
+    await build(client, base, "IN-KA")  # census languages and public holidays only: still weak, no Moderate claim
     ka = {s["code"]: s for s in (await client.get(f"{base}/atlas")).json()["states"]}["IN-KA"]
-    assert ka["built"] is True and ka["claims"] > 10 and ka["strength"] == "weak" and ka["categories_covered"] == 1
-    assert ka["source_types"] == ["holidays_package"] and "language" in ka["missing_categories"]
+    assert ka["built"] is True and ka["claims"] > 10 and ka["strength"] == "weak" and ka["categories_covered"] == 2
+    assert ka["source_types"] == ["census_2011", "holidays_package"] and "festival" in ka["missing_categories"]
 
 
 async def test_compare_puts_states_side_by_side_and_shows_missing_evidence(client: httpx.AsyncClient, seeded: Any) -> None:

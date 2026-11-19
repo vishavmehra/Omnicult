@@ -75,6 +75,9 @@ class Settings(BaseSettings):
     # Both optional: the adapters that need them are reported as not configured, never faked.
     data_gov_in_api_key: SecretStr | None = None
     youtube_api_key: SecretStr | None = None
+    # Moment Calendar: Google Calendar API (the public "Holidays in India" calendar) with an API key restricted to the Calendar
+    # and Knowledge Graph Search APIs. Optional: without it live campaigns serve the stored events and say when they were read.
+    google_public_api_key: SecretStr | None = None
     # Comment Pulse reads public YouTube comments with this key (YouTube Data API v3, commentThreads.list: 1 quota unit a page of
     # 100, 10,000 units a day for the whole app). A fetch stops at this many pages, and the same video is not fetched again
     # before the interval has passed.
@@ -89,6 +92,7 @@ class Settings(BaseSettings):
         "firebase_project_id",
         "data_gov_in_api_key",
         "youtube_api_key",
+        "google_public_api_key",
         mode="before",
     )
     @classmethod
@@ -148,6 +152,10 @@ class Settings(BaseSettings):
     # than this, and one build is cut off after the timeout (its partial result is not stored).
     lens_live_build_min_interval_seconds: int = 300
     lens_build_timeout_seconds: int = 90
+    # Auto-build: a live campaign's states are built in the background, one at a time, at most this many per campaign, with a
+    # pause between two builds so the free Wikimedia APIs see a polite client.
+    lens_auto_build_max_regions: int = Field(default=8, ge=1, le=36)
+    lens_auto_build_pause_seconds: float = Field(default=2.0, ge=0)
     # --- launch-t3 (Review Links, Region Plan, Asset Pack) ---------------------------------------------------------
     # Public review endpoints take no sign-in, so they are rate limited: requests per minute per client address, and
     # per link in total (a forged X-Forwarded-For cannot lift the per-link cap). One link also accepts a bounded

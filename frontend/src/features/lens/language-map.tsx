@@ -49,8 +49,15 @@ function Row({ entry, state }: { entry: LensLanguageEntry; state: string }) {
           {entry.code ? ` · ${entry.code}` : ""}
         </p>
       </div>
-      {entry.shares.length === 0 ? (
-        <p className="text-[12.5px] text-ink-muted">No census share collected for this language in {state}. Roles come from reference data and are not speaker shares.</p>
+      {entry.shares.length === 0 && entry.census_share != null ? (
+        <div className="space-y-0.5">
+          <Bar percent={entry.census_share} label={`${entry.name}: ${entry.census_share}% of the population in the 2011 census table`} />
+          <p className="type-meta pl-0.5">
+            Census 2011 table C-16{entry.census_speakers != null ? `, ${new Intl.NumberFormat("en-IN").format(entry.census_speakers)} people` : ""}
+          </p>
+        </div>
+      ) : entry.shares.length === 0 ? (
+        <p className="text-[12.5px] text-ink-muted">The census table has no share for this language in {state}. Roles come from reference data and are not speaker shares.</p>
       ) : (
         <>
           <div className="space-y-1.5">
@@ -88,12 +95,12 @@ function Detail({ data, region, campaignId }: { data: LensLanguageMap; region: s
   if (!r) return null;
   return (
     <section aria-labelledby="lm-state" className="space-y-3">
-      <SectionTitle id="lm-state" meta={r.has_census ? "Census 2011" : "No census shares collected"}>
+      <SectionTitle id="lm-state" meta={r.has_census ? "Census 2011" : "No 2011 figure"}>
         {r.region_name}: {languageName(r.primary_language)} in {scriptName(r.primary_script)} script
       </SectionTitle>
       {!r.has_census && (
         <p className="max-w-[68ch] text-[13.5px] text-ink-secondary">
-          Census shares are collected for four states. For this one the page lists the languages and scripts from reference data only. Build the four demo states, or add the census table, to see shares.
+          {r.region_name}&apos;s territory changed after the 2011 census, so no 2011 share is given to it. The languages and scripts below come from the official-language lists.
         </p>
       )}
       <ul className="ledger-rules rounded-card border border-border bg-surface">
@@ -118,8 +125,8 @@ export function LanguageMapView({ campaignId, region, onRegion }: { campaignId: 
       {data && (
         <>
           <p className="max-w-[68ch] text-[13px] text-ink-secondary">
-            Census year {data.period}: mother tongue as reported then, not a current language mix.{" "}
-            {withCensus.length > 0 ? `Shares are stored for ${withCensus.map((r) => r.region_name).join(", ")}.` : "No census share is stored in this mode yet."}
+            Census year {data.period}: mother tongue as reported then, not a current language mix. The census table covers {withCensus.length} of{" "}
+            {data.regions.length} states and union territories.
           </p>
           {region ? (
             <Detail data={data} region={region} campaignId={campaignId} />

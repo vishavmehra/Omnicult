@@ -120,14 +120,15 @@ Omnicult has 55 features across seven workspaces and a platform layer. On top of
 
 | Feature | What it does |
 |---|---|
-| Culture Atlas | Cultural signals for a region, each traceable to its source |
-| State Profile | Languages, scripts, festivals, food, colours, symbols, humour, family roles, customs and sensitivities for a state, every fact tagged |
-| Language Map | Language and script mix by state, from the India reference data and Census 2011 mother-tongue counts |
-| Moment Calendar | Public holidays and festivals that matter for timing |
-| Market Compare | States side by side on the same evidence |
+| Culture Atlas | All 36 states and union territories on one map, coloured by Evidence Meter strength or by a published figure (internet subscribers, homes without internet, income, literacy, tourist visits, public holidays); every state's card shows its figures, mother tongues, top searches and next public holidays, built or not |
+| State Profile | Languages, scripts, festivals, food, colours, symbols, humour, family roles, customs and sensitivities for a state, every fact tagged, beside the state's published data |
+| Auto-build | A live campaign's states (origin and targets) are built in the background when the brief names them and whenever Lens opens with one missing, one state at a time, with "Building Kerala…" shown in Lens; Trend Radar is then read for the new states |
+| Language Map | Language and script mix by state, from the India reference data and Census 2011 mother-tongue counts for 31 states and union territories |
+| Moment Calendar | A year calendar per state: public holidays, festivals and observances from the state's holiday list, Google's Holidays in India calendar and cited claims, colour-coded by kind, with the campaign dates highlighted; each moment says what it is, why it matters for the campaign, its date and its source |
+| Market Compare | States side by side: published figures with their periods, then the same evidence dimensions |
 | Trend Radar | Public-interest trends by region from open data, shown as attention, not demand |
 | Search Pulse | A state's top and rising Google searches of the latest week, with each term's weekly score, in the State Profile and the Trend Radar |
-| State Facts | Official statistics for the state beside the all-India figure: literacy, urban share, phone and internet use, income per person and household spending, each with its period |
+| State Facts | Official statistics for the state beside the all-India figure: literacy, urban share, schooling, phone and internet use, homes without internet (2025), bank accounts, health insurance, clean cooking fuel, income per person, household spending and tourist visits, each with its period |
 | Category Shelf | How the product category shows up regionally |
 | Evidence Meter | Sources, supported claims, freshness, coverage, open conflicts and stale claims, rated weak, partial or solid by named thresholds |
 
@@ -321,19 +322,29 @@ Open sources become cited **claims**. Code then decides confidence, finds confli
 | Wikidata | Entity resolution, region and language facts | CC0 |
 | Wikipedia text | Short cited excerpts as supporting evidence | CC BY-SA 4.0; page URL and title kept as attribution |
 | Google Trends public dataset (BigQuery) | Search Pulse: the top and rising search terms and weekly scores for every state, as the dataset reports them | Google dataset `bigquery-public-data.google_trends`, read through the BigQuery free tier |
-| data.gov.in (Open Government Data Platform India) | State Facts: NFHS-5, TRAI teledensity and internet subscriptions, net state domestic product per person, household consumption expenditure 2023-24, and Census 2011 literacy and urban share | Government Open Data License - India; the resource id and the source's update date are kept with every figure |
+| data.gov.in (Open Government Data Platform India) | State Facts and every state's figures in Lens: NFHS-5 (2019-21: phones, internet, bank accounts, clean cooking fuel, sanitation, health insurance, schooling, under-15 share), households without internet at home (2025, Rajya Sabha), TRAI teledensity and internet subscriptions, net state domestic product per person, household consumption expenditure 2023-24, domestic and foreign tourist visits 2023 and 2024 (Ministry of Tourism), ICT skills of people aged 15 to 29 (2020-21), and Census 2011 literacy and urban share | Government Open Data License - India; the resource id and the source's update date are kept with every figure |
+| Google Calendar API, public "Holidays in India" calendar | Moment Calendar: national public holidays and observances, with Google's tentative flag for lunar dates | Google APIs Terms of Service; read with an API key restricted to the Calendar and Knowledge Graph Search APIs, free quota |
+| Google Knowledge Graph Search API | Moment Calendar: what a moment is, in a short description; a result is kept only when it names the moment itself and ties it to India | Google APIs Terms of Service; the descriptions are Wikipedia text under CC BY-SA, shown with the page link and that attribution |
 | Wikipedia pageviews | Attention trends in the regional and English editions | Wikimedia analytics data; aggregate counts, attributed |
-| Census of India 2011, table C-16 | Mother-tongue counts and shares | Published by the Registrar General; only counts are stored, cited to the source |
-| python-holidays | Public holidays by state | MIT |
+| Census of India 2011, table C-16 | Mother-tongue counts and shares for the 31 states and union territories whose territory is unchanged since 2011 | Published by the Registrar General; only counts are stored, cited to the source |
+| python-holidays | Public holidays by state, for any year, on every state's calendar and card | MIT |
 | ASCI Code and guidelines | Cited clauses for Risk Check | Published by ASCI; short exact excerpts with page URL, partial index, not legal advice |
 | State tourism and government pages | Short cited excerpts for festivals, food and customs | Each site's own terms |
 | Noto Sans fonts | Rendering Indic text in code | SIL Open Font License 1.1 |
 
-**Search Pulse data.** `international_top_terms` and `international_top_rising_terms` hold, per refresh date, the current top 25 terms and their rank, a 0 to 100 `score` per state and week (empty where Google reports none) and, for rising terms, `percent_gain`. Within one refresh the term list and ranks are the same for every state; the score is what differs by state and week. Omnicult stores the newest 12 weeks per state and shows ranks, scores and gains unchanged; "scored in N of 12 weeks" counts the weeks with a score. One query a day (about 0.74 GB, capped at 2 GB) serves every state; the dataset has no Ladakh or merged Dadra and Nagar Haveli and Daman and Diu, and uses `IN-CT`, `IN-OR` and `IN-TG` for Chhattisgarh, Odisha and Telangana. Demo mode reads a recorded snapshot of the four demo states and never queries BigQuery.
+**Search Pulse data.** `international_top_terms` and `international_top_rising_terms` hold, per refresh date, the current top 25 terms and their rank, a 0 to 100 `score` per state and week (empty where Google reports none) and, for rising terms, `percent_gain`. Within one refresh the term list and ranks are the same for every state; the score is what differs by state and week. Omnicult stores the newest 12 weeks per state and shows ranks, scores and gains unchanged; "scored in N of 12 weeks" counts the weeks with a score. One query a day (about 0.74 GB, capped at 2 GB) serves every state; the dataset has no Ladakh or merged Dadra and Nagar Haveli and Daman and Diu, and uses `IN-CT`, `IN-OR` and `IN-TG` for Chhattisgarh, Odisha and Telangana. Demo mode reads a recorded snapshot of every state (`scripts/record_search_pulse.py`) and never queries BigQuery.
 
-**State Facts data.** Seven data.gov.in resources are pulled with filters and field selection and stored per state with the source's own update date. A check costs one small request per resource and downloads only what changed; a stored copy counts as current for 7 days (TRAI, income, spending) or 30 days (NFHS-5, Census). data.gov.in answers 403 to every request from Google Cloud addresses (checked from Cloud Run on 19 Nov 2026), so the deployed service does not pull it: `python -m scripts.record_state_facts --all`, run from an Indian connection, records every state, and the seed job (`scripts/seed_state_facts.py`) loads that recording with the same parsing and upsert code as a live pull. Local runs with `DATA_GOV_IN_API_KEY` pull live. Census 2011 figures are not given to states whose territory has changed since (Andhra Pradesh, Telangana, Jammu and Kashmir, Ladakh, and Dadra and Nagar Haveli and Daman and Diu). No published resource gives TV, newspaper or radio reach by state, so the panel does not show media reach. Demo mode reads records captured from the live API on 19 Nov 2026.
+**State Facts data.** Ten data.gov.in resources are pulled with filters and field selection and stored per state with the source's own update date. A check costs one small request per resource and downloads only what changed (a field newly added to the catalogue triggers one full pull); a stored copy counts as current for 7 days (TRAI, income, spending, tourism) or 30 days (NFHS-5, Census, home internet, ICT skills). The tourism table names its all-India row "Overall" and adds regional "Total" subtotals; only the "Overall" row is taken as India. data.gov.in answers 403 to every request from Google Cloud addresses (checked from Cloud Run on 19 Nov 2026), so the deployed service does not pull it: `python -m scripts.record_state_facts`, run from an Indian connection, records every state, and the seed job (`scripts/seed_state_facts.py`) loads that recording with the same parsing and upsert code as a live pull. Local runs with `DATA_GOV_IN_API_KEY` pull live. Census 2011 figures are not given to states whose territory has changed since (Andhra Pradesh, Telangana, Jammu and Kashmir, Ladakh, and Dadra and Nagar Haveli and Daman and Diu). No published resource gives TV, newspaper or radio reach by state, so the panel does not show media reach. Demo mode reads the same all-states recording (captured from the live API on 19 Nov 2026).
 
-**Keeping the public data current.** One Cloud Scheduler job calls an OIDC-protected endpoint at 05:30 IST every day. It refreshes Search Pulse, and State Facts wherever a data.gov.in key is configured; both refreshes are idempotent, and a failure makes the call fail so the scheduler retries. In the deployed service State Facts are updated by re-recording (the sources publish yearly or quarterly). Screens read the stored copy, so a slow or failing upstream never blocks a page.
+**Sources checked and not used.** Wikidata SPARQL festivals by state: a query on 19 Nov 2026 found festivals linked to only one state (Jammu and Kashmir, two festivals), too thin to show. data.gov.in religion and caste tables: sensitive traits, never shown. data.gov.in household assets (Census 2011 houselisting), digital payments, e-commerce and holiday lists by state: no state-wise API resource exists (only national series, the 2001 census or scheme funding tables). Registered motor vehicles by state: a share of the national total, which grows with state size and does not measure ownership.
+
+**Keeping the public data current.** One Cloud Scheduler job calls an OIDC-protected endpoint at 05:30 IST every day. It refreshes Search Pulse, State Facts wherever a data.gov.in key is configured, and the Moment Calendar's Google events for this year and the next (one Calendar API request a year); every refresh is idempotent, and a failure makes the call fail so the scheduler retries. In the deployed service State Facts are updated by re-recording (the sources publish yearly or quarterly). Screens read the stored copy, so a slow or failing upstream never blocks a page.
+
+**State data for every state.** Claims feed the Evidence Meter; published figures do not. Every state and union territory, built or not, shows its State Facts figures with their periods and the all-India figure, its Census 2011 mother tongues (31 states and union territories; none for Andhra Pradesh, Telangana, Jammu and Kashmir, Ladakh, and Dadra and Nagar Haveli and Daman and Diu, whose territory changed after 2011), its top and rising searches of the newest week, its public holidays and its official languages, in the Culture Atlas, the State Profile and Market Compare. Each number is copied from its dataset; code only orders, counts and finds the highest value in a row. The Evidence Meter's strength is still computed from claims alone.
+
+**Moment Calendar data.** A state's calendar merges the dated claims a build stored, the state's own public-holiday list (python-holidays, computed for any year) and Google's Holidays in India calendar (`lens_calendar_events`, migration 0036; an event whose name points to another state, such as "Bahag Bihu (Assam)", stays off other states' calendars). Two lists that give the same moment on the same day become one entry with both sources. Why a moment matters is computed, never written by a model: the lists that name it, the cited sources that describe it as a festival of the state, whether it falls inside or how many days it falls before or after the campaign dates, a Friday or Monday holiday next to a weekend, and a matching search in the state's newest week. What a moment is comes from the Knowledge Graph Search API, recorded by `scripts/record_lens_calendar.py` on 19 Nov 2026 into `backend/app/integrations/culture/data/moment_notes.json` (51 of 164 moment names have a description that passes the relevance rule; the rest show none).
+
+**Auto-build.** When a live campaign's brief names its states, and whenever Market Lens opens with one of them unbuilt, the API queues a build of each through the same pipeline as a manual build: one state at a time in the background, at most 8 per campaign, 2 seconds apart, never a state whose last build stored claims, and a failed state only after the 5-minute live build interval. Lens polls the queue and shows "Building Kerala…" until every state is in. Afterwards Trend Radar is read once for the newly built states. Demo campaigns are not auto-built; their states are seeded with the demo.
 
 Source coverage is uneven by design and reported as such: the curated references cover the four demo states, Wikidata is rate-limited and sparse for some regions, and a region with little evidence is shown as weak. Measured: a live Market Lens build of Tamil Nadu took 10 s.
 
@@ -346,7 +357,7 @@ The screens do not label data as demo, sample or synthetic, so this section is w
 - recorded Wikidata entity searches and Wikipedia pageview recordings;
 - a generated trend series, which is not real pageviews;
 - a sample Live Pulse dataset and sample comments;
-- recorded snapshots of Search Pulse (Google Trends in BigQuery) and State Facts (data.gov.in) for the four demo states;
+- recorded snapshots of Search Pulse (Google Trends in BigQuery, refresh date 18 Nov 2026) and State Facts (data.gov.in, recorded 19 Nov 2026) for every state, and of Google Calendar's Holidays in India for 2026 to 2028 (recorded 19 Nov 2026);
 - synthetic audience panels: AI personas, not people;
 - pre-made fixture outputs for the AI steps, so the demo calls no model.
 
@@ -450,6 +461,8 @@ Full lists are in `backend/.env.example` and `frontend/.env.example`. All settin
 | `ASSET_STORAGE_BACKEND`, `GCS_BUCKET` | `database` (local and tests), `local` or `gcs` with its bucket |
 | `YOUTUBE_API_KEY` | Comment Pulse |
 | `DATA_GOV_IN_API_KEY` | State Facts (data.gov.in); without it live State Facts answer 503 |
+| `GOOGLE_PUBLIC_API_KEY` | Moment Calendar: Google Calendar's Holidays in India (an API key restricted to the Calendar and Knowledge Graph Search APIs); without it the stored events are served |
+| `LENS_AUTO_BUILD_MAX_REGIONS`, `LENS_AUTO_BUILD_PAUSE_SECONDS` | Auto-build bounds: states per campaign (default 8) and the pause between two builds (default 2 s) |
 | `BIGQUERY_PROJECT` | Project that runs the Search Pulse query jobs; falls back to `GOOGLE_CLOUD_PROJECT` |
 | `SCHEDULER_SERVICE_ACCOUNT`, `SCHEDULER_AUDIENCE` | Who may call the internal endpoints |
 | `WIKIMEDIA_USER_AGENT` | Contact string Wikimedia asks API clients to send |
@@ -466,7 +479,7 @@ Full lists are in `backend/.env.example` and `frontend/.env.example`. All settin
 
 ## Database migrations
 
-Schema changes are additive Alembic migrations in `backend/migrations/versions/` (currently 0001 to 0034).
+Schema changes are additive Alembic migrations in `backend/migrations/versions/` (currently 0001 to 0036).
 
 ```bash
 cd backend
@@ -478,7 +491,7 @@ On Google Cloud, `ops/deploy/migrate.ps1` creates or updates two Cloud Run jobs 
 | Job | What it runs |
 |---|---|
 | `omnicult-migrate` | `alembic upgrade head` (additive, safe to re-run) |
-| `omnicult-seed` | `python -m scripts.seed_all`: India languages, regions, language profiles, curated moments and the country pack (idempotent upserts) |
+| `omnicult-seed` | `python -m scripts.seed_all`: India languages, regions, language profiles, curated moments and the country pack (idempotent upserts), the shared demo claims, and the all-states State Facts recording (a dataset gains its new fields on the next seed) |
 
 Both connect through the Cloud SQL attachment with `DATABASE_URL` from Secret Manager. Take a backup before a risky migration with `.\ops\deploy\migrate.ps1 -Backup`; `-SkipSeed` runs the schema only. The ASCI index ships inside the API image, and the Live Pulse sample data is generated in code, so neither needs a seed step.
 
@@ -500,7 +513,7 @@ Deployment scripts for Google Cloud are in `ops/deploy/` (PowerShell). The regio
 .\ops\deploy\smoke.ps1                 # 7  live checks of the API, web app and sign-in flow
 ```
 
-`ops/deploy/secrets.ps1` creates the YouTube API key secret once, before step 3.
+`ops/deploy/secrets.ps1` creates the YouTube API key secret once, before step 3, and the data.gov.in and Google public API key secrets when the env file holds them; `deploy-api.ps1` mounts the Google key as `GOOGLE_PUBLIC_API_KEY` when its secret exists.
 
 - `omnicult-api` runs with one instance and CPU always allocated, because runs execute in the process. It connects to Cloud SQL through the Cloud Run attachment, and the database URL comes from Secret Manager.
 - The web app's `NEXT_PUBLIC_*` values are build-time, so a changed API URL needs a web rebuild (`build.ps1 -Target web`).

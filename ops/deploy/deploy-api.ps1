@@ -15,6 +15,7 @@
   Firebase Hosting origins. Secrets from Secret Manager: DATABASE_URL (omnicult-database-url) and YOUTUBE_API_KEY
   (omnicult-youtube-api-key; create it with secrets.ps1 first). DATA_GOV_IN_API_KEY (omnicult-data-gov-in-api-key) is mounted
   when that secret exists (secrets.ps1 creates it from the env file when the key is there); without it State facts report "not set up".
+  GOOGLE_PUBLIC_API_KEY (omnicult-google-public-api-key, the Moment Calendar's Calendar API key) is mounted when that secret exists.
   Vertex AI and Cloud Storage use the runtime service account (Application Default Credentials); no key exists.
   Run migrate.ps1 first when a migration was added. -Public with AUTH_MODE=dev is refused here.
 #>
@@ -58,6 +59,13 @@ if ($DataGovKey -and (Get-GcloudValue secrets describe $script:DataGovSecret --p
     $secrets += ",DATA_GOV_IN_API_KEY=$($script:DataGovSecret):latest"
 } elseif ($DataGovKey) {
     Write-Warning "$($script:DataGovSecret) does not exist: DATA_GOV_IN_API_KEY is not mounted. Run secrets.ps1 with the key in the env file."
+}
+# Moment Calendar: Google Calendar's public "Holidays in India" calendar, read with an API key restricted to the Calendar and
+# Knowledge Graph Search APIs. Mounted when the secret exists; without it the calendar serves the stored events.
+if (Get-GcloudValue secrets describe $script:GooglePublicSecret --project $script:Project --format 'value(name)') {
+    $secrets += ",GOOGLE_PUBLIC_API_KEY=$($script:GooglePublicSecret):latest"
+} else {
+    Write-Warning "$($script:GooglePublicSecret) does not exist: GOOGLE_PUBLIC_API_KEY is not mounted. Run secrets.ps1 with the key in the env file."
 }
 # Search pulse reads Google's public Trends dataset in BigQuery: the runtime account only needs to run query jobs in this
 # project (the dataset is public). Idempotent; the API is enabled once with `gcloud services enable bigquery.googleapis.com`.

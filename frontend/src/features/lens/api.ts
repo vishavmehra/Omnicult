@@ -28,6 +28,14 @@ export type DataMode = S["LensAtlas"]["mode"];
 export type StateFacts = S["StateFacts"];
 export type StateFact = S["StateFact"];
 export type StateFactGroup = S["StateFactGroup"];
+export type LensStateData = S["LensStateData"];
+export type LensFigure = S["LensFigure"];
+export type LensDataSource = S["LensDataSource"];
+export type LensDataRow = S["LensDataRow"];
+export type LensCalendarEntry = S["LensCalendarEntry"];
+export type LensTypicalMoment = S["LensTypicalMoment"];
+export type LensAutoBuild = S["LensAutoBuild"];
+export type LensAutoBuildRegion = S["LensAutoBuildRegion"];
 
 export const lensKeys = {
   all: (campaignId: string) => ["lens", campaignId] as const,
@@ -38,6 +46,7 @@ export const lensKeys = {
     ["lens", campaignId, "calendar", region, year, from, to] as const,
   stateFacts: (campaignId: string, region: string) => ["lens", campaignId, "state-facts", region] as const,
   languageMap: (campaignId: string) => ["lens", campaignId, "language-map"] as const,
+  autoBuild: (campaignId: string) => ["lens", campaignId, "auto-build"] as const,
   claim: (workspaceId: string, claimId: string) => ["lens", "claim", workspaceId, claimId] as const,
 };
 
@@ -96,6 +105,35 @@ export function useLanguageMap(campaignId: string) {
     queryKey: lensKeys.languageMap(campaignId),
     queryFn: () => unwrap(api.GET("/api/v1/campaigns/{campaign_id}/lens/language-map", { params: { path: base(campaignId) } })),
   });
+}
+
+/**
+ * The campaign's states, built in the background. Opening Lens asks the server once to queue every campaign state that has no
+ * completed build (live campaigns, owner or editor); while any is queued or building the status is polled, and every Lens read
+ * is refetched as each one lands.
+ */
+export function useAutoBuild(campaignId: string) {
+  const qc = useQueryClient();
+  const start = useQuery({
+    queryKey: [...lensKeys.autoBuild(campaignId), "start"],
+    staleTime: Infinity,
+    retry: false,
+    queryFn: () => unwrap(api.POST("/api/v1/campaigns/{campaign_id}/lens/auto-build", { params: { path: base(campaignId) } })),
+  });
+  const running = start.data?.running ?? false;
+  const status = useQuery({
+    queryKey: lensKeys.autoBuild(campaignId),
+    enabled: start.isSuccess && running,
+    refetchInterval: (q) => (q.state.data?.running === false ? false : 3000),
+    queryFn: async () => {
+      const next = await unwrap(api.GET("/api/v1/campaigns/{campaign_id}/lens/auto-build", { params: { path: base(campaignId) } }));
+      const before = qc.getQueryData<LensAutoBuild>(lensKeys.autoBuild(campaignId)) ?? start.data;
+      const landed = next.regions.some((r) => r.state === "built" && before?.regions.find((b) => b.region_code === r.region_code)?.state !== "built");
+      if (landed) void qc.invalidateQueries({ predicate: (q) => q.queryKey[0] === "lens" && q.queryKey[1] === campaignId && q.queryKey[2] !== "auto-build" });
+      return next;
+    },
+  });
+  return status.data ?? start.data;
 }
 
 /** One claim with its sources, for the evidence drawer opened from a comparison cell. */

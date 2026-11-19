@@ -14,7 +14,7 @@ from app.core.config import get_settings
 from app.core.errors import AppError, ProviderNotConfigured
 from app.core.scheduler_auth import require_scheduler
 from app.schemas import state_facts as v
-from app.services import lens, lens_search_pulse, state_facts
+from app.services import lens, lens_moments, lens_search_pulse, state_facts
 
 router = APIRouter(tags=["lens"])
 
@@ -52,8 +52,15 @@ async def refresh_signals_for_scheduler(response: Response, _caller: Annotated[s
     except AppError as error:
         pulse_error = error
     facts = await state_facts.refresh_scheduled() if get_settings().data_gov_in_api_key else None
+    calendar, calendar_failed = None, False
+    if get_settings().google_public_api_key:  # Moment Calendar: Google's Holidays in India, this year and the next
+        try:
+            calendar = await lens_moments.refresh_scheduled()
+        except lens_moments.CalendarSourceError as error:
+            calendar_failed, calendar = True, {"error": error.kind}
     if pulse_error is not None:
         raise pulse_error
-    if facts is not None and facts.failed:
+    if (facts is not None and facts.failed) or calendar_failed:
         response.status_code = 500
-    return {"search_pulse": pulse and pulse.model_dump(mode="json"), "state_facts": facts and facts.model_dump(mode="json")}
+    return {"search_pulse": pulse and pulse.model_dump(mode="json"), "state_facts": facts and facts.model_dump(mode="json"),
+            "moment_calendar": calendar}

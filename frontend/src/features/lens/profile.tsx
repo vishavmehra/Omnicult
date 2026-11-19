@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, Hammer, Languages } from "lucide-react";
+import { CalendarDays, Hammer, Languages, LoaderCircle, MapPin } from "lucide-react";
 import { useState } from "react";
 
 import { EvidenceMeter } from "@/components/evidence/evidence-meter";
@@ -11,12 +11,13 @@ import { SearchPulse } from "@/features/lens-t3/search-pulse";
 import { SectionTitle } from "@/features/workspaces/parts";
 import { formatDate } from "@/lib/format";
 
-import { useStateProfile, type LensProfileSection, type LensStateProfile } from "./api";
+import { useAutoBuild, useStateProfile, type LensProfileSection, type LensStateProfile } from "./api";
 import { BuildPanel, BuildSummary } from "./build-panel";
 import { ClaimEntry } from "./claim-entry";
 import { ConflictList } from "./conflicts";
 import { categoryLabel, languageName, scriptName } from "./format";
-import { SourcesPanel, StrengthTag, nf, strengthOf } from "./parts";
+import { DataSources, SourcesPanel, StrengthTag, nf, strengthOf } from "./parts";
+import { StateDataCard } from "./state-data";
 import { StateFactsPanel } from "./state-facts";
 import { StateSelect } from "./state-select";
 
@@ -103,6 +104,34 @@ function Coverage({ profile }: { profile: LensStateProfile }) {
   );
 }
 
+function Meter({ data }: { data: LensStateProfile }) {
+  const claims = data.meter.claims;
+  return (
+    <section className="space-y-3 rounded-card border border-border bg-surface px-4 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-[13px] font-semibold text-ink">Evidence strength</p>
+        <StrengthTag strength={strengthOf(data.meter.strength, claims)} />
+      </div>
+      {claims > 0 && data.meter.strength_reasons.length > 0 && (
+        <ul className="list-disc space-y-0.5 pl-4 text-[12.5px] text-ink-secondary">
+          {data.meter.strength_reasons.map((r) => (
+            <li key={r}>{r}</li>
+          ))}
+        </ul>
+      )}
+      <EvidenceMeter {...kindCounts(data)} independentGroups={kindCounts(data).groups} conflicts={data.meter.open_conflicts} scopeLabel={data.region.name} />
+      <p className="type-ledger text-[12.5px] text-ink-body">
+        Confidence: Low {data.meter.confidence.low} · Moderate {data.meter.confidence.moderate} · High {data.meter.confidence.high}
+      </p>
+      <p className="type-meta">
+        {data.meter.supported_claims} supported by an observed source · {data.meter.stale_claims} older than two years · {data.meter.needs_review_claims} need review.
+        {data.meter.freshness.newest_source_date && ` Newest source ${formatDate(data.meter.freshness.newest_source_date)}.`}
+      </p>
+      <Coverage profile={data} />
+    </section>
+  );
+}
+
 export function ProfileView({
   campaignId,
   region,
@@ -115,58 +144,86 @@ export function ProfileView({
   onNavigate(view: LensView): void;
 }) {
   const profile = useStateProfile(campaignId, region);
+  const autoBuild = useAutoBuild(campaignId);
   const [building, setBuilding] = useState(false);
   const data = profile.data;
   const claims = data?.meter.claims ?? 0;
+  const queued = autoBuild?.regions.find((r) => r.region_code === data?.region.code && (r.state === "queued" || r.state === "building"));
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end gap-3">
         <StateSelect campaignId={campaignId} value={region} onChange={onRegion} className="w-full sm:w-64" />
-        {data && (
+        {data && !queued && (
           <Button type="button" variant="outline" aria-expanded={building} onClick={() => setBuilding((v) => !v)}>
             <Hammer aria-hidden />
-            {data.build ? "Rebuild" : "Build"} {data.region.name}
+            {data.build ? "Rebuild" : "Build"} evidence
           </Button>
         )}
       </div>
 
-      {!region && <EmptyState title="Choose a state" description="A profile is every sourced claim about one state: languages, festivals, food, colours, symbols, humour, customs and sensitivities, each with its source, date, kind, scope and confidence." />}
+      {!region && <EmptyState title="Choose a state" description="A profile is every published figure and every sourced claim about one state: languages, festivals, food, colours, symbols, humour, customs and sensitivities." />}
       {region && profile.isPending && <LoadingState label="Reading the profile…" />}
       {region && profile.isError && <ErrorState error={profile.error} onRetry={() => void profile.refetch()} />}
 
       {data && (
         <>
-          {building && <BuildPanel key={data.region.code} campaignId={campaignId} mode={data.mode} regionCodes={[data.region.code]} title={`${data.build ? "Rebuild" : "Build"} ${data.region.name}`} />}
+          {building && <BuildPanel key={`build-${data.region.code}`} campaignId={campaignId} mode={data.mode} regionCodes={[data.region.code]} title={`${data.build ? "Rebuild" : "Build"} ${data.region.name}`} />}
 
           <header className="space-y-1.5 border-b border-border pb-5">
-            <h2 className="type-title text-[28px] text-ink">{data.region.name}</h2>
+            <h2 className="type-title flex flex-wrap items-center gap-x-3 text-[28px] text-ink">
+              {data.region.name}
+              {data.campaign_role && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-pop-soft px-2.5 py-0.5 text-[12.5px] font-medium text-ink">
+                  <MapPin aria-hidden className="size-3.5 text-pop" />
+                  Campaign {data.campaign_role}
+                </span>
+              )}
+            </h2>
             <p className="type-meta">
               {data.region.kind === "union_territory" ? "Union territory" : "State"} · {data.region.code} · principal language {languageName(data.region.primary_language)} ({scriptName(data.region.primary_script)} script)
             </p>
           </header>
 
-          <SearchPulse key={data.region.code} campaignId={campaignId} region={data.region.code} />
-          <StateFactsPanel key={data.region.code} campaignId={campaignId} region={data.region.code} regionName={data.region.name} />
+          <section aria-labelledby="glance" className="grid gap-x-8 gap-y-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
+            <div className="min-w-0 space-y-3">
+              <SectionTitle id="glance">At a glance</SectionTitle>
+              <StateDataCard data={data.data} name={data.region.name} figures={false} onOpenCalendar={() => onNavigate("calendar")} />
+            </div>
+            <div className="min-w-0 space-y-3">
+              <Meter data={data} />
+              {data.build && <BuildSummary build={data.build} />}
+            </div>
+          </section>
 
-          {claims === 0 ? (
-            <EmptyState
-              title={`No sourced claims for ${data.region.name} in ${data.mode} mode yet`}
-              description={
-                <>
-                  {data.gaps[0]} A profile is assembled from claims, each with its source, date, kind, scope and confidence. Nothing is filled in to make it look complete: a section with no claims
-                  stays empty and says so.
-                </>
-              }
-              needs={[
-                { label: "A state selected", met: true },
-                { label: "A build for this state, which retrieves claims and computes their confidence", met: false },
-              ]}
-              action={!building ? <Button type="button" onClick={() => setBuilding(true)}><Hammer aria-hidden />Build {data.region.name}</Button> : undefined}
-            />
-          ) : (
-            <div className="grid gap-x-8 gap-y-8 xl:grid-cols-[minmax(0,1fr)_20rem]">
-              <div className="min-w-0 space-y-8">
+          <SearchPulse key={`pulse-${data.region.code}`} campaignId={campaignId} region={data.region.code} />
+          <StateFactsPanel key={`facts-${data.region.code}`} campaignId={campaignId} region={data.region.code} regionName={data.region.name} />
+
+          <section aria-labelledby="evidence" className="space-y-6">
+            <SectionTitle id="evidence" meta={claims > 0 ? `${nf.format(claims)} cited ${claims === 1 ? "claim" : "claims"}` : undefined}>
+              Cited evidence
+            </SectionTitle>
+            {claims === 0 ? (
+              <div role="status" className="flex flex-wrap items-center gap-3 rounded-card border border-dashed border-border-strong/50 bg-surface-muted/50 px-4 py-3 text-[13.5px] text-ink-secondary">
+                {queued ? (
+                  <>
+                    <LoaderCircle aria-hidden className="size-4 animate-spin text-pop motion-reduce:animate-none" />
+                    {queued.state === "building" ? `Building ${data.region.name}: cited claims will appear here as soon as they are stored.` : `${data.region.name} is queued to be built.`}
+                  </>
+                ) : (
+                  <>
+                    No cited claim about {data.region.name} is stored yet. The figures above are published data; a build gathers cited claims for the Evidence Meter.
+                    {!building && (
+                      <Button type="button" size="sm" onClick={() => setBuilding(true)}>
+                        <Hammer aria-hidden />
+                        Build {data.region.name}
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
+            ) : (
+              <>
                 {data.conflicts.length > 0 && (
                   <section aria-labelledby="conflicts" className="space-y-3">
                     <SectionTitle id="conflicts" meta={`${data.conflicts.filter((c) => c.status !== "resolved").length} open`}>
@@ -178,34 +235,9 @@ export function ProfileView({
                 {data.sections.map((s) => (
                   <Section key={s.key} section={s} onNavigate={onNavigate} />
                 ))}
-              </div>
-              <aside aria-label="Evidence for this state" className="min-w-0 space-y-5 xl:sticky xl:top-20 xl:self-start">
-                <section className="space-y-3 rounded-card border border-border bg-surface px-4 py-4">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-[13px] font-semibold text-ink">Evidence strength</p>
-                    <StrengthTag strength={strengthOf(data.meter.strength, claims)} />
-                  </div>
-                  {data.meter.strength_reasons.length > 0 && (
-                    <ul className="list-disc space-y-0.5 pl-4 text-[12.5px] text-ink-secondary">
-                      {data.meter.strength_reasons.map((r) => (
-                        <li key={r}>{r}</li>
-                      ))}
-                    </ul>
-                  )}
-                  <EvidenceMeter {...kindCounts(data)} independentGroups={kindCounts(data).groups} conflicts={data.meter.open_conflicts} scopeLabel={data.region.name} />
-                  <p className="type-ledger text-[12.5px] text-ink-body">
-                    Confidence: Low {data.meter.confidence.low} · Moderate {data.meter.confidence.moderate} · High {data.meter.confidence.high}
-                  </p>
-                  <p className="type-meta">
-                    {data.meter.supported_claims} supported by an observed source · {data.meter.stale_claims} older than two years · {data.meter.needs_review_claims} need review.
-                    {data.meter.freshness.newest_source_date && ` Newest source ${formatDate(data.meter.freshness.newest_source_date)}.`}
-                  </p>
-                  <Coverage profile={data} />
-                </section>
-                {data.build && <BuildSummary build={data.build} />}
-              </aside>
-            </div>
-          )}
+              </>
+            )}
+          </section>
 
           {data.gaps.length > 0 && claims > 0 && (
             <section aria-labelledby="gaps" className="space-y-2">
@@ -217,6 +249,7 @@ export function ProfileView({
               </ul>
             </section>
           )}
+          <DataSources sources={data.data_sources} />
           <SourcesPanel sources={data.sources} limitations={data.limitations} modeLabel={data.mode_label} />
         </>
       )}

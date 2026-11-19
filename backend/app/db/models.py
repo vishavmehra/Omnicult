@@ -868,6 +868,7 @@ from app.db.models_pulse_t3 import (  # noqa: E402,F401  (Live Pulse Tier 3 tabl
 from app.db.models_digest import CommentAnalysis, PulseComment, PulseDigest, YoutubeSource  # noqa: E402,F401  (Comment Pulse, Weekly Digest and YouTube sources: migrations 0030, 0031)
 from app.db.models_lens_t3 import LensSearchPulse, LensShelfSnapshot, LensTrendBatch, LensTrendSnapshot  # noqa: E402,F401  (Market Lens Tier 3 tables, migration 0025)
 from app.db.models_state_facts import StateFactSnapshot  # noqa: E402,F401  (State facts snapshots, migration 0035)
+from app.db.models_lens_calendar import LensCalendarEvent  # noqa: E402,F401  (Moment Calendar events, migration 0036)
 from app.db.models_lab_t3 import BuzzAct, FocusGroupInterjection, FocusGroupTurn  # noqa: E402,F401  (Audience Lab session tables, migration 0027)
 
 from app.db.models_studio_t3 import ClaimGuardCheck, ClaimGuardReview, FormatFitOutput  # noqa: E402,F401  (Creative Studio Tier 3 tables, migration 0026)

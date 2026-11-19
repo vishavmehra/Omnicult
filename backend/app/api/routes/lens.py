@@ -9,10 +9,9 @@ from fastapi import APIRouter, Path, Query
 
 from app.api.deps import CurrentUser, Limit, Offset
 from app.core.errors import ValidationFailed
-from app.db.base import utcnow
 from app.schemas import lens as v
 from app.schemas.common import ErrorDetail
-from app.services import lens, lens_views
+from app.services import lens, lens_autobuild, lens_views
 
 router = APIRouter(prefix="/campaigns/{campaign_id}/lens", tags=["lens"])
 
@@ -28,6 +27,20 @@ async def build_profiles(campaign_id: UUID, body: v.LensBuildRequest, user: Curr
     built less than LENS_LIVE_BUILD_MIN_INTERVAL_SECONDS ago answers 429, and rate-limited or unconfigured sources are
     reported in the build's `gaps`, `calls` and `status` (partial), never hidden."""
     return await lens.build_regions(user.id, campaign_id, body)
+
+
+@router.post("/auto-build", response_model=v.LensAutoBuild, status_code=202)
+async def start_auto_build(campaign_id: UUID, user: CurrentUser) -> v.LensAutoBuild:
+    """Queue, in the background, a build of every state the campaign names (origin and targets) that has no completed build
+    yet, and return the queue. Live campaigns, owner or editor role; for anyone else (and for demo campaigns) nothing is queued
+    and the status is returned. Idempotent: queued, running and built states are left alone; one state is built at a time."""
+    return await lens_autobuild.ensure(user.id, campaign_id)
+
+
+@router.get("/auto-build", response_model=v.LensAutoBuild)
+async def get_auto_build(campaign_id: UUID, user: CurrentUser) -> v.LensAutoBuild:
+    """Where each of the campaign's states stands: queued, building, built, failed (with the reason) or waiting."""
+    return await lens_autobuild.status(user.id, campaign_id)
 
 
 @router.get("/builds", response_model=v.LensBuildPage)
@@ -71,7 +84,7 @@ async def compare_states(
 @router.get("/regions/{region_code}/calendar", response_model=v.LensCalendar)
 async def get_moment_calendar(
     campaign_id: UUID, region_code: RegionPath, user: CurrentUser,
-    year: Annotated[int | None, Query(ge=2000, le=2100, description="Default: the current year.")] = None,
+    year: Annotated[int | None, Query(ge=2000, le=2100, description="Default: the year the campaign dates start in, else the current year.")] = None,
     window_from: Annotated[date | None, Query(description="Start of a campaign window to compare moments against.")] = None,
     window_to: Annotated[date | None, Query(description="End of the window, inclusive.")] = None,
 ) -> v.LensCalendar:
@@ -83,7 +96,7 @@ async def get_moment_calendar(
     if window_from and window_to and window_from > window_to:
         raise ValidationFailed("The supplied request is invalid.", details=[ErrorDetail(field="window_from", message="window_from must not be after window_to.")])
     window = v.LensWindow(date_from=window_from, date_to=window_to) if window_from and window_to else None
-    return await lens_views.calendar(await lens.lens_context(user.id, campaign_id), region_code, year or utcnow().year, window)
+    return await lens_views.calendar(await lens.lens_context(user.id, campaign_id), region_code, year, window)
 
 
 @router.get("/language-map", response_model=v.LensLanguageMap)

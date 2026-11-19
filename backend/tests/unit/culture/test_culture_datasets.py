@@ -8,6 +8,7 @@ from app.integrations.culture.adapters.census import CensusSource, load_census
 from app.integrations.culture.adapters.curated import CuratedReferenceSource, load_curated
 from app.integrations.culture.adapters.holidays_calendar import HolidaysCalendarSource, supported_subdivisions
 from app.integrations.culture.regions import REGIONS
+from app.reference.india import DEMO_REGIONS
 
 STATES = list(REGIONS)
 
@@ -45,7 +46,10 @@ def test_census_dataset_is_internally_consistent_and_covers_the_demo_languages()
         assert sum(lang["speakers"] for lang in state["languages"]) + state["other_speakers"] == state["population"]
         assert state["catalog_url"].startswith("https://censusindia.gov.in/nada/index.php/catalog/")
         isos = {lang["iso639_1"] for lang in state["languages"]}
-        assert {"mr", "ta", "ml", "bn", "hi", "en"} <= isos, region  # the six demo languages are always listed
+        if region in DEMO_REGIONS:
+            assert {"mr", "ta", "ml", "bn", "hi", "en"} <= isos, region  # the six demo languages are always listed there
+        assert {"hi", "en"} <= isos, region
+    assert len(data["states"]) == 31 and not {"IN-AP", "IN-TS", "IN-JK", "IN-LA", "IN-DH"} & set(data["states"])  # changed since 2011
 
 
 @pytest.mark.parametrize("region", STATES)
@@ -60,7 +64,10 @@ async def test_census_claims_never_share_a_subject_attribute_and_scope(region):
 
 
 async def test_census_unknown_region_returns_nothing():
-    assert await CensusSource().audience_facts("IN-GJ") == []
+    assert await CensusSource().audience_facts("IN-TS") == []  # Telangana did not exist in 2011
+    gujarat = await CensusSource().audience_facts("IN-GJ")
+    principal = next(c for c in gujarat if c.attribute == "principal_language")
+    assert principal.value == "Gujarati" and "Gujarat" in principal.value_text and principal.scope.region_code == "IN-GJ"
 
 
 # ---- holidays ----

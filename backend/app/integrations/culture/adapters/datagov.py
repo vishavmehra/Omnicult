@@ -47,6 +47,8 @@ class Resource:
     cadence_days: int  # how long a stored copy is served before the read path pulls again
     filters: dict[str, str] = field(default_factory=dict)
     census_2011: bool = False  # 2011 boundaries: states split or merged since are not mapped
+    national: str = ""  # the exact label of the all-India row when the table uses its own word for it; rows that only
+    # look national (regional subtotals labelled "Total") are then dropped
 
 
 def _m(key: str, field_id: str, period: str, unit: str) -> Metric:
@@ -59,8 +61,31 @@ RESOURCES: tuple[Resource, ...] = (
         (_m("electricity", "population_living_in_households_with_electricity____", "2019-21", "percent"),
          _m("women_mobile", "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____", "2019-21", "percent"),
          _m("women_internet", "women__age_15_49___who_have_ever_used_the_internet____", "2019-21", "percent"),
-         _m("men_internet", "men__age_15_49___who_have_ever_used_the_internet____", "2019-21", "percent")),
+         _m("men_internet", "men__age_15_49___who_have_ever_used_the_internet____", "2019-21", "percent"),
+         _m("women_bank", "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____", "2019-21", "percent"),
+         _m("clean_fuel", "households_using_clean_fuel_for_cooking3____", "2019-21", "percent"),
+         _m("sanitation", "population_living_in_households_that_use_an_improved_sanitation_facility2____", "2019-21", "percent"),
+         _m("health_insurance", "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____", "2019-21", "percent"),
+         _m("under15", "population_below_age_15_years____", "2019-21", "percent"),
+         _m("women_school10", "_women__age_15_49___with_10_or_more_years_of_schooling____", "2019-21", "percent"),
+         _m("men_school10", "men__age_15_49___with_10_or_more_years_of_schooling____", "2019-21", "percent")),
         cadence_days=30, filters={"area": "Total"}),
+    Resource(
+        "home_internet", "ec6c66b2-ff53-48b5-b3cc-f1dac5283d2c",
+        "State/UT-wise Percentage of Households without Internet Facility within Household Premises (Rajya Sabha, 29 January 2026)",
+        "state__ut",
+        (_m("home_no_internet", "overall", "2025", "percent"), _m("home_no_internet_rural", "rural", "2025", "percent"),
+         _m("home_no_internet_urban", "urban", "2025", "percent")), cadence_days=30),
+    Resource(
+        "tourism", "515c5fea-46b9-438e-b8c3-db01d4afc8c4", "State/UT-wise Details of Domestic and Foreign Tourist Visits during 2024-25",
+        "state_ut",
+        tuple(_m(f"tourist_visits_{k}", f"_{y}___{k}__in_million_", y, "million") for y in ("2023", "2024") for k in ("domestic", "foreign")),
+        cadence_days=7, national="Overall"),
+    Resource(
+        "ict_youth", "28969f46-bcdf-4c38-9b8c-0d2b178e7b46", "State/UT-wise Persons Aged 15-29 Years with ICT Skills, 2020-21", "state_uts",
+        (_m("youth_copy_file", "copy_or_move_a_file_or_folder", "2020-21", "percent"),
+         _m("youth_email_attachment", "send_e_mails_with_attached_files__documents__pictures_and_videos_", "2020-21", "percent"),
+         _m("youth_install_software", "find__download__install_and_configure_software", "2020-21", "percent")), cadence_days=30),
     Resource(
         "teledensity", "64da9332-95e7-4ba9-8919-0f47911f4c78", "State/UT-wise Total Tele Density as on 30-06-2024", "state_ut",
         (_m("teledensity", "total_teledensity__in___", "Jun 2024", "per100"),), cadence_days=7),
@@ -99,6 +124,7 @@ _ALIASES = {
     "a and n islands": "IN-AN", "andaman and nicobar": "IN-AN", "nct of delhi": "IN-DL",
     "delhi nct": "IN-DL", "orissa": "IN-OD", "uttaranchal": "IN-UT", "pondicherry": "IN-PY", "telengana": "IN-TS",
     "j and k": "IN-JK", "jammu and kashmir ut": "IN-JK", "dadra and nagar haveli and daman and diu": "IN-DH",
+    "madhyapradesh": "IN-MP", "tamilnadu": "IN-TN", "westbengal": "IN-WB",  # the ICT skills table drops the spaces
 }
 # States whose 2011 census figure describes a different territory than today's state (Telangana was carved out of Andhra
 # Pradesh in 2014, Ladakh out of Jammu and Kashmir in 2019, and the two Dadra, Nagar Haveli and Daman and Diu territories merged
@@ -172,6 +198,9 @@ def parse_records(resource: Resource, records: list[dict[str, Any]]) -> tuple[li
     for record in records:
         name = record.get(resource.state_field)
         code = region_code_for(name, census_2011=resource.census_2011)
+        if resource.national and isinstance(name, str):
+            # This table names its all-India row itself; any other row that maps to the country is a regional subtotal.
+            code = NATIONAL if name.strip().casefold() == resource.national.casefold() else None if code == NATIONAL else code
         if code is None:
             if isinstance(name, str) and name not in unmapped:
                 unmapped.append(name)

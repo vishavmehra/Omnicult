@@ -1,0 +1,1573 @@
+{
+ "recorded_on": "2026-11-19",
+ "calendar_id": "en.indian#holiday@group.v.calendar.google.com",
+ "calendar": "Holidays in India",
+ "years": {
+  "2026": [
+   {
+    "id": "20260101_g3cd53lk38acpd0ag0i9o8ldl8",
+    "summary": "New Year's Day",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-01-01"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAxMDFfZzNjZDUzbGszOGFjcGQwYWcwaTlvOGxkbDggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260103_vfff3hkjkuvnmt086hl7aj8e1k",
+    "summary": "Hazarat Ali's Birthday",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-01-03"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAxMDNfdmZmZjNoa2prdXZubXQwODZobDdhajhlMWsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260114_4vs1rbsldtpdmd26fi87obkubs",
+    "summary": "Pongal",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-01-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAxMTRfNHZzMXJic2xkdHBkbWQyNmZpODdvYmt1YnMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260114_5q8oap11ofmcanh1dimf61oae0",
+    "summary": "Makar Sankranti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-01-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAxMTRfNXE4b2FwMTFvZm1jYW5oMWRpbWY2MW9hZTAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260123_3o275i0ncb1rge8potjlrl22jc",
+    "summary": "Vasant Panchami",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-01-23"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAxMjNfM28yNzVpMG5jYjFyZ2U4cG90amxybDIyamMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260126_c26069b49o94ht7eclvg5pi030",
+    "summary": "Republic Day",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-01-26"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAxMjZfYzI2MDY5YjQ5bzk0aHQ3ZWNsdmc1cGkwMzAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260201_tual6tg2sdlfjl11qvambullgg",
+    "summary": "Guru Ravidas Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-02-01"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAyMDFfdHVhbDZ0ZzJzZGxmamwxMXF2YW1idWxsZ2cgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260212_mkcafebg8tjrifj8rorjd8nq98",
+    "summary": "Maharishi Dayanand Saraswati Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-02-12"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAyMTJfbWtjYWZlYmc4dGpyaWZqOHJvcmpkOG5xOTggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260215_n9m9ak6hn7p0gi1o1v3g5lagd4",
+    "summary": "Maha Shivaratri",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-02-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAyMTVfbjltOWFrNmhuN3AwZ2kxbzF2M2c1bGFnZDQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260219_kitq46ohu6ioibntogvn6g9494",
+    "summary": "Ramadan Start",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-02-19"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAyMTlfa2l0cTQ2b2h1NmlvaWJudG9ndm42Zzk0OTQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260219_lclo2ddidtaa0b9ol38qrdh4s4",
+    "summary": "Shivaji Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-02-19"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAyMTlfbGNsbzJkZGlkdGFhMGI5b2wzOHFyZGg0czQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260303_hll3fcdm9ba7qdf4v4he2ea964",
+    "summary": "Holika Dahana",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-03-03"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAzMDNfaGxsM2ZjZG05YmE3cWRmNHY0aGUyZWE5NjQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260304_bfu58uidc2rir7ctbtbokqq6ak",
+    "summary": "Holi",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-03-04"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAzMDRfYmZ1NTh1aWRjMnJpcjdjdGJ0Ym9rcXE2YWsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260319_90ge0tvb2jn00ve3b7movj7uvs",
+    "summary": "Ugadi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-03-19"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAzMTlfOTBnZTB0dmIyam4wMHZlM2I3bW92ajd1dnMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260319_nuaa3mu00r0prhtp47m6t31d5s",
+    "summary": "Gudi Padwa",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-03-19"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAzMTlfbnVhYTNtdTAwcjBwcmh0cDQ3bTZ0MzFkNXMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260319_q3uask17e3d8ckolmpskpmoq2o",
+    "summary": "Cheti Chand",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-03-19"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAzMTlfcTN1YXNrMTdlM2Q4Y2tvbG1wc2twbW9xMm8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260320_hu3s980hnter58h60qd3iitk10",
+    "summary": "Jamat Ul-Vida",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-03-20"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAzMjBfaHUzczk4MGhudGVyNThoNjBxZDNpaXRrMTAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260321_t5cv5mdng4bd0btbsf7fie6h80",
+    "summary": "Ramzan Id",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-03-21"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAzMjFfdDVjdjVtZG5nNGJkMGJ0YnNmN2ZpZTZoODAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260326_du9bl0480eq24f2sbmlh44rn9o",
+    "summary": "Rama Navami",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-03-26"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAzMjZfZHU5YmwwNDgwZXEyNGYyc2JtbGg0NHJuOW8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260331_frg2u1sbp5j2uur0jg9kdcb7u4",
+    "summary": "Mahavir Jayanti",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-03-31"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjAzMzFfZnJnMnUxc2JwNWoydXVyMGpnOWtkY2I3dTQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260403_gug5bnpril167ieg4hgm9hj6d8",
+    "summary": "Good Friday",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-04-03"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA0MDNfZ3VnNWJucHJpbDE2N2llZzRoZ205aGo2ZDggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260414_0li1u1l16c065vkseuim4g71b8",
+    "summary": "Vaisakhi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-04-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA0MTRfMGxpMXUxbDE2YzA2NXZrc2V1aW00ZzcxYjggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260414_2ir59ab3vf0v8evqcn61tv6tng",
+    "summary": "Ambedkar Jayanti",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-04-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA0MTRfMmlyNTlhYjN2ZjB2OGV2cWNuNjF0djZ0bmcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260414_g60k0bi4jlb403hs8dr2ur7ea8",
+    "summary": "Vishu",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-04-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA0MTRfZzYwazBiaTRqbGI0MDNoczhkcjJ1cjdlYTggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260414_t9r01lqibdo08nmoqohhq6klgc",
+    "summary": "Mesadi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-04-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA0MTRfdDlyMDFscWliZG8wOG5tb3FvaGhxNmtsZ2MgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260415_c4c8adtmis37sbr0ocbbseqtk4",
+    "summary": "Bahag Bihu (Assam)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-04-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA0MTVfYzRjOGFkdG1pczM3c2JyMG9jYmJzZXF0azQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260415_dkou17i6djfa06ksh59fk46pd8",
+    "summary": "Vaisakhadi (Bengal)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-04-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA0MTVfZGtvdTE3aTZkamZhMDZrc2g1OWZrNDZwZDggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260501_ifgghkrurrcga7ojs5p45g8seo",
+    "summary": "Buddha Purnima",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-05-01"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA1MDFfaWZnZ2hrcnVycmNnYTdvanM1cDQ1ZzhzZW8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260509_ecjil375juuuc3a9oda7sqqg28",
+    "summary": "Birthday of Rabindranath",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-05-09"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA1MDlfZWNqaWwzNzVqdXV1YzNhOW9kYTdzcXFnMjggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260528_q32vlr7i73k8e59sv7rag70emo",
+    "summary": "Bakrid",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-05-28"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA1MjhfcTMydmxyN2k3M2s4ZTU5c3Y3cmFnNzBlbW8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260626_uvd2gtvkc3346b7se2v4im48q4",
+    "summary": "Muharram/Ashura",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-06-26"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA2MjZfdXZkMmd0dmtjMzM0NmI3c2UydjRpbTQ4cTQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260716_pc4c8b6sqsclq80ncejpfkmkl4",
+    "summary": "Rath Yatra",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-07-16"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA3MTZfcGM0YzhiNnNxc2NscTgwbmNlanBma21rbDQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260815_bp8sbcp5n07g8d4813k4pt43hg",
+    "summary": "Independence Day",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-08-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA4MTVfYnA4c2JjcDVuMDdnOGQ0ODEzazRwdDQzaGcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260815_krb5ugio3pcdeh41ucdhvdh9m8",
+    "summary": "Parsi New Year",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-08-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA4MTVfa3JiNXVnaW8zcGNkZWg0MXVjZGh2ZGg5bTggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260826_1mmh4dpom1l5e0ck33tae3uaas",
+    "summary": "Onam",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-08-26"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA4MjZfMW1taDRkcG9tMWw1ZTBjazMzdGFlM3VhYXMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260826_4p148bep46h7j0r0vv1u7bkfi8",
+    "summary": "Milad un-Nabi",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-08-26"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA4MjZfNHAxNDhiZXA0Nmg3ajByMHZ2MXU3YmtmaTggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260828_fbq81giv9tij730f5flr5hpuac",
+    "summary": "Raksha Bandhan",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-08-28"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA4MjhfZmJxODFnaXY5dGlqNzMwZjVmbHI1aHB1YWMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260904_b4nrrbc7ikd5oln39o9v7o3gno",
+    "summary": "Janmashtami",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-09-04"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA5MDRfYjRucnJiYzdpa2Q1b2xuMzlvOXY3bzNnbm8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260904_lfnd1ca468kl4ph58frfpimgks",
+    "summary": "Janmashtami (Smarta)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-09-04"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA5MDRfbGZuZDFjYTQ2OGtsNHBoNThmcmZwaW1na3MgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20260914_npbd30qfortdbcjot9u8ndac08",
+    "summary": "Ganesh Chaturthi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-09-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjA5MTRfbnBiZDMwcWZvcnRkYmNqb3Q5dThuZGFjMDggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261002_arp6pgnu512c88v0jrqns43vu8",
+    "summary": "Mahatma Gandhi Jayanti",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-10-02"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjEwMDJfYXJwNnBnbnU1MTJjODh2MGpycW5zNDN2dTggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261011_1icioln142judlkcfbha3pjdpg",
+    "summary": "First Day of Sharad Navratri",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-10-11"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjEwMTFfMWljaW9sbjE0Mmp1ZGxrY2ZiaGEzcGpkcGcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261017_h1f2v84af2e4gol35pkkjbgdas",
+    "summary": "First Day of Durga Puja Festivities",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-10-17"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjEwMTdfaDFmMnY4NGFmMmU0Z29sMzVwa2tqYmdkYXMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261018_up7a27s35gkelsr1cbevbp5j00",
+    "summary": "Maha Saptami",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-10-18"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjEwMThfdXA3YTI3czM1Z2tlbHNyMWNiZXZicDVqMDAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261019_klpqb6i8didhk1i71405fe56pc",
+    "summary": "Maha Ashtami",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-10-19"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjEwMTlfa2xwcWI2aThkaWRoazFpNzE0MDVmZTU2cGMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261020_fjp0rb9o3n2re0oa89qu4f4mso",
+    "summary": "Dussehra",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-10-20"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjEwMjBfZmpwMHJiOW8zbjJyZTBvYTg5cXU0ZjRtc28gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261026_dpgstdjm2kua0c3ti4aqmnctbo",
+    "summary": "Maharishi Valmiki Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-10-26"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjEwMjZfZHBnc3Rkam0ya3VhMGMzdGk0YXFtbmN0Ym8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261029_du0vmm1a7d862bc71ro9a82uqc",
+    "summary": "Karaka Chaturthi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-10-29"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjEwMjlfZHUwdm1tMWE3ZDg2MmJjNzFybzlhODJ1cWMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261108_o3aevviv105saebf47ptcda14o",
+    "summary": "Diwali/Deepavali",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-11-08"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjExMDhfbzNhZXZ2aXYxMDVzYWViZjQ3cHRjZGExNG8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261108_sj6r4c25h02j6iuvqms4907fmo",
+    "summary": "Naraka Chaturdasi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-11-08"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjExMDhfc2o2cjRjMjVoMDJqNml1dnFtczQ5MDdmbW8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261109_9ucn1jr1v0qkbmh1p31aka5qag",
+    "summary": "Govardhan Puja",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-11-09"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjExMDlfOXVjbjFqcjF2MHFrYm1oMXAzMWFrYTVxYWcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261111_lem4nlhmh9ka68hh6m99dopvc8",
+    "summary": "Bhai Duj",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-11-11"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjExMTFfbGVtNG5saG1oOWthNjhoaDZtOTlkb3B2YzggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261115_8065pjqbbhi1kmd7493liod1ag",
+    "summary": "Chhat Puja (Pratihar Sashthi/Surya Sashthi)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-11-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjExMTVfODA2NXBqcWJiaGkxa21kNzQ5M2xpb2QxYWcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261124_njcklmiqk3v344nv88r1mo6ink",
+    "summary": "Guru Nanak Jayanti",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-11-24"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjExMjRfbmpja2xtaXFrM3YzNDRudjg4cjFtbzZpbmsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261124_pv7p2h23ej6ekau6c5hc4688t8",
+    "summary": "Guru Tegh Bahadur's Martyrdom Day",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-11-24"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjExMjRfcHY3cDJoMjNlajZla2F1NmM1aGM0Njg4dDggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261223_qaarbvg90v76dead87qu17kob4",
+    "summary": "Hazarat Ali's Birthday",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-12-23"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjEyMjNfcWFhcmJ2Zzkwdjc2ZGVhZDg3cXUxN2tvYjQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261224_neqbcde26rglcalt462982nqi0",
+    "summary": "Christmas Eve",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2026-12-24"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjEyMjRfbmVxYmNkZTI2cmdsY2FsdDQ2Mjk4Mm5xaTAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20261225_j7t84gf437vtue4ck75hvd56l0",
+    "summary": "Christmas",
+    "description": "Public holiday",
+    "start": {
+     "date": "2026-12-25"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNjEyMjVfajd0ODRnZjQzN3Z0dWU0Y2s3NWh2ZDU2bDAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   }
+  ],
+  "2027": [
+   {
+    "id": "20270101_p8d44frnphvj5avi6l2qrov1ns",
+    "summary": "New Year's Day",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-01-01"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAxMDFfcDhkNDRmcm5waHZqNWF2aTZsMnFyb3YxbnMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270114_snhpa8ap72ls6h72daor31osu4",
+    "summary": "Makar Sankranti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-01-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAxMTRfc25ocGE4YXA3MmxzNmg3MmRhb3IzMW9zdTQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270115_9a1onrqb772qv45gcvnpsqu4n8",
+    "summary": "Pongal",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-01-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAxMTVfOWExb25ycWI3NzJxdjQ1Z2N2bnBzcXU0bjggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270115_ajj4ih6m3q3nun9d3f60m41qr4",
+    "summary": "Guru Govind Singh Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-01-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAxMTVfYWpqNGloNm0zcTNudW45ZDNmNjBtNDFxcjQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270126_3ueccaeqtpio3llclsnnb33974",
+    "summary": "Republic Day",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-01-26"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAxMjZfM3VlY2NhZXF0cGlvM2xsY2xzbm5iMzM5NzQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270209_aahi2e9puucb8ul8rps6555r00",
+    "summary": "Ramadan Start (tentative)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India\nDate is tentative and may change.",
+    "start": {
+     "date": "2027-02-09"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAyMDlfYWFoaTJlOXB1dWNiOHVsOHJwczY1NTVyMDAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270211_kl0ecbgk48end4m29v4r25b6bo",
+    "summary": "Vasant Panchami",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-02-11"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAyMTFfa2wwZWNiZ2s0OGVuZDRtMjl2NHIyNWI2Ym8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270219_rnr5nqkt9mtea6h7f84nltrum0",
+    "summary": "Shivaji Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-02-19"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAyMTlfcm5yNW5xa3Q5bXRlYTZoN2Y4NG5sdHJ1bTAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270220_19166gseag7oph9nsl5v21snl4",
+    "summary": "Guru Ravidas Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-02-20"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAyMjBfMTkxNjZnc2VhZzdvcGg5bnNsNXYyMXNubDQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270302_rn894artda84k4m9e69p2mki34",
+    "summary": "Maharishi Dayanand Saraswati Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-03-02"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAzMDJfcm44OTRhcnRkYTg0azRtOWU2OXAybWtpMzQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270305_vv39k149efm9ccns0onpoqtfb0",
+    "summary": "Jamat Ul-Vida",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-03-05"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAzMDVfdnYzOWsxNDllZm05Y2NuczBvbnBvcXRmYjAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270306_258lkpk94le407aeusjmphgikc",
+    "summary": "Maha Shivaratri",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-03-06"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAzMDZfMjU4bGtwazk0bGU0MDdhZXVzam1waGdpa2MgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270310_2h899vh3h8hdotv5gea8gerksk",
+    "summary": "Ramzan Id (tentative)",
+    "description": "Public holiday\nDate is tentative and may change.",
+    "start": {
+     "date": "2027-03-10"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAzMTBfMmg4OTl2aDNoOGhkb3R2NWdlYThnZXJrc2sgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270322_9202renvgjrsaji3cv7n067a8g",
+    "summary": "Holika Dahana",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-03-22"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAzMjJfOTIwMnJlbnZnanJzYWppM2N2N24wNjdhOGcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270322_bhvcbk1j35t8h6puqfjgo2hur4",
+    "summary": "Dolyatra",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-03-22"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAzMjJfYmh2Y2JrMWozNXQ4aDZwdXFmamdvMmh1cjQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270322_keu32sqpm0ak2d82bo6grqe3pc",
+    "summary": "Holi",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-03-22"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAzMjJfa2V1MzJzcXBtMGFrMmQ4MmJvNmdycWUzcGMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270326_9qji2l8o2g5qh4a8ma1jr9ifvs",
+    "summary": "Good Friday",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-03-26"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzAzMjZfOXFqaTJsOG8yZzVxaDRhOG1hMWpyOWlmdnMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270407_0niv7s3g935532uc814dutiufk",
+    "summary": "Ugadi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-04-07"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MDdfMG5pdjdzM2c5MzU1MzJ1YzgxNGR1dGl1ZmsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270407_6bpid36leuifhsqbeffreilct4",
+    "summary": "Gudi Padwa",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-04-07"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MDdfNmJwaWQzNmxldWlmaHNxYmVmZnJlaWxjdDQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270407_7jk58h1suvnqpdl52rci7ok2qo",
+    "summary": "Chaitra Sukhladi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-04-07"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MDdfN2prNThoMXN1dm5xcGRsNTJyY2k3b2sycW8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270407_qopgvj9gn1sh1c836nlga0jbp8",
+    "summary": "Cheti Chand",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-04-07"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MDdfcW9wZ3ZqOWduMXNoMWM4MzZubGdhMGpicDggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270414_0vb77q67hmdtrodjglsdfvg8f0",
+    "summary": "Vishu",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-04-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MTRfMHZiNzdxNjdobWR0cm9kamdsc2Rmdmc4ZjAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270414_9uitr4s5kiavjvj3r3h3n98nq8",
+    "summary": "Ambedkar Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-04-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MTRfOXVpdHI0czVraWF2anZqM3IzaDNuOThucTggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270414_lq3f1s8bnrhui1tahq4rodkmlk",
+    "summary": "Mesadi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-04-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MTRfbHEzZjFzOGJucmh1aTF0YWhxNHJvZGttbGsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270414_qv4a4ivevb4cgh4mfrudjmiegg",
+    "summary": "Vaisakhi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-04-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MTRfcXY0YTRpdmV2YjRjZ2g0bWZydWRqbWllZ2cgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270415_a2ro6eu1pen4bc8t8t0ep46gfc",
+    "summary": "Bahag Bihu (Assam)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-04-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MTVfYTJybzZldTFwZW40YmM4dDh0MGVwNDZnZmMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270415_kuegg11i8r96f2hu4henobopa0",
+    "summary": "Vaisakhadi (Bengal)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-04-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MTVfa3VlZ2cxMWk4cjk2ZjJodTRoZW5vYm9wYTAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270415_rbgf7u7h9obbudbgej9rh3bmt0",
+    "summary": "Rama Navami",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-04-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MTVfcmJnZjd1N2g5b2JidWRiZ2VqOXJoM2JtdDAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270419_bq8ncrdckjm5ib3i94bbsgcb38",
+    "summary": "Mahavir Jayanti",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-04-19"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA0MTlfYnE4bmNyZGNram01aWIzaTk0YmJzZ2NiMzggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270509_58hasc8lupe4lmk7a1ksit369g",
+    "summary": "Birthday of Rabindranath",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-05-09"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA1MDlfNThoYXNjOGx1cGU0bG1rN2Exa3NpdDM2OWcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270517_p71ep4ru9258ap90ok6blfjcd0",
+    "summary": "Bakrid (tentative)",
+    "description": "Public holiday\nDate is tentative and may change.",
+    "start": {
+     "date": "2027-05-17"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA1MTdfcDcxZXA0cnU5MjU4YXA5MG9rNmJsZmpjZDAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270520_fcnvkqkqeuhcetej6e69pddrt4",
+    "summary": "Buddha Purnima",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-05-20"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA1MjBfZmNudmtxa3FldWhjZXRlajZlNjlwZGRydDQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270616_3k20sckpm0fo1jsd9jrmh5ljj4",
+    "summary": "Muharram/Ashura (tentative)",
+    "description": "Public holiday\nDate is tentative and may change.",
+    "start": {
+     "date": "2027-06-16"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA2MTZfM2syMHNja3BtMGZvMWpzZDlqcm1oNWxqajQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270705_ja2qu57j44l38sfotieg8qse9g",
+    "summary": "Rath Yatra",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-07-05"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA3MDVfamEycXU1N2o0NGwzOHNmb3RpZWc4cXNlOWcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270815_01iktqf34vt12bbkh3v262u4h0",
+    "summary": "Independence Day",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-08-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA4MTVfMDFpa3RxZjM0dnQxMmJia2gzdjI2MnU0aDAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270815_dace38sqe2m3mt6hdtqmsihefo",
+    "summary": "Milad un-Nabi (tentative)",
+    "description": "Public holiday\nDate is tentative and may change.",
+    "start": {
+     "date": "2027-08-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA4MTVfZGFjZTM4c3FlMm0zbXQ2aGR0cW1zaWhlZm8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270815_nste5u55tjur92ui2pc2m31j6o",
+    "summary": "Parsi New Year",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-08-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA4MTVfbnN0ZTV1NTV0anVyOTJ1aTJwYzJtMzFqNm8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270817_0tnupge6d0358ai87ab0rtkqhs",
+    "summary": "Raksha Bandhan",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-08-17"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA4MTdfMHRudXBnZTZkMDM1OGFpODdhYjBydGtxaHMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270825_j4hh5dcksa8dqf9lefv1q2qa80",
+    "summary": "Janmashtami (Smarta)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-08-25"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA4MjVfajRoaDVkY2tzYThkcWY5bGVmdjFxMnFhODAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270825_ub6b3rnk405v8se9noliu2l1k4",
+    "summary": "Janmashtami",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-08-25"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA4MjVfdWI2YjNybms0MDV2OHNlOW5vbGl1MmwxazQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270904_dbi4mlsmqh4a1u46bksp8jd5e4",
+    "summary": "Ganesh Chaturthi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-09-04"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA5MDRfZGJpNG1sc21xaDRhMXU0NmJrc3A4amQ1ZTQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270912_gavst6g6pppj2prjgkd26hj0ec",
+    "summary": "Onam",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-09-12"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA5MTJfZ2F2c3Q2ZzZwcHBqMnByamdrZDI2aGowZWMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20270930_5jd494lr8leai8a9cueg5ojjvc",
+    "summary": "First Day of Sharad Navratri",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-09-30"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzA5MzBfNWpkNDk0bHI4bGVhaThhOWN1ZWc1b2pqdmMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271002_2edlo6uiucadokae2c25555r8o",
+    "summary": "Mahatma Gandhi Jayanti",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-10-02"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMDJfMmVkbG82dWl1Y2Fkb2thZTJjMjU1NTVyOG8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271005_9gp1dcupvmeuj74bj16n1lnej8",
+    "summary": "First Day of Durga Puja Festivities",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-10-05"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMDVfOWdwMWRjdXB2bWV1ajc0YmoxNm4xbG5lajggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271006_1ibvlakql313kcollmhd65jpm0",
+    "summary": "Maha Saptami",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-10-06"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMDZfMWlidmxha3FsMzEza2NvbGxtaGQ2NWpwbTAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271007_7qisil1fgfeb1085n659su1eik",
+    "summary": "Maha Ashtami",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-10-07"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMDdfN3Fpc2lsMWZnZmViMTA4NW42NTlzdTFlaWsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271008_jjgvidc6lht016o4o81rm4un0g",
+    "summary": "Maha Navami",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-10-08"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMDhfampndmlkYzZsaHQwMTZvNG84MXJtNHVuMGcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271009_4jacl7im6kltp8ab19baeeq290",
+    "summary": "Dussehra",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-10-09"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMDlfNGphY2w3aW02a2x0cDhhYjE5YmFlZXEyOTAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271015_cm76crgv19lk1slss2vlv9fa2c",
+    "summary": "Maharishi Valmiki Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-10-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMTVfY203NmNyZ3YxOWxrMXNsc3Mydmx2OWZhMmMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271018_qv18b6b55guqqi8mdjhgqn13ao",
+    "summary": "Karaka Chaturthi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-10-18"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMThfcXYxOGI2YjU1Z3VxcWk4bWRqaGdxbjEzYW8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271028_8qb29soksr2qfi1p4gmj0ku5jk",
+    "summary": "Naraka Chaturdasi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-10-28"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMjhfOHFiMjlzb2tzcjJxZmkxcDRnbWowa3U1amsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271029_miv6ljqld90fb4eb26v2sh8cb4",
+    "summary": "Diwali/Deepavali",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-10-29"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMjlfbWl2NmxqcWxkOTBmYjRlYjI2djJzaDhjYjQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271030_d70d4gvl3h4pge5210qus66cio",
+    "summary": "Govardhan Puja",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-10-30"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMzBfZDcwZDRndmwzaDRwZ2U1MjEwcXVzNjZjaW8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271031_dj8l166pq2kv7r7lcj2tgic5qk",
+    "summary": "Bhai Duj",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-10-31"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEwMzFfZGo4bDE2NnBxMmt2N3I3bGNqMnRnaWM1cWsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271104_fdedn5ue5pokoca9hdmol5kvnk",
+    "summary": "Chhat Puja (Pratihar Sashthi/Surya Sashthi)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-11-04"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzExMDRfZmRlZG41dWU1cG9rb2NhOWhkbW9sNWt2bmsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271114_0rtt76jatrbaqhqqpivj71o0cg",
+    "summary": "Guru Nanak Jayanti",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-11-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzExMTRfMHJ0dDc2amF0cmJhcWhxcXBpdmo3MW8wY2cgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271124_1kdmmhks17fu60go8rb4ktq1ho",
+    "summary": "Guru Tegh Bahadur's Martyrdom Day",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-11-24"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzExMjRfMWtkbW1oa3MxN2Z1NjBnbzhyYjRrdHExaG8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271212_2b6qm4v8t1khddpoj67qgu35i4",
+    "summary": "Hazarat Ali's Birthday",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-12-12"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEyMTJfMmI2cW00djh0MWtoZGRwb2o2N3FndTM1aTQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271224_s7i0dkeltlg4c5n8137ctvt0h0",
+    "summary": "Christmas Eve",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2027-12-24"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEyMjRfczdpMGRrZWx0bGc0YzVuODEzN2N0dnQwaDAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20271225_0rk55qdea39ch026q5cgjosf9o",
+    "summary": "Christmas",
+    "description": "Public holiday",
+    "start": {
+     "date": "2027-12-25"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyNzEyMjVfMHJrNTVxZGVhMzljaDAyNnE1Y2dqb3NmOW8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   }
+  ],
+  "2028": [
+   {
+    "id": "20280101_d9jafde1n2b9skqhvjsok7qk58",
+    "summary": "New Year's Day",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-01-01"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAxMDFfZDlqYWZkZTFuMmI5c2txaHZqc29rN3FrNTggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280115_ff5avlm93hn4b86mcnpl6mcvco",
+    "summary": "Pongal",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-01-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAxMTVfZmY1YXZsbTkzaG40Yjg2bWNucGw2bWN2Y28gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280115_r02e1ljuu5a8v00ukl154j00m4",
+    "summary": "Makar Sankranti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-01-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAxMTVfcjAyZTFsanV1NWE4djAwdWtsMTU0ajAwbTQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280126_h6o83cul9v1l86nsfupdk3qiqc",
+    "summary": "Republic Day",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-01-26"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAxMjZfaDZvODNjdWw5djFsODZuc2Z1cGRrM3FpcWMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280129_nnrbnt6cquv9mcbpb89ku5frgc",
+    "summary": "Ramadan Start (tentative)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India\nDate is tentative and may change.",
+    "start": {
+     "date": "2028-01-29"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAxMjlfbm5yYm50NmNxdXY5bWNicGI4OWt1NWZyZ2MgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280131_f0kse563kgn7e6onmnksogp010",
+    "summary": "Vasant Panchami",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-01-31"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAxMzFfZjBrc2U1NjNrZ243ZTZvbm1ua3NvZ3AwMTAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280219_qmnn642badsuo0e20nu2j70690",
+    "summary": "Shivaji Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-02-19"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAyMTlfcW1ubjY0MmJhZHN1bzBlMjBudTJqNzA2OTAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280223_0euj1qivmp8hqn1u5552qivgg8",
+    "summary": "Maha Shivaratri",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-02-23"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAyMjNfMGV1ajFxaXZtcDhocW4xdTU1NTJxaXZnZzggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280227_ip63hqp3uolnp7ip4ek9h2n38s",
+    "summary": "Ramzan Id (tentative)",
+    "description": "Public holiday\nDate is tentative and may change.",
+    "start": {
+     "date": "2028-02-27"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAyMjdfaXA2M2hxcDN1b2xucDdpcDRlazloMm4zOHMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280311_kgqtao2bp975aje01n4ara16fs",
+    "summary": "Holi",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-03-11"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAzMTFfa2dxdGFvMmJwOTc1YWplMDFuNGFyYTE2ZnMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280327_nurvc1u9caqs9baiotmpc4b6ek",
+    "summary": "Gudi Padwa",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-03-27"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAzMjdfbnVydmMxdTljYXFzOWJhaW90bXBjNGI2ZWsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280327_teoum48p1cphfci688qsg6ei4s",
+    "summary": "Ugadi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-03-27"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODAzMjdfdGVvdW00OHAxY3BoZmNpNjg4cXNnNmVpNHMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280403_kq2ql73t3hr96hvf8b1uj5mojg",
+    "summary": "Rama Navami",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-04-03"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA0MDNfa3EycWw3M3QzaHI5Nmh2ZjhiMXVqNW1vamcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280407_dksn4eced6dn9lfkm0bh6lkg8c",
+    "summary": "Mahavir Jayanti",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-04-07"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA0MDdfZGtzbjRlY2VkNmRuOWxma20wYmg2bGtnOGMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280414_1m0il2tk2fflj9fsr825abiuqs",
+    "summary": "Good Friday",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-04-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA0MTRfMW0waWwydGsyZmZsajlmc3I4MjVhYml1cXMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280414_9p83lgsh2p7ubmb7mva0mscmrk",
+    "summary": "Ambedkar Jayanti",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-04-14"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA0MTRfOXA4M2xnc2gycDd1Ym1iN212YTBtc2NtcmsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280506_d7g472dj1m02s448v9gfog6mk0",
+    "summary": "Bakrid (tentative)",
+    "description": "Public holiday\nDate is tentative and may change.",
+    "start": {
+     "date": "2028-05-06"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA1MDZfZDdnNDcyZGoxbTAyczQ0OHY5Z2ZvZzZtazAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280604_56bo2ben3n19ivgo45jabe9pck",
+    "summary": "Muharram/Ashura (tentative)",
+    "description": "Public holiday\nDate is tentative and may change.",
+    "start": {
+     "date": "2028-06-04"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA2MDRfNTZibzJiZW4zbjE5aXZnbzQ1amFiZTlwY2sgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280624_ifjj3j75i4thasne7rtuq0d618",
+    "summary": "Rath Yatra",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-06-24"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA2MjRfaWZqajNqNzVpNHRoYXNuZTdydHVxMGQ2MTggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280805_7u52m6fdur568op4otn37huseo",
+    "summary": "Raksha Bandhan",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-08-05"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA4MDVfN3U1Mm02ZmR1cjU2OG9wNG90bjM3aHVzZW8gZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280813_3pvuo5rviqi6fpigbt7qr27n5g",
+    "summary": "Janmashtami (Smarta)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-08-13"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA4MTNfM3B2dW81cnZpcWk2ZnBpZ2J0N3FyMjduNWcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280813_mg2n0c63fdu0j1bi8l3nqrdie4",
+    "summary": "Janmashtami",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-08-13"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA4MTNfbWcybjBjNjNmZHUwajFiaThsM25xcmRpZTQgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280815_6n71hro5sesemrd26m8iho1r8g",
+    "summary": "Independence Day",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-08-15"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA4MTVfNm43MWhybzVzZXNlbXJkMjZtOGlobzFyOGcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280823_vbl4gg16vlqq796htapbvk8kh0",
+    "summary": "Ganesh Chaturthi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-08-23"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA4MjNfdmJsNGdnMTZ2bHFxNzk2aHRhcGJ2azhraDAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280901_243taim5444rmihr68g28cdjgk",
+    "summary": "Onam",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-09-01"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA5MDFfMjQzdGFpbTU0NDRybWlocjY4ZzI4Y2RqZ2sgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280919_c82hp0mbko08u7uouc1gon1ceg",
+    "summary": "First Day of Sharad Navratri",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-09-19"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA5MTlfYzgyaHAwbWJrbzA4dTd1b3VjMWdvbjFjZWcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280924_vngqe2ka79qh13higc9570b4vk",
+    "summary": "First Day of Durga Puja Festivities",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-09-24"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA5MjRfdm5ncWUya2E3OXFoMTNoaWdjOTU3MGI0dmsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20280927_6lsppe8gf7qk4l7jd6b8slm93g",
+    "summary": "Dussehra",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-09-27"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODA5MjdfNmxzcHBlOGdmN3FrNGw3amQ2YjhzbG05M2cgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20281002_f6q8ij2n4arhh68h5hpdfvqtak",
+    "summary": "Mahatma Gandhi Jayanti",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-10-02"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODEwMDJfZjZxOGlqMm40YXJoaDY4aDVocGRmdnF0YWsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20281007_n3fph96ip5m9be130ev9ri3qsc",
+    "summary": "Karaka Chaturthi",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-10-07"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODEwMDdfbjNmcGg5NmlwNW05YmUxMzBldjlyaTNxc2MgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20281017_vrl03pqpq5rlubmt0doai9f3h8",
+    "summary": "Diwali/Deepavali",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-10-17"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODEwMTdfdnJsMDNwcXBxNXJsdWJtdDBkb2FpOWYzaDggZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20281019_braqavbepjjjdrq8qjtu75fv5g",
+    "summary": "Bhai Duj",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-10-19"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODEwMTlfYnJhcWF2YmVwampqZHJxOHFqdHU3NWZ2NWcgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20281023_kfus9j7s92pngf979v0pu9ph2k",
+    "summary": "Chhat Puja (Pratihar Sashthi/Surya Sashthi)",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-10-23"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODEwMjNfa2Z1czlqN3M5MnBuZ2Y5Nzl2MHB1OXBoMmsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20281124_fmabeuucmil9l29mggi5cq2nvs",
+    "summary": "Guru Tegh Bahadur's Martyrdom Day",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-11-24"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODExMjRfZm1hYmV1dWNtaWw5bDI5bWdnaTVjcTJudnMgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20281201_ao9qnt3ofvv2t7m0g7e313q5p0",
+    "summary": "Hazarat Ali's Birthday",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-12-01"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODEyMDFfYW85cW50M29mdnYydDdtMGc3ZTMxM3E1cDAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20281224_jnc993qbce0d4jdchl1du37nfk",
+    "summary": "Christmas Eve",
+    "description": "Observance\nTo hide observances, go to Google Calendar Settings > Holidays in India",
+    "start": {
+     "date": "2028-12-24"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODEyMjRfam5jOTkzcWJjZTBkNGpkY2hsMWR1MzduZmsgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   },
+   {
+    "id": "20281225_huispm9b9i0970k7n2eprhmou0",
+    "summary": "Christmas",
+    "description": "Public holiday",
+    "start": {
+     "date": "2028-12-25"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=MjAyODEyMjVfaHVpc3BtOWI5aTA5NzBrN24yZXByaG1vdTAgZW4uaW5kaWFuI2hvbGlkYXlAdg",
+    "status": "confirmed"
+   }
+  ]
+ }
+}

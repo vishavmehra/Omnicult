@@ -165,7 +165,7 @@ async def get_pulse(ctx: LensContext, code: str) -> v.LensSearchPulse:
         refresh_date = date.fromisoformat(recorded()["refresh_date"])
         stamp = datetime.combine(date.fromisoformat(recorded()["recorded_on"]), datetime.min.time(), tzinfo=UTC)
         if not rows:
-            gaps.append(f"The demo recording covers {', '.join(sorted(recorded()['regions']))}, not {names[code]}.")
+            gaps.append(f"No search data is recorded for {names[code]}.")
     else:
         stored = await _live_rows(code)
         rows = [{k: getattr(r, k) for k in logic.KEYS} for r in stored]

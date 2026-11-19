@@ -14,9 +14,109 @@ import { cn } from "@/lib/utils";
 
 import { useAtlas, useClaim, useCompare, type LensCompare, type LensCompareItem } from "./api";
 import { ClaimEntry } from "./claim-entry";
-import { categoryLabel } from "./format";
-import { SourcesPanel, StrengthTag, nf, strengthOf } from "./parts";
+import { categoryLabel, dayLabel } from "./format";
+import { DataSources, SourcesPanel, StrengthTag, nf, strengthOf } from "./parts";
+import { formatFact, type FactUnit } from "./state-facts-logic";
 import { StateSelect } from "./state-select";
+
+/**
+ * Published figures side by side: one row per figure any compared state has, each cell with its own period. The bar is the
+ * value against the largest value in the row; "Highest" names the largest number, which is not always the better one.
+ */
+function DataTable({ data }: { data: LensCompare }) {
+  const cols = data.regions.length;
+  const grid = { gridTemplateColumns: `minmax(9rem, 15rem) repeat(${cols}, minmax(11rem, 1fr))` };
+  const lead = (label: string, meta?: string) => (
+    <div role="rowheader" className="sticky left-0 z-10 bg-surface px-3 py-2.5">
+      <p className="text-[13px] font-medium text-ink">{label}</p>
+      {meta && <p className="type-meta">{meta}</p>}
+    </div>
+  );
+  return (
+    <div className="overflow-x-auto rounded-card border border-border bg-surface" role="region" aria-label="Published figures, side by side" tabIndex={0}>
+      <div role="table" className="min-w-max">
+        <div role="row" className="grid border-b border-border bg-surface-muted/60" style={grid}>
+          <div role="columnheader" className="type-meta sticky left-0 z-10 bg-surface-muted px-3 py-2.5">
+            Figure
+          </div>
+          {data.regions.map((r) => (
+            <div key={r.region.code} role="columnheader" className="border-l border-border px-3 py-2.5">
+              <p className="type-title text-[19px] text-ink">{r.region.name}</p>
+            </div>
+          ))}
+        </div>
+        <div role="row" className="grid border-b border-border" style={grid}>
+          {lead("Mother tongues", "Census 2011, or the official languages")}
+          {data.regions.map((r) => (
+            <div key={r.region.code} role="cell" className="space-y-0.5 border-l border-border px-3 py-2.5 text-[13px] text-ink-body">
+              {r.data.languages.slice(0, 2).map((l) => (
+                <p key={`${l.code}-${l.name}`}>
+                  {l.name}
+                  {l.share !== null && <span className="type-ledger text-ink-secondary"> {l.share}%</span>}
+                </p>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div role="row" className="grid border-b border-border" style={grid}>
+          {lead("Top searches", "Newest week, where the state scores highest")}
+          {data.regions.map((r) => (
+            <div key={r.region.code} role="cell" className="space-y-0.5 border-l border-border px-3 py-2.5 text-[13px] text-ink-body">
+              {r.data.searches.length === 0 ? (
+                <p className="text-ink-muted">No search data</p>
+              ) : (
+                r.data.searches.slice(0, 2).map((t) => (
+                  <p key={t.term}>
+                    {t.term} <span className="type-ledger text-ink-secondary">{t.score}</span>
+                  </p>
+                ))
+              )}
+            </div>
+          ))}
+        </div>
+        <div role="row" className="grid border-b border-border" style={grid}>
+          {lead("Public holidays", data.regions[0] ? `On each state's ${data.regions[0].data.holidays_year} list` : undefined)}
+          {data.regions.map((r) => (
+            <div key={r.region.code} role="cell" className="space-y-0.5 border-l border-border px-3 py-2.5 text-[13px] text-ink-body">
+              <p className="type-ledger text-ink">{r.data.holidays}</p>
+              {r.data.next_holidays[0] && (
+                <p className="text-ink-secondary">
+                  Next: {r.data.next_holidays[0].name}, {dayLabel(r.data.next_holidays[0].date)}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+        {data.data_rows.map((row) => {
+          const top = Math.max(...row.cells.map((c) => c.value ?? 0));
+          return (
+            <div key={row.key} role="row" className="grid border-b border-border last:border-b-0" style={grid}>
+              {lead(row.label)}
+              {row.cells.map((cell) => (
+                <div key={cell.region_code} role="cell" className="min-w-0 space-y-1 border-l border-border px-3 py-2.5">
+                  {cell.value === null ? (
+                    <p className="text-[12.5px] text-ink-muted">No figure</p>
+                  ) : (
+                    <>
+                      <p className="flex flex-wrap items-baseline gap-x-2">
+                        <span className="type-ledger text-[14px] font-semibold text-ink">{formatFact(row.unit as FactUnit, cell.value)}</span>
+                        <span className="rounded-full bg-surface-muted px-1.5 text-[10.5px] tabular-nums text-ink-secondary">{cell.period}</span>
+                        {row.highest.includes(cell.region_code) && <span className="text-[11px] font-medium text-pop">Highest</span>}
+                      </p>
+                      <span className="clay-well block h-1.5 overflow-hidden rounded-full p-px" aria-hidden>
+                        <span className="block h-full rounded-full bg-[var(--role-lens-strong)]" style={{ width: `${top > 0 ? Math.max(2, (cell.value / top) * 100) : 0}%` }} />
+                      </span>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export const COMPARE_MIN = 2;
 export const COMPARE_MAX = 4;
@@ -182,12 +282,19 @@ export function CompareView({ campaignId, regions, onRegions }: { campaignId: st
       {compare.isError && <ErrorState error={compare.error} onRetry={() => void compare.refetch()} />}
       {data && (
         <>
+          <section aria-labelledby="cmp-data" className="space-y-3">
+            <SectionTitle id="cmp-data" meta={`${data.data_rows.length} published figures`}>
+              {data.regions.map((r) => r.region.name).join(" and ")}: the numbers
+            </SectionTitle>
+            <DataTable data={data} />
+          </section>
           <section aria-labelledby="cmp" className="space-y-3">
             <SectionTitle id="cmp" meta="Select a claim for its sources">
-              {data.regions.map((r) => r.region.name).join(" and ")}
+              Cited evidence
             </SectionTitle>
             <Table data={data} onOpen={setClaimId} />
           </section>
+          <DataSources sources={data.data_sources} />
           <SourcesPanel sources={data.sources} limitations={data.limitations} modeLabel={data.mode_label} />
           <ClaimSheet workspaceId={data.workspace_id} claimId={claimId} onClose={() => setClaimId(null)} />
         </>
