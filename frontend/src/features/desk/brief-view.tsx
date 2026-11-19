@@ -117,7 +117,6 @@ export function Completeness({ brief }: { brief: Pick<Brief, "completeness"> }) 
 
 /** Which version is on screen, when it was saved, and where the content came from. */
 export function VersionBar({ brief, viewing }: { brief: Brief; viewing?: { version: number; createdAt: string; note: string | null } }) {
-  const fixture = brief.provenance.source === "demo_fixture";
   return (
     <div className="space-y-2.5 rounded-card border border-border bg-surface px-4 py-3">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
@@ -141,7 +140,6 @@ export function VersionBar({ brief, viewing }: { brief: Brief; viewing?: { versi
       </div>
       {(viewing?.note ?? brief.change_note) && <p className="text-[13px] text-ink-body">“{viewing?.note ?? brief.change_note}”</p>}
       <Completeness brief={brief} />
-      {fixture && <p className="text-[11.5px] text-ink-muted">Source: demonstration fixture</p>}
     </div>
   );
 }
@@ -149,7 +147,7 @@ export function VersionBar({ brief, viewing }: { brief: Brief; viewing?: { versi
 const nameOf = (regions: Region[] | undefined, code: string) => regions?.find((r) => r.code === code)?.name ?? code;
 
 /** The brief as a document. Read-only; editing is a separate mode. */
-export function BriefDocument({ content, regions, sample }: { content: BriefContent; regions: Region[] | undefined; sample: boolean }) {
+export function BriefDocument({ content, regions }: { content: BriefContent; regions: Region[] | undefined }) {
   const c = content;
   const rows = [...(c.regions.origin ? [{ code: c.regions.origin, role: "Origin" }] : []), ...c.regions.targets.map((code) => ({ code, role: "Target" }))];
   const budget = c.budget;
@@ -255,7 +253,6 @@ export function BriefDocument({ content, regions, sample }: { content: BriefCont
             {budget.total > allocated + 0.005 && Object.keys(budget.by_region).length > 0 && (
               <p className="text-[12.5px] text-ink-muted">{formatMoney(budget.currency, budget.total - allocated)} of the total is not assigned to a region.</p>
             )}
-            {(sample || budget.sample) && <p className="text-[11.5px] text-ink-muted">Source: sample figures</p>}
           </div>
         )}
       </Block>

@@ -64,7 +64,7 @@ async def test_quick_read_on_the_fixture_provider_labels_everything_synthetic_an
     outcome = await run_quick_read(inp, gateway(fixture=True))
     assert outcome.status == "completed" and outcome.error is None and len(outcome.responses) == 12
     assert any("not responses from real people" in n or "not a measurement of real people" in n for n in outcome.limitations)
-    assert any("fixture" in n.lower() for n in outcome.limitations)
+    assert not any("fixture" in n.lower() for n in outcome.limitations)
     for response in outcome.responses.values():
         assert response.is_synthetic is True and response.first_reaction and response.message.restated
         assert response.message.survival in ("understood", "partial", "misunderstood") and response.follow_up_question

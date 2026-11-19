@@ -15,7 +15,7 @@ type Dist = BuzzSummary["sentiment"];
 
 /** One sentence from the counted reach: who saw it, who passed it on, and why it stopped. No score, no estimate. */
 export function reachLine(r: Reach): string {
-  const seen = `${r.exposed} of ${pluralise(r.population, "simulated account")} saw it`;
+  const seen = `${r.exposed} of ${pluralise(r.population, "account")} saw it`;
   const passed = r.resharers === 0 ? "none posted or reshared it" : `${r.resharers} posted or reshared it`;
   const end =
     r.ended === "no_new_exposure"
@@ -138,7 +138,7 @@ export function BuzzView({ result, stateName, onNewRun }: { result: BuzzResult; 
       <RunBanner run={result} label="Buzz Simulator" onNewRun={onNewRun} />
 
       {(usable || active || result.acts.length > 0) && (
-        <Panel id="buzz-setup" title="The simulation" meta={`${pluralise(panel.generated_size, "simulated account")}`}>
+        <Panel id="buzz-setup" title="The simulation" meta={`${pluralise(panel.generated_size, "account")}`}>
           <dl className="type-ledger grid gap-x-6 gap-y-1 text-[13px] sm:grid-cols-[9rem_minmax(0,1fr)]">
             <dt className="text-ink-muted">States</dt>
             <dd className="text-ink-body">{result.regions.map((r) => r.name).join(", ")}</dd>
@@ -180,7 +180,7 @@ export function BuzzView({ result, stateName, onNewRun }: { result: BuzzResult; 
               <CohortTable title="By state" rows={summary.by_state} />
               <CohortTable title="By language" rows={summary.by_language} />
             </div>
-            <p className="mt-2 max-w-[68ch] text-xs text-ink-secondary">Cohorts hold a handful of simulated accounts each, so differences between them are noisy. Read them as questions to ask real people.</p>
+            <p className="mt-2 max-w-[68ch] text-xs text-ink-secondary">Cohorts hold a handful of accounts each, so differences between them are noisy. Read them as questions to ask.</p>
           </Panel>
 
           <Panel id="buzz-influence" title="Who showed it to whom" meta="Reshares that put the creative in front of someone new">

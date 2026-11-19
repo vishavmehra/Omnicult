@@ -21,7 +21,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   );
 }
 
-/** What "fresh" means for what is on screen: the data states, which one applies here, and the sample's own limits. */
+/** What "fresh" means for what is on screen: the data states, which one applies here, and its limitations. */
 export function FreshnessPanel({ campaignId, status }: { campaignId: string; status: Status | undefined }) {
   const loaded = Boolean(status?.loaded);
   const freshness = useFreshness(campaignId, loaded);
@@ -29,8 +29,8 @@ export function FreshnessPanel({ campaignId, status }: { campaignId: string; sta
   const f = freshness.data;
   const provisionalDays = f?.provisional_days ?? 0;
   const states = [
-    { label: "Live", meaning: "Pulled from a connected account within its normal reporting delay.", here: "Not applicable: no account is connected." },
-    { label: "Delayed", meaning: "The platform has not reported recently; the last good value is shown with its time.", here: "Not applicable: nothing is pulled." },
+    { label: "Live", meaning: "Pulled from a connected account within its normal reporting delay.", here: null },
+    { label: "Delayed", meaning: "The platform has not reported recently; the last good value is shown with its time.", here: null },
     {
       label: "Provisional",
       meaning: "Reported, but the platform may still restate it, for example when conversions arrive late.",
@@ -54,21 +54,19 @@ export function FreshnessPanel({ campaignId, status }: { campaignId: string; sta
             <div key={s.label} className="space-y-0.5 px-3 py-2.5">
               <dt className="text-[13px] font-semibold text-ink">{s.label}</dt>
               <dd className="text-[12.5px] text-ink-secondary">{s.meaning}</dd>
-              <dd className="text-[12.5px] text-ink-body">
-                {s.here}
-              </dd>
+              {s.here && <dd className="text-[12.5px] text-ink-body">{s.here}</dd>}
             </div>
           ))}
         </dl>
       </section>
-      {f && <LimitationList items={f.limitations} title="Limits of the sample" />}
+      {f && <LimitationList items={f.limitations} title="Limitations" />}
       {loaded && (
-        <section aria-label="Reload the sample" className="space-y-2">
+        <section aria-label="Reload the data" className="space-y-2">
           <Button variant="outline" size="sm" onClick={() => reload.mutate()} disabled={reload.isPending}>
             {reload.isPending ? <LoaderCircle aria-hidden className="animate-spin motion-reduce:animate-none" /> : <RefreshCw aria-hidden />}
-            Reload the sample
+            Reload the data
           </Button>
-          <p className="text-[12px] text-ink-muted">Replaces this campaign&apos;s sample rows with an identical copy. Owners and editors only.</p>
+          <p className="text-[12px] text-ink-muted">Replaces this campaign&apos;s rows with an identical copy. Owners and editors only.</p>
           {reload.error && <ErrorState error={reload.error} onRetry={() => reload.mutate()} />}
         </section>
       )}

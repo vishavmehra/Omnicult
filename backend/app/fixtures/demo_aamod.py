@@ -3,11 +3,11 @@ adapted versions, and the deterministic "model" outputs that make a demo project
 
 Everything here is hand-written and labelled. Nothing is research and nothing was reviewed by a native speaker: the
 Tamil, Malayalam and Bengali lines are drafted by the demo author, and the Tamil, Malayalam and Bengali phrasebook says
-so wherever it is shown (the workflows add "Demo fixture output, not a live model response.").
+so wherever it is shown.
 
 The responders are plugged into the existing demo providers (`demo_studio`, `audience_llm`, `demo_llm`) and answer ONLY
-for the Aamod copy; for any other input they return None, which the fixture provider reports as "No demo fixture for
-this input" instead of inventing text. Back-translations are literal English renderings written by hand. Severity,
+for the Aamod copy; for any other input they return None, which the fixture provider reports as "This input is not available in
+the demo" instead of inventing text. Back-translations are literal English renderings written by hand. Severity,
 verdicts and confidence are never set here: code computes them from what these responders return.
 """
 
@@ -18,7 +18,6 @@ from pathlib import Path
 from typing import Any, NamedTuple
 
 ROOT = Path(__file__).resolve().parent / "omnicult_demo"
-DEMO_NOTE = "Demonstration fixture of a fictional brand. Not a live result."
 BRIEF_PRIMARY_MESSAGE = "Home-style festive sweets, ready to gift and delivered before the festival day."
 CLAIM_QUOTE = "महाराष्ट्रातील सर्वोत्तम फराळ टिन"  # the planted superiority claim, as written on the end card and key visual
 LEGIBILITY_QUOTE = "ग्राहकांच्या पसंतीनुसार"

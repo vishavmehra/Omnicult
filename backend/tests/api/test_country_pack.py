@@ -8,7 +8,7 @@ from app.reference import india, india_pack
 from tests.api.omnicult_support import API, client_for, seeded  # noqa: F401
 from tests.conftest import BOB
 
-PINNED = ("1", "f9a55ff683f7e73e3199ae6a6b9866083385b5764707e0f1c086e5b76651d8a2")
+PINNED = ("1", "35a1b36c379fb83a3419b58289bbd1312b078e39498932688b9f5e304a4ef218")
 
 
 def test_changing_the_reference_data_requires_a_new_pack_version() -> None:

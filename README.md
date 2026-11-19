@@ -4,7 +4,7 @@
 
 ### Adapt one campaign for every Indian state, with the evidence to back each change
 
-Omnicult takes a campaign made for one Indian state and helps a team bring it to another. It learns the region from cited evidence, remakes the creative with Gemini, Lyria and Veo while code sets the Indic text and enforces the locks, and tests the result with a labelled synthetic panel before deciding Go, Fix or Rethink by fixed rules. Every claim keeps its source, and a Proof Report answers "why did we make this decision?" from the record.
+Omnicult takes a campaign made for one Indian state and helps a team bring it to another. It learns the region from cited evidence, remakes the creative with Gemini, Lyria and Veo while code sets the Indic text and enforces the locks, and tests the result with a synthetic panel before deciding Go, Fix or Rethink by fixed rules. Every claim keeps its source, and a Proof Report answers "why did we make this decision?" from the record.
 
 [![Google Cloud](https://img.shields.io/badge/Google%20Cloud-4285F4.svg?logo=googlecloud&logoColor=white)](#google-cloud-and-firebase-services-used)
 [![Vertex AI Gemini](https://img.shields.io/badge/Vertex%20AI-Gemini-8E75B2.svg?logo=googlegemini&logoColor=white)](#ai-and-the-model-gateway)
@@ -29,7 +29,7 @@ Omnicult takes a campaign made for one Indian state and helps a team bring it to
 
 </div>
 
-> **Omnicult is decision support, not a forecast.** The audiences are synthetic personas, the demo brand is fictional, and the delivery metrics in Live Pulse are a labelled sample dataset. Every claim says where it came from, and models never choose a score, a verdict or a confidence level. See [How Omnicult stays honest](#how-omnicult-stays-honest).
+> **Omnicult is decision support, not a forecast.** The audiences are synthetic personas, the demo brand is fictional, and the delivery metrics in Live Pulse are a sample dataset (see [Demo data and sources](#demo-data-and-sources)). Every claim says where it came from, and models never choose a score, a verdict or a confidence level. See [How Omnicult stays honest](#how-omnicult-stays-honest).
 
 ---
 
@@ -54,6 +54,7 @@ The reviewer account is a shared email-and-password account created for people e
 - [Google Cloud and Firebase services used](#google-cloud-and-firebase-services-used)
 - [AI and the model gateway](#ai-and-the-model-gateway)
 - [Evidence and open data](#evidence-and-open-data)
+- [Demo data and sources](#demo-data-and-sources)
 - [Data model](#data-model)
 - [Authentication and roles](#authentication-and-roles)
 - [Security and privacy](#security-and-privacy)
@@ -95,7 +96,7 @@ The demo brand is **Aamod**, a fictional festive-sweets brand. Its Diwali film w
 3. **Creative Studio.** X-Ray the film: scenes, keyframes, the Marathi transcript with an English back-translation, and the Maharashtrian references. Transcreate for Tamil Nadu, apply a Tweak Chip, lock the logo, tin and tagline, and see the Version Tree. The original is never changed.
 4. **Audience Lab.** Run a Quick Read on a synthetic Tamil Nadu panel, then a Risk Check. It flags an unsubstantiated superiority claim in the end-card small print, pinned to the scene and the text box.
 5. **Launch Room.** Compare the original and adapted versions under visible rules. The Readiness Board returns **Fix** until the claim is removed or substantiated.
-6. **Live Pulse.** The regional dashboard on a labelled sample dataset, real comments from the YouTube Data API, and Predicted vs Actual.
+6. **Live Pulse.** The regional dashboard on a sample dataset, real comments from the YouTube Data API, and Predicted vs Actual.
 7. **Proof Vault.** Generate the Proof Report: findings, sources, conflicts, creative changes, synthetic audience results, risks, readiness, limitations and run metadata.
 
 The Aamod imagery and voice are AI-generated (Gemini image and speech models) and all on-screen text is rendered in code. The Marathi voice-over was checked by a transcription round trip, not by a native speaker. Long jobs run in the background with a visible state, and an interrupted run can be retried.
@@ -113,7 +114,7 @@ Omnicult has 55 features across seven workspaces and a platform layer. On top of
 | Brand Kit | Logo, colours, fonts, product images, tone, protected terms and never-change zones |
 | Brand Glossary | Brand spellings by script, preferred translations, pronunciation and do-not-translate terms, checked in code after every adaptation |
 | Command Bar | Type what you want done; it runs the same tools the workspaces use |
-| Demo Mode | The Aamod campaign on labelled fixtures, kept apart from live records |
+| Demo Mode | The Aamod campaign on recorded and offline datasets, kept apart from live records |
 
 ### Market Lens
 
@@ -184,7 +185,7 @@ Omnicult has 55 features across seven workspaces and a platform layer. On top of
 
 | Feature | What it does |
 |---|---|
-| Regional Dashboard | Delivery, cost, response, video and outcome by region and version, on a labelled sample dataset, with last-updated time and provisional days marked |
+| Regional Dashboard | Delivery, cost, response, video and outcome by region and version, on a sample dataset, with last-updated time and provisional days marked |
 | Alerts | Deterministic rules (CTR drop, cost spike) run daily by Cloud Scheduler |
 | Comment Pulse | Languages detected, sentiment and themes for real comments fetched through the YouTube Data API |
 | Fatigue Watch | Frequency up while response falls, per version and region |
@@ -238,11 +239,11 @@ Measured on Vertex AI: one Tamil Nadu key visual with Tamil text shaped correctl
 
 ## How Omnicult stays honest
 
-- **Synthetic audiences are labelled synthetic** wherever they appear, on screen and in exports. They are model-written personas sampled by state, language, city tier and age band, never by protected traits. One model voices all of them, so agreement is not confirmation, and nothing here is calibrated against real outcomes.
+- **Synthetic audiences are AI personas, not people.** They are model-written personas sampled by state, language, city tier and age band, never by protected traits. One model voices all of them, so agreement is not confirmation, and nothing here is calibrated against real outcomes.
 - **Scores, verdicts and severities are computed by code.** Scoring is `mvp-2`, readiness is `ready-1`, risk severity is `risk-rules-v1`. Models supply observations; they never choose a score, a verdict or a confidence level.
 - **Every claim has provenance:** source, date, kind (observed, calculated, synthetic, interpretation or unverified), scope and confidence. When sources disagree, both values stay visible and the conflict lowers dependent confidence until a reviewer resolves it.
 - **Confidence is Low, Moderate or High, not a percentage.** Moderate needs two independent observed sources under two years old. High needs native-reviewer confirmation or real campaign results, and the team has no native reviewer, so no claim shows High. Synthetic results never exceed Moderate.
-- **Fixtures and samples are labelled.** Aamod is fictional, the Live Pulse delivery metrics are a seeded sample dataset, and saved demonstration results show their original run date.
+- **Demo data is documented here, not badged on screen.** The screens carry no demo or sample banners; [Demo data and sources](#demo-data-and-sources) says exactly what is recorded, generated or sample.
 - **Not claimed:** legal clearance (Risk Check is a screening aid and the ASCI index is a partial set of cited excerpts), sales prediction, or native-quality translation. The Census figures are from 2011, and Wikipedia pageviews measure attention, not demand.
 - **Failures are shown.** If a model call fails, Omnicult reports it and, where configured, falls back to another Google model and records that in the trace. It never switches to a non-Google provider.
 
@@ -324,6 +325,22 @@ Open sources become cited **claims**. Code then decides confidence, finds confli
 | Noto Sans fonts | Rendering Indic text in code | SIL Open Font License 1.1 |
 
 Source coverage is uneven by design and reported as such: the curated references cover the four demo states, Wikidata is rate-limited and sparse for some regions, and a region with little evidence is shown as weak. Measured: a live Market Lens build of Tamil Nadu took 10 s.
+
+## Demo data and sources
+
+The screens do not label data as demo, sample or synthetic, so this section is where that is written down.
+
+**The "Try the demo" project** (fictional brand Aamod) runs on recorded and offline datasets and calls no model:
+
+- recorded Wikidata entity searches and Wikipedia pageview recordings;
+- a generated trend series, which is not real pageviews;
+- a sample Live Pulse dataset and sample comments;
+- synthetic audience panels: AI personas, not people;
+- pre-made fixture outputs for the AI steps, so the demo calls no model.
+
+**Live projects** read live sources (Vertex AI, Wikidata, Wikipedia and the YouTube Data API) and record provenance on every claim and run: source, retrieval time, model, prompt version and cost where known.
+
+**Proof Vault keeps that provenance.** Each claim's evidence record, each run's stage trace and the Data Health view carry the data mode (`mode`, `retrieval_mode`), so a result can always be traced back to what produced it.
 
 ## Data model
 

@@ -11,7 +11,7 @@ import { RunStatusBadge } from "@/components/workflow/run-status";
 import { Verdict } from "@/components/workflow/verdict";
 import { CreativeMat, LedgerList } from "@/features/workspaces/parts";
 import type { DataMode } from "@/lib/api/types";
-import { formatDate, formatDateTime, formatElapsed, humanize, shortId } from "@/lib/format";
+import { formatDate, formatDateTime, formatElapsed, humanize, shortId, shownModel } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { useClaim } from "./api";
@@ -461,7 +461,7 @@ function AudienceBody({ c }: { c: Content<"audience_results"> }) {
               </span>
               <span className="type-meta inline-flex items-center gap-1">
                 <Bot aria-hidden className="size-3.5" />
-                {r.respondent_count} synthetic respondents
+                {r.respondent_count} respondents
               </span>
             </p>
             <p className="max-w-[68ch] text-[14px] text-ink-body">{r.summary}</p>
@@ -481,7 +481,6 @@ function AudienceBody({ c }: { c: Content<"audience_results"> }) {
           </Row>
         ))}
       </Rows>
-      <p className="type-meta">Source: simulated panel. Respondents are synthetic, not real people, and not independent observations.</p>
     </div>
   );
 }
@@ -570,7 +569,6 @@ function LiveBody({ c }: { c: Content<"live_performance"> }) {
           </tbody>
         </table>
       </div>
-      {c.sample_data && <p className="type-meta">Source: sample dataset.</p>}
     </div>
   );
 }
@@ -621,7 +619,7 @@ function RunsBody({ c }: { c: Content<"run_history"> }) {
                     <span className="ml-2 font-mono text-[11.5px] text-ink-muted">{shortId(r.run_id)}</span>
                   </td>
                   <td className="px-3 py-2"><RunStatusBadge status={r.status} /></td>
-                  <td className="px-3 py-2 text-ink-secondary">{r.models.length ? r.models.join(", ") : "No model recorded"}</td>
+                  <td className="px-3 py-2 text-ink-secondary">{r.models.filter(shownModel).length ? r.models.filter(shownModel).join(", ") : "No model recorded"}</td>
                   <td className="px-3 py-2 tabular-nums text-ink-secondary">{r.duration_ms != null ? formatElapsed(r.duration_ms) : "not recorded"}</td>
                   <td className="px-3 py-2 tabular-nums text-ink-secondary">{r.estimated_cost_usd != null ? formatUsd(r.estimated_cost_usd) : "not recorded"}</td>
                 </tr>

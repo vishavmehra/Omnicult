@@ -21,7 +21,7 @@ FIELDS = {
 }
 REQUIRED = {"name", "target_markets", "evaluation_criteria"}
 DEMO_CONTENT_LOCKED = (
-    "Demo campaign content is fixed so that the demo fixtures stay truthful. Create a live project to edit copy."
+    "Demo campaign content is fixed. Create a live project to edit copy."
 )
 
 

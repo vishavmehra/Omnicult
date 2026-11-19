@@ -29,7 +29,7 @@ from app.services.common import get_owned, get_project, not_found, paginate, req
 from app.services.identity import WRITE_ROLES
 
 REGION_NAME = {r.code: r.name for r in REGIONS}
-DEMO_LOCKED = "Demo records are fixed so that the demo fixtures stay truthful. Create a live brand and campaign to write your own."
+DEMO_LOCKED = "Demo records are fixed. Create a live brand and campaign to write your own."
 REQUIRED_LABELS: dict[str, str] = {
     "objective": "an objective",
     "origin_region": "the region the original was made for",
@@ -480,7 +480,7 @@ async def apply_demo_brief_and_brand(
         campaign.name = brief["name"][:120]
 
     latest = await _latest(session, campaign_id)
-    _write_brief(session, campaign, project, latest, content, note="Loaded from the demonstration fixture", user_id=None, provenance=_provenance(brief))
+    _write_brief(session, campaign, project, latest, content, note=None, user_id=None, provenance=_provenance(brief))
 
     brand = await _brand_record(session, project_id)
     for field, value in brand_record_from_fixtures(design, brand_kit, content).items():

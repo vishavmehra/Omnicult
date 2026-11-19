@@ -62,7 +62,7 @@ function AnswerRow({ a, p, campaignId, runId }: { a: PanelAnswer; p?: PanelParti
       <p lang={langFor(a.answer, p?.language ?? "en")} className="max-w-[68ch] text-[14px] leading-snug text-ink">{a.answer}</p>
       <p className="type-meta">
         {memoryNote(a)}
-        {a.model_id ? ` · model ${a.model_id}` : " · no model called"}
+        {a.model_id ? ` · model ${a.model_id}` : ""}
         {p && (
           <>
             {" · "}
@@ -267,7 +267,7 @@ function AskForm({ run, participants, initialParticipant, initialQuestion, onAsk
       )}
 
       <p className="type-meta" aria-live="polite">
-        {selected.length === 0 ? "No participant selected." : `${pluralise(selected.length, "synthetic participant")} will be asked.`}
+        {selected.length === 0 ? "No participant selected." : `${pluralise(selected.length, "participant")} will be asked.`}
       </p>
 
       <FieldBlock label="Question" htmlFor="ask-question" error={touched ? (questionError ?? targetError) : null} hint="Answers come from each participant's stored response and earlier answers. Nothing new is invented about them, and a participant with no stored response is not asked.">
@@ -281,7 +281,7 @@ function AskForm({ run, participants, initialParticipant, initialQuestion, onAsk
           {ask.isPending ? "Asking…" : "Ask the panel"}
         </Button>
         <p className="max-w-[60ch] text-[12.5px] text-ink-secondary">
-          {block ?? (project.mode === "demo" ? "Demo project: answers quote each participant's stored fixture response; no model is called." : "Live: each batch of up to eight participants is one model call.")}
+          {block ?? (project.mode === "demo" ? null : "Live: each batch of up to eight participants is one model call.")}
         </p>
       </div>
     </form>
@@ -349,7 +349,7 @@ export function AskTab({ loc }: { loc: Loc }) {
     return (
       <EmptyState
         title="No panel to ask yet"
-        description="Ask the Panel puts a follow-up question to the synthetic participants of a finished Quick Read or Audience Study, answered from their stored responses. Run one of those first."
+        description="Ask the Panel puts a follow-up question to the participants of a finished Quick Read or Audience Study, answered from their stored responses. Run one of those first."
         needs={[
           { label: "A Quick Read or Audience Study that has finished", met: false },
           { label: "At least one participant with a stored response", met: false },
@@ -368,7 +368,7 @@ export function AskTab({ loc }: { loc: Loc }) {
   return (
     <div className="space-y-5">
       <p className="max-w-[68ch] text-[14px] text-ink-secondary">
-        Put a follow-up question to one participant, a subgroup or the whole panel. Each answer comes from that participant&apos;s stored response and earlier answers, so the same synthetic person keeps their identity across questions.
+        Put a follow-up question to one participant, a subgroup or the whole panel. Each answer comes from that participant&apos;s stored response and earlier answers, so the same person keeps their identity across questions.
       </p>
       <div className="space-y-1.5">
         <p className="text-[13px] font-medium text-ink">Panel</p>
@@ -380,13 +380,13 @@ export function AskTab({ loc }: { loc: Loc }) {
             loc.selectRun(id);
           }}
           regionName={regionName}
-          describe={(r) => `${r.kind === "quick_read" ? "Quick Read" : "Audience Study"}, ${pluralise(r.participant_count, "synthetic participant")}`}
+          describe={(r) => `${r.kind === "quick_read" ? "Quick Read" : "Audience Study"}, ${pluralise(r.participant_count, "participant")}`}
         />
       </div>
 
       {run && (parts.isPending ? <LoadingState label="Loading the panel…" /> : parts.error ? <ErrorState error={parts.error} onRetry={() => void parts.refetch()} /> : (
         <>
-          <Panel id="ask-form" title="New question" meta={`${participants.length} synthetic participants in this panel`}>
+          <Panel id="ask-form" title="New question" meta={`${participants.length} participants in this panel`}>
             <AskForm
               key={run.id}
               run={run}

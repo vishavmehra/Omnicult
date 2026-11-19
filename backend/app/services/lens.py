@@ -59,8 +59,7 @@ async def lens_context(user_id: UUID, campaign_id: UUID, *, writable: bool = Fal
 
 def mode_label(mode: str) -> str:
     if mode == "demo":
-        return ("Demo fixtures. Claims are labelled DEMO FIXTURE: the same offline datasets live mode reads, with recorded entity "
-                "searches and a synthetic trend series. Not a live retrieval.")
+        return ""
     return "Live sources. Each claim was retrieved from the sources shown, on the dates shown."
 
 
@@ -183,7 +182,7 @@ async def build_regions(user_id: UUID, campaign_id: UUID, body: v.LensBuildReque
     if ctx.mode == "live" and len(codes) > LIVE_MAX_REGIONS:
         raise _bad("region_codes", f"A live build takes at most {LIVE_MAX_REGIONS} states per request; it calls public APIs.")
     if body.include_grounding and ctx.mode == "demo":
-        raise _bad("include_grounding", "Grounded research is a live source; demo mode uses fixtures only.")
+        raise _bad("include_grounding", "Grounded research is not available for this project.")
     keys = [(ctx.workspace_id, code, ctx.mode) for code in codes]
     if any(key in _RUNNING for key in keys):
         raise Conflict("A build for one of these states is already running.")

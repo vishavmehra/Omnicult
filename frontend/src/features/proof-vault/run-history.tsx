@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, CircleAlert, CircleCheck, CircleDashed, FlaskConical, RotateCw } from "lucide-react";
+import { ChevronRight, CircleAlert, CircleCheck, CircleDashed, RotateCw } from "lucide-react";
 import { useState } from "react";
 
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
@@ -9,7 +9,7 @@ import { RunStatusBadge } from "@/components/workflow/run-status";
 import { RUN_TYPE_META } from "@/features/project/workflow";
 import { SectionTitle } from "@/features/workspaces/parts";
 import type { RunStatus, RunType } from "@/lib/api/types";
-import { formatDateTime, formatElapsed, humanize, shortId } from "@/lib/format";
+import { formatDateTime, formatElapsed, humanize, shortId, shownModel } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { RUN_HISTORY_PAGE, useRunDetail, useRunHistory } from "./api";
@@ -133,7 +133,7 @@ function Detail({ run }: { run: RunHistoryItem }) {
                         )}
                       </td>
                       <td className="px-3 py-2 text-ink-secondary">
-                        {s.model_id ?? "No model recorded"}
+                        {shownModel(s.model_id) ?? "No model recorded"}
                         {s.provider && <span className="type-meta block">{s.provider}</span>}
                       </td>
                       <td className="px-3 py-2 font-mono text-[11.5px] text-ink-secondary">{s.prompt_version ?? "none"}</td>
@@ -174,8 +174,8 @@ function Detail({ run }: { run: RunHistoryItem }) {
                   <tr key={u.id}>
                     <td className="px-3 py-2">{humanize(u.capability)}</td>
                     <td className="px-3 py-2 text-ink-secondary">
-                      {u.model}
-                      <span className="type-meta block">{u.provider}</span>
+                      {shownModel(u.model) ?? "No model called"}
+                      {shownModel(u.provider) && <span className="type-meta block">{u.provider}</span>}
                     </td>
                     <td className="px-3 py-2 font-mono text-[11.5px] text-ink-secondary">{u.prompt_version ?? "none"}</td>
                     <td className="px-3 py-2 tabular-nums text-ink-secondary">
@@ -222,12 +222,6 @@ function RunEntry({ run }: { run: RunHistoryItem }) {
             <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <span className="text-[14.5px] font-medium text-ink">{run.operation}</span>
               <RunStatusBadge status={run.status} />
-              {run.mode === "demo" && (
-                <span className="inline-flex items-center gap-1 text-[11.5px] text-ink-muted">
-                  <FlaskConical aria-hidden className="size-3.5" />
-                  Demo fixture
-                </span>
-              )}
               {run.resumable && (
                 <span className="inline-flex items-center gap-1 text-[11.5px] text-ink-secondary">
                   <RotateCw aria-hidden className="size-3.5" />
@@ -239,7 +233,7 @@ function RunEntry({ run }: { run: RunHistoryItem }) {
             <span className="type-ledger flex flex-wrap gap-x-4 gap-y-0.5 text-[12.5px] text-ink-secondary">
               <span title={started}>{formatDateTime(started)}</span>
               <span>Took {run.duration_ms != null ? formatElapsed(run.duration_ms) : run.status === "running" || run.status === "queued" ? "not finished" : "not recorded"}</span>
-              <span>{run.models.length ? run.models.join(", ") : "No model recorded"}</span>
+              <span>{run.models.filter(shownModel).length ? run.models.filter(shownModel).join(", ") : "No model recorded"}</span>
               <span>Prompt {run.prompt_versions.length ? run.prompt_versions.join(", ") : "none"}</span>
             </span>
             <span className="type-ledger flex flex-wrap gap-x-4 gap-y-0.5 text-[12.5px] text-ink-secondary">

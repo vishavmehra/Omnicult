@@ -190,7 +190,7 @@ function BarContent({ close }: { close(): void }) {
           </CommandItem>
           {activeId && (
             <>
-              <CommandItem value="start quick read audience lab synthetic panel" onSelect={() => go(`${workspaceHref(activeId, "lab")}?start=quick-read`)} className={ITEM}>
+              <CommandItem value="start quick read audience lab panel" onSelect={() => go(`${workspaceHref(activeId, "lab")}?start=quick-read`)} className={ITEM}>
                 <RoleMark workspace="lab" size="xs" />
                 Start a Quick Read
                 <span className="ml-auto text-xs text-ink-muted">Audience Lab</span>
@@ -235,7 +235,7 @@ function BarContent({ close }: { close(): void }) {
             </>
           )}
           <CommandItem
-            value="try the demo sample brand fixtures"
+            value="try the demo example brand"
             onSelect={() => {
               close();
               demo.mutate();
@@ -246,7 +246,6 @@ function BarContent({ close }: { close(): void }) {
               <FlaskConical aria-hidden />
             </Tile>
             Try the demo
-            <span className="ml-auto text-xs text-ink-muted">Labelled sample data</span>
           </CommandItem>
         </CommandGroup>
 
@@ -280,7 +279,6 @@ function BarContent({ close }: { close(): void }) {
                   <span className="min-w-0 flex-1 truncate">{c.name}</span>
                   <span className="max-w-[40%] shrink-0 truncate text-xs text-ink-muted">
                     {c.brand.name}
-                    {c.brand.mode === "demo" ? " · demo" : ""}
                   </span>
                 </CommandItem>
               ))}

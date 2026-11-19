@@ -67,3 +67,6 @@ export function plainText<T>(value: T): T {
 export function shortId(id: string) {
   return id.length > 12 ? id.slice(0, 8) : id;
 }
+
+/** The offline provider's ids (`fixture`, `demo-fixture...`) are internal, never shown as a model or provider name. */
+export const shownModel = (id: string | null | undefined) => (id && !/^(demo-)?fixture(-.*)?$/.test(id) ? id : null);

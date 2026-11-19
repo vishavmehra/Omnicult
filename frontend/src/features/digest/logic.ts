@@ -31,10 +31,8 @@ export const PULSE_VIEWS: { key: PulseView; label: string }[] = [
 ];
 export const asPulseView = (value: string | null | undefined): PulseView => (PULSE_VIEWS.some((v) => v.key === value) ? (value as PulseView) : "overview");
 
-// ---------------------------------------------------------------- one quiet source line per view
+// ---------------------------------------------------------------- model reading label
 
-export const COMMENT_SOURCE = "Source: sample comments, written for the demo, not from a connected channel";
-export const DIGEST_SOURCE = "Source: stored campaign records and the Live Pulse sample dataset";
 export const MODEL_INTERPRETATION = "Model interpretation";
 
 // ---------------------------------------------------------------- sentiment

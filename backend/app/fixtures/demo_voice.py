@@ -1,9 +1,9 @@
 """Demo-mode "model" outputs for the Voice Director: a handful of instructions about the fictional Aamod journey.
 
-These are fixtures, labelled as such by the service ("Demo fixture output, not a live model response."). Each responder
+These are hand-written fixtures. Each responder
 reads the same payload the live model is given (the elements, versions and chips of the selected version) and answers in the
 live output schema, so the plan goes through the same code validation as a live plan: a locked tagline is still refused, an
-unknown element is still dropped. Any other instruction gets "No demo fixture for this instruction." with the examples that
+unknown element is still dropped. Any other instruction gets "This instruction is not available in the demo." with the examples that
 do work, instead of an invented plan. The Tamil line below was written by the demo author and has not been reviewed by a
 native speaker.
 """
@@ -15,7 +15,7 @@ from typing import Any
 from app.fixtures import demo_aamod
 
 Context = Mapping[str, Any]
-NO_FIXTURE = "No demo fixture for this instruction."
+NO_FIXTURE = "This instruction is not available in the demo."
 EXAMPLES = (
     "Make the Tamil headline warmer, keep the brand name",
     "Lock the call to action",
@@ -43,7 +43,7 @@ def _plain(text: str) -> str:
 
 
 def _refusal(why: str = NO_FIXTURE) -> dict[str, Any]:
-    return {"supported": False, "summary": "", "refusal": f"{why} Demo instructions that work: " + "; ".join(f"“{e}”" for e in EXAMPLES) + ".", "steps": []}
+    return {"supported": False, "summary": "", "refusal": f"{why} Instructions that work: " + "; ".join(f"“{e}”" for e in EXAMPLES) + ".", "steps": []}
 
 
 def _plan(summary: str, steps: list[dict[str, Any]]) -> dict[str, Any]:

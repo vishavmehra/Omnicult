@@ -16,7 +16,7 @@ from uuid import UUID
 from langchain_core.runnables import RunnableConfig
 
 from app.agents import message_check as agent
-from app.agents._common import DEMO_OUTPUT_NOTE, DROPPED_NOTE, content_dict, norm
+from app.agents._common import DROPPED_NOTE, content_dict, norm
 from app.agents.quick_read import participant_rows
 from app.analytics.scoring import SYNTHETIC_NOTE
 from app.llm.gateway import LLMError, LLMGateway
@@ -25,7 +25,7 @@ from app.schemas.runs import RunError
 from app.workflows._common import execute, linear_graph, llm_error, local_step, merge_steps, outcome_status
 from app.workflows.audience_types import PanelMember
 from app.workflows.lab_t3_types import JudgementRecord, MessageCheckInput, MessageCheckOutcome, ReadingRecord
-from app.workflows.quick_read import DEMO_NOTE, INDEPENDENCE_NOTE, announce
+from app.workflows.quick_read import INDEPENDENCE_NOTE, announce
 
 STAGES = ("loading_context", "reading_message", "comparing_restatements", "aggregating_results")
 CONCURRENCY = 2
@@ -174,8 +174,7 @@ GRAPH = linear_graph(State, [(STAGES[0], loading), (STAGES[1], reading), (STAGES
 
 async def run_message_check(inp: MessageCheckInput, llm: LLMGateway, progress: Any = None) -> MessageCheckOutcome:
     state = await execute(GRAPH, {"inp": inp, "steps": [], "limitations": []}, SimpleNamespace(llm=llm), progress, inp.context.mode)
-    demo = inp.context.mode == "demo"
-    notes = [SYNTHETIC_NOTE, INDEPENDENCE_NOTE, *([DEMO_NOTE, DEMO_OUTPUT_NOTE] if demo else [])]
+    notes = [SYNTHETIC_NOTE, INDEPENDENCE_NOTE]
     return MessageCheckOutcome(
         status=outcome_status(state), readings=state.get("readings", {}), judgements=state.get("judgements", {}),
         limitations=list(dict.fromkeys([*notes, *state.get("limitations", [])])), steps=state.get("steps", []), error=state.get("error"))

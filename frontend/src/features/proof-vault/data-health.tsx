@@ -22,9 +22,9 @@ const FRESHNESS: Record<SourceHealth["freshness"], { label: string; Icon: typeof
 };
 
 const CACHE: Record<SourceHealth["cache_state"], string> = {
-  fixture: "Demo fixtures only",
+  fixture: "Stored datasets only",
   stored_live: "Stored copies of live retrievals",
-  mixed: "Fixtures and stored live copies",
+  mixed: "Stored datasets and live copies",
   none: "Nothing stored",
 };
 

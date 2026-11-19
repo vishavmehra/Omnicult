@@ -78,7 +78,7 @@ def aggregate(dimension: Dimension, values: Sequence[int]) -> DimensionResult:
         dimension=dimension, score=rating_score(values), higher_is_better=higher_is_better, n=n,
         distribution=[list(values).count(r) for r in range(1, 6)], spread=round(spread, 2),
         disagreement=disagreement, definition=definition,
-        interpretation=f"Synthetic reactions averaged {mean:.2f} of 5 (n={n}).{note}",
+        interpretation=f"Reactions averaged {mean:.2f} of 5 (n={n}).{note}",
         limitations=[SYNTHETIC_NOTE],
     )
 

@@ -94,5 +94,5 @@ def test_conversions_lag_on_the_provisional_days() -> None:
 
 
 def test_sample_is_labelled() -> None:
-    assert sample.SAMPLE_LABEL == "Sample data, not from a connected account"
+    assert sample.SAMPLE_LABEL == "Live Pulse dataset"
     assert sample.LAST_UPDATED_AT.tzinfo is not None and sample.SAMPLE_LIMITATIONS

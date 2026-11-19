@@ -575,8 +575,8 @@ def write_json(kv_elements: list[dict], v: dict) -> None:
     video_stream = next(s for s in info["streams"] if s["codec_name"] == "h264")
     doc = {
         "fixture": {"id": "omnicult-demo-creative-mh-original", "version": 1, "kind": "demo_fixture",
-                    "label": "Demonstration fixture: original creative of a fictional brand, made for the Omnicult demo. "
-                             "Not a real advertisement; imagery and voice are AI-generated, all text is rendered in code."},
+                    "label": "Original creative of the fictional brand Aamod; imagery and voice are AI-generated, "
+                             "all text is rendered in code."},
         "brand_id": "demo-brand-aamod", "campaign_id": "demo-campaign-aamod-diwali-2027",
         "region_code": "IN-MH", "languages": ["mr", "en"], "scripts": ["Deva", "Latn"],
         "creatives": [

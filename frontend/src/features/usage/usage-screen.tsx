@@ -28,14 +28,14 @@ function DisclosureLabel({ children }: { children: string }) {
 
 /** The one quiet source line: what the numbers are, and what they are not. */
 function sourceLine(report: UsageReport | undefined, mode: UsageMode) {
-  if (mode === "demo") return "Demo project: these calls are saved fixtures. No model ran, so nothing was billed.";
+  if (mode === "demo") return null;
   return `Estimates from the gateway price table${report ? ` ${report.price_table_version}` : ""}, not invoices.`;
 }
 
 function Summary({ report }: { report: UsageReport }) {
   const tokens = `${num.format(report.input_tokens)} in, ${num.format(report.output_tokens)} out${report.thinking_tokens ? `, ${num.format(report.thinking_tokens)} thinking` : ""}`;
   const rows: [string, string, string | null][] = [
-    ["Model calls", `${num.format(report.calls)}${report.failed_calls ? `, ${num.format(report.failed_calls)} failed` : ""}`, report.fixture_calls ? `${num.format(report.fixture_calls)} of them fixture calls` : null],
+    ["Model calls", `${num.format(report.calls)}${report.failed_calls ? `, ${num.format(report.failed_calls)} failed` : ""}`, null],
     ["Estimated cost", usd(report.estimated_cost_usd), report.calls_without_cost ? `${num.format(report.calls_without_cost)} ${report.calls_without_cost === 1 ? "call has" : "calls have"} no recorded cost and ${report.calls_without_cost === 1 ? "is" : "are"} left out of this sum` : null],
     ["Tokens", tokens, null],
   ];
@@ -65,7 +65,7 @@ function Report({ report, days, mode }: { report: UsageReport; days: number; mod
           title={mode === "demo" ? "The demo project has no recorded calls" : `No model calls recorded in the last ${days} days`}
           description={
             mode === "demo"
-              ? "It answers from saved fixtures and calls no model, so there is nothing to meter."
+              ? "There is nothing to meter for the demo project."
               : report.scope === "own"
                 ? "Calls you start appear here once the model gateway records them."
                 : "Calls appear here once the model gateway records them for this workspace."
@@ -179,7 +179,7 @@ export function UsageScreen() {
           </Tag>
         )}
       </div>
-      <p className="type-meta mb-6 max-w-[80ch]">{sourceLine(report.data, mode)}</p>
+      {mode === "live" && <p className="type-meta mb-6 max-w-[80ch]">{sourceLine(report.data, mode)}</p>}
 
       {me.error ? (
         <ErrorState error={me.error} onRetry={() => void me.refetch()} />

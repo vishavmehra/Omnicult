@@ -28,7 +28,7 @@ from app.media import remake_video as pipeline
 from app.media.remake import duration_ms as wav_ms
 from app.schemas.common import StepTrace
 from app.schemas.runs import RunError
-from app.workflows._common import DEMO_RUN_NOTE, STAGES, announce, execute, linear_graph, llm_error, local_step
+from app.workflows._common import STAGES, announce, execute, linear_graph, llm_error, local_step
 from app.workflows.remake import LockedSpec
 from app.workflows.types import OutcomeStatus, WorkflowContext, WorkflowDeps
 
@@ -44,7 +44,6 @@ LOCK_NOTE = ("Video models cannot guarantee that the logo, the pack and the tagl
 NO_FRAME_NOTE = "No remade key visual was available, so the clip was generated from the prompt alone: the logo and the pack are not in it."
 OWN_FRAME_NOTE = "The start frame is the image chosen for this run; locked regions are only as the image holds them."
 UNREVIEWED_NOTE = "The voice-over is machine speech; no native speaker has reviewed it."
-DEMO_VIDEO_NOTE = "Saved demonstration result: the clip is a committed fixture, not a live call. The start frame, the voice-over join and the checks ran live in code."
 DURATION_TOLERANCE_MS = 1000  # the delivered length may differ from the requested one by this much before the check is flagged
 StartSource = Literal["remake_scene", "asset", "demo_fixture", "none"]
 
@@ -218,7 +217,7 @@ async def loading_context(state: GState, config: RunnableConfig) -> dict:
         fixture = fixtures.video_clip(inp.region_code)
         if fixture is None:
             return _fail(state, RunError(code="UNSUPPORTED_CAPABILITY", stage=V1, retryable=False,
-                                         message=f"The demonstration fixtures cover {', '.join(fixtures.demo_video_regions()) or 'no region'} "
+                                         message=f"The demo covers {', '.join(fixtures.demo_video_regions()) or 'no region'} "
                                                  "only; use a live project for other regions. Nothing was generated."))
         update["fixture"] = fixture
     try:
@@ -246,7 +245,7 @@ async def generating_video(state: GState, config: RunnableConfig) -> dict:
         return {"raw": fixture.data, "mime": fixture.mime_type, "steps": [*state["steps"], trace],
                 "meta": {"source": "demo_fixture", "model": fixture.model, "location": fixture.location, "operation_id": None,
                          "prompt": fixture.prompt},  # the saved clip was made from this prompt, whatever the project's own would be
-                "limitations": [*state["limitations"], DEMO_VIDEO_NOTE]}
+                "limitations": state["limitations"]}
     try:
         clip = await state["client"].generate(
             inp.prompt, start_image=state["frame"], start_mime_type="image/png", seconds=inp.seconds, aspect_ratio=state["aspect"],
@@ -320,7 +319,7 @@ async def run_remake_video(inp: RemakeVideoInput, deps: WorkflowDeps, progress: 
         return RemakeVideoOutcome(status="failed", steps=steps, error=error, limitations=state.get("limitations", []), prompt=inp.prompt)
     meta, facts, checks = state["meta"], state.get("facts"), state["checks"]
     flagged = [c for c in checks if not c.passed]
-    notes = [*state["limitations"], *([DEMO_RUN_NOTE] if state["demo"] else []),
+    notes = [*state["limitations"],
              *([f"{len(flagged)} of {len(checks)} code checks were flagged; see the checks."] if flagged else [])]
     return RemakeVideoOutcome(
         status="partial" if flagged else "completed", clip=state["final"], silent_clip=state["raw"], joined=state["joined"],

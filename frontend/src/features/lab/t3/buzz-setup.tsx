@@ -80,7 +80,7 @@ export function BuzzForm({ options, defaults, onStarted }: { options: SamplingOp
         value={states}
         onChange={setStates}
         max={MAX_STATES}
-        hint={`One to ${MAX_STATES}. The simulated accounts are drawn state by state, each reading a language of its own state unless you pick languages below.`}
+        hint={`One to ${MAX_STATES}. The accounts are drawn state by state, each reading a language of its own state unless you pick languages below.`}
       />
       {statesError && (
         <p role="alert" className="-mt-3 text-xs font-medium text-danger">
@@ -89,7 +89,7 @@ export function BuzzForm({ options, defaults, onStarted }: { options: SamplingOp
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <FieldBlock label="Simulated accounts" htmlFor="buzz-size" error={sizeError} hint={`${floor} to ${maxSize}. A population size for the simulation, not a number of people.`}>
+        <FieldBlock label="Accounts" htmlFor="buzz-size" error={sizeError} hint={`${floor} to ${maxSize}. The size of the population.`}>
           <input id="buzz-size" type="number" inputMode="numeric" min={floor} max={maxSize} value={Number.isNaN(size) ? "" : size} onChange={(e) => setSize(e.target.valueAsNumber)} aria-invalid={Boolean(sizeError)} aria-describedby="buzz-size-hint" className={CONTROL} />
         </FieldBlock>
         <FieldBlock label="Platform" htmlFor="buzz-platform" hint="Sets the voice and length of the posts. No platform data is used.">
@@ -104,7 +104,7 @@ export function BuzzForm({ options, defaults, onStarted }: { options: SamplingOp
         <FieldBlock label="Rounds" htmlFor="buzz-rounds" error={roundsError} hint={`1 to ${maxRounds}. Each account acts once, in the round after it first sees the creative.`}>
           <input id="buzz-rounds" type="number" inputMode="numeric" min={1} max={maxRounds} value={Number.isNaN(rounds) ? "" : rounds} onChange={(e) => setRounds(e.target.valueAsNumber)} aria-invalid={Boolean(roundsError)} aria-describedby="buzz-rounds-hint" className={CONTROL} />
         </FieldBlock>
-        <FieldBlock label="Share who see it first (%)" htmlFor="buzz-exposure" error={exposureError} hint="10 to 60. A setting for the simulation, not a forecast of who would see it.">
+        <FieldBlock label="Share who see it first (%)" htmlFor="buzz-exposure" error={exposureError} hint="10 to 60.">
           <input id="buzz-exposure" type="number" inputMode="numeric" min={10} max={60} value={Number.isNaN(exposure) ? "" : exposure} onChange={(e) => setExposure(e.target.valueAsNumber)} aria-invalid={Boolean(exposureError)} aria-describedby="buzz-exposure-hint" className={CONTROL} />
         </FieldBlock>
         <FieldBlock label="Accounts each account sees posts from" htmlFor="buzz-degree" error={degreeError} hint="2 to 6. Who sees whose posts is seeded and mostly within a state; it is not a measured follower graph.">
@@ -144,7 +144,7 @@ export function BuzzForm({ options, defaults, onStarted }: { options: SamplingOp
           <p className="max-w-[60ch] text-[12.5px] text-ink-secondary">
             {block ??
               (project.mode === "demo"
-                ? "Demo project: runs on labelled fixtures. It is free and calls no model."
+                ? null
                 : "Live run: calls the configured language model once per batch of accounts per round, so it takes a minute or more.")}
           </p>
         </div>

@@ -1,7 +1,6 @@
 """Demo-mode "model" outputs: one table of fixture responders, keyed by prompt version.
 
-Hand-written, deterministic, and labeled: the gateway records provider "fixture" and the workflows add
-"Demo fixture output, not a live model response." Each responder receives the agent's structured input and
+Hand-written and deterministic: the gateway records provider "fixture". Each responder receives the agent's structured input and
 returns JSON in that agent's output schema, so validation and cross-reference checks run as in live mode.
 The responders live beside their features (`demo_population`, `demo_studio`, `demo_studio_t3`, `demo_aamod`,
 `demo_voice`, `pulse_comments`) and are plugged into this table.

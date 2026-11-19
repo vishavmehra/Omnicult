@@ -133,7 +133,7 @@ export function TodayView() {
           <EmptyState
             illustration={<EmptyIllustration kind="ledger" className="h-28" />}
             title="No brands or campaigns yet"
-            description="Omnicult keeps one brief per campaign and reads it in every workspace. Start with the demo, a sample brand on labelled fixtures, or create your own brand and campaign."
+            description="Omnicult keeps one brief per campaign and reads it in every workspace. Start with the demo, or create your own brand and campaign."
             action={
               <div className="flex flex-wrap gap-2">
                 <Button onClick={() => demo.mutate()} disabled={demo.isPending}>

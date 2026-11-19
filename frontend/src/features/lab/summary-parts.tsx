@@ -4,7 +4,7 @@ import { Sigma } from "lucide-react";
 import { useMemo } from "react";
 
 import { Tag } from "@/components/evidence/badges";
-import { formatDateTime } from "@/lib/format";
+import { formatDateTime, shownModel } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { useSamplingOptions } from "./api";
@@ -25,7 +25,7 @@ export function RatingRow({ result }: { result: DimensionResult }) {
         </p>
       </div>
       <div className="flex flex-wrap items-end gap-x-6 gap-y-2">
-        <div role="img" aria-label={`Ratings 1 to 5 given by synthetic participants: ${result.distribution.join(", ")}`} className="flex items-end gap-1.5">
+        <div role="img" aria-label={`Ratings 1 to 5 given by participants: ${result.distribution.join(", ")}`} className="flex items-end gap-1.5">
           {result.distribution.map((n, i) => (
             <div key={i} className="flex w-6 flex-col items-center gap-1">
               <span aria-hidden className="clay-well flex h-9 w-full items-end rounded-[4px] p-[2px]">
@@ -40,7 +40,7 @@ export function RatingRow({ result }: { result: DimensionResult }) {
           ))}
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
-          <Tag className="border-border bg-surface-muted text-ink" title="Computed by documented code from the synthetic ratings. Not a measurement of real people.">
+          <Tag className="border-border bg-surface-muted text-ink" title="Computed by documented code from the ratings.">
             <Sigma aria-hidden />
             Calculated
           </Tag>
@@ -140,9 +140,9 @@ export function GroundingPanel({ grounding }: { grounding: GroundingSummary }) {
 export function Provenance({ meta, extra }: { meta: RunMetadata; extra?: { label: string; value: string }[] }) {
   const cost = meta.usage.estimated_cost_usd;
   const rows: { label: string; value: string }[] = [
-    { label: "Mode", value: meta.mode === "demo" ? "Demo fixtures" : "Live" },
-    { label: "Providers", value: meta.providers.join(", ") || "None" },
-    { label: "Models", value: meta.model_ids.length ? meta.model_ids.join(", ") : meta.mode === "demo" ? "None: no model was called" : "Not reported" },
+    ...(meta.mode === "demo" ? [] : [{ label: "Mode", value: "Live" }]),
+    { label: "Providers", value: meta.providers.filter(shownModel).join(", ") || "None" },
+    { label: "Models", value: meta.model_ids.filter(shownModel).length ? meta.model_ids.filter(shownModel).join(", ") : "None" },
     { label: "Prompt versions", value: meta.prompt_versions.join(", ") || "None" },
     { label: "Seed", value: meta.seed === null ? "None" : String(meta.seed) },
     ...(extra ?? []),

@@ -26,7 +26,7 @@ const PICKS: Record<string, string[]> = {
   create: ["Creative X-Ray", "Transcreate, with English back-translation", "Tweak Chips", "Lock and Edit", "Version Tree"],
   test: ["Quick Read", "Risk Check", "Audience Study", "Ask the Panel"],
   decide: ["Compare and Score, by visible rules", "Readiness Board"],
-  track: ["Regional Dashboard, on clearly labelled sample data until an account is connected"],
+  track: ["Regional Dashboard by region and version"],
   prove: ["Proof Report", "Run History", "Evidence Map", "Search", "Data Health"],
 };
 const TINTS = ["tint-peach", "tint-sky", "tint-mint", "tint-butter", "tint-rose", "tint-peach", "tint-sky", "tint-mint"];
@@ -47,7 +47,7 @@ const CARDS: Card[] = [
     title: "Every claim has a receipt",
     where: "The trust layer",
     icons: [Fingerprint],
-    features: ["Five tags: source, date, kind, scope, confidence", "Confidence by rule, never a percentage", "Conflict cards keep both values", "Synthetic results always labelled"],
+    features: ["Five tags: source, date, kind, scope, confidence", "Confidence by rule, never a percentage", "Conflict cards keep both values"],
     roadmap: [],
     tint: TINTS[6],
   },

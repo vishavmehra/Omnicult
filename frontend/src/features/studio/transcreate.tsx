@@ -290,7 +290,7 @@ export function TranscreatePanel({
               {busy ? "Transcreating…" : `Transcreate ${chosen.length} ${chosen.length === 1 ? "line" : "lines"}`}
             </Button>
             <p className="text-[12.5px] text-ink-muted">
-              {demo ? "Source: demo fixtures, available for a few lines only." : "One model call; its cost estimate is recorded on the new version."}
+              {demo ? "Available for a few lines only." : "One model call; its cost estimate is recorded on the new version."}
             </p>
           </div>
           {start.isError && <MutationError error={start.error} onRetry={lastVars ? () => launch(lastVars) : undefined} />}

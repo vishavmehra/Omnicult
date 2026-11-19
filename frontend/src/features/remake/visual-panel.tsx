@@ -21,7 +21,7 @@ import {
   type RemakeOutput,
   type VersionSummary,
 } from "./api";
-import { AiTag, AuthImage, CostConfirm, LockChip, Notice, RunProgress, SELECT, SourceLine, usd } from "./parts";
+import { AiTag, AuthImage, CostConfirm, LockChip, Notice, RunProgress, SELECT, usd } from "./parts";
 import { planVisual, suggestAssets } from "./plan";
 import { isVideoClip } from "./video-api";
 
@@ -131,9 +131,9 @@ export function VisualPanel({
           </select>
         </Field>
 
-        <Field label="Finished creative" htmlFor="rv-original" required={!demo} hint={demo ? "Left empty, the saved demonstration key visual is used." : "Locked regions are restored from this image."}>
+        <Field label="Finished creative" htmlFor="rv-original" required={!demo} hint={demo ? "Left empty, the key visual is used." : "Locked regions are restored from this image."}>
           <select id="rv-original" className={SELECT} value={original} onChange={(e) => setOriginalId(e.target.value)}>
-            <option value="">{demo ? "Demonstration key visual" : "Choose an image"}</option>
+            <option value="">{demo ? "Key visual" : "Choose an image"}</option>
             {(images.data ?? []).map((a) => <option key={a.id} value={a.id}>{a.filename}</option>)}
           </select>
         </Field>
@@ -171,7 +171,7 @@ export function VisualPanel({
         {blockedReason && !imageOff && <Notice tone="info">{blockedReason}</Notice>}
         <CostConfirm demo={demo} estimate={caps.image.estimated_cost_usd} what="one image generation" checked={confirmed} onChange={setConfirmed} />
         <Button type="submit" disabled={!canRun} className="w-full">
-          {working ? "Working…" : demo ? "Show the saved remake" : "Generate regional scene"}
+          {working ? "Working…" : demo ? "Show the remake" : "Generate regional scene"}
         </Button>
         {start.error && <ErrorState error={start.error} />}
       </form>
@@ -224,10 +224,6 @@ function VisualResult({ output }: { output: RemakeOutput }) {
     <section aria-label="Visual remake result" className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
         <h2 className="flex items-center gap-2 text-[17px] font-semibold text-ink">Regional scene <AiTag /></h2>
-        <SourceLine>
-          {v.source === "demo_fixture" ? "Saved demonstration output" : `${v.model} · ${v.location ?? "global"}`} · {formatDate(output.created_at)}
-          {v.source === "demo_fixture" ? "" : ` · ${usd(output.estimated_cost_usd)}`}
-        </SourceLine>
       </div>
 
       {v.original_url && (

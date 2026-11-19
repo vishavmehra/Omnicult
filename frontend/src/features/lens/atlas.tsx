@@ -254,7 +254,7 @@ export function AtlasView({ campaignId, selected, onSelect, onOpenProfile }: { c
           title={`No state has been built in ${data.mode} mode yet`}
           description={
             data.mode === "demo"
-              ? "Demo mode reads labelled fixtures, so nothing is retrieved until you load them. Loading the four demo states is instant and calls nothing."
+              ? "Nothing is built yet. Load the four demo states to see the evidence map."
               : "Live mode retrieves claims from the sources when you build a state. Until then every state stays empty: nothing is filled in to make the map look complete."
           }
           needs={[

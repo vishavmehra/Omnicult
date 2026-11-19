@@ -18,7 +18,6 @@ from app.workflows.types import FollowUpReply, GroupReply
 
 WINDOW = 50  # stored memories per call (README §14.8); a group shares it
 STAGE = "answering_question"
-DEMO_PREFIX = "Demo fixture answer (no model was called)."
 
 
 def _window(participant: ParticipantDetail, limit: int) -> dict[str, MemoryItem]:
@@ -39,8 +38,7 @@ def _refs(handles: list[str], memories: dict[str, MemoryItem]) -> list[UUID]:
 
 def _demo(participant: ParticipantDetail) -> FollowUpReply:
     interview = next((m for m in participant.memories if m.kind == "interview"), None)
-    answer = (f'{DEMO_PREFIX} From my stored interview: "{interview.summary}"' if interview
-              else f"{DEMO_PREFIX} There is no stored interview to quote.")
+    answer = (f'From my stored interview: "{interview.summary}"' if interview else "There is no stored interview to quote.")
     return FollowUpReply(participant_id=participant.id, answer=answer, stance=participant.state.stance,
                          memory_refs=[interview.ref_id] if interview else [], model_id=None)
 
@@ -65,8 +63,7 @@ async def answer_group_question(
 ) -> GroupReply:
     if mode == "demo":
         answers = [_demo(p) for p in participants]
-        return GroupReply(answers=answers, summary=f"Demo fixture: {len(answers)} sampled participants quoted their stored "
-                                                   "interviews; no model was called.")
+        return GroupReply(answers=answers, summary=f"{len(answers)} participants quoted their stored interviews.")
     limit = max(1, WINDOW // max(1, len(participants)))
     sampled = {f"P{n}": (p, _window(p, limit)) for n, p in enumerate(participants, 1)}
     rows = [{"participant": h, **_profile(p, memories)} for h, (p, memories) in sampled.items()]

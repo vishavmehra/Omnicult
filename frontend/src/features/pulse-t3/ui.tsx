@@ -11,11 +11,6 @@ export function PulseTabPage({ children, className }: { children: ReactNode; cla
   return <div className={cn("space-y-8", PULSE_THEME, className)}>{children}</div>;
 }
 
-/** The one quiet source line of a view. */
-export function SourceLine({ children = "Source: sample dataset." }: { children?: ReactNode }) {
-  return <p className="type-meta max-w-[78ch]">{children}</p>;
-}
-
 /** A labelled number input with its unit after it and its error under it, as in the alert preview. */
 export function NumberField({
   label,

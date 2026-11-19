@@ -43,7 +43,7 @@ from app.services.digest_render import Exported, export_digest
 
 log = logging.getLogger("omnicult.digest")
 Outcome = Literal["created", "existing", "empty"]
-DEMO_NARRATIVE = "The summary is written by a model and is available in live projects only. This demo project's digest is numbers and lists."
+DEMO_NARRATIVE = "The written summary is available in live projects only."
 MAX_CAMPAIGNS_PER_CALL = 1000  # ponytail: one request walks every active campaign; page it or fan out per campaign past this
 
 

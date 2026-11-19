@@ -22,7 +22,7 @@ from tests.api.omnicult_support import API, add_member, client_for, seeded, work
 from tests.api.test_crud import make_campaign, make_project
 from tests.conftest import BOB
 
-LABEL = "Sample comments, not from a connected channel"
+LABEL = "Comments"
 COMMENTS = len(sample.generate_comments())
 
 
@@ -64,6 +64,7 @@ def scripted(responder: Callable[[dict[str, Any]], Any], monkeypatch: pytest.Mon
 def assert_labelled(body: dict[str, Any]) -> None:
     assert body["is_sample"] is True and body["label"] == LABEL and body["source_kind"] == "sample"
     assert body["dataset_version"] == sample.DATASET_VERSION and body["limitations"]
+    assert body["source_line"] == "" and not any(w in x.lower() for x in body["limitations"] for w in ("demo", "fixture", "sample"))
 
 
 # --- the dataset ---------------------------------------------------------------------------------------------------

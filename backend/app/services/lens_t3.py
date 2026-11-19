@@ -20,7 +20,7 @@ from app.analytics import lens_trends as trends
 from app.core.config import Settings
 from app.db import models as m
 from app.db.session import read_session
-from app.fixtures.lens_t3_demo import RecordedPageviewsSource, RecordedShelfSource, recorded_label
+from app.fixtures.lens_t3_demo import RecordedPageviewsSource, RecordedShelfSource
 from app.integrations.culture import CultureService, InMemoryCacheStore
 from app.integrations.culture.adapters.wikipedia_attention import WikipediaAttentionSource
 from app.integrations.culture.base import CallLogRecord
@@ -70,7 +70,7 @@ def series_window(today: date) -> tuple[date, date]:
 def source_line(mode: str, *, what: str, taken_at: datetime | None = None) -> str:
     """The one quiet line each view carries about where its numbers come from."""
     if mode == "demo":
-        return f"Demo fixture: {what}, {recorded_label()}"
+        return ""
     return f"Public data: {what}" + (f", retrieved {taken_at:%d %b %Y}".replace(" 0", " ") if taken_at else "")
 
 

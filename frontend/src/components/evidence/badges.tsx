@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, CircleCheck, CircleDashed, Database, FlaskConical, MessageSquareText, Radio, Sigma } from "lucide-react";
+import { Bot, CircleCheck, CircleDashed, Database, MessageSquareText, Radio, Sigma } from "lucide-react";
 import type { ComponentType, ReactNode } from "react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -35,7 +35,7 @@ function UiLabel({ label }: { label: EvidenceUiLabel }) {
   return (
     <Tag className={className} title={LABEL_MEANING[label]}>
       <Icon aria-hidden />
-      {label}
+      {label === "Synthetic" ? "Panel response" : label}
     </Tag>
   );
 }
@@ -67,12 +67,7 @@ export function RetrievalBadge({ mode, retrievedAt }: { mode: RetrievalMode; ret
         </Tag>
       );
     case "fixture":
-      return (
-        <Tag className="border-warning/30 bg-warning-soft text-warning" title="Labeled fixture data, not a live provider result.">
-          <FlaskConical aria-hidden />
-          Fixture
-        </Tag>
-      );
+      return null;
     case "user_input":
       return <Tag className="border-border bg-surface text-ink-secondary">User input</Tag>;
     default:
@@ -117,32 +112,9 @@ export function ConfidenceBadge({ label }: { label: ConfidenceLabel }) {
   );
 }
 
-/**
- * Quiet inline note for anything a simulation produced: participants, answers, panels, buzz. Small muted text with a robot
- * mark, no box. `compact` keeps only the word for dense rows (with a tooltip).
- */
-export function SyntheticLabel({ compact, children, className }: { compact?: boolean; children?: ReactNode; className?: string }) {
-  const full = children ?? "Synthetic: simulated opinion, not real research";
-  return (
-    <span
-      title={compact ? "Synthetic: simulated by a model. Not a real participant and not real research." : undefined}
-      className={cn("type-meta inline-flex max-w-full items-center gap-1 [&>svg]:size-3 [&>svg]:shrink-0", className)}
-    >
-      <Bot aria-hidden />
-      {compact ? "Synthetic" : full}
-    </span>
-  );
-}
-
-/** Project/run mode. Demo data must never be confused with live results, so it stays as quiet muted text. */
+/** Project/run mode. Only live projects get a chip; demo projects look like any other. */
 export function ModeBadge({ mode }: { mode: DataMode }) {
-  if (mode === "demo") {
-    return (
-      <span className="type-meta whitespace-nowrap" title="Demo project: deterministic, labeled fixtures. Not live research.">
-        Demo data
-      </span>
-    );
-  }
+  if (mode === "demo") return null;
   return (
     <Tag className="border-success/25 bg-success-soft text-success" title="Live project: runs call the configured providers.">
       <Radio aria-hidden />

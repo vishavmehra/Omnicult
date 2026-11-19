@@ -16,11 +16,6 @@ export function AiTag({ children = "AI proposal" }: { children?: ReactNode }) {
   return <Tag className="border-dashed border-ink-secondary/50 bg-surface text-ink-secondary">{children}</Tag>;
 }
 
-/** The one quiet source line of a view. */
-export function SourceLine({ children }: { children: ReactNode }) {
-  return <p className="type-meta">{children}</p>;
-}
-
 export const usd = (value: number | null | undefined) => (value == null ? "not priced" : `$${value < 0.01 ? value.toFixed(4) : value.toFixed(3)}`);
 
 export function mmss(ms: number) {
@@ -95,7 +90,7 @@ export function CostConfirm({
   checked: boolean;
   onChange: (next: boolean) => void;
 }) {
-  if (demo) return <p className="text-[13px] text-ink-secondary">This project shows saved output. No model is called and nothing is charged.</p>;
+  if (demo) return null;
   return (
     <label className="flex items-start gap-2.5 text-[13.5px] text-ink-body">
       <input

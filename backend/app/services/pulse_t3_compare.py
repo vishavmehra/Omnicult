@@ -29,14 +29,14 @@ TAU_STRONG = 0.5  # |tau| at or above this reads as mostly agreeing / mostly dis
 METRICS: tuple[v.PvaMetric, ...] = ("ctr", "view_rate", "completion_100", "roas")
 PREDICTORS: dict[str, str] = {
     "launch_score": "Launch Room score",
-    "quick_read_favourable": "Quick Read: share of simulated respondents who reacted positively",
+    "quick_read_favourable": "Quick Read: share of respondents who reacted positively",
 }
 
 METHOD = v.PvaMethod(
     version=METHOD_VERSION,
     steps=[
         "Pair: a Pulse version and a Creative Studio version are paired only where you linked them for that region. A version with no link is never compared.",
-        "Predicted: the newest stored Launch Room verdict for that Studio version and region gives the overall score, and the Quick Read counts it read give the share of simulated respondents who reacted positively.",
+        "Predicted: the newest stored Launch Room verdict for that Studio version and region gives the overall score, and the Quick Read counts it read give the share of respondents who reacted positively.",
         "Actual: the chosen Pulse metric over the version's settled days in that region, all platforms together. Provisional days are left out.",
         "Rank: the pairs are ranked on each prediction and on the actual metric, 1 being highest. Only ranks are compared; a score or a panel share is never turned into a predicted result.",
         "Read: same rank is agree, one rank apart is near, two or more apart is differ. Kendall's tau-b is how often two pairs fall in the same order in both rankings; it needs at least three pairs.",
@@ -44,7 +44,7 @@ METHOD = v.PvaMethod(
     assumptions=[
         "The pairs come from different regions, so from different audiences and baselines; the ranking mixes them.",
         "Each version is read over its own settled days, shown on every pair.",
-        "A Quick Read panel is simulated respondents, not independent observations, and a Launch Room score is a rule-based reading of stored observations, not a forecast.",
+        "The respondents of a Quick Read panel are not independent observations, and a Launch Room score is a rule-based reading of stored observations, not a forecast.",
         "With fewer than about eight pairs the agreement describes what happened; it does not test anything.",
     ],
 )

@@ -79,7 +79,7 @@ async def test_a_plan_is_validated_and_stored_and_changes_nothing_until_steps_ar
 
     assert plan["status"] == "proposed" and plan["supported"] and plan["source"] == "typed" and plan["version_id"] == root["id"]
     assert plan["provider"] == "fixture" and plan["prompt_version"] == "voice-direct-v2" and plan["mode"] == "demo"
-    assert "Demo fixture output, not a live model response." in plan["notes"]
+    assert not any("fixture" in n.lower() for n in plan["notes"])
     edit, lock = plan["steps"]
     assert (edit["id"], edit["kind"], edit["status"]) == ("s1", "edit_element", "proposed")
     assert edit["before"] == "Happy Diwali" and edit["after"] == "Warm Diwali wishes" and edit["changes_data"] and edit["needs_confirmation"]
@@ -363,9 +363,9 @@ async def test_a_transcreate_step_starts_a_run_and_its_version_carries_the_instr
 async def test_demo_mode_answers_unknown_instructions_with_no_fixture_and_never_invents_a_plan(seeded: Any, client: httpx.AsyncClient) -> None:
     cid, root = await demo_studio(client)
     plan = await plan_for(client, cid, "Translate everything into Klingon")
-    assert plan["status"] == "unsupported" and plan["refusal"].startswith("No demo fixture for this instruction.")
+    assert plan["status"] == "unsupported" and plan["refusal"].startswith("This instruction is not available in the demo.")
     assert "Make the Tamil headline warmer" in plan["refusal"] and plan["steps"] == []
-    assert plan["provider"] == "fixture" and "Demo fixture output, not a live model response." in plan["notes"]
+    assert plan["provider"] == "fixture" and not any("fixture" in n.lower() for n in plan["notes"])
 
 
 # --- live mode: the real gateway over a scripted provider -----------------------------------------------------------------
@@ -443,5 +443,5 @@ async def test_a_demo_project_never_transcribes(seeded: Any, client: httpx.Async
     cid, root = await demo_studio(client)
     response = await client.post(f"{API}/campaigns/{cid}/direct/transcribe", files={"file": ("clip.wav", WAV, "audio/wav")})
     assert response.status_code == 200 and response.json()["status"] == "unavailable" and response.json()["transcript"] == ""
-    assert "demo project never calls a model provider" in response.json()["message"]
+    assert "needs a live project" in response.json()["message"]
 

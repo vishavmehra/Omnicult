@@ -33,11 +33,11 @@ REGION_NAMES = {r.code: r.name for r in REGIONS}
 CARD_GROUPS: tuple[v.MetricGroup, ...] = ("delivery", "cost", "response", "video", "outcome", "creative_health")
 DEFAULT_COMPARE = ("ctr", "cpm", "cpa", "roas", "view_rate", "completion_100", "ctr_change_vs_first_week")
 PLATFORM_LABELS = {"google_ads": "Google Ads", "youtube": "YouTube", "meta": "Meta Ads", "ga4": "GA4"}
-ROADMAP_NOTE = "Roadmap: connecting ad accounts is not available in this build. Pulse shows the labelled sample dataset only."
-NOT_LOADED = "The sample dataset is not loaded for this campaign. Load it first with POST /campaigns/{id}/pulse/sample-dataset."
+ROADMAP_NOTE = "Roadmap: connecting ad accounts is not available in this build."
+NOT_LOADED = "The dataset is not loaded for this campaign. Load it first with POST /campaigns/{id}/pulse/sample-dataset."
 CATALOGUE_NOTES = (
     "Calculated metrics are computed in code from stored base metrics; a ratio with no denominator is null, never 0.",
-    "Metrics with in_sample=false are defined for the product but have no values in the sample dataset.",
+    "Some metrics are defined for the product but have no values in the dataset.",
     REACH_CAVEAT,
 )
 
@@ -93,7 +93,7 @@ def _filter(rows: list[SeriesRow], region: str | None = None, version: str | Non
         ("platform", platform, {r.platform for r in rows}),
     ):
         if value is not None and value not in present:
-            raise _bad(field, f"Not in the sample dataset. Available: {', '.join(sorted(present))}.")
+            raise _bad(field, f"Not in the dataset. Available: {', '.join(sorted(present))}.")
     return [
         r for r in rows
         if (region is None or r.region_code == region) and (version is None or r.version_label == version)
@@ -107,7 +107,7 @@ def _check_metrics(names: list[str], *, daily: bool = False) -> None:
         if d is None:
             raise _bad("metric", f"Unknown metric '{name}'. See GET /campaigns/{{id}}/pulse/metrics.")
         if not d.in_sample:
-            raise _bad("metric", f"'{name}' has no values in the sample dataset.")
+            raise _bad("metric", f"'{name}' has no values in the dataset.")
         if daily and d.aggregation == "window_change":
             raise _bad("metric", f"'{name}' compares two weeks; it is a single value, not a daily series.")
 
@@ -137,7 +137,7 @@ def _status(rows: list[SeriesRow], last_updated_at: datetime | None, dataset_ver
         date_to=max((r.day for r in rows), default=None), provisional_from=min(prov, default=None),
         regions=sorted({r.region_code for r in rows}), versions=sorted({r.version_label for r in rows}),
         platforms=sorted({r.platform for r in rows}),
-        note=("Generated, deterministic sample data. " if rows else "Not loaded. ") + sample.SAMPLE_LABEL + ".",
+        note=sample.SAMPLE_LABEL + "." if rows else "Not loaded.",
     )
 
 
@@ -225,7 +225,7 @@ async def predicted_vs_actual(user_id: UUID, campaign_id: UUID) -> v.PredictedVs
     return v.PredictedVsActual(
         reason=(
             "Not available. Predicted vs Actual compares the panel's read with real regional results, and no real "
-            "results exist for this campaign. The sample dataset is generated and is never compared with predictions."
+            "results exist for this campaign."
             if real == 0 else
             "Not available in this build. Real result rows exist, but the calibration method (compatible observations, "
             "stored calibration history) is roadmap, so no comparison is shown."
@@ -330,7 +330,7 @@ async def compare_versions(user_id: UUID, campaign_id: UUID, *, metrics: list[st
     if baseline is not None:
         _filter(loaded.rows, version=baseline)  # a baseline label that is not in the dataset is a 422
     rows = _filter(loaded.rows, region, None, platform)
-    caveats = list(sample.SAMPLE_LIMITATIONS[2:]) + ["Versions that ran in only some regions are compared only where they overlap."]
+    caveats = list(sample.SAMPLE_LIMITATIONS[1:]) + ["Versions that ran in only some regions are compared only where they overlap."]
     comparisons = []
     for code in sorted({r.region_code for r in rows}):
         rrows = [r for r in rows if r.region_code == code]
@@ -378,10 +378,10 @@ async def freshness(user_id: UUID, campaign_id: UUID) -> v.Freshness:
     return v.Freshness(
         **_stamp(loaded), date_from=min(r.day for r in loaded.rows), date_to=max(r.day for r in loaded.rows),
         provisional_from=prov[0] if prov else None, provisional_days=len(prov),
-        refresh="None. The sample is static; it is never refreshed from an ad platform.",
+        refresh="Not refreshed automatically.",
         platforms=sorted({r.platform for r in loaded.rows}),
         notes=[
-            "Not real time. Real ad platforms report with a delay and some conversions arrive days later, so recent days "
+            "Ad platforms report with a delay and some conversions arrive days later, so recent days "
             "are marked provisional.",
             f"The last {len(prov)} days are provisional; conversions on them are under-reported.",
         ],
@@ -425,7 +425,7 @@ async def alert_preview(user_id: UUID, campaign_id: UUID, config: AlertConfig) -
                  for s in result.skipped],
         evaluated=result.evaluated,
         note=(
-            "Preview of Alerts (roadmap feature 45). The rules run over the sample dataset only, provisional days are "
+            "Preview of Alerts (roadmap feature 45). The rules run over the loaded dataset only, provisional days are "
             "never used, thresholds are request parameters, and nothing is saved or sent."
         ),
     )

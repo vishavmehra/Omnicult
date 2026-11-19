@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { useLoadSample } from "./api";
 
 /**
- * Before the sample is loaded: what Live Pulse is, that this build runs it on a sample, and the one action that
- * loads it. Nothing is drawn and no number is shown until the user asks for the sample.
+ * Before the data is loaded: what Live Pulse is and the one action that loads it. Nothing is drawn and no number is
+ * shown until the user asks for it.
  */
 export function Intro({ campaignId }: { campaignId: string }) {
   const load = useLoadSample(campaignId);
@@ -24,22 +24,21 @@ export function Intro({ campaignId }: { campaignId: string }) {
               date range, last-updated time and whether it is still provisional.
             </p>
             <p>
-              Live Pulse runs on a sample dataset: three weeks of daily results for four regions and three versions, across
-              Google Ads and YouTube. None of it describes a real audience or a real campaign.
+              It covers three weeks of daily results for four regions and three versions, across Google Ads and YouTube.
             </p>
           </div>
         }
         needs={[
-          { label: "The sample dataset: load it below", met: false },
+          { label: "The Live Pulse dataset: load it below", met: false },
         ]}
         action={
           <div className="space-y-2">
             <Button size="lg" onClick={() => load.mutate()} disabled={load.isPending}>
               {load.isPending ? <LoaderCircle aria-hidden className="animate-spin motion-reduce:animate-none" /> : <Database aria-hidden />}
-              {load.isPending ? "Loading the sample…" : "Load the sample dataset"}
+              {load.isPending ? "Loading the data…" : "Load the dataset"}
             </Button>
             <p className="max-w-[60ch] text-[12.5px] text-ink-muted">
-              Loading writes the generated rows to this campaign as sample data. Loading again replaces them with an identical copy. Only an owner or editor can load it.
+              Loading writes the rows to this campaign. Loading again replaces them with an identical copy. Only an owner or editor can load it.
             </p>
           </div>
         }

@@ -400,18 +400,14 @@ export function BriefEditor({ brief, initial, regions, onCancel, onSaved }: { br
         />
       </Group>
 
-      <Group legend="Budget" hint="Planning numbers. Mark them as sample when they are placeholders.">
-        <div className="grid gap-4 sm:grid-cols-3">
+      <Group legend="Budget" hint="Planning numbers.">
+        <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Currency" htmlFor={id("b-cur")} required>
             <Input id={id("b-cur")} maxLength={3} placeholder="INR" value={budget?.currency ?? ""} onChange={(e) => set({ budget: { total: null as unknown as number, by_region: {}, sample: false, note: null, ...budget, currency: e.target.value.toUpperCase() } }) /* a null total means "not entered"; cleanBrief drops the budget */} className="bg-surface uppercase" />
           </Field>
           <Field label="Total" htmlFor={id("b-total")} required>
             <NumberInput id={id("b-total")} value={budget?.total} onChange={(n) => set({ budget: { currency: budget?.currency || "INR", by_region: {}, sample: false, note: null, ...budget, total: n as number } })} />
           </Field>
-          <label className="flex items-end gap-2 pb-1.5 text-[13.5px] text-ink">
-            <input type="checkbox" className="size-4 accent-[var(--ember)]" checked={budget?.sample ?? false} disabled={!budget} onChange={(e) => budget && set({ budget: { ...budget, sample: e.target.checked } })} />
-            These are sample numbers
-          </label>
         </div>
         {budget && inBrief.length > 0 && (
           <div className="space-y-1.5">

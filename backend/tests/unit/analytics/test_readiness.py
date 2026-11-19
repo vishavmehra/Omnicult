@@ -25,7 +25,7 @@ def fired(a: v.ReadinessAssessment) -> list[str]:
 def test_a_clean_version_is_go_and_says_it_is_only_a_recommendation():
     a = assess(good())
     assert (a.verdict, a.rules_applied, a.issues, a.highest_priority_issue) == ("go", ["G0_no_blocking_rule"], [], None)
-    assert "8 of 10 synthetic respondents" in a.main_reason and "solid" in a.main_reason
+    assert "8 of 10 respondents" in a.main_reason and "solid" in a.main_reason
     assert "human approval" in a.next_action and "real people" in a.next_action
     assert any("not an approval" in x for x in a.confidence_limitations)
     assert a.rule_version == "ready-1" and a.scoring_version == "mvp-2" and a.score.overall is not None
@@ -42,7 +42,7 @@ def test_partial_evidence_still_allows_go_but_is_disclosed():
 def test_rt1_message_not_understood_means_rethink():
     a = assess(good(quick_read=quick_read(understood=3)))  # 30% < 40%
     assert a.verdict == "rethink" and a.highest_priority_issue.rule_id == "RT1_message_not_understood"
-    assert "Only 3 of 10 synthetic respondents" in a.main_reason and "Rework the core message" in a.next_action
+    assert "Only 3 of 10 respondents" in a.main_reason and "Rework the core message" in a.next_action
 
 
 def test_rt1_is_not_applied_to_a_panel_that_is_too_small_to_judge():

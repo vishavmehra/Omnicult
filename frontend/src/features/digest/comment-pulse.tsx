@@ -15,8 +15,8 @@ import { NO_FILTERS, useCommentStatus, useCommentSummary, useLoadComments, useRe
 import { CommentList } from "./comment-list";
 import { CommentThemes } from "./comment-themes";
 import { SlicesTable, VolumeSection } from "./comment-trends";
-import { COMMENT_SOURCE, LANGUAGE_NAME, runWeeks } from "./logic";
-import { ModelTag, SourceLine } from "./ui";
+import { LANGUAGE_NAME, runWeeks } from "./logic";
+import { ModelTag } from "./ui";
 import { YoutubeSourcePanel } from "./youtube-source";
 
 type Status = components["schemas"]["CommentDatasetStatus"];
@@ -33,7 +33,6 @@ export function CommentPulse({ campaignId }: { campaignId: string }) {
         <p className="max-w-[68ch] text-[14.5px] text-ink-secondary">
           What viewers say under the campaign&apos;s videos, by region, language and version. Counts and trends are calculated; sentiment and themes are read by a model and marked as such.
         </p>
-        <SourceLine>{status.data?.source_line ?? COMMENT_SOURCE}</SourceLine>
       </header>
       {status.data?.youtube && <YoutubeSourcePanel campaignId={campaignId} youtube={status.data.youtube} />}
       {status.error ? (
@@ -58,22 +57,22 @@ function NotLoaded({ campaignId }: { campaignId: string }) {
         description={
           <div className="space-y-2">
             <p>
-              Comment Pulse reads comments under a campaign&apos;s videos. It runs on a set of sample comments written in Marathi, Tamil, Malayalam, Bengali and English, some mixing the
+              Comment Pulse reads comments under a campaign&apos;s videos, written in Marathi, Tamil, Malayalam, Bengali and English, some mixing the
               regional language with English.
             </p>
             <p>Counts, languages and trends are calculated from the comments. Sentiment and themes need a model to read them, and are marked as its interpretation.</p>
           </div>
         }
         needs={[
-          { label: "The sample comments: load them below", met: false },
+          { label: "The comments: load them below", met: false },
         ]}
         action={
           <div className="space-y-2">
             <Button size="lg" onClick={() => load.mutate()} disabled={load.isPending}>
               {load.isPending ? <LoaderCircle aria-hidden className="animate-spin motion-reduce:animate-none" /> : <MessagesSquare aria-hidden />}
-              {load.isPending ? "Loading the comments…" : "Load the sample comments"}
+              {load.isPending ? "Loading the comments…" : "Load the comments"}
             </Button>
-            <p className="max-w-[60ch] text-[12.5px] text-ink-muted">Loading writes the sample comments to this campaign. Loading again replaces them with identical ones. Only an owner or editor can load them.</p>
+            <p className="max-w-[60ch] text-[12.5px] text-ink-muted">Loading writes the comments to this campaign. Loading again replaces them with identical ones. Only an owner or editor can load them.</p>
           </div>
         }
       />
@@ -163,7 +162,7 @@ function Facts({ summary, stale }: { summary: Summary; stale: boolean }) {
   const t = summary.totals;
   const c = summary.coverage;
   const rows: { label: string; value: string; note: string }[] = [
-    { label: "Comments in view", value: String(c.comments_in_view), note: c.comments_in_view === c.comments_in_dataset ? (summary.is_sample ? "the whole sample" : "all fetched") : `of ${c.comments_in_dataset} ${summary.is_sample ? "in the sample" : "fetched"}` },
+    { label: "Comments in view", value: String(c.comments_in_view), note: c.comments_in_view === c.comments_in_dataset ? (summary.is_sample ? "the whole set" : "all fetched") : `of ${c.comments_in_dataset} ${summary.is_sample ? "in the set" : "fetched"}` },
     { label: "Languages", value: String(c.languages_in_view), note: summary.languages.map((l) => l.language_name).join(", ") || "none" },
     { label: "Claim mentions", value: String(t.claim_mentions), note: "match a watch term in the text" },
     { label: "Festival mentions", value: String(t.cultural_mentions), note: summary.is_sample ? "name a different festival" : "name a festival on the watch list" },
@@ -197,7 +196,7 @@ function Reading({ campaignId, summary }: { campaignId: string; summary: Summary
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-border bg-surface px-4 py-3">
           <div className="min-w-0 space-y-1 text-[13.5px] text-ink-body">
             <p>
-              {a.is_fixture ? "Read from labelled fixtures, not a model" : `Read by ${a.model_id ?? a.provider}`}
+              {a.is_fixture ? "Sentiment and themes reading" : `Read by ${a.model_id ?? a.provider}`}
               <span className="text-ink-secondary">
                 {" "}
                 · {a.read_count} of {a.comment_count} comments labelled · {formatDateTime(a.created_at)}

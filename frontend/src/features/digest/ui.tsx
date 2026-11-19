@@ -19,11 +19,6 @@ export function ModelTag({ className, children = MODEL_INTERPRETATION }: { class
   );
 }
 
-/** The one quiet line that says where a view's figures come from. */
-export function SourceLine({ children, className }: { children: ReactNode; className?: string }) {
-  return <p className={cn("type-meta", className)}>{children}</p>;
-}
-
 const SENTIMENT: Record<SentimentLabel, { Icon: LucideIcon; className: string }> = {
   positive: { Icon: ThumbsUp, className: "text-success" },
   neutral: { Icon: Minus, className: "text-ink-secondary" },

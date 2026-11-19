@@ -72,7 +72,7 @@ function StudyForm({ options, onStarted }: { options: SamplingOptions; onStarted
         hint={stateError ?? "Up to five. Participants are spread across them."}
       />
       <div className="grid gap-4 sm:grid-cols-2">
-        <FieldBlock label="Panel size" htmlFor="st-size" error={sizeError} hint={`Synthetic participants, ${min} to ${max} on this server. Each is interviewed once. A panel size, not a number of people surveyed.`}>
+        <FieldBlock label="Panel size" htmlFor="st-size" error={sizeError} hint={`Participants, ${min} to ${max} on this server. Each is interviewed once.`}>
           <input id="st-size" type="number" inputMode="numeric" min={min} max={max} value={Number.isNaN(size) ? "" : size} onChange={(e) => setSize(e.target.valueAsNumber)} aria-invalid={Boolean(sizeError)} aria-describedby="st-size-hint" className={CONTROL} />
         </FieldBlock>
         <FieldBlock label="Interview depth" htmlFor="st-depth" hint="Standard adds one follow-up question to each interview.">
@@ -160,7 +160,7 @@ function StudyView({ result, onAsk, onNewRun }: { result: AudienceStudyResult; o
       <RunBanner run={result} label="Audience Study" onNewRun={onNewRun} />
       {usable && (
         <>
-          <Panel id="st-panel" title="The panel" meta={`${pluralise(panel.generated_size, "synthetic participant")} interviewed${panel.requested_size !== panel.generated_size ? `, ${panel.requested_size} requested` : ""}`}>
+          <Panel id="st-panel" title="The panel" meta={`${pluralise(panel.generated_size, "participant")} interviewed${panel.requested_size !== panel.generated_size ? `, ${panel.requested_size} requested` : ""}`}>
             <dl className="type-ledger grid gap-x-6 gap-y-1 text-[13px] sm:grid-cols-[8rem_minmax(0,1fr)]">
               <dt className="text-ink-muted">States</dt>
               <dd className="text-ink-body">{panel.states.map((s) => `${s.name} ${panel.marginal_counts.states?.[s.code] ?? 0}`).join(" · ")}</dd>
@@ -176,15 +176,15 @@ function StudyView({ result, onAsk, onNewRun }: { result: AudienceStudyResult; o
 
           {summary ? (
             <>
-              <Panel id="st-overall" title="Reactions" meta="Counts of synthetic participants">
-                <DistributionLedger dist={summary.overall} noun="synthetic participants interviewed" />
+              <Panel id="st-overall" title="Reactions" meta="Counts of participants">
+                <DistributionLedger dist={summary.overall} noun="participants interviewed" />
               </Panel>
 
               {groups.length > 0 && (
                 <Panel id="st-segments" title="Segment differences" meta="Counted from the stored interviews">
                   <SegmentTable groups={groups} />
                   <p className="mt-2 max-w-[68ch] text-xs text-ink-secondary">
-                    Tallies per dimension value. Small slices are noisy, so read them as questions to ask rather than market segments. They say nothing about real people.
+                    Tallies per dimension value. Small slices are noisy, so read them as questions to ask rather than market segments.
                   </p>
                 </Panel>
               )}
@@ -203,7 +203,7 @@ function StudyView({ result, onAsk, onNewRun }: { result: AudienceStudyResult; o
                   <div>
                     <p className="type-meta mb-1.5 flex items-center gap-2">
                       Differences between groups
-                      <Tag className="border-dashed border-ink-secondary/50 bg-surface text-ink-secondary" title="A model's reading of the tallies. Not a finding about real people.">
+                      <Tag className="border-dashed border-ink-secondary/50 bg-surface text-ink-secondary" title="A model's reading of the tallies.">
                         <MessageSquareText aria-hidden />
                         Model interpretation
                       </Tag>
@@ -232,7 +232,7 @@ function StudyView({ result, onAsk, onNewRun }: { result: AudienceStudyResult; o
             <GroundingPanel grounding={result.grounding} />
           </Panel>
 
-          <Panel id="st-participants" title="Participants and interviews" meta={`${result.participants.length} synthetic`}>
+          <Panel id="st-participants" title="Participants and interviews" meta={`${result.participants.length} participants`}>
             <StudyParticipants participants={result.participants} onAsk={onAsk} />
           </Panel>
         </>
@@ -260,7 +260,7 @@ export function StudyTab({ loc }: { loc: Loc }) {
   return (
     <div className="space-y-5">
       <p className="max-w-[68ch] text-[14px] text-ink-secondary">
-        The deeper run: a bounded synthetic panel sampled by state, language, city tier and age band, with an interview for each participant. It rehearses questions to put to real people; it does not measure them.
+        The deeper run: a bounded panel sampled by state, language, city tier and age band, with an interview for each participant.
       </p>
       <SetupPanel title="New Audience Study" meta={runs.data.length ? undefined : "Start here"} open={setupOpen} onOpenChange={setOpen}>
         <StudyForm
@@ -271,7 +271,7 @@ export function StudyTab({ loc }: { loc: Loc }) {
           }}
         />
       </SetupPanel>
-      <RunPicker runs={runs.data} selectedId={selectedId} onSelect={loc.selectRun} regionName={regionName} describe={(r) => pluralise(r.participant_count, "synthetic participant")} />
+      <RunPicker runs={runs.data} selectedId={selectedId} onSelect={loc.selectRun} regionName={regionName} describe={(r) => pluralise(r.participant_count, "participant")} />
       {selectedId && result.error && <ErrorState error={result.error} onRetry={() => void result.refetch()} />}
       {selectedId && !result.data && !result.error && <LoadingState label="Opening the Audience Study…" />}
       {result.data && <StudyView result={result.data} onNewRun={() => setOpen(true)} onAsk={(id) => loc.go({ tab: "ask", run: result.data.id, participant: id, q: null })} />}

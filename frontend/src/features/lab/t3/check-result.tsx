@@ -106,7 +106,7 @@ function RegionSection({ region, languageCode }: { region: MessageCheckRegion; l
   const r = region.rates;
   const copy = [region.creative.headline, region.creative.body, region.creative.call_to_action].filter(Boolean).join(" / ");
   return (
-    <Panel id={`mc-${region.region.code}`} title={region.region.name} meta={r.denominator ? `${pluralise(r.denominator, "synthetic participant")} compared` : "Nothing compared"}>
+    <Panel id={`mc-${region.region.code}`} title={region.region.name} meta={r.denominator ? `${pluralise(r.denominator, "participant")} compared` : "Nothing compared"}>
       <div className="space-y-5">
         <p className="text-[13px] text-ink-secondary">
           <span className="text-ink-muted">Copy read: </span>
@@ -136,7 +136,7 @@ function RegionSection({ region, languageCode }: { region: MessageCheckRegion; l
                     </li>
                   ))}
                 </ul>
-                <p className="type-meta">Slices hold a handful of synthetic participants each: read differences as questions to ask, not findings.</p>
+                <p className="type-meta">Slices hold a handful of participants each: read differences as questions to ask, not findings.</p>
               </section>
             )}
 
@@ -315,7 +315,7 @@ export function MessageCheckView({ result, onNewRun }: { result: MessageCheckRes
             </p>
           )}
 
-          <Panel id="mc-participants" title="Participants" meta={`${result.participants.length} synthetic`}>
+          <Panel id="mc-participants" title="Participants" meta={`${result.participants.length} participants`}>
             <ul className="ledger-rules">
               {rows.map((p) => (
                 <ParticipantRow key={p.id} p={p} points={points} />

@@ -307,7 +307,7 @@ function PictureFit({ campaignId, version, creativeId, plans }: { campaignId: st
         <ElementTable strategy={strategy} />
         <ApplyBar key={`${format.id}-${strategy.strategy}`} campaignId={campaignId} versionId={version.id} creativeId={creativeId} format={format} strategy={strategy} />
       </div>
-      <p className="type-meta">Source: planned in code ({plans.tool_version}) from the picture and the boxes of this version. Safe zones are working defaults; check the platform&apos;s current guidance.</p>
+      <p className="type-meta">Planned in code ({plans.tool_version}) from the picture and the boxes of this version. Safe zones are working defaults; check the platform&apos;s current guidance.</p>
     </div>
   );
 }
@@ -376,7 +376,7 @@ function Cutdowns({ plans }: { plans: FormatFitPlans }) {
           </div>
         )}
       </section>
-      <p className="type-meta">Source: scene timings from Creative X-Ray, scored in code ({plans.tool_version}). Suggestions only: no video is rendered.</p>
+      <p className="type-meta">Scene timings from Creative X-Ray, scored in code ({plans.tool_version}). Suggestions only: no video is rendered.</p>
     </div>
   );
 }

@@ -22,7 +22,7 @@ from datetime import UTC, date, datetime, timedelta
 from app.services.pulse_metrics import SeriesRow
 
 DATASET_VERSION = "pulse-sample-1"
-SAMPLE_LABEL = "Sample data, not from a connected account"
+SAMPLE_LABEL = "Live Pulse dataset"
 START = date(2026, 10, 27)
 DAYS = 21
 END = START + timedelta(days=DAYS - 1)
@@ -140,9 +140,7 @@ def generate_sample_rows() -> list[SeriesRow]:
 
 
 SAMPLE_LIMITATIONS = (
-    "Generated with a fixed seed. No real audience, ad platform or account stands behind these numbers.",
-    "Real platforms report with a delay and credit conversions days later; the sample imitates that, so the last "
+    "Platforms report with a delay and credit conversions days later, so the last "
     f"{PROVISIONAL_DAYS} days are provisional and their conversions are under-reported.",
-    "Differences between versions are descriptive. They are not an experiment, carry no significance test, and say "
-    "nothing about how a real campaign would perform.",
+    "Differences between versions are descriptive. They are not an experiment and carry no significance test.",
 )

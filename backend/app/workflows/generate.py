@@ -33,7 +33,7 @@ from app.media import textrender
 from app.schemas import generate as g
 from app.schemas.common import StepTrace
 from app.schemas.runs import RunError
-from app.workflows._common import DEMO_RUN_NOTE, STAGES, announce, execute, linear_graph, llm_error, local_step
+from app.workflows._common import STAGES, announce, execute, linear_graph, llm_error, local_step
 from app.workflows.types import OutcomeStatus, WorkflowContext, WorkflowDeps
 
 IMAGE, VOICE, JINGLE = "generate_image", "generate_voice", "generate_jingle"
@@ -46,10 +46,6 @@ JINGLE_PROMPT_VERSION = "generate-jingle-v1"
 REFERENCE_DROPPED_NOTE = ("The Brand Kit product image was not sent to the model as a reference: the real product is placed in code, and a "
                           "reference showing the pack makes the model draw its own as well. Turn the product placement off to use it as a reference.")
 INTERPRETATION_NOTE = "The scene is a model interpretation. Confirm props, symbols and styling with someone from the region."
-DEMO_IMAGE_NOTE = ("Saved demonstration scene: one saved image (the clean key-visual plate of the Aamod demo creative) stands in for the image "
-                   "model in a demo project, whatever the region. The logo, product image and headline were placed in code on this run.")
-DEMO_VOICE_NOTE = "Saved demonstration recordings: the speech is a committed fixture, not a live call. Pace and timings ran in code."
-DEMO_JINGLE_NOTE = "Saved demonstration clip: a Lyria music bed made once for the Aamod creative. It was cut to length in code."
 UNREVIEWED_NOTE = "No native speaker has reviewed this audio; a code check cannot tell whether the pronunciation is right."
 MUSIC_NOTE = "The music is a model interpretation of the hints; listen before using it, and check the rights position of AI music for your use."
 GAP_MS = 450
@@ -295,7 +291,7 @@ async def loading_brief(state: IState, config: RunnableConfig) -> dict:
         fixture = demo.scene()
         if fixture is None:
             return _fail(state, RunError(code="UNSUPPORTED_CAPABILITY", stage=I1, retryable=False,
-                                         message="The demonstration scene is not installed on this server. Nothing was generated."))
+                                         message="This scene is not available on this server. Nothing was generated."))
         update["scene_fixture"] = fixture
     else:
         client = deps.llm.capability("image_generation")
@@ -314,7 +310,7 @@ async def generating_image(state: IState, config: RunnableConfig) -> dict:
         trace = local_step(I2, IMAGE, "fixture", started).model_copy(update={"prompt_version": fixture.prompt_version})
         return {"scene": fixture.data, "scene_mime": fixture.mime_type, "steps": [*state["steps"], trace],
                 "meta": {"source": "demo_fixture", "model": fixture.model, "location": fixture.location},
-                "limitations": [*state["limitations"], DEMO_IMAGE_NOTE]}
+                "limitations": state["limitations"]}
     reference = state["reference"]
     try:  # one call, never retried by the app; the gateway's own bounded retry already ran
         image = await state["client"].generate(
@@ -369,7 +365,7 @@ async def run_generate_image(inp: GenerateImageInput, deps: WorkflowDeps, progre
     if error is not None or composite is None:
         return GenerateImageOutcome(status="failed", steps=steps, error=error, limitations=state.get("limitations", []), prompt=state.get("prompt"))
     meta = state["meta"]
-    notes = [*state.get("limitations", []), *([DEMO_RUN_NOTE] if state["demo"] else [])]
+    notes = [*state.get("limitations", [])]
     return GenerateImageOutcome(
         status="partial" if any(not c["passed"] for c in composite.checks) else "completed", scene=state["scene"], scene_mime=state["scene_mime"],
         composite=composite.png, width=composite.width, height=composite.height, engine=composite.engine, source=meta["source"],
@@ -437,7 +433,7 @@ async def speaking_lines(state: VState, config: RunnableConfig) -> dict:
         elif state["demo"]:
             audio = remake_demo.speech_clip(line.language, line.text, inp.request.voice)
             if audio is None:
-                problems.append("No demonstration recording exists for this exact line and voice.")
+                problems.append("This exact line and voice is not available in the demo.")
             else:
                 meta = {"source": "demo_fixture", "model": audio.model, "location": audio.location, "voice": audio.voice,
                         "language_code": audio.language_code}
@@ -502,7 +498,7 @@ async def run_generate_voice(inp: GenerateVoiceInput, deps: WorkflowDeps, progre
     if error is not None or results is None:
         return GenerateVoiceOutcome(status="failed", steps=steps, error=error, limitations=state.get("limitations", []))
     meta = state["meta"]
-    notes = [*state.get("limitations", []), *([DEMO_VOICE_NOTE, DEMO_RUN_NOTE] if state["demo"] else [])]
+    notes = [*state.get("limitations", [])]
     track = state["track"]
     return GenerateVoiceOutcome(
         status="partial" if any(r["problems"] for r in results) else "completed", track=track, source=meta["source"], voice=meta["voice"],
@@ -568,7 +564,7 @@ async def composing_jingle(state: JState, config: RunnableConfig) -> dict:
         trace = local_step(J2, JINGLE, "fixture", started).model_copy(update={"model_id": model})
         return {"raw": wav, "steps": [*state["steps"], trace], "prompt": saved_prompt,
                 "meta": {"source": "demo_fixture", "model": model, "location": location},
-                "limitations": [*state["limitations"], DEMO_JINGLE_NOTE]}
+                "limitations": state["limitations"]}
     try:
         clip = await state["client"].generate(state["prompt"], stage=J2, agent=JINGLE)
     except LLMError as exc:  # the provider's error is the run's error: shown, not hidden
@@ -606,7 +602,7 @@ async def run_generate_jingle(inp: GenerateJingleInput, deps: WorkflowDeps, prog
     if error is not None or info is None:
         return GenerateJingleOutcome(status="failed", steps=steps, error=error, limitations=state.get("limitations", []), prompt=state.get("prompt"))
     meta = state["meta"]
-    notes = [*state.get("limitations", []), *([DEMO_RUN_NOTE] if state["demo"] else [])]
+    notes = [*state.get("limitations", [])]
     return GenerateJingleOutcome(
         status="completed", clip=state["clip"], source=meta["source"], model=meta["model"], location=meta["location"], prompt=state["prompt"],
         limitations=list(dict.fromkeys(notes)), steps=steps, **info,

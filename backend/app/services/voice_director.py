@@ -19,7 +19,6 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.agents import direct
-from app.agents._common import DEMO_OUTPUT_NOTE
 from app.agents.direct import ChipRef, PlanContext, VersionRef
 from app.core.config import get_settings
 from app.core.errors import AppError, Conflict, ValidationFailed
@@ -75,7 +74,7 @@ async def transcribe(user_id: UUID, campaign_id: UUID, data: bytes, language: st
     async with read_session() as s:
         campaign, project = await campaign_for(s, user_id, campaign_id, writable=True)
     if project.mode == "demo":
-        return _transcript("unavailable", message="A demo project never calls a model provider, so there is no transcription. Type the instruction instead.")
+        return _transcript("unavailable", message="Voice input needs a live project. Type the instruction instead.")
     if not data or len(data) > MAX_CLIP_BYTES or not _is_clip(data):
         raise ValidationFailed("The recording must be a WAV, WebM, Ogg or MP4 clip of at most 4 MB.",
                                details=[ErrorDetail(field="file", message="Unsupported or oversized audio.")])
@@ -184,8 +183,6 @@ async def create_plan(user_id: UUID, campaign_id: UUID, body: v.DirectPlanReques
         raise ctx.llm_failure(exc) from exc
     out, trace = result.value, result.trace
     steps, notes = direct.validate_steps(out.steps, plan_ctx) if out.supported else ([], [])
-    if trace.provider == "fixture":
-        notes.append(DEMO_OUTPUT_NOTE)
     supported = out.supported and bool(steps)
     refusal = None
     if not supported:

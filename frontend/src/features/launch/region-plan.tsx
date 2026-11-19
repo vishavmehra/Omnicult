@@ -139,7 +139,6 @@ function RegionArticle({ plan, entry, onOpen }: { plan: RegionPlan; entry: Regio
                   <>
                     {money(entry.budget.currency, entry.budget.amount)}
                     {entry.budget.share_of_total !== null && <span className="text-ink-muted"> · {(entry.budget.share_of_total * 100).toFixed(0)}% of the total</span>}
-                    {entry.budget.sample && <span className="text-ink-muted"> · sample numbers</span>}
                   </>
                 ) : (
                   "No amount for this region in the brief"
@@ -239,7 +238,7 @@ function Summary({ plan }: { plan: RegionPlan }) {
       muted: plan.total_budget === null,
       value:
         plan.total_budget !== null && plan.currency
-          ? `${money(plan.currency, plan.total_budget)} in total${plan.budget_sample ? ", sample numbers" : ""}${plan.unallocated_budget ? `, ${money(plan.currency, plan.unallocated_budget)} not yet split by region` : ""}`
+          ? `${money(plan.currency, plan.total_budget)} in total${plan.unallocated_budget ? `, ${money(plan.currency, plan.unallocated_budget)} not yet split by region` : ""}`
           : "No budget in the brief",
     },
     { label: "Regions ready", value: `${ready} of ${plan.regions.length}${ready < plan.regions.length ? ", the rest wait on the records listed below" : ""}` },
@@ -336,7 +335,6 @@ export function RegionPlanTab({ onOpen }: { onOpen(tab: DeliveryTab, region?: st
               <li key={n}>{n}</li>
             ))}
           </ul>
-          <p className="type-meta">{plan.source_line}</p>
         </section>
       )}
     </div>

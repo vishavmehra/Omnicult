@@ -11,7 +11,7 @@ import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { useRemakeRun, useStartSound, useVersion, type RemakeCapabilities, type RemakeOutput, type VersionSummary } from "./api";
-import { AiTag, CostConfirm, Notice, RunProgress, SELECT, SourceLine, mmss, usd } from "./parts";
+import { AiTag, CostConfirm, Notice, RunProgress, SELECT, mmss, usd } from "./parts";
 import { defaultVoiceLines } from "./plan";
 
 const SPEECH_LINE_ESTIMATE = 0.0012;
@@ -138,7 +138,7 @@ export function SoundPanel({
         {blocked && !speechOff && <Notice tone="info">{blocked}</Notice>}
         <CostConfirm demo={demo} estimate={estimate} what={`${chosen.length} speech ${chosen.length === 1 ? "call" : "calls"}${jingle ? " and a jingle" : ""}`} checked={confirmed} onChange={setConfirmed} />
         <Button type="submit" disabled={!canRun} className="w-full">
-          {working ? "Working…" : demo ? "Play the saved voice-over" : `Speak ${chosen.length} ${chosen.length === 1 ? "line" : "lines"}`}
+          {working ? "Working…" : demo ? "Play the voice-over" : `Speak ${chosen.length} ${chosen.length === 1 ? "line" : "lines"}`}
         </Button>
         {start.error && <ErrorState error={start.error} />}
       </form>
@@ -192,10 +192,6 @@ function SoundResult({ output }: { output: RemakeOutput }) {
     <section aria-label="Voice-over result" className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
         <h2 className="flex items-center gap-2 text-[17px] font-semibold text-ink">Voice-over <AiTag /></h2>
-        <SourceLine>
-          {s.source === "demo_fixture" ? "Saved demonstration output" : s.model} · voice {s.voice} · {s.language_code} · {formatDate(output.created_at)}
-          {s.source === "demo_fixture" ? "" : ` · ${usd(output.estimated_cost_usd)}`} · no native-speaker review
-        </SourceLine>
       </div>
 
       <div className="space-y-2 rounded-card border border-border bg-surface p-3.5">

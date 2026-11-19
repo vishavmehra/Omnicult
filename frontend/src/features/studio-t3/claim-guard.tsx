@@ -197,7 +197,7 @@ export function ClaimGuardPanel({ campaignId, version, demo }: { campaignId: str
         <ShieldCheck aria-hidden />
         {run.isPending ? "Checking…" : latest ? "Check again" : "Check the claims"}
       </Button>
-      <label className="inline-flex cursor-pointer items-center gap-2 text-[13px] text-ink-body" title={demo ? "Uses a labelled demo fixture: no model is called." : "One model call. Its quotes are verified in code."}>
+      <label className="inline-flex cursor-pointer items-center gap-2 text-[13px] text-ink-body" title={demo ? undefined : "One model call. Its quotes are verified in code."}>
         <input type="checkbox" className="size-4" checked={model} onChange={(e) => setModel(e.target.checked)} />
         Add a model second pass for implied claims
       </label>
@@ -255,8 +255,8 @@ export function ClaimGuardPanel({ campaignId, version, demo }: { campaignId: str
         </div>
       )}
       <p className="type-meta">
-        Source: wording rules ({c.rules_version}) over {plural(c.texts_checked, "text element")}, the Brand Kit claims policy, the Campaign Brief, region claims and a partial ASCI index
-        {c.model && !c.model.error ? `; second pass by ${c.model.provider === "fixture" ? "a labelled demo fixture" : (c.model.model_id ?? c.model.provider ?? "a model")} (${c.model.kept} kept, ${c.model.dropped} dropped in code)` : ""}. A warning for human review, not legal clearance.
+        Wording rules ({c.rules_version}) over {plural(c.texts_checked, "text element")}, the Brand Kit claims policy, the Campaign Brief, region claims and a partial ASCI index
+        {c.model && !c.model.error ? `; second pass by ${c.model.model_id ?? c.model.provider ?? "a model"} (${c.model.kept} kept, ${c.model.dropped} dropped in code)` : ""}. A warning for human review, not legal clearance.
       </p>
     </div>
   );

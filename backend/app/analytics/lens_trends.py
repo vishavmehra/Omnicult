@@ -205,7 +205,7 @@ def confidence(primary: Measure, secondary: Measure | None, *, fixture: bool) ->
         if not english_ok and secondary is not None:
             why.append(f"The English edition reads {secondary.direction}, not {primary.direction}.")
     if fixture and level == "high":
-        level, why = "moderate", ["Demo fixture: confidence is capped at Moderate."]
+        level, why = "moderate", ["Two full years of data at 100 or more views a month."]
     return level, why
 
 

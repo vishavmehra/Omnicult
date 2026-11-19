@@ -3,7 +3,7 @@
     "id": "omnicult-demo-brand-glossary-aamod",
     "version": 1,
     "kind": "demo_fixture",
-    "label": "Demonstration fixture: Brand Glossary of the fictional brand Aamod, made for the Omnicult demo."
+    "label": "Brand Glossary of the fictional brand Aamod."
   },
   "brand_id": "demo-brand-aamod",
   "review_status": "Drafted by the demo author. Spellings and language notes should be confirmed by native-speaker reviewers before any real use.",

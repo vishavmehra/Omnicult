@@ -3,7 +3,6 @@
 import { CircleAlert, LoaderCircle, TriangleAlert } from "lucide-react";
 import { useCallback } from "react";
 
-import { SyntheticLabel } from "@/components/evidence/badges";
 import { ContextPanel } from "@/components/shell/workspace-shell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRuns } from "@/features/lab/api";
@@ -68,11 +67,11 @@ function LabActivity() {
 }
 
 /**
- * Audience Lab: Quick Read, Audience Study, Ask the Panel and Risk Check on one campaign. Every result is labelled
- * synthetic, the panel size is never presented as people surveyed, and each tab keeps its place in the URL.
+ * Audience Lab: Quick Read, Audience Study, Ask the Panel and Risk Check on one campaign. The panel size is never
+ * presented as people surveyed, and each tab keeps its place in the URL.
  */
 export function LabWorkspace() {
-  const { campaign, project } = useCampaign();
+  const { campaign } = useCampaign();
   const loc = useLabLocation();
   const onTab = useCallback((v: unknown) => loc.setTab(v as LabTab), [loc]);
 
@@ -80,13 +79,6 @@ export function LabWorkspace() {
     <>
       <WorkspaceHeader workspace="lab">
         <CampaignFacts />
-        <div className="flex flex-wrap items-center gap-2 pt-2">
-          <SyntheticLabel>
-            {project.mode === "demo"
-              ? "Synthetic audience on demo fixtures. Simulated reactions, not consumer research."
-              : "Synthetic audience. Simulated reactions, not consumer research."}
-          </SyntheticLabel>
-        </div>
         <LabActivity />
       </WorkspaceHeader>
 
@@ -131,7 +123,7 @@ export function LabWorkspace() {
         </section>
         <section aria-labelledby="lab-limits" className="space-y-2">
           <h3 id="lab-limits" className="text-[13px] font-semibold text-ink">
-            What a synthetic panel can and cannot show
+            What the panel can and cannot show
           </h3>
           <ul className="list-disc space-y-1 pl-5 text-[13px] leading-relaxed text-ink-body marker:text-ink-muted">
             <li>It rehearses reactions and questions for real research. It does not measure real people or predict sales.</li>

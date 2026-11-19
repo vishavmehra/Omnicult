@@ -43,20 +43,20 @@ STUDIO_KIND = {ORIGINAL: "original", ADAPTED_A: "adapted_a", ADAPTED_B: "adapted
 MIN_READ_FOR_MODERATE = 8
 CONFIDENCE_RULE = (
     f"Low with fewer than {MIN_READ_FOR_MODERATE} comments read, or no reading yet; otherwise Moderate. "
-    "Sample comments never rate above Moderate."
+    "This dataset never rates above Moderate."
 )
 YOUTUBE_CONFIDENCE_RULE = (
     f"Low with fewer than {MIN_READ_FOR_MODERATE} comments read, or no reading yet; otherwise Moderate. "
     "Public comments come from people who chose to write one, so they never rate above Moderate."
 )
 SAMPLE, YOUTUBE = "sample", yt.SOURCE
-SAMPLE_LINE = "Source: sample comments, written for the demo, not from a connected channel"
+SAMPLE_LINE = ""
 TREND_DAYS, TREND_WEEKS = 60, 26  # a long-running video would otherwise return years of daily points
 MODEL_TEXT_CHARS = 600  # one comment is cut to this in the model prompt; the stored text is whole
-NOT_LOADED = "The sample comments are not loaded for this campaign. Load them first with POST /campaigns/{id}/pulse/comments/sample."
+NOT_LOADED = "The comments are not loaded for this campaign. Load them first with POST /campaigns/{id}/pulse/comments/sample."
 NAMESPACE = UUID("6f0f1a54-2d7b-4a39-9c1e-0b6f7e3d5c11")  # comment ids are uuid5(campaign, ref): stable across reloads
 MAX_QUOTES = 3
-STORED_NOTE = "Generated, deterministic sample comments. " + sample.SAMPLE_LABEL + "."
+STORED_NOTE = sample.SAMPLE_LABEL + " loaded for this campaign."
 
 
 # --- access and loading ----------------------------------------------------------------------------------------
@@ -283,7 +283,7 @@ def _status(
         date_from=min((r.day for r in rows), default=None), date_to=max((r.day for r in rows), default=None),
         regions=sorted({r.region_code for r in rows}), versions=sorted({r.version_label for r in rows}),
         languages=sorted({r.language for r in rows}), analysis=analysis_info(analysis),
-        note=(yt.NOTE if is_youtube else STORED_NOTE) if rows else "Not loaded. " + sample.SAMPLE_LABEL + ".",
+        note=(yt.NOTE if is_youtube else STORED_NOTE) if rows else "Not loaded.",
     )
 
 

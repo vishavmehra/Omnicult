@@ -137,7 +137,7 @@ export function VoiceForm({
           {options.sample_lines.length > 0 && (
             <Button type="button" variant="outline" size="sm" onClick={() => setLines(options.sample_lines.map((t) => fresh(t)))}>
               <Quote aria-hidden />
-              Use the saved sample lines
+              Use the suggested lines
             </Button>
           )}
         </div>

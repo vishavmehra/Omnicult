@@ -114,7 +114,6 @@ export function BrandKitView({ kit, campaignId }: { kit: BrandKit; campaignId: s
   // Hovering a colour lights the contrast pairs it belongs to.
   const [lit, setLit] = useState<string | null>(null);
   const colourName = new Map(d.colours.map((c) => [c.id, c.name]));
-  const fixture = kit.provenance.source === "demo_fixture";
   const empty = !kit.saved;
   const protectedRule = new Map(d.protected_term_rules.map((r) => [r.term, r.rule]));
 
@@ -134,7 +133,6 @@ export function BrandKitView({ kit, campaignId }: { kit: BrandKit; campaignId: s
         {d.category && <p className="text-[13.5px] text-ink-secondary">{d.category}</p>}
         {kit.description && <p className="max-w-[68ch] text-[14.5px] text-ink-body">{kit.description}</p>}
         {d.name_meaning && <p className="max-w-[68ch] text-[13px] text-ink-secondary">{d.name_meaning}</p>}
-        {(fixture || d.fictional) && <p className="text-[11.5px] text-ink-muted">Source: demonstration fixture{d.fictional ? ", fictional brand" : ""}</p>}
       </header>
 
       {empty && (

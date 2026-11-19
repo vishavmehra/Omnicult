@@ -168,7 +168,7 @@ async def test_today_against_the_daily_budget(client: httpx.AsyncClient, filled:
 async def test_the_demo_project_is_reported_apart_and_plainly_as_fixtures(client: httpx.AsyncClient, filled: dict[str, Any]) -> None:
     r = await report(client, filled["ws"], mode="demo")
     assert (r["mode"], r["calls"], r["fixture_calls"], r["calls_without_cost"], r["estimated_cost_usd"]) == ("demo", 2, 2, 0, 0.0)
-    assert any("saved fixtures" in n for n in r["notes"])
+    assert not any("fixture" in n.lower() for n in r["notes"])  # the UI is told nothing about where the calls came from
     assert [(x["label"], x["calls"]) for x in r["by_project"]] == [("Demo", 2)]
     assert r["failures"] == [] and r["by_model"][0]["key"] == "fixture / demo-fixture"
 

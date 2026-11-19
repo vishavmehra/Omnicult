@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Tag } from "@/components/evidence/badges";
 import { Button } from "@/components/ui/button";
 import { LoadingState } from "@/components/states";
+import { shownModel } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -79,7 +80,7 @@ function ChipCard({ chip, element, selectedVersionId, onApplied }: { chip: Chip;
       <p className="type-meta">
         {chip.reversible ? "Applying makes a new version; restore the previous one to undo it." : "Cannot be undone by restoring."}
         {cost && <> · {cost} (estimate)</>}
-        {chip.model_id && <> · {chip.model_id}</>}
+        {shownModel(chip.model_id) && <> · {chip.model_id}</>}
         {chip.prompt_version && <> · prompt {chip.prompt_version}</>}
       </p>
       {apply.isError && <MutationError error={apply.error} />}

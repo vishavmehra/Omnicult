@@ -24,11 +24,6 @@ export function AiTag({ children = "AI proposal" }: { children?: ReactNode }) {
   return <Tag className="border-dashed border-ink-secondary/50 bg-surface text-ink-secondary">{children}</Tag>;
 }
 
-/** The one quiet source line of a view. */
-export function SourceLine({ children }: { children: ReactNode }) {
-  return <p className="type-meta">{children}</p>;
-}
-
 /** A plain notice for a condition the person can read and act on. */
 export function Notice({ tone = "warning", children }: { tone?: "warning" | "info"; children: ReactNode }) {
   return (

@@ -143,7 +143,7 @@ export function BriefGlance({ completeness, content, regions }: { completeness?:
             <CountUp value={budget.total} format={(n) => formatMoney(budget.currency, Math.round(n))} />
           </p>
           <BudgetBar budget={budget} name={name} active={active} onHover={setHover} onPick={(code) => setRegion((r) => (r === code ? null : code))} />
-          {(budget.sample || budget.note) && <p className="mt-2 text-[12px] text-ink-muted">{budget.note ?? "Source: sample figures"}</p>}
+          {budget.note && <p className="mt-2 text-[12px] text-ink-muted">{budget.note}</p>}
         </section>
       )}
 

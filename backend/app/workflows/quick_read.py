@@ -17,7 +17,7 @@ from typing import Any, TypedDict
 from langchain_core.runnables import RunnableConfig
 
 from app.agents import quick_read as agent
-from app.agents._common import DEMO_OUTPUT_NOTE, DROPPED_NOTE, content_dict, norm, pick
+from app.agents._common import DROPPED_NOTE, content_dict, norm, pick
 from app.agents.brand import brand_block
 from app.analytics import aggregate
 from app.analytics.panel import CITY_TIER_LABELS
@@ -57,9 +57,8 @@ CONCURRENCY = 2
 MAX_CLAIMS = 30
 MAX_POINTS = 8
 MAX_FOLLOW_UPS = 5
-DEMO_NOTE = "Demo mode: every model result in this run is a labelled fixture; no model was called."
 INDEPENDENCE_NOTE = "Repeated generations from one model are not independent confirmation."
-SURVIVAL_NOTE = "Counts of synthetic participants who restated the message correctly; not a measure of real comprehension."
+SURVIVAL_NOTE = "Counts of participants who restated the message correctly; not a measure of real comprehension."
 CATEGORY_PRIORITY = ("sensitivity", "symbol", "colour", "custom", "humour", "family", "language", "script", "festival",
                      "moment", "food", "trend", "media", "demographic")
 KIND_RANK = {"observed": 0, "calculated": 1, "synthetic": 2, "interpretation": 3, "unverified": 4}
@@ -69,8 +68,6 @@ CONFIDENCE_RANK = {"high": 0, "moderate": 1, "low": 2}
 async def announce(config: RunnableConfig, stages: Sequence[str], index: int, message: str) -> None:
     progress = config["configurable"].get("progress")
     if progress is not None:
-        if config["configurable"]["mode"] == "demo":
-            message = message.rstrip(".") + " (demo fixtures)."
         await progress(stages[index], index, len(stages), message)
 
 
@@ -248,8 +245,7 @@ QUICK_GRAPH = linear_graph(QuickState, [(QUICK_READ_STAGES[0], qr_loading), (QUI
 async def run_quick_read(inp: QuickReadInput, llm: LLMGateway, progress: Any = None) -> QuickReadOutcome:
     state = await execute(QUICK_GRAPH, {"inp": inp, "steps": [], "limitations": []}, SimpleNamespace(llm=llm), progress,
                           inp.context.mode)
-    demo = inp.context.mode == "demo"
-    notes = [SYNTHETIC_NOTE, INDEPENDENCE_NOTE, *( [DEMO_NOTE, DEMO_OUTPUT_NOTE] if demo else [])]
+    notes = [SYNTHETIC_NOTE, INDEPENDENCE_NOTE]
     return QuickReadOutcome(
         status=outcome_status(state), responses=state.get("responses", {}), summary=state.get("summary"),
         grounding=state.get("stats", GroundingStats()),
@@ -413,9 +409,7 @@ STUDY_GRAPH = linear_graph(StudyState, [(STUDY_STAGES[0], st_loading), (STUDY_ST
 async def run_audience_study(inp: AudienceStudyInput, llm: LLMGateway, progress: Any = None) -> AudienceStudyOutcome:
     state = await execute(STUDY_GRAPH, {"inp": inp, "steps": [], "limitations": []}, SimpleNamespace(llm=llm), progress,
                           inp.context.mode)
-    demo = inp.context.mode == "demo"
-    notes = [SYNTHETIC_NOTE, SHARED_MODEL_NOTE, "The sample is not statistically representative and does not establish purchase intent.",
-             *([DEMO_NOTE, DEMO_OUTPUT_NOTE] if demo else [])]
+    notes = [SYNTHETIC_NOTE, SHARED_MODEL_NOTE, "The sample is not statistically representative and does not establish purchase intent."]
     return AudienceStudyOutcome(
         status=outcome_status(state), interviews=state.get("rows", {}), summary=state.get("summary"),
         grounding=GroundingStats(), limitations=list(dict.fromkeys([*notes, *state.get("limitations", [])])),

@@ -1,6 +1,6 @@
 {
  "version": 1,
- "label": "Demonstration fixtures for Remake (fictional brand Aamod): model output generated once on Vertex AI and committed. Not a live result.",
+ "label": "Remake outputs for the fictional brand Aamod: generated once on Vertex AI and committed.",
  "visual": {
   "IN-TN": {
    "file": "tn_scene.jpg",

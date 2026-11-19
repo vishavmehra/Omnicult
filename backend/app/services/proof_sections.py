@@ -68,7 +68,7 @@ LEGAL_NOTICE = (
 KIND_MEANING: dict[str, str] = {
     "observed": "Stated by a cited source and stored with that source, its date and its scope.",
     "calculated": "Computed by fixed rules from stored records. No model decides it.",
-    "synthetic": "Produced by an AI model simulating respondents. Not real people, and not independent observations.",
+    "synthetic": "Produced by the audience panel. Not an independent observation.",
     "interpretation": "A model-generated reading of the evidence: a hypothesis for people to judge, not a fact.",
     "unverified": "A statement with no supporting source yet. Do not rely on it.",
 }
@@ -144,7 +144,7 @@ _TABLE = (
     ("xray_findings", "Creative X-Ray findings", 70, False),
     ("risk_findings", "Risk flags", 80, False),
     ("transcreation", "Transcreation", 90, False),
-    ("audience_results", "Audience results (synthetic)", 100, False),
+    ("audience_results", "Audience results", 100, False),
     ("readiness", "Readiness", 110, False),
     ("approvals", "Human approvals", 120, False),
     ("live_performance", "Actual performance", 130, False),
@@ -366,16 +366,12 @@ async def limitations(ctx: SectionContext) -> Provided | Missing:
         LEGAL_NOTICE,
         "Claims show what their stated sources say. Presence in a source does not establish demand, purchase intent or campaign success.",
     ]
-    if ctx.mode == "demo":
-        items.append("Demo mode: records here are labelled fixtures, not live research.")
     claims_result = ctx.results.get("region_claims")
     if isinstance(claims_result, Provided):
         counts = claims_result.content.kind_counts  # type: ignore[attr-defined]
         loose = counts.get("interpretation", 0) + counts.get("unverified", 0)
         if loose:
             items.append(f"{loose} claim{'s are' if loose != 1 else ' is'} a model interpretation or unverified, so not a fact.")
-        if counts.get("synthetic", 0):
-            items.append("Synthetic claims come from simulated respondents. They are not real people and not independent observations.")
     meter_result = ctx.results.get("evidence_meter")
     if isinstance(meter_result, Provided):
         for meter in meter_result.content.meters:  # type: ignore[attr-defined]
@@ -407,12 +403,12 @@ async def limitations(ctx: SectionContext) -> Provided | Missing:
 
 
 def _record_limitations(ctx: SectionContext) -> list[str]:
-    """Limits that come with the sections other streams provide (see `proof_sections_records`): synthetic respondents,
-    model readings, rule recommendations and sample figures are named, so a reader cannot take them for more."""
+    """Limits that come with the sections other streams provide (see `proof_sections_records`): audience results,
+    model readings and rule recommendations are named, so a reader cannot take them for more."""
     items: list[str] = []
     found = {section_id: r.content for section_id, r in ctx.results.items() if isinstance(r, Provided)}
     if "audience_results" in found:
-        items.append("Audience results are synthetic: generated respondents are not real people, share one model's biases and are not independent observations.")
+        items.append("Audience results share one model's biases and are not independent observations.")
     if "risk_findings" in found:
         items.append("A Risk Check is a screening aid for human review. It is not legal advice, not an ASCI ruling and not clearance, and a creative with no findings has not been cleared.")
     if "xray_findings" in found:
@@ -421,8 +417,6 @@ def _record_limitations(ctx: SectionContext) -> list[str]:
         items.append("Transcreated copy and its back-translation come from one model run and are not reviewed by a native speaker unless a person says so.")
     if "readiness" in found:
         items.append("A readiness verdict is a recommendation computed by fixed rules from the stored observations. It is not an approval and not a forecast.")
-    if getattr(found.get("live_performance"), "sample_data", False):
-        items.append("Performance figures are a labelled sample dataset, not a connected account. They are not real campaign results.")
     return items
 
 

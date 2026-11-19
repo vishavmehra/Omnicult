@@ -16,7 +16,7 @@ from uuid import UUID
 from langchain_core.runnables import RunnableConfig
 
 from app.agents import focus_group as agent
-from app.agents._common import DEMO_OUTPUT_NOTE, DROPPED_NOTE, content_dict, norm, pick
+from app.agents._common import DROPPED_NOTE, content_dict, norm, pick
 from app.analytics.focus_group import disagreement_probe, speaking_order
 from app.analytics.scoring import SYNTHETIC_NOTE
 from app.llm.gateway import LLMError, LLMGateway
@@ -25,7 +25,7 @@ from app.schemas.common import StepTrace
 from app.schemas.runs import RunError
 from app.workflows._common import execute, linear_graph, llm_error, local_step, merge_steps, outcome_status
 from app.workflows.lab_t3_types import DraftTurn, FocusGroupInput, FocusGroupOutcome, FocusIO, FocusSpeaker
-from app.workflows.quick_read import DEMO_NOTE, INDEPENDENCE_NOTE, announce, claims_digest
+from app.workflows.quick_read import INDEPENDENCE_NOTE, announce, claims_digest
 
 STAGES = ("loading_context", "moderated_discussion", "analysing_themes")
 WINDOW = 24  # turns of transcript the model sees
@@ -168,8 +168,7 @@ async def discussing(state: State, config: RunnableConfig) -> dict:
         probe = disagreement_probe(s.turns, s.rounds - 1) if s.rounds else None
         ok = await s.play_round("moderator", question, f"{probe} {question}" if probe else question)
         if ok and progress is not None:
-            demo = " (demo fixtures)" if inp.context.mode == "demo" else ""
-            await progress(STAGES[1], 1, len(STAGES), f"Question {k + 1} of {len(inp.guide)} discussed{demo}.")
+            await progress(STAGES[1], 1, len(STAGES), f"Question {k + 1} of {len(inp.guide)} discussed.")
         ok = ok and await s.drain()
     return _discussion_result(state, s, started)
 
@@ -201,9 +200,7 @@ GRAPH = linear_graph(State, [(STAGES[0], loading), (STAGES[1], discussing), (STA
 async def run_focus_group(inp: FocusGroupInput, llm: LLMGateway, io: FocusIO, progress: Any = None) -> FocusGroupOutcome:
     state = await execute(GRAPH, {"inp": inp, "steps": [], "limitations": []}, SimpleNamespace(llm=llm, io=io), progress, inp.context.mode)
     session: _Session = state["session"]
-    demo = inp.context.mode == "demo"
-    notes = [SYNTHETIC_NOTE, INDEPENDENCE_NOTE, "Replies and stances are the model's labels; counts are made by code from the saved transcript.",
-             *([DEMO_NOTE, DEMO_OUTPUT_NOTE] if demo else [])]
+    notes = [SYNTHETIC_NOTE, INDEPENDENCE_NOTE, "Replies and stances are the model's labels; counts are made by code from the saved transcript."]
     return FocusGroupOutcome(
         status=outcome_status(state), turns=session.turns, limitations=list(dict.fromkeys([*notes, *state.get("limitations", [])])),
         steps=state.get("steps", []), error=state.get("error"))

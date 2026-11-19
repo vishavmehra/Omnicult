@@ -3,7 +3,7 @@
 import "@xyflow/react/dist/style.css";
 
 import { Background, Controls, Handle, MarkerType, Position, ReactFlow, ReactFlowProvider, useReactFlow, type Edge, type Node, type NodeProps } from "@xyflow/react";
-import { ArrowRight, Bot, FlaskConical, type LucideIcon } from "lucide-react";
+import { ArrowRight, type LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type KeyboardEvent, type ReactNode } from "react";
 
@@ -47,9 +47,6 @@ function DotNode({ data, selected }: NodeProps<FlowNode>) {
         {Icon ? <Icon aria-hidden className="size-5" /> : <span className="size-3 rounded-full" style={{ background: color }} />}
       </span>
       {data.showLabel && <span className="line-clamp-2 text-[11.5px] leading-tight font-medium text-ink">{node.label}</span>}
-      {(node.isSynthetic || node.isDemo) && (
-        <span className="text-[11px] font-semibold text-ink-secondary">{[node.isSynthetic && "Synthetic", node.isDemo && "Demo"].filter(Boolean).join(" · ")}</span>
-      )}
       <Handle type="source" position={Position.Bottom} style={{ opacity: 0, width: 1, height: 1, border: 0 }} />
     </div>
   );
@@ -207,8 +204,6 @@ function GraphCanvasInner({ nodes, edges, legend, isLoading, error, onRetry, tru
   const shown = visible.find((n) => n.id === (selectedId ?? hoveredId));
   const shownEdges = shown ? visibleEdges.filter((e) => e.source === shown.id || e.target === shown.id) : [];
   const live = shown ? `${shown.label}, ${humanize(shown.kind)}, ${shownEdges.length} connection${shownEdges.length === 1 ? "" : "s"}` : "";
-  const anySynthetic = nodes.some((n) => n.isSynthetic);
-  const anyDemo = nodes.some((n) => n.isDemo);
 
   if (isLoading) return <LoadingState label="Loading the graph…" />;
   if (error) return <ErrorState error={error} onRetry={onRetry} />;
@@ -270,22 +265,6 @@ function GraphCanvasInner({ nodes, edges, legend, isLoading, error, onRetry, tru
             <option value="none">No labels</option>
           </select>
         </label>
-        {(anySynthetic || anyDemo) && (
-          <div className="space-y-1.5 border-t border-border pt-3 text-[12.5px] text-ink-secondary">
-            {anySynthetic && (
-              <p className="flex items-start gap-1.5">
-                <Bot aria-hidden className="mt-0.5 size-3.5 shrink-0" />
-                Synthetic nodes are AI-generated, not real people.
-              </p>
-            )}
-            {anyDemo && (
-              <p className="flex items-start gap-1.5">
-                <FlaskConical aria-hidden className="mt-0.5 size-3.5 shrink-0" />
-                Demo data: labeled fixtures, not live research.
-              </p>
-            )}
-          </div>
-        )}
       </Card>
 
       {/* Canvas */}
@@ -356,9 +335,6 @@ function GraphCanvasInner({ nodes, edges, legend, isLoading, error, onRetry, tru
                 {legend.find((l) => l.kind === shown.kind)?.label ?? humanize(shown.kind)}
               </p>
               <p className="font-serif text-[20px] leading-tight font-semibold text-ink">{shown.label}</p>
-              {(shown.isSynthetic || shown.isDemo) && (
-                <p className="text-[12.5px] text-ink-secondary">{[shown.isSynthetic && "Synthetic (AI-generated)", shown.isDemo && "Demo data"].filter(Boolean).join(" · ")}</p>
-              )}
             </div>
             {shown.region && <p className="text-[13.5px] text-ink-body">Region: {shown.region}</p>}
             {shown.facts && Object.keys(shown.facts).length > 0 && (

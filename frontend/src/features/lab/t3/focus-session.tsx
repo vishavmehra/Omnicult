@@ -75,7 +75,6 @@ export function FocusSession({ campaignId, result, maxInterjections, onNewRun }:
   const active = isActive(result.status);
   return (
     <div className="space-y-5">
-      <p className="type-meta">Simulated panel: the participants are synthetic.</p>
       <RunBanner run={result} label="Focus Group" onNewRun={onNewRun} />
 
       <Disclosure summary={`${pluralise(result.speakers.length, "speaker")} and the guide`}>

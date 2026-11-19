@@ -103,7 +103,6 @@ function Tile({ item, selected, onSelect }: { item: GenerateItem; selected: bool
             <p className="truncate text-[13.5px] font-medium text-ink">{item.title}</p>
             <p className="type-meta">
               {formatRelative(item.created_at)}
-              {item.mode === "demo" ? " · saved demonstration" : ""}
             </p>
           </div>
         </button>

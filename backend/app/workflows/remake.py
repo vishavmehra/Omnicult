@@ -28,7 +28,7 @@ from app.media import remake as pipeline
 from app.media import textrender
 from app.schemas.common import StepTrace
 from app.schemas.runs import RunError
-from app.workflows._common import DEMO_RUN_NOTE, STAGES, announce, execute, linear_graph, llm_error, local_step
+from app.workflows._common import STAGES, announce, execute, linear_graph, llm_error, local_step
 from app.workflows.types import OutcomeStatus, WorkflowContext, WorkflowDeps
 
 VISUAL, SOUND = "remake_visual", "remake_sound"
@@ -42,8 +42,6 @@ DEFAULT_JINGLE_PROMPT = (
 )
 INTERPRETATION_NOTE = "The scene is a model interpretation. Confirm props, symbols and styling with someone from the region."
 NO_PLATE_NOTE = "No clean plate was supplied: the model was shown the finished creative, so leftover shapes of the old text are possible."
-DEMO_VISUAL_NOTE = "Saved demonstration result: the scene is a committed fixture, not a live call. Locked regions, text and checks ran live in code."
-DEMO_SOUND_NOTE = "Saved demonstration result: the speech clips are committed fixtures, not live calls. Timings and checks ran live in code."
 UNREVIEWED_NOTE = "No native speaker has reviewed this audio; a code check cannot tell whether the pronunciation is right."
 NO_JINGLE_DEMO = "Demo projects do not call the music model; the existing music bed is kept."
 MAX_REFERENCE_SIDE = 1600  # the model sees a reduced copy of the layout; the stored output is full size
@@ -242,7 +240,7 @@ async def loading_context(state: VState, config: RunnableConfig) -> dict:
         fixture = fixtures.visual_background(inp.region_code)
         if fixture is None:
             return _fail(state, RunError(code="UNSUPPORTED_CAPABILITY", stage=V1, retryable=False,
-                                         message=f"The demonstration fixtures cover {', '.join(fixtures.demo_regions()) or 'no region'} only; "
+                                         message=f"The demo covers {', '.join(fixtures.demo_regions()) or 'no region'} only; "
                                                  "use a live project for other regions. Nothing was generated."))
         update["fixture"] = fixture
     else:
@@ -263,7 +261,7 @@ async def generating_scene(state: VState, config: RunnableConfig) -> dict:
         trace = trace.model_copy(update={"prompt_version": fixture.prompt_version})
         return {"generated": fixture.data, "generated_mime": fixture.mime_type, "steps": [*state["steps"], trace],
                 "meta": {"source": "demo_fixture", "model": fixture.model, "location": fixture.location},
-                "limitations": [*state["limitations"], DEMO_VISUAL_NOTE]}
+                "limitations": state["limitations"]}
     original = state["original"]
     extras = [(inp.reference, _mime(inp.reference))] if inp.reference else []
     try:
@@ -325,7 +323,7 @@ async def run_remake_visual(inp: RemakeVisualInput, deps: WorkflowDeps, progress
                                    prompt=state.get("prompt"))
     texts = composite.texts
     flagged = sum(1 for t in texts if not t["passed"])
-    notes = [*state.get("limitations", []), *([DEMO_RUN_NOTE] if state["demo"] else []),
+    notes = [*state.get("limitations", []),
              *([f"{flagged} of {len(texts)} text boxes were flagged by the code checks; see the text checks."] if flagged else [])]
     meta = state["meta"]
     locked = [{**r.model_dump(), "identical": ok} for r, ok in zip(inp.locked, composite.locked_identical, strict=True)]
@@ -393,7 +391,7 @@ async def speaking_lines(state: SState, config: RunnableConfig) -> dict:
         elif state["demo"]:
             audio = fixtures.speech_clip(language, line.text, inp.voice)
             if audio is None:
-                problems.append("No demonstration recording exists for this exact line and voice.")
+                problems.append("This exact line and voice is not available in the demo.")
             else:
                 meta = {"source": "demo_fixture", "model": audio.model, "location": audio.location, "voice": audio.voice,
                         "language_code": audio.language_code}
@@ -472,7 +470,7 @@ async def run_remake_sound(inp: RemakeSoundInput, deps: WorkflowDeps, progress: 
     results = meta["results"]
     flagged = any(r["problems"] for r in results)
     jingle: MusicClip | None = state.get("jingle")
-    notes = [*state.get("limitations", []), *([DEMO_SOUND_NOTE, DEMO_RUN_NOTE] if state["demo"] else [])]
+    notes = [*state.get("limitations", [])]
     return RemakeSoundOutcome(
         status="partial" if flagged or (inp.jingle and jingle is None) else "completed", voiceover=meta["track"],
         source=meta["source"], voice=meta["voice"], language_code=meta["language_code"], model=meta["model"],

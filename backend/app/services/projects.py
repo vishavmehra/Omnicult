@@ -83,7 +83,7 @@ BRAND_MEMORY_FIELDS = (
     "preferred_terms", "prohibited_terms", "protected_terms", "approved_examples", "constraints",
 )
 DEMO_BRAND_LOCKED = (
-    "The demo brand kit is fixed so that the demo fixtures stay truthful. Create a live project to use your own brand."
+    "The demo brand kit is fixed. Create a live project to use your own brand."
 )
 
 

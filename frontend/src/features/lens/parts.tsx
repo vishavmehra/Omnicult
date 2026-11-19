@@ -36,7 +36,7 @@ export function StrengthTag({ strength, className }: { strength: Strength; class
 }
 
 /** What a view rests on: each source family, its newest dates and its limits. Every Lens view ends with this. */
-export function SourcesPanel({ sources, limitations, modeLabel }: { sources: LensSourceSummary[]; limitations: string[]; modeLabel?: string }) {
+export function SourcesPanel({ sources, limitations }: { sources: LensSourceSummary[]; limitations: string[]; modeLabel?: string }) {
   return (
     <section aria-labelledby="lens-sources" className="space-y-3">
       <h2 id="lens-sources" className="text-[15px] font-semibold text-ink">
@@ -73,7 +73,6 @@ export function SourcesPanel({ sources, limitations, modeLabel }: { sources: Len
         </ul>
       )}
       <LimitationList items={limitations} />
-      {modeLabel && <p className="type-meta max-w-[80ch]">Source: {modeLabel}</p>}
     </section>
   );
 }

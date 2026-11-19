@@ -54,7 +54,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 export const metadata: Metadata = {
   title: { default: "Omnicult", template: "%s · Omnicult" },
   description:
-    "Creative intelligence for regional campaigns: understand the region, adapt the creative, test it with a labelled synthetic audience, decide by visible rules, and keep the evidence.",
+    "Creative intelligence for regional campaigns: understand the region, adapt the creative, rehearse it with an audience panel, decide by visible rules, and keep the evidence.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

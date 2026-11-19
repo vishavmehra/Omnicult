@@ -164,7 +164,7 @@ PACK = {
     },
     "never_sampled": ["religion", "caste", "health", "sexual orientation", "political opinion"],
     "notes": (
-        "Synthetic panels may vary by state, language, city tier and age band (decision M-13). "
+        "Panels may vary by state, language, city tier and age band (decision M-13). "
         "Protected traits are never sampled. Reference data only: facts about a region are claims with sources."
     ),
 }

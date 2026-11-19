@@ -41,7 +41,6 @@ from app.schemas.xray import (
     normalise,
 )
 from app.workflows._common import (
-    DEMO_RUN_NOTE,
     DEMO_UPLOADS_MESSAGE,
     NO_VISION_MESSAGE,
     execute,
@@ -67,7 +66,7 @@ PROMPT_TRANSCRIPT_CHARS = 12_000  # what the model is shown of a transcript or o
 PROMPT_NOTES_CHARS = 4_000
 NO_TRANSCRIBE = "No transcription capability is configured on this server, and no SRT or VTT sidecar was uploaded. The transcript is unavailable; nothing was invented."
 INTERPRETATION_NOTE = "A model's cultural reading. It is not an observed fact; confirm it with people from the region."
-DEMO_FIXTURE_NOTE = "Demo fixtures do not cover Creative X-Ray; the scenes below are keyframe timings only."
+DEMO_FIXTURE_NOTE = "Scene readings are not available for this creative; the scenes below are keyframe timings only."
 RESOLUTION = {  # the MediaError -> RunError mapping
     MediaToolMissing: ("PROVIDER_NOT_CONFIGURED", False),
     ValidationFailed: ("RUN_FAILED", False),
@@ -318,8 +317,6 @@ def build_scenes(
 async def _announce(config: RunnableConfig, index: int, message: str) -> None:
     progress = config["configurable"].get("progress")
     if progress is not None:
-        if config["configurable"]["mode"] == "demo":
-            message = message.rstrip(".") + " (demo fixtures)."
         await progress(STAGES[index], index, len(STAGES), message)
 
 
@@ -564,7 +561,6 @@ async def run_creative_xray(inp: XRayInput, deps: WorkflowDeps, progress: Progre
     prepared: PreparedMedia | None = state.get("prepared")
     observations = state.get("observations", {})
     unavailable = VisionStatus(status="not_requested", provider=None, model_id=None, message=None)
-    demo = [DEMO_RUN_NOTE] if inp.context.mode == "demo" else []
     return XRayOutcome(
         status=outcome_status(state), probe=state.get("probe"),
         transcribe=state.get("transcribe") or TranscribeStatus(status="not_applicable", provider=None, model_id=None, message=None),
@@ -573,5 +569,5 @@ async def run_creative_xray(inp: XRayInput, deps: WorkflowDeps, progress: Progre
                 for f in (prepared.frames if prepared else [])],
         transcript=state.get("transcript", []), sidecar_notes=prepared.sidecar_notes if prepared else None,
         scenes=state.get("scenes", []), dropped=state.get("dropped", {}),
-        limitations=list(dict.fromkeys([*demo, *state.get("limitations", [])])), steps=state.get("steps", []), error=state.get("error"),
+        limitations=list(dict.fromkeys(state.get("limitations", []))), steps=state.get("steps", []), error=state.get("error"),
     )

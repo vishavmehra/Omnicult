@@ -73,7 +73,7 @@ async def test_a_demo_clip_needs_no_confirmation_no_provider_and_is_built_from_t
     assert (await content(client, clip["video_url"])).content == (FIXTURES / "remake" / saved["file"]).read_bytes()
     assert [r["element_id"] for r in clip["kept_regions"]] == ["mh-kv-logo", "mh-kv-packshot", "mh-kv-tagline"]
     assert all(c["passed"] for c in clip["checks"]) and clip["start_frame_asset_id"]
-    assert any("Saved demonstration result" in n for n in out["limitations"]) and any("cannot guarantee" in n for n in out["limitations"])
+    assert not any(w in n.lower() for n in out["limitations"] for w in ("fixture", "demonstration")) and any("cannot guarantee" in n for n in out["limitations"])
     frame = (await content(client, clip["start_frame_url"])).content
     assert frame[:8] == b"\x89PNG\r\n\x1a\n"
 
@@ -84,7 +84,7 @@ async def test_the_demo_preview_shows_the_saved_prompt_and_a_zero_cost(client: h
     assert plan["mode"] == "demo" and plan["can_run"] and plan["estimated_cost_usd"] == 0.0 and plan["model"] is None
     assert plan["price_per_second_usd"] is None and plan["prompt"] == remake_demo.manifest()["video"]["IN-TN"]["prompt"]
     assert (plan["start_frame"]["source"], plan["start_frame"]["width"], plan["start_frame"]["height"]) == ("demo_fixture", 720, 1280)
-    assert plan["start_frame"]["preview_jpeg_base64"] and any("Saved demonstration clip" in n for n in plan["notes"])
+    assert plan["start_frame"]["preview_jpeg_base64"] and not any(w in n.lower() for n in plan["notes"] for w in ("fixture", "demonstration"))
     other = (await client.post(f"{API}/campaigns/{world.campaign}/remakes/video/preview", json={"region_code": "IN-KL", "language": "ml"})).json()
     assert not other["can_run"] and "IN-TN" in other["blocked_reason"]
     refused = await start_video(client, world, {"region_code": "IN-KL", "language": "ml"})

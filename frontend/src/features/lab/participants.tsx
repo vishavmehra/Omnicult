@@ -100,7 +100,7 @@ export function QuickReadParticipants({ participants, claims, onAsk }: { partici
   }));
   return (
     <div className="space-y-4">
-      <PanelGrid faces={faces} onAsk={onAsk} ariaLabel="The synthetic panel" />
+      <PanelGrid faces={faces} onAsk={onAsk} ariaLabel="The panel" />
       <ul className="ledger-rules">
         {rows.map((p) => {
           const r = p.response;
@@ -165,7 +165,7 @@ export function StudyParticipants({ participants, onAsk }: { participants: Study
   });
   return (
     <div className="space-y-4">
-      <PanelGrid faces={faces} onAsk={onAsk} ariaLabel="The synthetic panel" />
+      <PanelGrid faces={faces} onAsk={onAsk} ariaLabel="The panel" />
       <ul className="ledger-rules">
         {rows.map((p) => {
           const iv = p.interview;

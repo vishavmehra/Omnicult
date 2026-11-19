@@ -54,7 +54,7 @@ MAX_SCENES = 4
 FRAME_NOTES = {
     "remake_scene": "The generated scene of the Remake: Visuals result in this version, with the locked regions restored from the original. No text.",
     "asset": "The image you chose, used as it is.",
-    "demo_fixture": "The saved demonstration scene with the locked regions of the key visual restored. No text.",
+    "demo_fixture": "The scene of the key visual with the locked regions restored. No text.",
     "none": "No remade key visual exists in this version and no image was chosen: the clip is made from the prompt alone.",
 }
 
@@ -158,10 +158,10 @@ async def plan(s: AsyncSession, user_id: UUID, campaign_id: UUID, body: r.Remake
         scene_element = remade[0] if remade else first_scene
         p.locked = regions_around(source.elements, scene_element, locks)[0] if scene_element else []
         if body.region_code not in remake_demo.demo_video_regions() and p.blocked is None:
-            p.blocked, p.blocked_field = (f"The demonstration clip covers {', '.join(remake_demo.demo_video_regions()) or 'no region'} only. "
+            p.blocked, p.blocked_field = (f"The demo covers {', '.join(remake_demo.demo_video_regions()) or 'no region'} only. "
                                           "Use a live project for other regions."), "region_code"
         if body.start_asset_id is not None:
-            p.notes.append("Demo projects always start from the saved key visual; the image you chose is not used.")
+            p.notes.append("Demo projects always start from the key visual; the image you chose is not used.")
     elif body.start_asset_id is not None:
         p.start = await _image_asset(s, user_id, project, body.start_asset_id, "start_asset_id")
         p.start_source = "asset"
@@ -232,7 +232,6 @@ async def preview(user_id: UUID, campaign_id: UUID, body: r.RemakeVideoRequest) 
     video_spec = price_for(p.model)[0] if p.model else None
     if demo and (saved := remake_demo.video_clip(p.region.code)):
         p.prompt = saved.prompt  # the saved clip was made from this prompt; the project's own would not match what plays
-        p.notes.append("Saved demonstration clip: it was generated once on Vertex AI from the start frame and this prompt. Nothing is called.")
     return r.RemakeVideoPreview(
         mode=p.project.mode, can_run=problem is None, blocked_reason=problem, source_version_id=p.source.id,  # type: ignore[arg-type]
         region_code=p.region.code, language=p.language.code,
@@ -345,7 +344,7 @@ async def persist(s: AsyncSession, run: m.AgentRun, outcome: RemakeVideoOutcome,
         refused = v.Rejection(code="LOCKED", element_ids=sorted(targets),
                               message=f"Locked element(s) cannot be changed: {', '.join(sorted(targets))}. Unlock them first.")
         params = {"run_id": str(run.id), "kind": "video"}
-    reason = (f"Made a {outcome.seconds} s clip for {d['region_name']} with {outcome.model or 'the saved demonstration clip'}: "
+    reason = (f"Made a {outcome.seconds} s clip for {d['region_name']}{f' with {outcome.model}' if outcome.model else ''}: "
               + ("the start frame is the regional key visual without its text" if outcome.start_frame else "no start frame, from the prompt alone")
               + ("; the voice-over is joined." if outcome.joined else "; the clip has no audio."))
     op, node = await record_operation(

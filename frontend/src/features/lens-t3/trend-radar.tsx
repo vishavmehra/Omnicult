@@ -301,7 +301,6 @@ export function TrendRadarView({ campaignId }: { campaignId: string }) {
           <p className="type-meta">Method {data.method.version}.</p>
         </div>
       </details>
-      <p className="type-meta">{data.source_line}</p>
     </div>
   );
 }

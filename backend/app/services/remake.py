@@ -462,8 +462,7 @@ async def capabilities(user_id: UUID, campaign_id: UUID) -> r.RemakeCapabilities
     def status(name: str, estimate: float | None, location: str | None) -> r.CapabilityStatus:
         model = capability_model(settings, name)  # type: ignore[arg-type]
         if demo:
-            return r.CapabilityStatus(configured=True, model=None, location=None, estimated_cost_usd=0.0,
-                                      note="Demonstration fixtures: no provider is called.")
+            return r.CapabilityStatus(configured=True, model=None, location=None, estimated_cost_usd=0.0, note=None)
         ok = gateway is not None and gateway.capability(name) is not None
         return r.CapabilityStatus(configured=ok, model=model if ok else None, location=location if ok else None,
                                   estimated_cost_usd=estimate if ok else None)

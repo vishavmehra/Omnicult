@@ -16,7 +16,7 @@ from uuid import NAMESPACE_URL, UUID, uuid5
 from langchain_core.runnables import RunnableConfig
 
 from app.agents import buzz as agent
-from app.agents._common import DEMO_OUTPUT_NOTE, DROPPED_NOTE, content_dict, norm
+from app.agents._common import DROPPED_NOTE, content_dict, norm
 from app.analytics import buzz as stats
 from app.analytics.lab_text import wording_overlap
 from app.analytics.scoring import SYNTHETIC_NOTE
@@ -26,7 +26,7 @@ from app.schemas.runs import RunError
 from app.workflows._common import execute, linear_graph, llm_error, local_step, merge_steps, outcome_status
 from app.workflows.audience_types import PanelMember
 from app.workflows.lab_t3_types import BuzzInput, BuzzIO, BuzzOutcome, DraftAct
-from app.workflows.quick_read import DEMO_NOTE, INDEPENDENCE_NOTE, announce
+from app.workflows.quick_read import INDEPENDENCE_NOTE, announce
 
 STAGES = ("loading_context", "simulating_rounds", "tallying_spread")
 BATCH = 10
@@ -182,8 +182,7 @@ async def simulating(state: State, config: RunnableConfig) -> dict:
             acts += round_acts
         rounds_run = round_index
         if progress is not None:
-            demo = " (demo fixtures)" if inp.context.mode == "demo" else ""
-            await progress(STAGES[1], 1, len(STAGES), f"Round {round_index} of {inp.rounds}: {len(round_acts)} accounts acted{demo}.")
+            await progress(STAGES[1], 1, len(STAGES), f"Round {round_index} of {inp.rounds}: {len(round_acts)} accounts acted.")
         if failure is not None and not round_acts:
             ended = "stopped_early"
             break
@@ -223,8 +222,7 @@ GRAPH = linear_graph(State, [(STAGES[0], loading), (STAGES[1], simulating), (STA
 
 async def run_buzz(inp: BuzzInput, llm: LLMGateway, io: BuzzIO, progress: Any = None) -> BuzzOutcome:
     state = await execute(GRAPH, {"inp": inp, "steps": [], "limitations": []}, SimpleNamespace(llm=llm, io=io), progress, inp.context.mode)
-    demo = inp.context.mode == "demo"
-    notes = [SYNTHETIC_NOTE, INDEPENDENCE_NOTE, OPEN_NOTE, *([DEMO_NOTE, DEMO_OUTPUT_NOTE] if demo else [])]
+    notes = [SYNTHETIC_NOTE, INDEPENDENCE_NOTE, OPEN_NOTE]
     network = state.get("network", {})
     return BuzzOutcome(
         status=outcome_status(state), acts=state.get("acts", []), network={str(k): [str(x) for x in v] for k, v in network.items()},

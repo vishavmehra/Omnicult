@@ -25,7 +25,7 @@ export function MetricDefinitions({ campaignId, open }: { campaignId: string; op
     <Section id="definitions" title="Metric definitions" meta={<span>Calculated in code from stored base metrics</span>}>
       <details open={open} className="group rounded-card border border-border bg-surface">
         <summary className="cursor-pointer px-4 py-2.5 text-[13px] text-ink-secondary hover:text-ink">
-          {catalogue.data ? `${catalogue.data.items.length} metrics, ${catalogue.data.items.filter((m) => m.in_sample).length} with values in the sample` : "Metric definitions"}
+          {catalogue.data ? `${catalogue.data.items.length} metrics, ${catalogue.data.items.filter((m) => m.in_sample).length} with values` : "Metric definitions"}
         </summary>
         <div className="border-t border-border">
           {catalogue.error ? (
@@ -38,14 +38,14 @@ export function MetricDefinitions({ campaignId, open }: { campaignId: string; op
             <>
               <div className="max-h-[28rem] overflow-auto">
                 <table className="type-ledger w-full min-w-[40rem] text-left text-[12.5px]">
-                  <caption className="sr-only">Every metric Live Pulse defines: group, unit, formula, and whether the sample has values for it.</caption>
+                  <caption className="sr-only">Every metric Live Pulse defines: group, unit, formula, and whether there are values for it.</caption>
                   <thead className="sticky top-0 bg-surface-muted text-ink-secondary">
                     <tr>
                       <th scope="col" className="px-3 py-2 font-medium">Metric</th>
                       <th scope="col" className="px-3 py-2 font-medium">Group</th>
                       <th scope="col" className="px-3 py-2 font-medium">Unit</th>
                       <th scope="col" className="px-3 py-2 font-medium">Formula or meaning</th>
-                      <th scope="col" className="px-3 py-2 font-medium">In the sample</th>
+                      <th scope="col" className="px-3 py-2 font-medium">Has values</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">

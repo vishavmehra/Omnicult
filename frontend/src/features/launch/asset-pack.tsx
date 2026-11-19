@@ -151,7 +151,7 @@ function Built({ pack, onNew }: { pack: AssetPackCreated; onNew(): void }) {
  * expiring link. Only files whose rights were confirmed go in; everything left out is listed with the reason.
  */
 export function AssetPackTab({ region: wanted, onOpen }: { region: string | null; onOpen(tab: DeliveryTab, region?: string): void }) {
-  const { campaign, project } = useCampaign();
+  const { campaign } = useCampaign();
   const caps = useCapabilities();
   const plan = useRegionPlan(campaign.id);
   const packs = useAssetPacks(campaign.id);
@@ -163,7 +163,6 @@ export function AssetPackTab({ region: wanted, onOpen }: { region: string | null
   const regions = plan.data?.regions ?? [];
   const current = region || regions.find((r) => r.pack_available)?.region_code || regions[0]?.region_code || "";
   const preview = useAssetPackPreview(campaign.id, current);
-  const demo = project.mode === "demo";
 
   function submit() {
     build.mutate({ region_code: current }, { onSuccess: setBuilt });
@@ -315,7 +314,6 @@ export function AssetPackTab({ region: wanted, onOpen }: { region: string | null
             ))}
           </ul>
         )}
-        {demo && <p className="type-meta">Source: demonstration data. The fictional brand’s files had their rights confirmed by the demo seed; nothing here is a live asset.</p>}
       </section>
     </div>
   );

@@ -10,8 +10,6 @@ from typing import Any
 
 from app.schemas.proof import ProofReport
 
-DEMO_BANNER = "DEMO DATA: fixture results, not live research."
-
 
 def _cell(value: Any) -> str:
     return str("n/a" if value is None else value).replace("|", "\\|").replace("\n", " ")
@@ -148,11 +146,9 @@ def generic_blocks(content: Any, *, limit: int = 200) -> list[Block]:
 
 def report_blocks(report: ProofReport) -> list[Block]:
     out: list[Block] = [("h1", report.title)]
-    if report.mode == "demo":
-        out.append(("note", DEMO_BANNER))
     out += [
         ("note", report.legal_notice),
-        ("p", f"Report version {report.version_number}, {report.status}, {report.mode} mode, generated {report.created_at.isoformat()}. "
+        ("p", f"Report version {report.version_number}, {report.status}{', live mode' if report.mode == 'live' else ''}, generated {report.created_at.isoformat()}. "
               f"Campaign content version {report.campaign_version_id}. Regions: {', '.join(report.target_region_codes) or 'none'}. "
               "Assembled deterministically from stored records; no model was called."),
         ("h2", "How to read this report"),

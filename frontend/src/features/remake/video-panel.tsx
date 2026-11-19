@@ -10,7 +10,7 @@ import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { useProjectImages, useRemakeRun, type RemakeCapabilities, type RemakeOutput, type VersionSummary } from "./api";
-import { CostConfirm, LockChip, Notice, RunProgress, SELECT, SourceLine, usd } from "./parts";
+import { CostConfirm, LockChip, Notice, RunProgress, SELECT, usd } from "./parts";
 import { useStartVideo, useVideoPreview, type VideoPreview } from "./video-api";
 import { VideoResult } from "./video-result";
 
@@ -112,7 +112,7 @@ export function VideoPanel({
         </p>
 
         {demo ? (
-          <p className="text-[13px] text-ink-secondary">The saved demonstration clip is {caps.video_default_seconds} s, 720p, for {caps.demo_video_regions.join(", ") || "no region"}.</p>
+          <p className="text-[13px] text-ink-secondary">The clip is {caps.video_default_seconds} s, 720p, for {caps.demo_video_regions.join(", ") || "no region"}.</p>
         ) : (
           <Field label="Length" htmlFor="rm-seconds" hint="Billed per generated second. Eight seconds needs a higher per-run AI budget.">
             <select id="rm-seconds" className={SELECT} value={seconds} onChange={(e) => setSeconds(Number(e.target.value))}>
@@ -157,7 +157,7 @@ export function VideoPanel({
         {blocked && !videoOff && <Notice tone="info">{blocked}</Notice>}
         <CostConfirm demo={demo} estimate={plan?.estimated_cost_usd} what={`one ${request?.seconds ?? seconds} s video clip`} checked={confirmed} onChange={setConfirmed} />
         <Button type="submit" disabled={!canRun} className="w-full">
-          {working ? "Working…" : demo ? "Show the saved clip" : `Make a ${request?.seconds ?? seconds} s clip`}
+          {working ? "Working…" : demo ? "Show the clip" : `Make a ${request?.seconds ?? seconds} s clip`}
         </Button>
         {start.error && <ErrorState error={start.error} />}
       </form>
@@ -185,7 +185,7 @@ export function VideoPanel({
                     className={cn("flex w-full items-center justify-between gap-3 px-3.5 py-2 text-left text-[13px] hover:bg-surface-muted", o.id === shown?.id && "bg-surface-muted")}
                   >
                     <span className="text-ink-body">{o.region_code} · {o.video?.seconds} s · {formatDate(o.created_at)}</span>
-                    <span className="type-meta">{o.passed ? "checks passed" : "checks flagged"} · {o.video?.source === "demo_fixture" ? "saved clip" : usd(o.estimated_cost_usd)}</span>
+                    <span className="type-meta">{o.passed ? "checks passed" : "checks flagged"} · {usd(o.estimated_cost_usd)}</span>
                   </button>
                 </li>
               ))}
@@ -206,10 +206,6 @@ function Plan({ plan, loading, error, demo, onRetry }: { plan: VideoPreview | un
     <section aria-label="What the clip starts from" className="space-y-3 rounded-card border border-border bg-surface p-3.5">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h2 className="text-[15px] font-semibold text-ink">Start frame and prompt</h2>
-        <SourceLine>
-          {demo ? "Saved demonstration clip" : `${plan.model ?? "no model"} · ${plan.location ?? ""}`} · {plan.seconds} s · {plan.resolution} · no model audio
-          {!demo && plan.price_per_second_usd != null ? ` · $${plan.price_per_second_usd.toFixed(2)} per second` : ""}
-        </SourceLine>
       </div>
       <div className="grid gap-4 sm:grid-cols-[auto_minmax(0,1fr)]">
         <figure className="space-y-1.5">
@@ -237,7 +233,7 @@ function Plan({ plan, loading, error, demo, onRetry }: { plan: VideoPreview | un
             </div>
           )}
           <div className="space-y-1">
-            <h3 className="text-[12.5px] font-medium text-ink-secondary">Prompt {demo ? "of the saved clip" : "sent to the model"}</h3>
+            <h3 className="text-[12.5px] font-medium text-ink-secondary">{demo ? "Prompt" : "Prompt sent to the model"}</h3>
             <p className="max-h-56 overflow-y-auto whitespace-pre-wrap rounded-lg bg-surface-muted/60 px-3 py-2 text-[13px] text-ink-body">{plan.prompt}</p>
             <p className="type-meta">Kept out: {plan.negative_prompt}</p>
           </div>

@@ -75,11 +75,11 @@ async def test_every_claim_has_provenance_unless_it_is_an_interpretation():
             assert s.source_identifier.startswith("fixture:")  # demo output is never mistaken for a live result
 
 
-async def test_trend_claims_are_synthetic_in_fixture_mode_and_labelled():
+async def test_trend_claims_are_synthetic_in_fixture_mode():
     profile = await RegionProfileBuilder(fixture_service()).build("IN-TN", today=TODAY)
     trends = profile.claims_by_category["trend"]
     assert len(trends) == 3 and all(t.kind == "synthetic" and "not demand" in t.value_text for t in trends)
-    assert all(t.sources[0].title.startswith("[DEMO FIXTURE]") for t in trends)
+    assert all("DEMO FIXTURE" not in t.sources[0].title for t in trends)
 
 
 async def test_genuine_disagreements_survive_as_separate_claims():
