@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import array
+import io
 import hashlib
 import json
 import math
@@ -239,7 +240,21 @@ def keyvisual() -> list[dict]:
 def read_wav(path: Path) -> tuple[array.array, int]:
     with wave.open(str(path)) as wav:
         assert wav.getsampwidth() == 2 and wav.getnchannels() == 1
-        return array.array("h", wav.readframes(wav.getnframes())), wav.getframerate()
+        frames, rate = wav.readframes(wav.getnframes()), wav.getframerate()
+    if frames[:4] == b"RIFF":  # a TTS reply saved whole: unwrap it, or its header plays as a click
+        with wave.open(io.BytesIO(frames)) as inner:
+            frames, rate = inner.readframes(inner.getnframes()), inner.getframerate()
+    return array.array("h", frames), rate
+
+
+def faded(samples: array.array, rate: int) -> array.array:
+    """10 ms in, 25 ms out, so a line never starts or stops with a step (a click on the cut)."""
+    out, fi, fo = array.array("h", samples), int(0.010 * rate), int(0.025 * rate)
+    for k in range(min(fi, len(out))):
+        out[k] = int(out[k] * k / fi)
+    for k in range(min(fo, len(out))):
+        out[len(out) - fo + k] = int(out[len(out) - fo + k] * (fo - 1 - k) / fo)
+    return out
 
 
 def trim(samples: array.array, rate: int, level: int = 600) -> array.array:
@@ -277,7 +292,7 @@ def write_voiceover(lines, timing, rate: int, total: float) -> Path:
     track = array.array("h", bytes(2 * int(total * rate)))
     for key, samples in lines.items():
         start = int(timing[key]["start"] * rate)
-        track[start:start + len(samples)] = samples
+        track[start:start + len(samples)] = faded(samples, rate)
     out = OUT / "voiceover_mr.wav"
     with wave.open(str(out), "wb") as wav:
         wav.setnchannels(1), wav.setsampwidth(2), wav.setframerate(rate), wav.writeframes(track.tobytes())

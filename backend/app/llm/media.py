@@ -76,6 +76,21 @@ def png_size(data: bytes) -> tuple[int, int] | None:
     return None
 
 
+def speech_pcm(data: bytes, mime_type: str) -> tuple[bytes, int]:
+    """16-bit mono PCM and its sample rate from a TTS audio part. Vertex may send raw `audio/L16;rate=...` PCM or a whole WAV
+    file; a WAV must be unwrapped, or its 44-byte header would be played as a click at the start of every line."""
+    if data[:4] == b"RIFF" and data[8:12] == b"WAVE":
+        with wave.open(io.BytesIO(data)) as wav:
+            if wav.getnchannels() != 1 or wav.getsampwidth() != 2:
+                raise ProviderError("The model returned audio in an unexpected format.", transient=False)
+            return wav.readframes(wav.getnframes()), wav.getframerate()
+    rate = TTS_SAMPLE_RATE
+    for piece in mime_type.split(";"):
+        if piece.strip().startswith("rate="):
+            rate = int(piece.strip()[5:])
+    return data, rate
+
+
 def pcm_to_wav(pcm: bytes, sample_rate: int = TTS_SAMPLE_RATE) -> bytes:
     buffer = io.BytesIO()
     with wave.open(buffer, "wb") as out:
@@ -223,12 +238,9 @@ class TTSClient(_Adapter):
             for part in (response.candidates[0].content.parts or []) if response.candidates and response.candidates[0].content else []:
                 blob = getattr(part, "inline_data", None)
                 if blob is not None and blob.data and str(blob.mime_type or "").startswith("audio/"):
-                    rate = TTS_SAMPLE_RATE
-                    for piece in str(blob.mime_type).split(";"):
-                        if piece.strip().startswith("rate="):
-                            rate = int(piece.strip()[5:])
-                    record.audio_seconds = len(blob.data) / (rate * 2)
-                    return blob.data, rate
+                    pcm, rate = speech_pcm(blob.data, str(blob.mime_type))
+                    record.audio_seconds = len(pcm) / (rate * 2)
+                    return pcm, rate
             raise ProviderError("The model returned no audio.", transient=False)
 
         (pcm, rate), retries, usage = await google.run_generation(

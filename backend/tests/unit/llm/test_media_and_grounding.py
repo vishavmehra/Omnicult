@@ -221,3 +221,11 @@ async def test_gateway_exposes_every_capability_behind_deadlines_and_one_meter()
     assert LLMGateway(settings(google_cloud_project=None)).capability("image_generation") is None
     assert LLMGateway(settings(), fixture=True).capability("tts") is None
     assert LLMGateway(settings(gemini_model_image="gemini-3.8-flash")).capability("image_generation") is None  # wrong capability
+
+
+def test_speech_pcm_unwraps_a_wav_so_its_header_is_never_played() -> None:
+    from app.llm.media import pcm_to_wav, speech_pcm
+
+    pcm = bytes([1, 0, 2, 0, 3, 0, 4, 0])
+    assert speech_pcm(pcm, "audio/L16;codec=pcm;rate=24000") == (pcm, 24000)
+    assert speech_pcm(pcm_to_wav(pcm, 22050), "audio/wav") == (pcm, 22050)  # the header is gone, the rate comes from it
