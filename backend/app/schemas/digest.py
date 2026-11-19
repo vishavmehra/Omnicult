@@ -159,7 +159,10 @@ class DigestFlagged(ApiModel):
 class DigestComments(ApiModel):
     available: bool
     reason: str | None
-    source: str
+    source: str = Field(description="One quiet line naming the comments the section used, the same line Comment Pulse shows.")
+    source_kind: Literal["sample", "youtube"] = Field(
+        default="sample", description="Which comments the section read: the labelled sample, or the public YouTube comments of the attached videos.")
+    video_titles: list[str] = Field(default_factory=list, description="The videos the YouTube comments come from. Empty for the sample.")
     window_from: date | None
     window_to: date | None
     comments_total: int

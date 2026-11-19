@@ -5,7 +5,9 @@ A week is an ISO week in India Standard Time (Monday to Sunday). Four kinds of r
   * Pulse movement: the 7 settled days of Live Pulse data ending on the last settled day on or before the week's end,
     against the 7 days before them. Provisional days never enter a comparison. Alerts come from the same fixed rules as
     the Pulse alert preview, run over the data up to that day;
-  * comments: the sample comments in that same data window, with the model reading's themes where one exists;
+  * comments: the comments Comment Pulse shows (the YouTube comments of a live campaign that has any, otherwise the sample).
+    A YouTube comment counts for the week it was published in; sample comments count in that same data window. Sentiment and
+    themes are the stored model reading of that source, where one exists;
   * open items and next actions: what is open when the digest is generated, and a short list produced by fixed rules.
 No model is called here. The numbers a reader sees are the numbers computed below.
 """
@@ -24,6 +26,7 @@ from app.db import models as m
 from app.fixtures import pulse_comments as sample_comments
 from app.schemas import digest as d
 from app.services import comment_pulse as comments_service
+from app.services import comment_youtube as youtube
 from app.services.campaign_regions import campaign_region_codes
 from app.services.pulse_alerts import AlertConfig, evaluate
 from app.services.pulse_metrics import BY_NAME, SeriesRow, values_of
@@ -259,29 +262,38 @@ def build_pulse(rows: list[SeriesRow], sub: Subject, week: d.DigestWeek) -> d.Di
 
 
 def build_comments(
-    rows: list[m.PulseComment], analysis: m.CommentAnalysis | None, week: d.DigestWeek, pulse: d.DigestPulse,
+    data: comments_service.Dataset, titles: list[str], week: d.DigestWeek, pulse: d.DigestPulse,
 ) -> tuple[d.DigestComments, Counter]:
-    """The comments section, and the count of mentions by (watch id, label, region) for the action rules."""
+    """The comments section, and the count of mentions by (watch id, label, region) for the action rules. `data` is the
+    source Comment Pulse selected. Counts, sentiment and themes come from its stored reading; nothing is read here."""
+    rows, analysis = data.rows, data.analysis
     if not rows:
         reason = "No comments are loaded for this campaign."
         return d.DigestComments(
-            available=False, reason=reason, source=COMMENT_SOURCE, window_from=None, window_to=None, comments_total=0,
-            comments_in_window=0, claim_mentions_in_window=0, cultural_mentions_in_window=0, sentiment=None, themes=[],
-            flagged=[]), Counter()
-    start, end = (pulse.window_from, pulse.window_to) if pulse.available else (week.start, week.end)
-    f = comments_service.Filters(date_from=start, date_to=end)
+            available=False, reason=reason, source=COMMENT_SOURCE, source_kind="sample", video_titles=[], window_from=None,
+            window_to=None, comments_total=0, comments_in_window=0, claim_mentions_in_window=0, cultural_mentions_in_window=0,
+            sentiment=None, themes=[], flagged=[]), Counter()
     labels = dict(analysis.labels) if analysis is not None else {}
-    view = comments_service._in_view(rows, f, labels)  # noqa: SLF001  (the same filter the Comment Pulse views use)
-    flags = {r.ref: comments_service.flags_of(r.text) for r in view}
+    live = data.source == comments_service.YOUTUBE
+    if live:  # real comments: the ISO week of their published time (India Standard Time), not the Pulse data window
+        start, end = week.start, week.end
+        lo, hi = week_bounds(week)
+        f = comments_service.Filters()
+        view = [r for r in rows if lo <= (r.published_at or datetime.combine(r.day, time.min, tzinfo=UTC)) < hi]
+    else:
+        start, end = (pulse.window_from, pulse.window_to) if pulse.available else (week.start, week.end)
+        f = comments_service.Filters(date_from=start, date_to=end)
+        view = comments_service._in_view(rows, f, labels)  # noqa: SLF001  (the same filter the Comment Pulse views use)
+    flags = {r.ref: comments_service.flags_of(r.text, generic=live) for r in view}
     mentions: Counter = Counter()
     for r in view:
         for x in flags[r.ref]:
             mentions[(x.watch_id, x.label, x.kind, r.region_code)] += 1
     flagged = sorted((r for r in view if flags[r.ref]), key=lambda r: (-r.likes, r.ref))[:MAX_FLAGGED]
-    themes, _ = comments_service.theme_views(rows, analysis, f)
+    themes, _ = comments_service.theme_views(view, analysis, f)
     return d.DigestComments(
-        available=True, reason=None, source=COMMENT_SOURCE, window_from=start, window_to=end, comments_total=len(rows),
-        comments_in_window=len(view),
+        available=True, reason=None, source=data.line if live else COMMENT_SOURCE, source_kind="youtube" if live else "sample",
+        video_titles=titles, window_from=start, window_to=end, comments_total=len(rows), comments_in_window=len(view),
         claim_mentions_in_window=sum(n for (_, _, kind, _), n in mentions.items() if kind == "planted_claim"),
         cultural_mentions_in_window=sum(n for (_, _, kind, _), n in mentions.items() if kind == "cultural_misstep"),
         sentiment=comments_service.counts_of(view, labels) if analysis is not None else None,
@@ -404,9 +416,9 @@ def build_actions(items: d.DigestOpenItems, pulse: d.DigestPulse, comments: d.Di
 async def build_content(s: AsyncSession, sub: Subject, week: d.DigestWeek, now: datetime) -> d.DigestContent:
     changed = await what_changed(s, sub, week)
     pulse = build_pulse(await pulse_rows(s, sub.campaign.id), sub, week)
-    rows = await comments_service.load_rows(s, sub.campaign.id)
-    analysis = await comments_service.newest_analysis(s, sub.campaign.id) if rows else None
-    comments, mentions = build_comments(rows, analysis, week, pulse)
+    data = await comments_service.read_dataset(s, sub.project, sub.campaign.id)  # the same selection Comment Pulse makes
+    titles = [x.video_title or x.video_id for x in await youtube.sources_of(s, sub.campaign.id)] if data.source == comments_service.YOUTUBE else []
+    comments, mentions = build_comments(data, titles, week, pulse)
     items = await open_items(s, sub, now)
     return d.DigestContent(
         campaign_name=sub.campaign.name, mode=sub.project.mode, as_of=now, week=week,  # type: ignore[arg-type]
@@ -441,8 +453,9 @@ def facts_of(c: d.DigestContent) -> list[str]:
         out.append(f"No Pulse movement: {p.reason}")
     cm = c.comments
     if cm.available:
+        scope = "YouTube comments posted this week" if cm.source_kind == "youtube" else "Comments in the data window"
         out.append(
-            f"Comments in the data window: {cm.comments_in_window}; {cm.claim_mentions_in_window} mention the unsourced claim and "
+            f"{scope}: {cm.comments_in_window}; {cm.claim_mentions_in_window} mention the unsourced claim and "
             f"{cm.cultural_mentions_in_window} name a different festival.")
     oi = c.open_items
     out.append(f"Open items: {oi.conflicts_total} evidence conflicts and {oi.risk_findings_total} open Risk Check findings.")

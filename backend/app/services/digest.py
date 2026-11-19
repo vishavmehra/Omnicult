@@ -77,7 +77,9 @@ def is_empty(c: v.DigestContent) -> bool:
     ch = c.what_changed.counts
     recorded = sum(ch.model_dump().values())
     oi = c.open_items
-    return not (c.pulse.available or c.comments.available or recorded or oi.conflicts_total or oi.risk_findings_total or oi.not_ready)
+    cm = c.comments  # fetched YouTube comments from other weeks are not news for this one; the sample is the data window as before
+    comments = cm.available and (cm.source_kind == "sample" or cm.comments_in_window > 0)
+    return not (c.pulse.available or comments or recorded or oi.conflicts_total or oi.risk_findings_total or oi.not_ready)
 
 
 def _week_for(day: date | None, now: datetime) -> v.DigestWeek:

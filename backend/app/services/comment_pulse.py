@@ -123,15 +123,22 @@ class Dataset:
     analysis: m.CommentAnalysis | None
 
 
-async def _dataset(s: AsyncSession, project: m.Project, campaign_id: UUID) -> Dataset:
+async def read_dataset(s: AsyncSession, project: m.Project, campaign_id: UUID) -> Dataset:
+    """The one place that picks the comments: the active source, its line and its newest reading. `rows` is empty when
+    nothing is loaded. Comment Pulse and the Weekly Digest both read through here."""
     source = await active_source(s, project, campaign_id)
     rows = await load_rows(s, campaign_id, source)
-    if not rows:
-        raise Conflict(NOT_LOADED)
-    analysis = await newest_analysis(s, campaign_id, source)
+    analysis = await newest_analysis(s, campaign_id, source) if rows else None
     if source == YOUTUBE and analysis is not None and not set(analysis.labels) & {r.ref for r in rows}:
         analysis = None  # a reading of comments that are no longer stored says nothing about these
     return Dataset(source, rows, await yt.line_for(s, campaign_id) if source == YOUTUBE else SAMPLE_LINE, analysis)
+
+
+async def _dataset(s: AsyncSession, project: m.Project, campaign_id: UUID) -> Dataset:
+    d = await read_dataset(s, project, campaign_id)
+    if not d.rows:
+        raise Conflict(NOT_LOADED)
+    return d
 
 
 def analysis_info(row: m.CommentAnalysis | None) -> v.CommentAnalysisInfo | None:
