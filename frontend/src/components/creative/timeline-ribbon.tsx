@@ -76,7 +76,7 @@ export function TimelineRibbon({ items, ariaLabel, value, onChange, onActivate, 
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-16 overflow-x-clip">
         <div className="absolute inset-y-0 left-0 w-full transition-transform duration-300 ease-out" style={{ transform: `translateX(${x}%)` }}>
           <div
-            className={cn("pointer-events-auto absolute bottom-1 w-[min(19rem,80vw)] rounded-xl bg-surface-raised px-3 py-2 shadow-float", onActivate && "cursor-pointer")}
+            className={cn("pointer-events-auto absolute bottom-1 w-[min(19rem,100%)] rounded-xl bg-surface-raised px-3 py-2 shadow-float", onActivate && "cursor-pointer")}
             style={{ transform: `translateX(${-x}%)` }}
             onClick={() => onActivate?.(item.id)}
           >

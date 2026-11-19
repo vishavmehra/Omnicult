@@ -216,12 +216,14 @@ function BarContent({ close }: { close(): void }) {
                 Direct this version…
                 <span className="ml-auto text-xs text-ink-muted">Creative Studio</span>
               </CommandItem>
-              <CommandItem value="edit brief campaign desk" onSelect={() => go(`${workspaceHref(activeId, "desk")}?edit=brief`)} className={ITEM}>
-                <Tile>
-                  <PencilLine aria-hidden />
-                </Tile>
-                Edit the brief
-              </CommandItem>
+              {active?.brand.mode !== "demo" && (
+                <CommandItem value="edit brief campaign desk" onSelect={() => go(`${workspaceHref(activeId, "desk")}?edit=brief`)} className={ITEM}>
+                  <Tile>
+                    <PencilLine aria-hidden />
+                  </Tile>
+                  Edit the brief
+                </CommandItem>
+              )}
               <CommandItem value="open brand kit logo colours fonts" onSelect={() => go(`${workspaceHref(activeId, "desk")}?tab=brand-kit`)} className={ITEM}>
                 <Tile>
                   <Palette aria-hidden />
