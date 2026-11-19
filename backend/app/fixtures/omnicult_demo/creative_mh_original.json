@@ -26,8 +26,8 @@
       ],
       "asset": {
         "path": "creative/mh_original/video.mp4",
-        "bytes": 6667461,
-        "sha256": "d6adeb15cab9ce46a5f6f8a0c69aee1be38288f3d7ee6b22137f40bbe7e006a6",
+        "bytes": 6376284,
+        "sha256": "452452750d7363189215e32681b3cdf0ad920cc576f7fdb833c25f57d1e10d67",
         "mime_type": "video/mp4",
         "width": 1080,
         "height": 1920,
