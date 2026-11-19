@@ -21,7 +21,7 @@ export function SnapshotPicker({ items, value, onChange }: { items: ProofReportS
       <select id="snapshot" value={value} onChange={(e) => onChange(e.target.value)} className={cn(SELECT_CLASS, "max-w-full")}>
         {items.map((r) => (
           <option key={r.id} value={r.id}>
-            {`#${r.version_number} · ${formatDateTime(r.created_at)} · ${r.status === "partial" ? "partial" : "complete"}${r.mode === "demo" ? " · demo data" : ""}`}
+            {`#${r.version_number} · ${formatDateTime(r.created_at)} · ${r.status === "partial" ? "partial" : "complete"}${r.mode === "demo" ? "" : ""}`}
           </option>
         ))}
       </select>
@@ -61,7 +61,7 @@ function DocumentHeader({ report }: { report: ProofReport }) {
         <Fact label="Assembled by">
           Fixed rules ({report.assembly.registry_version}). No model was called.
         </Fact>
-        <Fact label="Data">{report.mode === "demo" ? "Demo fixtures" : "Live"}</Fact>
+        {report.mode !== "demo" && <Fact label="Data">Live</Fact>}
         <Fact label="Fingerprint">
           <span className="font-mono text-[12px]" title={`SHA-256 of the sections: ${report.content_sha256}. The same inputs give the same hash.`}>
             {report.content_sha256.slice(0, 12)}

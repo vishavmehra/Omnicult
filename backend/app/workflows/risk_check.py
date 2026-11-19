@@ -17,7 +17,7 @@ from uuid import UUID
 from langchain_core.runnables import RunnableConfig
 
 from app.agents import risk_check as agent
-from app.agents._common import DEMO_OUTPUT_NOTE, DROPPED_NOTE, norm, pick
+from app.agents._common import DROPPED_NOTE, norm, pick
 from app.agents.brand import applied_note, brand_block
 from app.analytics.risk_rules import (
     PATTERN_TEXT,
@@ -42,7 +42,6 @@ TEXT_KINDS = frozenset({"headline", "body", "cta", "tagline", "caption", "voiceo
 EXCERPT_IN_PROMPT = 420
 MODEL_NOTE = "Model interpretation for human review; not a verified violation."
 PATTERN_NOTE = "Matched by a fixed wording pattern; for human review, not a verified violation."
-DEMO_NOTE = "Demo mode: model findings in this run are labelled fixtures; no model was called."
 NO_CLAIMS_NOTE = "No region claims were supplied, so findings rest on the ad-code index and model interpretation only."
 RULES_NOTE = (
     f"Severity follows {RULES_VERSION}: base level by category, raised by a cited ad-code clause, observed or calculated "
@@ -179,7 +178,6 @@ async def rc_assessing(state: RiskState, config: RunnableConfig) -> dict:
 async def rc_verifying(state: RiskState, config: RunnableConfig) -> dict:
     await announce(config, STAGES, 2, "Verifying quotes and applying the severity rules.")
     started, inp = time.perf_counter(), state["inp"]
-    demo = config["configurable"]["mode"] == "demo"
     dropped, kept = DroppedCounts(), []
     scene_by_id = {s.id: s for s in inp.scenes}
     order = {el.id: n for n, el in enumerate(inp.elements)}
@@ -223,7 +221,7 @@ async def rc_verifying(state: RiskState, config: RunnableConfig) -> dict:
                 observation=item.observation, interpretation=item.interpretation, suggested_fix=item.suggested_fix,
                 ad_codes=[_ref(e) for e in refs_fit], claim_ids=[c.id for c in claims], source="model_assessment",
                 severity_rules=[r.as_dict() for r in decision.rules],
-                limitations=[MODEL_NOTE, *([DEMO_OUTPUT_NOTE] if demo else [])]),
+                limitations=[MODEL_NOTE]),
         })
     final: list[DraftFinding] = []
     for d in state["deterministic"]:
@@ -255,9 +253,8 @@ GRAPH = linear_graph(RiskState, [(STAGES[0], rc_loading), (STAGES[1], rc_assessi
 async def run_risk_check(inp: RiskCheckInput, llm: LLMGateway, progress: Any = None) -> RiskCheckOutcome:
     state = await execute(GRAPH, {"inp": inp, "steps": [], "limitations": []}, SimpleNamespace(llm=llm), progress, inp.context.mode)
     findings, dropped, cited = state.get("findings", []), state.get("dropped", DroppedCounts()), state.get("cited", [])
-    demo = inp.context.mode == "demo"
     brand_note = applied_note([f"Prohibited term: {t}" for t in inp.context.brand.prohibited_terms])
-    notes = [RULES_NOTE, INDEX_NOTE, brand_note, *([DEMO_NOTE] if demo else [])]
+    notes = [RULES_NOTE, INDEX_NOTE, brand_note]
     return RiskCheckOutcome(
         status=outcome_status(state), findings=findings, dropped=dropped, cited_claim_ids=cited,
         limitations=list(dict.fromkeys([*notes, *state.get("limitations", [])])), steps=state.get("steps", []),

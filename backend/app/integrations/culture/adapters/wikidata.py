@@ -52,7 +52,7 @@ class WikidataSource(SourceBase):
     descriptor = SourceDescriptor(
         name="wikidata", source_type="knowledge_graph",
         supported_operations=frozenset({"resolve_entity", "related_signals"}),
-        scope="Global; queried for India and the demo states (ISO 3166-2:IN). Multilingual labels.",
+        scope="Global; queried for India and four states (ISO 3166-2:IN). Multilingual labels.",
         coverage_limitations=[
             "Coverage is uneven: many Indian festivals and foods carry no link to a state.",
             "A relationship is a statement someone entered; it does not show current popularity or demand.",

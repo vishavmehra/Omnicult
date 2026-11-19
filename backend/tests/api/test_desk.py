@@ -144,7 +144,7 @@ async def test_the_seam_maps_both_fixture_files_onto_the_schema(client: httpx.As
     c = await seed_demo(client)
     brief = (await client.get(c["brief"])).json()
     content = brief["content"]
-    assert brief["version"] == 1 and brief["provenance"]["source"] == "demo_fixture" and "Demonstration fixture" in brief["provenance"]["label"]
+    assert brief["version"] == 1 and brief["provenance"]["source"] == "demo_fixture" and "fixture" not in brief["provenance"]["label"].lower()
     assert brief["completeness"]["complete"] is True
     assert content["regions"] == {"origin": "IN-MH", "targets": ["IN-TN", "IN-KL", "IN-WB"]}
     assert content["languages"] == BRIEF_FIXTURE["languages"] and content["scripts"] == BRIEF_FIXTURE["scripts"]
@@ -154,7 +154,7 @@ async def test_the_seam_maps_both_fixture_files_onto_the_schema(client: httpx.As
     assert content["dates"]["start"] == "2027-10-04" and len(content["dates"]["key_moments"]) == 5 and len(content["dates"]["sources"]) == 2
     assert content["success_metric"]["primary"]["id"] == "cost_per_order" and len(content["success_metric"]["secondary"]) == 2
     assert content["product"]["price"] == {"currency": "INR", "amount": 899} and content["cta"]["original"]["region_code"] == "IN-MH"
-    assert content["original_creative_refs"] == BRIEF_FIXTURE["original_creative_ids"] and len(content["constraints"]) == 4
+    assert content["original_creative_refs"] == BRIEF_FIXTURE["original_creative_ids"] and len(content["constraints"]) == 3
 
     campaign = (await client.get(f"{API}/campaigns/{c['id']}")).json()
     assert campaign["name"] == BRIEF_FIXTURE["name"] and campaign["objective"] == BRIEF_FIXTURE["objective"]

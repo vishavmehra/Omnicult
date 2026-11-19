@@ -135,10 +135,10 @@ def test_two_years_at_a_hundred_views_is_moderate_and_solid_counts_with_every_vi
     assert lately_falling.direction == "rising" and t.confidence(lately_falling, None, fixture=False)[0] == "moderate"
 
 
-def test_a_demo_fixture_never_reaches_high() -> None:
+def test_a_fixture_series_never_reaches_high() -> None:
     solid = t.measure(series([400] * 12 + [800] * 12), flat_edition())
     level, reasons = t.confidence(solid, None, fixture=True)
-    assert level == "moderate" and "Demo fixture" in reasons[0]
+    assert level == "moderate" and not any("fixture" in r.lower() for r in reasons)
 
 
 # --- which article --------------------------------------------------------------------------------------------------

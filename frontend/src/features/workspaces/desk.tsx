@@ -105,7 +105,6 @@ function BriefHistory({ campaignId, viewing, onView }: { campaignId: string; vie
                   </span>
                   {v.change_note && <span className="block text-[12px] text-ink-body">{v.change_note}</span>}
                   <span className="block truncate text-[11.5px] text-ink-muted">
-                    {v.provenance.source === "demo_fixture" ? "Demonstration fixture · " : ""}
                     Changed: {v.changed_fields.join(", ") || "nothing"}
                   </span>
                 </button>
@@ -218,7 +217,7 @@ export function DeskWorkspace() {
               ) : viewing !== null && older.error ? (
                 <ErrorState error={older.error} onRetry={() => void older.refetch()} />
               ) : (
-                <BriefDocument content={viewing !== null && older.data ? older.data.content : brief.content} regions={regionsQ.data} sample={demo} />
+                <BriefDocument content={viewing !== null && older.data ? older.data.content : brief.content} regions={regionsQ.data} />
               )}
             </>
           )}

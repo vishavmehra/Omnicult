@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { useUseInStudio, type GenerateAssetRef, type GenerateItem, type GenerateKind, type Run } from "./api";
 import { LiveStrip, PlayButton, PlayerAudio, useAudioPlayer, Waveform, type Segment } from "./audio";
 import { AssetImage, CompareSlider } from "./images";
-import { AiTag, Chip, mmss, Notice, RunError, RunLadder, seconds, SourceLine, usd } from "./parts";
+import { AiTag, Chip, mmss, Notice, RunError, RunLadder, seconds, usd } from "./parts";
 
 const KIND_WORD: Record<GenerateKind, string> = { image: "image", voice: "voice-over", jingle: "jingle" };
 const GLINTS: CSSProperties[] = [
@@ -107,9 +107,9 @@ function Actions({ campaignId, item, onReference }: { campaignId: string; item: 
 
 function Provenance({ item }: { item: GenerateItem }) {
   const facts: [string, string][] = [
-    ["Model", item.model ? `${item.model}${item.location ? ` · ${item.location}` : ""}` : "none (saved output)"],
+    ["Model", item.model ? `${item.model}${item.location ? ` · ${item.location}` : ""}` : "none"],
     ["Prompt version", item.prompt_version],
-    ["Estimated cost", item.source === "demo_fixture" ? "none: nothing was charged" : usd(item.estimated_cost_usd)],
+    ["Estimated cost", item.source === "demo_fixture" ? "none" : usd(item.estimated_cost_usd)],
     ["Model time", item.latency_ms ? seconds(item.latency_ms) : "n/a"],
     ["Run", item.id],
   ];
@@ -319,11 +319,6 @@ export function ItemView({ campaignId, item, onReference }: { campaignId: string
       <Actions campaignId={campaignId} item={item} onReference={onReference} />
       <Limitations item={item} />
       <Provenance item={item} />
-      <SourceLine>
-        {item.source === "demo_fixture"
-          ? `Source: saved demonstration ${KIND_WORD[item.kind]}, made once with ${item.model}. No model was called for this run.`
-          : `Source: ${item.model}${item.location ? ` (${item.location})` : ""}, prompt ${item.prompt_version}, ${usd(item.estimated_cost_usd)} estimated.`}
-      </SourceLine>
     </div>
   );
 }

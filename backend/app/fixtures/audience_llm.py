@@ -1,6 +1,6 @@
 """Demo-mode "model" outputs for the Audience Lab (Quick Read, Audience Study, Risk Check).
 
-Deterministic and labelled: the gateway records provider "fixture" and the workflows add a demo note. Each responder reads
+Deterministic: the gateway records provider "fixture". Each responder reads
 the agent's structured input (the creative, the sampling dimensions, the supplied region claims) and writes output in that
 agent's schema, so the output passes the same validation, quote verification and citation mapping as a live model's.
 Nothing here is research: it shows the product working without a provider.
@@ -118,7 +118,7 @@ def study_analysis(ctx: Context) -> dict:
         top, bottom = slices[0], slices[-1]
         differences.append(
             f"{top['label']} has the highest positive rate ({top['distribution']['rates']['positive']:.0%}) and {bottom['label']} "
-            f"the lowest ({bottom['distribution']['rates']['positive']:.0%}) among these synthetic participants.")
+            f"the lowest ({bottom['distribution']['rates']['positive']:.0%}) among these participants.")
     if tallies["misunderstandings"]:
         differences.append(f"The most common misunderstanding was '{tallies['misunderstandings'][0]['label']}'.")
     return {"group_differences": differences,

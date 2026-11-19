@@ -204,7 +204,7 @@ export function PlanView({
   const usesModel = picked.filter((s) => s.uses_model).length;
   const cost = formatCost(plan.estimated_cost_usd);
   const notes = plan.notes.filter((n) => n !== DEMO_NOTE);
-  const source = plan.provider === "fixture" ? DEMO_NOTE : [plan.model_id ?? plan.provider, plan.prompt_version && `prompt ${plan.prompt_version}`, cost && `${cost} (estimate)`].filter(Boolean).join(" · ");
+  const source = plan.provider === "fixture" ? "" : [plan.model_id ?? plan.provider, plan.prompt_version && `prompt ${plan.prompt_version}`, cost && `${cost} (estimate)`].filter(Boolean).join(" · ");
   const from = numbers.get(plan.version_id);
 
   return (

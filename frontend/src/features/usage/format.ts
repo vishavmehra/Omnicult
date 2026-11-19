@@ -19,7 +19,7 @@ const CAPABILITY: Record<string, string> = {
 export const capabilityLabel = (key: string) => CAPABILITY[key] ?? humanize(key);
 
 /** `google / gemini-3.8-flash` stays as the gateway names it; only the separator is read aloud-friendly. */
-export const modelLabel = (key: string) => key.replace(" / ", ", ");
+export const modelLabel = (key: string) => (/fixture/.test(key) ? "No model called" : key.replace(" / ", ", "));
 
 /** Small amounts keep four decimals so a $0.0021 call does not read as $0.00. A missing cost is never printed as 0. */
 export function usd(n: number | null | undefined) {
@@ -53,7 +53,7 @@ export function costParts(row: Pick<UsageRow, "estimated_cost_usd" | "calls" | "
     value: usd(row.estimated_cost_usd),
     recorded: row.estimated_cost_usd !== null,
     note: allFixture
-      ? "fixture, no model ran"
+      ? ""
       : [
           row.calls_without_cost > 0 ? `${num.format(row.calls_without_cost)} without a recorded cost` : null,
           row.price_known === false ? "stand-in price" : null,

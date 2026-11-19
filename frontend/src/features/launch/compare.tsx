@@ -456,7 +456,7 @@ function ComparisonResults({ comparison, regionName, stale }: { comparison: Scor
         </details>
       </section>
 
-      <p className="type-meta">Source: Quick Read counts from a simulated panel; scores computed by fixed rules ({comparison.scoring_version}).</p>
+      <p className="type-meta">Scores computed by fixed rules ({comparison.scoring_version}).</p>
     </div>
   );
 }

@@ -114,8 +114,6 @@ function Row({ term, children }: { term: string; children: ReactNode }) {
   );
 }
 
-const FIXTURE_ORIGIN = { hand_authored: "Hand-authored fixture (not retrieved from the provider)", captured_live: "Sanitized capture of a real provider response" };
-
 function RecordView({ record: r }: { record: EvidenceRecord }) {
   return (
     <article className="space-y-2.5 border-t border-border pt-3 first-of-type:border-t-0 first-of-type:pt-0">
@@ -175,7 +173,6 @@ function RecordView({ record: r }: { record: EvidenceRecord }) {
       <LimitationList items={r.limitations} title="Record limitations" />
       {r.provenance && (
         <dl className="grid grid-cols-[96px_minmax(0,1fr)] gap-x-3 gap-y-1 text-xs">
-          {r.provenance.fixture_origin && <Row term="Fixture origin">{FIXTURE_ORIGIN[r.provenance.fixture_origin]}</Row>}
           {r.provenance.normalizer_version && (
             <Row term="Normalizer">
               <span className="font-mono">v{r.provenance.normalizer_version}</span>

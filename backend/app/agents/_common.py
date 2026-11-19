@@ -21,7 +21,6 @@ class Strict(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-DEMO_OUTPUT_NOTE = "Demo fixture output, not a live model response."
 AFFINITY_NOTE = "Aggregate affinity; not evidence of demand, purchase intent, or individual preference."
 DROPPED_NOTE = "Some references in the model output did not match the supplied items and were removed."
 SOURCE_EVIDENCE_TYPES = frozenset({"qloo_source", "provider_result", "user_input"})

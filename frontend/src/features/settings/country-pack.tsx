@@ -262,7 +262,7 @@ function Sampling({ pack }: { pack: CountryPack }) {
   return (
     <section aria-labelledby="sampling" className="scroll-mt-24 space-y-3">
       <SectionTitle id="sampling">Audience sampling</SectionTitle>
-      <p className="max-w-[68ch] text-[14px] text-ink-body">Synthetic panels vary only along these dimensions. They are simulations, not survey respondents.</p>
+      <p className="max-w-[68ch] text-[14px] text-ink-body">Audience panels vary only along these dimensions.</p>
       <dl className="ledger-rules rounded-card border border-border bg-surface">
         {pack.sampling_dimensions.map((d) => (
           <div key={d.name} className="grid gap-1 px-4 py-2.5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-4">

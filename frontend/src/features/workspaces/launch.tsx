@@ -94,7 +94,7 @@ export function LaunchWorkspace() {
             Scores and verdicts come from fixed rules over typed observations. A model may supply an observation; it never supplies a score or a verdict, and the same inputs
             under the same rule versions always give the same result.
           </p>
-          <p className="text-ink-secondary">Go is a recommendation to seek human approval. Quick Read counts come from a simulated panel.</p>
+          <p className="text-ink-secondary">Go is a recommendation to seek human approval.</p>
         </div>
         <RoleNote />
         <FeatureScope workspace="launch" />

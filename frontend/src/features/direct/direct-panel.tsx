@@ -98,7 +98,7 @@ export function DirectPanel({
   const micWord = !recorder.supported
     ? "Voice input is not available here. It needs a secure page and a browser that can record audio. Type the instruction instead."
     : demo
-      ? "Voice input needs a live project. Demo projects never call a model provider, so type the instruction."
+      ? "Voice input needs a live project, so type the instruction."
       : recorder.state === "denied"
         ? "Microphone access is blocked. Allow it for this site in the browser's address bar or settings, then hold the button again. Or type the instruction."
         : recorder.state === "requesting"
@@ -253,7 +253,7 @@ export function DirectPanel({
         </form>
 
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
-          <span className="type-meta">{demo ? "Demo instructions:" : "Try:"}</span>
+          <span className="type-meta">Try:</span>
           {examples.map((example) => (
             <Button
               key={example}

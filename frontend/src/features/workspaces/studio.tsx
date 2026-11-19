@@ -24,7 +24,7 @@ import { VersionTree } from "@/features/studio/version-tree";
 import { ClaimGuardPanel } from "@/features/studio-t3/claim-guard";
 import { FormatFitPanel } from "@/features/studio-t3/format-fit";
 import { ScriptCheckPanel } from "@/features/studio-t3/script-check";
-import { formatDateTime } from "@/lib/format";
+import { formatDateTime, shownModel } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { useCampaign } from "./campaign-context";
@@ -73,7 +73,7 @@ function VersionHeader({
   const place = placeTag(version);
   const tone = version.settings.tone;
   const gen = version.settings.generation;
-  const model = gen && typeof gen.model_id === "string" ? gen.model_id : null;
+  const model = gen && typeof gen.model_id === "string" ? shownModel(gen.model_id) : null;
   const prompt = gen && typeof gen.prompt_version === "string" ? gen.prompt_version : null;
   const cost = version.actor === "ai" ? formatCost(op?.estimated_cost_usd) : null;
   return (

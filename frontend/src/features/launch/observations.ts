@@ -25,7 +25,7 @@ export const MISSING_EFFECT: Record<GroupKey, string> = {
   quick_read: "Message clarity and Cultural relevance are not assessed, and rule FX13 holds the verdict at Fix.",
   risk_check: "Sensitivity risk is not assessed (an unrun Risk Check is not “no risk”), and rule FX14 holds the verdict at Fix.",
   transcreation: "Brand fidelity is not assessed, and the back-translation check on Message clarity is skipped.",
-  references: "Cultural relevance rests on the synthetic panel alone; reference grounding is skipped.",
+  references: "Cultural relevance rests on the panel alone; reference grounding is skipped.",
   objectives: "Objective consistency is not assessed.",
   evidence_meter: "Evidence strength for the region is unknown, and rule FX12 holds the verdict at Fix.",
 };

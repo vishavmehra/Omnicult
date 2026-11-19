@@ -222,7 +222,7 @@ export function CampaignForm({
         <Field label="Objective" htmlFor="c-objective" className="sm:col-span-2" hint="What the campaign should achieve. Loop scores consistency with it.">
           <Textarea id="c-objective" value={objective} onChange={(e) => setObjective(e.target.value)} rows={2} className="bg-surface" aria-describedby="c-objective-hint" />
         </Field>
-        <Field label="Target markets" htmlFor="c-markets" className="sm:col-span-2" hint={demo ? "Demo runs only support the seeded market (Japan)." : "Search by country name or ISO code."}>
+        <Field label="Target markets" htmlFor="c-markets" className="sm:col-span-2" hint={demo ? "The demo supports one market (Japan)." : "Search by country name or ISO code."}>
           <MarketListField id="c-markets" value={markets} onChange={setMarkets} />
         </Field>
       </div>
@@ -234,7 +234,7 @@ export function CampaignForm({
         {contentLocked && (
           <p id="content-locked" className="flex items-start gap-2 text-[13px] text-ink-secondary">
             <Lock aria-hidden className="mt-0.5 size-3.5 shrink-0" />
-            Demo campaign content is fixed so the fixture results stay truthful; the API rejects content edits with 409. Create a live project to test your own copy.
+            Demo campaign content is fixed. Create a live project to test your own copy.
           </p>
         )}
         <Field label="Headline" htmlFor="c-headline" hint={<Counter value={headline} max={LIMITS.headline} />}>

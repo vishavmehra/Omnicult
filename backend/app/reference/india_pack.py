@@ -49,7 +49,7 @@ SOURCE_NOTES: tuple[SourceNote, ...] = (
         "Curated by hand from the legislation. The terms of the underlying texts were not reviewed."),
     SourceNote(
         "census-2011-c16", "Census of India 2011, table C-16 (population by mother tongue)",
-        "Mother-tongue shares for the four demo states.", "https://censusindia.gov.in/nada/",
+        "Mother-tongue shares for the four covered states.", "https://censusindia.gov.in/nada/",
         "All rights reserved by the Census Digital Library (catalog page footer)", "checked",
         "Counts are stored as facts with the table's own citation; the workbook is not redistributed. "
         "A 2011 snapshot, never current."),
@@ -63,7 +63,7 @@ SOURCE_NOTES: tuple[SourceNote, ...] = (
         "The documentation states no data licence. Treated as Wikimedia open data; not verified as CC0."),
     SourceNote(
         "curated-references", "Curated references (English Wikipedia and government tourism pages)",
-        "Festivals, foods, colours, symbols, customs and sensitivities for the four demo states.", None,
+        "Festivals, foods, colours, symbols, customs and sensitivities for the four covered states.", None,
         "Wikipedia text: CC BY-SA 4.0. Government pages: each site's own terms.", "checked",
         "Short excerpts are stored with the page URL and title as attribution. Only short cited excerpts are kept."),
     SourceNote(

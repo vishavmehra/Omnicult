@@ -76,7 +76,8 @@ def digest_blocks(dg: d.Digest) -> list[Block]:
             out.append(("table", header, [
                 [sl.region_name, sl.version_label] + [_move(x.unit, x) for x in sl.metrics] for sl in p.slices]))
         out.append(("ul", [f"{a.region_name}, {a.version_label}: {a.headline}. {a.suggested_action}" for a in p.alerts] or ["No Pulse alert fired."]))
-    out.append(("p", p.source))
+    if p.source:
+        out.append(("p", p.source))
 
     cm = c.comments
     out.append(("h2", "Comments"))
@@ -95,7 +96,8 @@ def digest_blocks(dg: d.Digest) -> list[Block]:
         if cm.flagged:
             out.append(("table", ["Comment", "Region", "Version", "Matches", "Likes"], [
                 [f.text, f.region_code, f.version_label, f.label, f.likes] for f in cm.flagged]))
-    out.append(("p", cm.source))
+    if cm.source:
+        out.append(("p", cm.source))
 
     oi = c.open_items
     out += [("h2", "Open conflicts and issues"),

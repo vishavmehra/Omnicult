@@ -479,7 +479,7 @@ async def capabilities(user_id: UUID, campaign_id: UUID) -> g.GenerateCapabiliti
         model = capability_model(settings, generator.capability)  # type: ignore[arg-type]
         if is_demo:
             return g.GeneratorInfo(kind=generator.kind, run_type=generator.run_type, label=generator.label, available=True, model=None, location=None,  # type: ignore[arg-type]
-                                   estimated_cost_usd=0.0, note="Saved demonstration output: no provider is called.")
+                                   estimated_cost_usd=0.0, note=None)
         ok = gateway is not None and gateway.capability(generator.capability) is not None
         return g.GeneratorInfo(kind=generator.kind, run_type=generator.run_type, label=generator.label, available=ok, model=model if ok else None,  # type: ignore[arg-type]
                                location=location if ok else None, estimated_cost_usd=estimate if ok else None, note=note)

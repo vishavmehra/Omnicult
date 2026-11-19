@@ -13,14 +13,13 @@ from langchain_core.runnables import RunnableConfig
 from pydantic import BaseModel
 
 from app.agents import transcreate as agent
-from app.agents._common import DEMO_OUTPUT_NOTE
 from app.agents.brand import applied_note, brand_block
 from app.llm.gateway import LLMError
 from app.schemas.common import StepTrace
 from app.schemas.runs import RunError
 from app.schemas.versions import Tone, TranscreatedLine
 from app.studio.checks import min_share_for, script_check, term_checks, term_problems
-from app.workflows._common import DEMO_RUN_NOTE, STAGES, announce, execute, linear_graph, llm_error, local_step
+from app.workflows._common import STAGES, announce, execute, linear_graph, llm_error, local_step
 from app.workflows.types import OutcomeStatus, ProgressFn, WorkflowContext, WorkflowDeps
 
 RUN = "transcreate"
@@ -166,7 +165,6 @@ def assemble(
 
 async def run_transcreate(inp: TranscreateInput, deps: WorkflowDeps, progress: ProgressFn | None = None) -> TranscreateOutcome:
     state = await execute(GRAPH, {"inp": inp, "steps": [], "limitations": []}, deps, progress, inp.context.mode)
-    demo = inp.context.mode == "demo"
     drafts = state.get("drafts", []) if "scripts" in state else []
     lines = assemble(inp, drafts, state["checks"], state["scripts"]) if drafts else []
     requested = len(inp.lines)
@@ -175,7 +173,6 @@ async def run_transcreate(inp: TranscreateInput, deps: WorkflowDeps, progress: P
     notes = [
         agent.SAME_MODEL_NOTE, UNREVIEWED_NOTE, *([] if inp.claims else [NO_CLAIMS_NOTE]),
         *(["Some lines failed the checks; they are shown for review and were not applied."] if any(not x.passed for x in lines) else []),
-        *([DEMO_RUN_NOTE, DEMO_OUTPUT_NOTE] if demo else []),
     ]
     return TranscreateOutcome(
         status=status, lines=lines, limitations=list(dict.fromkeys([*state.get("limitations", []), *notes])),

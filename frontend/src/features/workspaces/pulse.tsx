@@ -48,7 +48,7 @@ export function PulseWorkspace() {
           {status.error ? (
             <ErrorState error={status.error} onRetry={() => void status.refetch()} />
           ) : !status.data ? (
-            <LoadingState label="Checking the sample dataset…" />
+            <LoadingState label="Checking the dataset…" />
           ) : loaded ? (
             <Dashboard campaignId={campaign.id} status={status.data} />
           ) : (

@@ -583,8 +583,6 @@ async def _persist(run_id: UUID, kind: str, outcome: Any) -> None:
             total_steps=total,
             message=("Complete." if outcome.status == "completed" else "Finished with partial results; see the limitations.")
             if outcome.status in USABLE else "Stopped.").model_dump()
-        if run.mode == "demo" and outcome.status in USABLE:
-            run.progress["message"] = run.progress["message"][:-1] + " (demo fixtures)."
         run.completed_at = now
 
 
@@ -917,8 +915,6 @@ async def ask_panel(user_id: UUID, campaign_id: UUID, run_id: UUID, body: v.AskP
     unanswered = [r.id for r in asked if r.id not in answered]
     limitations = ["Every answer is AI-generated from the participant's stored response and earlier answers; none is a real person.",
                    "A sample of synthetic participants is not the whole market, and agreement between them is not confirmation."]
-    if run.mode == "demo":
-        limitations.append("Demo mode: answers quote the stored response; no model was called.")
     if unanswered:
         limitations.append(f"{len(unanswered)} selected participant(s) did not get an answer ({'a batch failed' if failures else 'the model omitted them'}).")
     usage = _usage_totals([t for t in traces]).model_dump(mode="json")

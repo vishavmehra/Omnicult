@@ -230,7 +230,7 @@ def _unread(label: str, region: object, mode: str, last: CallLogRecord | None) -
     if last is not None and last.status == "error":
         return f"\"{label}\" could not be read ({last.error_type}), so it is not shown."
     if mode == "demo":
-        return f"\"{label}\" is not in the demo recording, so it is not shown."
+        return f"\"{label}\" has no series for this state, so it is not shown."
     language = LANGUAGE_NAMES.get(region.language, region.language)  # type: ignore[attr-defined]
     return f"\"{label}\" has no Wikipedia article in the {language} or English edition, so it is not shown."
 

@@ -13,8 +13,8 @@ import { cn } from "@/lib/utils";
 
 import { downloadDigest, EXPORT_LABEL, useAddSummary, useCreateDigest, useDigest, useDigests, type ExportFormat } from "./api";
 import { CommentsSection, Limitations, NextActions, OpenItems, PulseMovement, WhatChanged } from "./digest-sections";
-import { DIGEST_SOURCE, isoWeekLabel, weekChoices, weekSpan, type Digest } from "./logic";
-import { ModelTag, SourceLine } from "./ui";
+import { isoWeekLabel, weekChoices, weekSpan, type Digest } from "./logic";
+import { ModelTag } from "./ui";
 
 type Row = { start: string; end: string; label: string; digest: components["schemas"]["DigestSummary"] | null };
 
@@ -45,7 +45,6 @@ export function WeeklyDigest({ campaignId }: { campaignId: string }) {
         <p className="max-w-[68ch] text-[14.5px] text-ink-secondary">
           What changed in the campaign this week, how Pulse moved, what is open and what to do next. Every number is calculated from stored records. Export it to Markdown or PDF; nothing is sent anywhere.
         </p>
-        <SourceLine>{DIGEST_SOURCE}</SourceLine>
       </header>
       {list.error && !list.data ? (
         <ErrorState error={list.error} onRetry={() => void list.refetch()} />

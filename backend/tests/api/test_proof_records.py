@@ -66,7 +66,7 @@ async def test_every_record_section_is_available_with_typed_content_and_honest_l
     assert kinds["risk_findings"] == {"calculated", "interpretation"}
     assert kinds["audience_results"] == {"synthetic"}
     assert kinds["readiness"] == {"calculated"} and kinds["approvals"] == {"observed"}
-    assert kinds["live_performance"] == {"synthetic"}  # the labelled sample dataset, not a connected account
+    assert kinds["live_performance"] == {"synthetic"}  # the Live Pulse dataset, not a connected account
 
 
 async def test_creative_versions_lists_the_tree_oldest_first_with_who_made_each(seeded: Any, client: httpx.AsyncClient) -> None:
@@ -139,7 +139,7 @@ async def test_audience_results_are_synthetic_and_never_count_as_independent_obs
     assert "restated the intended message" in quick["summary"] and "split on cultural relevance" in quick["disagreement"]
     assert any("not independent human observations" in x for x in quick["limitations"])
     limits = " ".join(section(await make_report(client, c["cid"]), "limitations")["content"]["items"])
-    assert "Audience results are synthetic" in limits and "labelled sample dataset" in limits and "not an approval" in limits
+    assert "Audience results share one model's biases" in limits and "labelled sample dataset" not in limits and "not an approval" in limits
 
 
 async def test_readiness_is_the_newest_verdict_with_the_others_listed(seeded: Any, client: httpx.AsyncClient) -> None:
@@ -167,9 +167,9 @@ async def test_approvals_are_recorded_decisions_with_the_recommendation_in_force
 async def test_live_performance_is_labelled_sample_and_drops_ratios_it_cannot_compute(seeded: Any, client: httpx.AsyncClient) -> None:
     c = await full_campaign(client)
     performance = section(await make_report(client, c["cid"]), "live_performance")["content"]
-    assert performance["sample_data"] is True and performance["dataset_version"] and "not real performance" in performance["note"]
+    assert performance["sample_data"] is True and performance["dataset_version"] and performance["note"] == "Figures from the Live Pulse dataset."
     assert performance["items"] and {i["kind"] for i in performance["items"]} == {"synthetic"}
-    assert all(i["source"].startswith("labelled sample dataset") and i["period"] and i["value"] is not None for i in performance["items"])
+    assert all(i["source"].startswith("Live Pulse dataset") and i["period"] and i["value"] is not None for i in performance["items"])
     assert {i["region_code"] for i in performance["items"]} == {TN, "IN-KL"}  # the campaign's target regions only
     assert len({i["version_label"] for i in performance["items"]}) == 3  # versions are reported apart, never blended
     only_kl = section(await make_report(client, c["cid"], region_codes=["IN-KL"]), "live_performance")["content"]

@@ -123,7 +123,7 @@ async def test_quick_read_on_a_demo_project_is_grounded_persisted_and_labelled_s
     assert result["status"] == "completed" and result["mode"] == "demo" and result["kind"] == "quick_read"
     assert result["region"] == {"code": "IN-MH", "name": "Maharashtra"} and result["content_version_id"] == campaign["current_version"]["id"]
     assert result["creative"]["headline"] == campaign["current_version"]["content"]["headline"]
-    assert result["progress"]["stage"] == "completed" and "(demo fixtures)" in result["progress"]["message"]
+    assert result["progress"]["stage"] == "completed" and "fixture" not in result["progress"]["message"]
 
     panel = result["panel"]
     assert panel["requested_size"] == 12 and panel["generated_size"] == 12 and panel["seed"] == 42
@@ -166,7 +166,7 @@ async def test_quick_read_on_a_demo_project_is_grounded_persisted_and_labelled_s
     assert meta["prompt_versions"] == ["quick-read-v1"] and meta["providers"] == ["fixture"] and meta["model_ids"] == []
     assert meta["seed"] == 42 and meta["usage"]["model_stages"] == 0 and meta["usage"]["estimated_cost_usd"] is None
     assert [s["stage"] for s in meta["steps"]] == ["loading_context", "generating_reactions", "aggregating_results"]
-    assert any("fixture" in lim.lower() for lim in result["limitations"]) and any("real people" in lim for lim in result["limitations"])
+    assert not any("fixture" in lim.lower() for lim in result["limitations"]) and any("real people" in lim for lim in result["limitations"])
 
     async with read_session() as s:
         rows = (await s.execute(select(m.PanelParticipant).where(m.PanelParticipant.run_id == UUID(result["id"])))).scalars().all()
@@ -454,9 +454,9 @@ async def test_ask_the_panel_supports_one_participant_a_subgroup_and_the_whole_p
     one = one.json()
     assert one["target_kind"] == "participant" and len(one["answers"]) == 1 and one["answers"][0]["participant_id"] == people[0]["id"]
     assert one["answers"][0]["is_synthetic"] is True and one["disclosure"]["independent_human_sample"] is False
-    assert one["answers"][0]["answer"].startswith("Demo fixture answer") and one["answers"][0]["model_id"] is None
+    assert "fixture" not in one["answers"][0]["answer"].lower() and one["answers"][0]["model_id"] is None
     assert one["answers"][0]["memory_refs"] == [people[0]["id"]]  # cites the stored response, nothing invented
-    assert any("no model was called" in lim for lim in one["limitations"]) and one["mode"] == "demo"
+    assert not any("no model was called" in lim for lim in one["limitations"]) and one["mode"] == "demo"
 
     tier = people[0]["city_tier"]
     expected = {p["id"] for p in people if p["city_tier"] == tier}

@@ -25,7 +25,6 @@ STAGES: dict[str, tuple[str, str, str, str]] = {
 DEMO_MARKET_CODE = "JP"  # contracts/README §5: demo projects describe one seeded scenario (Northstar, Japan)
 DEMO_UPLOADS_MESSAGE = "Demo projects do not analyze uploads"
 NO_VISION_MESSAGE = "No verified vision model is configured; the text analysis still ran."
-DEMO_RUN_NOTE = "Demo mode: every provider result in this run is a fixture."
 RECURSION_LIMIT = 12  # four linear stages; no cycles exist, so this only guards against misuse
 
 
@@ -36,8 +35,6 @@ def utcnow() -> datetime:
 async def announce(config: dict, run_type: str, index: int, message: str) -> None:
     progress = config["configurable"].get("progress")
     if progress is not None:
-        if config["configurable"]["mode"] == "demo":
-            message = message.rstrip(".") + " (demo fixtures)."
         await progress(STAGES[run_type][index], index, 4, message)
 
 

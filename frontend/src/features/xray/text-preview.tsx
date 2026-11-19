@@ -294,7 +294,7 @@ export function TextPreviewTool({ creative, scene }: { creative: Creative; scene
                   size="sm"
                   onClick={() => patch(active.id, { text: LANGUAGES.find((l) => l.code === active.language)?.sample ?? "" })}
                 >
-                  Use a sample line
+                  Use an example line
                 </Button>
                 <span className="type-meta">A common greeting for checking layout. Not campaign copy and not reviewed by a native speaker.</span>
               </div>

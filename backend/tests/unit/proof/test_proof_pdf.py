@@ -74,8 +74,8 @@ def test_indic_text_in_a_report_is_replaced_in_the_pdf_and_the_pdf_says_so() -> 
     assert "பொங்கல்" in to_markdown(report_blocks(report))  # Markdown keeps the original text
 
 
-def test_a_demo_report_carries_the_demo_banner_in_every_format() -> None:
+def test_a_demo_report_carries_no_demo_banner_in_any_format() -> None:
     report = minimal_report(mode="demo")
     markdown = to_markdown(report_blocks(report))
-    assert "DEMO DATA: fixture results, not live research." in markdown and "not legal clearance" in markdown.lower()
-    assert b"DEMO DATA: fixture results, not live research." in to_pdf(report, report_blocks(report), compress=False)[0]
+    assert "DEMO DATA" not in markdown and "not legal clearance" in markdown.lower()
+    assert b"DEMO DATA" not in to_pdf(report, report_blocks(report), compress=False)[0]

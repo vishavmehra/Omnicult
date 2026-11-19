@@ -95,7 +95,7 @@ def _rt1(c: Context) -> Hit | None:
     if q is None or q.understood / q.respondents >= MESSAGE_FAIL_SHARE:
         return None
     return Hit(
-        f"Only {q.understood} of {q.respondents} synthetic respondents restated the intended message.",
+        f"Only {q.understood} of {q.respondents} respondents restated the intended message.",
         "Rework the core message for this region, then run Quick Read again.", "quick_read", _ids(q.evidence_ids),
     )
 
@@ -126,7 +126,7 @@ def _rt4(c: Context) -> Hit | None:
     if q is None or q.relevant / q.respondents >= RELEVANCE_FAIL_SHARE:
         return None
     return Hit(
-        f"Only {q.relevant} of {q.respondents} synthetic respondents found it relevant to this region.",
+        f"Only {q.relevant} of {q.respondents} respondents found it relevant to this region.",
         "Rethink the references and language for this region; consider a different cultural anchor.", "quick_read",
         _ids(q.evidence_ids),
     )
@@ -194,7 +194,7 @@ def _fx6(c: Context) -> Hit | None:
     if share < MESSAGE_FAIL_SHARE or share >= MESSAGE_GO_SHARE:
         return None
     return Hit(
-        f"The message was understood by {q.understood} of {q.respondents} synthetic respondents (Go needs {MESSAGE_GO_SHARE:.0%}).",
+        f"The message was understood by {q.understood} of {q.respondents} respondents (Go needs {MESSAGE_GO_SHARE:.0%}).",
         "Clarify the headline or call to action and run Quick Read again.", "quick_read", _ids(q.evidence_ids),
     )
 
@@ -217,7 +217,7 @@ def _fx8(c: Context) -> Hit | None:
     if share < RELEVANCE_FAIL_SHARE or share >= RELEVANCE_GO_SHARE:
         return None
     return Hit(
-        f"Only {q.relevant} of {q.respondents} synthetic respondents found it relevant to this region (Go needs {RELEVANCE_GO_SHARE:.0%}).",
+        f"Only {q.relevant} of {q.respondents} respondents found it relevant to this region (Go needs {RELEVANCE_GO_SHARE:.0%}).",
         "Strengthen regional references using supported evidence claims.", "quick_read", _ids(q.evidence_ids),
     )
 
@@ -281,7 +281,7 @@ def _fx15(c: Context) -> Hit | None:
         return None
     return Hit(
         f"The Quick Read panel is too small to judge ({q.respondents} respondents; at least {MIN_PANEL} needed).",
-        "Re-run Quick Read with a larger synthetic panel.", "quick_read", _ids(q.evidence_ids),
+        "Re-run Quick Read with a larger panel.", "quick_read", _ids(q.evidence_ids),
     )
 
 
@@ -306,12 +306,12 @@ class Rule:
 
 RULES: tuple[Rule, ...] = (
     Rule("RT1_message_not_understood", "rethink", 10,
-         f"At least {MIN_PANEL} synthetic respondents and fewer than {MESSAGE_FAIL_SHARE:.0%} restated the intended message.", _rt1),
+         f"At least {MIN_PANEL} respondents and fewer than {MESSAGE_FAIL_SHARE:.0%} restated the intended message.", _rt1),
     Rule("RT2_primary_objective_not_met", "rethink", 11, "A primary objective is marked not met.", _rt2),
     Rule("RT3_severe_unresolved_risk", "rethink", 12,
          f"Open Risk Check findings total {SEVERE_RISK_POINTS} points or more (high 40, medium 15, low 5).", _rt3),
     Rule("RT4_region_relevance_failure", "rethink", 13,
-         f"At least {MIN_PANEL} synthetic respondents and fewer than {RELEVANCE_FAIL_SHARE:.0%} found it relevant to the region.", _rt4),
+         f"At least {MIN_PANEL} respondents and fewer than {RELEVANCE_FAIL_SHARE:.0%} found it relevant to the region.", _rt4),
     Rule("FX1_blocking_finding_unresolved", "fix", 20, "A finding flagged blocks-Go is still open.", _fx1),
     Rule("FX2_open_high_finding", "fix", 21, "A high-severity Risk Check finding is still open.", _fx2),
     Rule("FX3_conflict_on_relied_claim", "fix", 22,
@@ -412,7 +412,7 @@ def assess(version_id: UUID, label: str, o: v.VersionObservations) -> v.Readines
         q, meter = o.quick_read, o.evidence_meter
         assert q is not None and meter is not None  # FX12 and FX13 fire without them
         reason = (
-            f"No readiness rule fires: {q.understood} of {q.respondents} synthetic respondents understood the message, "
+            f"No readiness rule fires: {q.understood} of {q.respondents} respondents understood the message, "
             f"no unresolved finding blocks Go, and evidence for the region reads {meter.strength}."
         )
         action = "Send this version for human approval in this region, and validate with real people before committing launch spend."

@@ -12,7 +12,7 @@ import type { LineResult } from "./types";
 
 /** One quiet source line under a result: what the back-translation is and where the checks run. */
 export function TranscreateLimits() {
-  return <p className="type-meta">Source: back-translation by the same model run as the copy; script and glossary checks computed in code; no native-speaker review.</p>;
+  return <p className="type-meta">Back-translation by the same model run as the copy; script and glossary checks computed in code; no native-speaker review.</p>;
 }
 
 function CheckRow({ label, result, children }: { label: string; result: ReactNode; children?: ReactNode }) {

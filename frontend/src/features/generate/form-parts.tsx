@@ -109,9 +109,7 @@ export function StartRow({
   const ready = !blocked && (demo || confirmed) && !working && !pending;
   return (
     <div className="space-y-3 border-t border-border pt-4 lg:sticky lg:bottom-0 lg:z-10 lg:-mx-5 lg:-mb-5 lg:bg-surface lg:px-5 lg:pb-5">
-      {demo ? (
-        <p className="text-[13px] text-ink-secondary">This project shows saved output. No model is called and nothing is charged.</p>
-      ) : (
+      {demo ? null : (
         <label className="flex items-start gap-2.5 text-[13.5px] text-ink-body">
           <input type="checkbox" checked={confirmed} onChange={(e) => onConfirm(e.target.checked)} className="mt-0.5 size-4 shrink-0 accent-primary" />
           <span>

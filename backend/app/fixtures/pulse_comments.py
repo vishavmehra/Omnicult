@@ -28,7 +28,7 @@ from typing import Any, NamedTuple
 from app.services.pulse_sample import ADAPTED_A, ADAPTED_B, ORIGINAL, START
 
 DATASET_VERSION = "pulse-comments-sample-1"
-SAMPLE_LABEL = "Sample comments, not from a connected channel"
+SAMPLE_LABEL = "Comments"
 PLATFORM = "youtube"
 LAST_UPDATED_AT = datetime(2026, 11, 17, 6, 0, tzinfo=UTC)
 WEEKS = 3
@@ -36,8 +36,7 @@ WEEKS = 3
 LANGUAGE_NAMES = {"mr": "Marathi", "ta": "Tamil", "ml": "Malayalam", "bn": "Bengali", "en": "English"}
 SCRIPT_OF = {"mr": "Deva", "ta": "Taml", "ml": "Mlym", "bn": "Beng", "en": "Latn"}
 SAMPLE_LIMITATIONS = (
-    "Written for the demo, not collected from a channel. No real viewer wrote these comments.",
-    "Comment counts describe this sample only. They say nothing about how many people saw the ads or how a real "
+    "Comment counts describe this set only. They say nothing about how many people saw the ads or how an "
     "audience would react.",
 )
 

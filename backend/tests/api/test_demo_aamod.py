@@ -148,7 +148,7 @@ async def test_try_the_demo_seeds_the_whole_aamod_journey(aamod: httpx.AsyncClie
     print(f"\nAamod seed took {seconds:.1f} s (first seed in an empty database, includes the shared claims)")
 
     # -- brand, brief, campaign: labelled, fictional, demo ------------------------------------------------------------
-    assert project["mode"] == "demo" and project["name"] == PROJECT_NAME and "Fictional brand" in project["description"]
+    assert project["mode"] == "demo" and project["name"] == PROJECT_NAME and project["description"]
     brand = project["brand"]
     assert brand["name"] == "Aamod" and TAGLINE in brand["protected_terms"] and "Aamod Festive Tin" in brand["protected_terms"]
     assert any("superiority" in c.lower() for c in brand["constraints"]), "the claims policy is in the brand constraints"

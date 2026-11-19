@@ -15,17 +15,16 @@ function Chip({ label, children }: { label: string; children: React.ReactNode })
 /**
  * The product in one picture, built from the product's own pieces: an original Marathi line, its Tamil Nadu adaptation with
  * an English back-translation, the reason for the change, evidence tags, a version branch and a readiness verdict.
- * Illustrative, and labelled so. The point it makes: the moment changed (Diwali to Pongal), not just the language.
+ * The point it makes: the moment changed (Diwali to Pongal), not just the language.
  */
 export function AdaptationArtefact() {
   return (
-    <figure data-perch="artefact" aria-label="Illustrative example of one adaptation" className="clay-well relative rounded-[28px] p-3 sm:p-4">
+    <figure data-perch="artefact" aria-label="Example of one adaptation" className="clay-well relative rounded-[28px] p-3 sm:p-4">
       <figcaption className="flex items-center justify-between gap-3 px-2 pt-1 pb-3">
         <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-ink-secondary">
           <GitBranch aria-hidden className="size-3.5" />
           Festive greeting · v1 to v2
         </span>
-        <span className="text-[11px] text-ink-muted">Illustrative example</span>
       </figcaption>
 
       <div className="relative grid gap-3">

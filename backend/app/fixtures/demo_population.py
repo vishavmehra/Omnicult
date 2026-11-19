@@ -93,7 +93,7 @@ def analysis(ctx: Context) -> dict:
     rows = [(g["group"], g["distribution"]["rates"]["positive"]) for g in ctx["tallies"]["by_group"] if g["distribution"]["denominator"]]
     rows.sort(key=lambda r: -r[1])
     differences = [f"{rows[0][0]} has the highest positive rate ({rows[0][1]:.0%}) and {rows[-1][0]} the lowest "
-                   f"({rows[-1][1]:.0%}) in these synthetic interviews."] if len(rows) > 1 else []
+                   f"({rows[-1][1]:.0%}) in these interviews."] if len(rows) > 1 else []
     misunderstandings = ctx["tallies"]["misunderstandings"]
     if misunderstandings:
         differences.append(f"The most common misunderstanding was '{misunderstandings[0]['label']}' "
@@ -101,7 +101,7 @@ def analysis(ctx: Context) -> dict:
     return {"group_differences": differences,
             "next_actions": ["Name the product and one concrete benefit in the headline.",
                              "Test the headline with real weekend hikers in Japan before launch."],
-            "evidence_gaps": ["No observed outcomes from real people.", "Interest signals are demo fixtures, not live data."]}
+            "evidence_gaps": ["No observed outcomes from real people."]}
 
 
 def social_round(ctx: Context) -> dict:

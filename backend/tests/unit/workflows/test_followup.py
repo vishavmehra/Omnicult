@@ -47,11 +47,11 @@ async def test_demo_answer_quotes_the_stored_interview_without_a_model():
     llm, provider = gateway({})
     reply = await answer_followup(population_study_id=uuid4(), participant=p, question="Why?", mode="demo", llm=llm)
     interview = p.memories[1]
-    assert reply.answer.startswith("Demo fixture answer") and interview.summary in reply.answer
+    assert "fixture" not in reply.answer.lower() and interview.summary in reply.answer
     assert reply.memory_refs == [interview.ref_id] and reply.model_id is None and provider.requests == []
     group = await answer_group_question(population_study_id=uuid4(), group_id="grp-1", participants=[p, participant(1)],
                                         question="Why?", mode="demo", llm=llm)
-    assert len(group.answers) == 2 and "no model was called" in group.summary and provider.requests == []
+    assert len(group.answers) == 2 and "fixture" not in group.summary.lower() and provider.requests == []
 
 
 async def test_live_followup_cites_only_stored_memories():

@@ -49,7 +49,6 @@ export function NewCampaign({ brands, onClose }: { brands: ProjectSummary[]; onC
               >
                 <input type="radio" name="brand" value={b.id} checked={b.id === brandId} onChange={() => setBrandId(b.id)} className="sr-only" />
                 {b.name}
-                {b.mode === "demo" && <span className="text-[11.5px] text-warning">demo</span>}
               </label>
             ))}
             <label
@@ -63,7 +62,7 @@ export function NewCampaign({ brands, onClose }: { brands: ProjectSummary[]; onC
             </label>
           </div>
           {brand?.mode === "demo" && (
-            <p className="text-[12.5px] text-warning">Demo brands run on labelled fixtures only. Create a new brand to work with your own copy and live sources.</p>
+            <p className="text-[12.5px] text-warning">Demo brands are read-only. Create a new brand to work with your own copy and live sources.</p>
           )}
         </fieldset>
 

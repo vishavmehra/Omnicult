@@ -21,7 +21,7 @@ import {
   roleColor,
   type TileDatum,
 } from "@/components/creative";
-import { ModeBadge, Tag } from "@/components/evidence/badges";
+import { Tag } from "@/components/evidence/badges";
 import { WORKSPACES, workspaceHref, type WorkspaceKey } from "@/components/shell/workspaces";
 import { ErrorState } from "@/components/states";
 import { RunStatusBadge } from "@/components/workflow/run-status";
@@ -122,7 +122,6 @@ export function HeroCampaign({ campaign, card, run, className }: { campaign: Dir
           <div>
             <p className="flex flex-wrap items-center gap-x-2 text-[12.5px] text-ink-secondary">
               {campaign.brand.name}
-              {campaign.brand.mode === "demo" && <ModeBadge mode="demo" />}
             </p>
             <h2 id="hero-title" className="type-title mt-1 text-[24px] text-ink sm:text-[28px]">
               <Link href={workspaceHref(campaign.id, "desk")} className="hover:text-rose">
@@ -608,7 +607,6 @@ export function RunsTile({ runs, pending, className }: { runs: { run: Run; brand
                 <RunStatusBadge status={run.status} />
                 <span className="truncate text-[12px] text-ink-muted">
                   {brand.name}
-                  {run.mode === "demo" && " · demo fixture"}
                 </span>
                 <span className="type-meta text-right" title={formatDateTime(run.created_at)}>
                   {formatRelative(run.created_at)}
@@ -658,7 +656,6 @@ function CampaignCard({ campaign, card, run }: { campaign: DirectoryCampaign; ca
         </h3>
         <p className="mt-0.5 flex items-center gap-2 truncate text-[12px] text-ink-secondary">
           {campaign.brand.name}
-          {campaign.brand.mode === "demo" && <ModeBadge mode="demo" />}
         </p>
       </div>
       <div className="flex items-center gap-3">

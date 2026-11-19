@@ -37,7 +37,6 @@ export function Dashboard({ campaignId, status }: { campaignId: string; status: 
       )}
       <TrendSection campaignId={campaignId} filters={filters} names={names} />
       <CompareSection campaignId={campaignId} status={status} filters={filters} names={names} />
-      <p className="type-meta">Source: sample dataset {status.dataset_version}</p>
     </div>
   );
 }

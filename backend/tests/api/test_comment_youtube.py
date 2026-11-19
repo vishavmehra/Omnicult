@@ -314,7 +314,7 @@ async def test_the_sample_and_its_reading_stay_apart_from_the_youtube_ones(clien
     assert removed.status_code == 204
     back = (await client.get(f"{base}/status")).json()
     assert back["source_kind"] == "sample" and back["is_sample"] is True and back["comment_count"] == COMMENTS and back["analysis"] is not None
-    assert back["source_line"] == "Source: sample comments, written for the demo, not from a connected channel"
+    assert back["source_line"] == ""
     async with read_session() as s:
         assert await s.scalar(select(func.count()).select_from(m.PulseComment).where(m.PulseComment.source_kind == "youtube")) == 0
         assert await s.scalar(select(func.count()).select_from(m.YoutubeSource)) == 0

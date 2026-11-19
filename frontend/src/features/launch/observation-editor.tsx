@@ -151,7 +151,6 @@ export function ObservationEditor({ versionId, regionCode }: { versionId: string
         onAdd={() => set((d) => withGroup(d, "quick_read", blank.quick_read()))}
         onRemove={() => set((d) => withGroup(d, "quick_read", null))}
         error={problems.quick_read}
-        note={<p className="type-meta">Counts from a simulated panel.</p>}
       >
         {q && (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">

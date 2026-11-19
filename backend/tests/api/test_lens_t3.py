@@ -68,7 +68,7 @@ async def test_the_demo_trend_radar_reads_the_recording_and_keeps_history(aamod:
         assert response.status_code == 200, response.text
         radar = response.json()
         again = (await client.post(f"{base}/trend-radar/refresh", json={"region_codes": ["IN-TN"]})).json()
-    assert radar["mode"] == "demo" and radar["source_line"].startswith("Demo fixture: Wikipedia pageviews") and "recorded" in radar["source_line"]
+    assert radar["mode"] == "demo" and radar["source_line"] == ""
     assert radar["category"]["pack_key"] == "festive_sweets_snacks" and radar["category"]["status"] == "matched"
     assert radar["moments_window"] == {"date_from": "2027-10-04", "date_to": "2027-11-01"} and radar["moments_window_basis"] == "campaign_dates"
     assert radar["method"]["version"] == "attention-windows-v2" and radar["method"]["year_months"] == 12 and "never changes the label" in radar["method"]["description"]
@@ -92,7 +92,7 @@ async def test_the_demo_trend_radar_reads_the_recording_and_keeps_history(aamod:
     assert tn["moments"] and all(mo["date"] is None or "2027-10-04" <= mo["date"] <= "2027-11-01" for mo in tn["moments"])
     assert all(mo["timing_text"] for mo in tn["moments"] if mo["date"] is None)  # no exact day: the source's own words instead
     assert any(mo["term_key"] for r in radar["regions"] for mo in r["moments"])
-    assert any("not in the demo recording" in g for g in tn["gaps"])  # a festival the recording does not hold is said, not drawn
+    assert any("has no series for this state" in g for g in tn["gaps"])  # a festival the recording does not hold is said, not drawn
     # a second refresh keeps the first reading as history
     twice = next(i for r in again["regions"] if r["region_code"] == "IN-TN" for i in r["items"] if i["label"] == "Pongal (festival)")
     assert twice["snapshots"] == 2 and len(twice["history"]) == 1 and twice["history"][0]["direction"] == twice["direction"]
@@ -131,7 +131,7 @@ async def test_the_demo_category_shelf_lists_what_wikidata_records_and_leaves_th
         first = await client.post(f"{base}/category-shelf/refresh", json={})
         assert first.status_code == 200, first.text
         shelf = (await client.post(f"{base}/category-shelf/refresh", json={})).json()
-    assert shelf["mode"] == "demo" and shelf["source_line"].startswith("Demo fixture: Wikidata statements and Wikipedia pageviews")
+    assert shelf["mode"] == "demo" and shelf["source_line"] == ""
     assert shelf["category"]["pack_label"] == "Festive sweets and snacks"
     assert shelf["snapshot"]["version"] == 2 and [h["version"] for h in shelf["history"]] == [1]
     regions = {r["region_code"]: r for r in shelf["regions"]}

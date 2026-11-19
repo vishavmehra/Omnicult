@@ -149,7 +149,7 @@ function explain(code: ErrorCode | "NETWORK_ERROR"): Explanation {
             <Link className="underline underline-offset-2" href="/app">
               Try the demo
             </Link>{" "}
-            to explore the workflow on labelled fixtures.
+            to explore the workflow.
           </>
         ),
       };

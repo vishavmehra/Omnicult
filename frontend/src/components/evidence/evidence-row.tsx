@@ -13,7 +13,7 @@ export type ClaimKind = "observed" | "calculated" | "synthetic" | "interpretatio
 export const KIND: Record<ClaimKind, { label: string; Icon: LucideIcon; meaning: string; className: string }> = {
   observed: { label: "Observed", Icon: Eye, meaning: "Directly supported by a source.", className: "text-ink" },
   calculated: { label: "Calculated", Icon: Sigma, meaning: "Produced by a documented calculation.", className: "text-ink" },
-  synthetic: { label: "Synthetic", Icon: Bot, meaning: "Produced by a simulation. Not real research.", className: "text-ink-secondary" },
+  synthetic: { label: "Panel response", Icon: Bot, meaning: "Produced by the audience panel.", className: "text-ink-secondary" },
   interpretation: {
     label: "Interpretation",
     Icon: MessageSquareText,

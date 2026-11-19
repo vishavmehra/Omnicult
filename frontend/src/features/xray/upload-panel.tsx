@@ -312,9 +312,7 @@ export function RunForm({
         </Field>
       </div>
 
-      {demo ? (
-        <p className="text-[12.5px] text-ink-secondary">Demo brand: no model is called, so the result is timing and keyframes only.</p>
-      ) : (
+      {demo ? null : (
         <p className="text-[12.5px] text-ink-secondary">
           A live run sends the creative&apos;s keyframes to a vision model, one call per frame, and costs model usage. Run it once, then read the result.
         </p>

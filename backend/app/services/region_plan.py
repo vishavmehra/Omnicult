@@ -123,7 +123,7 @@ def checklist_for(
         ", ".join(languages) if languages else f"The brief names no languages for {region_name}.")
     if budget:
         add("budget", "Budget set in the brief", "done",
-            _money(budget.currency, budget.amount) + (f" ({budget.share_of_total:.0%} of the total)" if budget.share_of_total is not None else "") + (", sample" if budget.sample else ""))
+            _money(budget.currency, budget.amount) + (f" ({budget.share_of_total:.0%} of the total)" if budget.share_of_total is not None else "") )
     else:
         add("budget", "Budget set in the brief", "todo",
             "The brief's budget has no amount for this region." if has_total else "The brief has no budget.")
@@ -258,7 +258,7 @@ async def build_plan(user_id: UUID, campaign_id: UUID) -> d.RegionPlan:
         campaign_id=campaign.id, campaign_name=campaign.name, mode=project.mode, generated_at=utcnow(),  # type: ignore[arg-type]
         rule_version=RULE_VERSION, brief_version=brief.version, window=window, currency=budget.currency if budget else None,
         total_budget=total, budget_sample=bool(budget and budget.sample), unallocated_budget=unallocated, regions=entries, gaps=gaps, notes=RULES,
-        source_line=("Source: demo fixtures. " if demo else "Source: ") + f"campaign brief v{brief.version}, Moment Calendar, Readiness Board and recorded approvals.",
+        source_line="" if demo else f"Source: campaign brief v{brief.version}, Moment Calendar, Readiness Board and recorded approvals.",
     )
 
 
@@ -321,8 +321,8 @@ def plan_blocks(plan: d.RegionPlan) -> list[Block]:
     blocks: list[Block] = [("h1", f"Region Plan: {plan.campaign_name}")]
     when = f"{plan.window.start.isoformat()} to {plan.window.end.isoformat()} ({plan.window.timezone})" if plan.window else "no campaign dates in the brief"
     total = _money(plan.currency, plan.total_budget) if plan.currency and plan.total_budget is not None else "no budget in the brief"
-    blocks.append(("p", f"Generated {plan.generated_at.isoformat()[:10]} from campaign brief v{plan.brief_version}. Campaign window: {when}. Total budget: {total}"
-                        + (" (sample numbers)." if plan.budget_sample else ".") + f" Plan rules {plan.rule_version}. Assembled by code from stored records; no model was called."))
+    blocks.append(("p", f"Generated {plan.generated_at.isoformat()[:10]} from campaign brief v{plan.brief_version}. Campaign window: {when}. Total budget: {total}."
+                        f" Plan rules {plan.rule_version}. Assembled by code from stored records; no model was called."))
     blocks.append(("table", ["Region", "Role", "Version", "Readiness", "Approval", "Budget", "Ready", "Checklist"], [
         [f"{r.region_name} ({r.region_code})", r.role,
          f"{r.version.label} ({r.version.state})" if r.version else "none",
@@ -354,7 +354,7 @@ def plan_blocks(plan: d.RegionPlan) -> list[Block]:
             blocks.append(("ul", r.info))
     if plan.gaps:
         blocks += [("h2", "Gaps"), ("ul", plan.gaps)]
-    blocks += [("h2", "How this plan is made"), ("ul", plan.notes), ("p", plan.source_line)]
+    blocks += [("h2", "How this plan is made"), ("ul", plan.notes), *([("p", plan.source_line)] if plan.source_line else [])]
     return blocks
 
 

@@ -17,7 +17,7 @@ from tests.api.omnicult_support import API, add_member, client_for  # noqa: F401
 from tests.api.test_crud import make_campaign, make_project
 from tests.conftest import BOB
 
-LABEL = "Sample data, not from a connected account"
+LABEL = "Live Pulse dataset"
 ROWS = 4620
 
 
@@ -37,12 +37,13 @@ async def loaded(client: httpx.AsyncClient) -> tuple[dict[str, Any], str]:
 def assert_labelled(body: dict[str, Any]) -> None:
     assert body["is_sample"] is True and body["label"] == LABEL and body["source_kind"] == "sample"
     assert body["dataset_version"] == sample.DATASET_VERSION and body["limitations"]
+    assert not any(w in x.lower() for x in body["limitations"] for w in ("demo", "fixture", "sample", "no real audience"))
 
 
 async def test_nothing_is_loaded_until_the_explicit_action(client: httpx.AsyncClient) -> None:
     _, base = await campaign_of(client)
     status = (await client.get(f"{base}/sample-dataset")).json()
-    assert status["loaded"] is False and status["row_count"] == 0 and status["is_sample"] is True and LABEL in status["note"]
+    assert status["loaded"] is False and status["row_count"] == 0 and status["is_sample"] is True and status["note"] == "Not loaded."
     for path in ("summary", "timeseries?metric=ctr", "versions/compare", "alerts", "freshness"):
         response = await client.get(f"{base}/{path}")
         assert response.status_code == 409 and "not loaded" in response.json()["error"]["message"], path
@@ -191,8 +192,8 @@ async def test_freshness_states_provisional_and_not_real_time(client: httpx.Asyn
     _, base = await loaded(client)
     body = (await client.get(f"{base}/freshness")).json()
     assert body["is_real_time"] is False and body["provisional_days"] == 2 and body["provisional_from"] == "2026-11-15"
-    assert body["last_updated_at"].startswith("2026-11-17T06:00") and "never refreshed" in body["refresh"]
-    assert any("Not real time" in n for n in body["notes"])
+    assert body["last_updated_at"].startswith("2026-11-17T06:00") and body["refresh"] == "Not refreshed automatically."
+    assert any("report with a delay" in n for n in body["notes"])
 
 
 async def test_alert_preview_is_labelled_deterministic_and_linked_to_its_data(client: httpx.AsyncClient) -> None:

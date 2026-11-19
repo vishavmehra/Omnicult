@@ -79,7 +79,7 @@ function QuickReadForm({ options, onStarted }: { options: SamplingOptions; onSta
             ))}
           </NativeSelect>
         </FieldBlock>
-        <FieldBlock label="Panel size" htmlFor="qr-size" error={sizeError} hint={`Synthetic participants to generate, ${min} to ${max}. A panel size, not a number of people surveyed.`}>
+        <FieldBlock label="Panel size" htmlFor="qr-size" error={sizeError} hint={`Participants to generate, ${min} to ${max}.`}>
           <input
             id="qr-size"
             type="number"
@@ -145,7 +145,7 @@ export function QuickReadTab({ loc }: { loc: Loc }) {
   return (
     <div className="space-y-5">
       <p className="max-w-[68ch] text-[14px] text-ink-secondary">
-        A fast read of how a small synthetic panel reacts to the creative in one region: first reactions, whether the message survives, what confuses, and regional concerns. Every answer is simulated.
+        A fast read of how a small panel reacts to the creative in one region: first reactions, whether the message survives, what confuses, and regional concerns.
       </p>
       <SetupPanel title="New Quick Read" meta={runs.data.length ? undefined : "Start here"} open={setupOpen} onOpenChange={setOpen}>
         <QuickReadForm
@@ -162,7 +162,7 @@ export function QuickReadTab({ loc }: { loc: Loc }) {
         selectedId={selectedId}
         onSelect={loc.selectRun}
         regionName={regionName}
-        describe={(r) => pluralise(r.participant_count, "synthetic participant")}
+        describe={(r) => pluralise(r.participant_count, "participant")}
       />
 
       {selectedId && result.error && <ErrorState error={result.error} onRetry={() => void result.refetch()} />}

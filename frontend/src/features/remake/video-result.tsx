@@ -4,10 +4,9 @@ import { Check, TriangleAlert, X } from "lucide-react";
 import { useState } from "react";
 
 import { useAssetObjectUrl } from "@/features/assets/asset-uploader";
-import { formatDate } from "@/lib/format";
 
 import type { RemakeOutput } from "./api";
-import { AiTag, LockChip, Notice, SourceLine, mmss, usd } from "./parts";
+import { AiTag, LockChip, Notice, mmss, usd } from "./parts";
 
 const KB = 1024;
 const size = (bytes: number) => (bytes >= KB * KB ? `${(bytes / (KB * KB)).toFixed(1)} MB` : `${Math.round(bytes / KB)} KB`);
@@ -28,10 +27,6 @@ export function VideoResult({ output }: { output: RemakeOutput }) {
     <section aria-label="Clip result" className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
         <h2 className="flex items-center gap-2 text-[17px] font-semibold text-ink">Regional clip <AiTag /></h2>
-        <SourceLine>
-          {demo ? "Saved demonstration clip" : `${v.model} · ${v.location ?? "us-central1"}`} · {v.seconds} s · {v.resolution} · {formatDate(output.created_at)}
-          {demo ? "" : ` · ${usd(output.estimated_cost_usd)} estimated`}
-        </SourceLine>
       </div>
 
       <div className="space-y-2 rounded-card border border-border bg-surface p-3.5">
@@ -135,13 +130,13 @@ export function VideoResult({ output }: { output: RemakeOutput }) {
         <summary className="cursor-pointer font-medium text-ink">Prompt and provenance</summary>
         <dl className="mt-2.5 grid gap-1.5 sm:grid-cols-[9rem_minmax(0,1fr)]">
           <dt className="type-meta">Model</dt>
-          <dd>{demo ? `${v.model ?? "Veo"} (saved demonstration clip, generated once)` : `${v.model} · ${v.location}`}</dd>
+          <dd>{demo ? `${v.model ?? "Veo"}` : `${v.model} · ${v.location}`}</dd>
           <dt className="type-meta">Length and size</dt>
           <dd>{v.seconds} s asked for · {v.resolution} · {v.aspect_ratio ?? "no aspect ratio"}</dd>
           <dt className="type-meta">Estimated cost</dt>
-          <dd>{demo ? "none: saved clip" : `${usd(output.estimated_cost_usd)} from the price table, not a billed amount`}</dd>
+          <dd>{demo ? "none" : `${usd(output.estimated_cost_usd)} from the price table, not a billed amount`}</dd>
           <dt className="type-meta">Start frame</dt>
-          <dd>{{ remake_scene: "The Remake: Visuals scene with the locked regions restored, no text", asset: "An image chosen for this run", demo_fixture: "The saved demonstration scene with the locked regions restored, no text", none: "None: made from the prompt alone" }[v.start_source]}</dd>
+          <dd>{{ remake_scene: "The Remake: Visuals scene with the locked regions restored, no text", asset: "An image chosen for this run", demo_fixture: "The Remake: Visuals scene with the locked regions restored, no text", none: "None: made from the prompt alone" }[v.start_source]}</dd>
           <dt className="type-meta">Prompt version</dt>
           <dd className="font-mono text-[12.5px]">{v.prompt_version}</dd>
           <dt className="type-meta">Version created</dt>

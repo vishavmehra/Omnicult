@@ -41,9 +41,8 @@ export function BuzzTab({ loc }: { loc: Loc }) {
     <div className="space-y-5">
       <div className="space-y-1">
         <p className="max-w-[68ch] text-[14px] text-ink-secondary">
-          Synthetic posts, replies and reshares in response to the creative, per state and language: who sees it, who passes it on, what they say and how the message changes on the way.
+          Posts, replies and reshares in response to the creative, per state and language: who sees it, who passes it on, what they say and how the message changes on the way.
         </p>
-        <p className="type-meta">Simulated spread inside a synthetic population. Not a prediction of real virality.</p>
       </div>
 
       <SetupPanel title="New simulation" meta={items.length ? undefined : "Start here"} open={setupOpen} onOpenChange={setOpen}>
@@ -57,7 +56,7 @@ export function BuzzTab({ loc }: { loc: Loc }) {
         />
       </SetupPanel>
 
-      <RunPicker runs={items} selectedId={selectedId} onSelect={loc.selectRun} regionName={stateName} describe={(r) => pluralise(r.participant_count, "simulated account")} />
+      <RunPicker runs={items} selectedId={selectedId} onSelect={loc.selectRun} regionName={stateName} describe={(r) => pluralise(r.participant_count, "account")} />
 
       {selectedId && result.error && <ErrorState error={result.error} onRetry={() => void result.refetch()} />}
       {selectedId && !result.data && !result.error && <LoadingState label="Opening the simulation…" />}

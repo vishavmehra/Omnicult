@@ -21,7 +21,6 @@ function tooltipLines(p: UsagePoint, kind: Kind) {
   if (kind === "spend") {
     lines.push(p.calls === 0 ? "No calls" : p.estimated_cost_usd === null ? "Cost not recorded" : `${usd(p.estimated_cost_usd)} estimated`);
     if (p.calls > 0 && p.estimated_cost_usd !== null && p.calls_without_cost > 0) lines.push(`${num.format(p.calls_without_cost)} without a recorded cost`);
-    if (p.fixture_calls > 0) lines.push(`${num.format(p.fixture_calls)} fixture`);
   } else {
     lines.push(`${num.format(p.calls)} ${p.calls === 1 ? "call" : "calls"}${p.failed_calls ? `, ${num.format(p.failed_calls)} failed` : ""}`);
   }

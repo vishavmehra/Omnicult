@@ -65,7 +65,7 @@ RULES: dict[str, tuple[str, str]] = {
     "A2_overall_weighted_utility": ("overall", "Weighted mean of utilities over the assessed dimensions."),
     "A3_min_coverage": ("overall", f"Overall is null when the assessed weight is below {MIN_COVERAGE}."),
     "M1_quick_read_understanding": (
-        "message_clarity", "Share of synthetic respondents who restated the intended message (weight 0.7)."),
+        "message_clarity", "Share of respondents who restated the intended message (weight 0.7)."),
     "M2_back_translation": (
         "message_clarity", "Share of lines whose English back-translation kept the meaning (weight 0.3)."),
     "M3_script_error_cap": ("message_clarity", f"Any line with a script error caps the dimension at {SCRIPT_ERROR_CAP:g}."),
@@ -73,7 +73,7 @@ RULES: dict[str, tuple[str, str]] = {
     "B2_prohibited_term_cap": (
         "brand_fidelity", f"Any line with a prohibited term caps the dimension at {PROHIBITED_TERM_CAP:g}."),
     "C1_quick_read_relevance": (
-        "cultural_relevance", "Share of synthetic respondents who judged the creative relevant to the region (weight 0.6)."),
+        "cultural_relevance", "Share of respondents who judged the creative relevant to the region (weight 0.6)."),
     "C2_reference_grounding": (
         "cultural_relevance", "Share of cultural references backed by an evidence claim (weight 0.4)."),
     "R1_open_finding_points": (
@@ -81,7 +81,7 @@ RULES: dict[str, tuple[str, str]] = {
         "Open findings score high 40, medium 15, low 5 points, capped at 100 (weight 0.7). Resolved and dismissed "
         "findings score 0."),
     "R2_panel_concerns": (
-        "sensitivity_risk", "Share of synthetic respondents who raised a regional concern (weight 0.3)."),
+        "sensitivity_risk", "Share of respondents who raised a regional concern (weight 0.3)."),
     "R3_open_high_floor": (
         "sensitivity_risk", f"Any open high-severity finding keeps the dimension at {OPEN_HIGH_FLOOR:g} or above."),
     "O1_objective_status": (
@@ -155,7 +155,7 @@ def _message_clarity(o: v.VersionObservations) -> _Draft:
         return d
     d.use("M1_quick_read_understanding", _signal(
         "quick_read.understood_share", pct(q.understood, q.respondents), 0.7,
-        f"{q.understood} of {q.respondents} synthetic respondents restated the intended message."))
+        f"{q.understood} of {q.respondents} respondents restated the intended message."))
     if t is not None and t.meaning_preserved_lines is not None:
         d.use("M2_back_translation", _signal(
             "transcreation.meaning_preserved_share", pct(t.meaning_preserved_lines, t.lines_checked), 0.3,
@@ -192,7 +192,7 @@ def _cultural_relevance(o: v.VersionObservations) -> _Draft:
         return d
     d.use("C1_quick_read_relevance", _signal(
         "quick_read.relevant_share", pct(q.relevant, q.respondents), 0.6,
-        f"{q.relevant} of {q.respondents} synthetic respondents found it relevant to the region."))
+        f"{q.relevant} of {q.respondents} respondents found it relevant to the region."))
     if r is not None:
         d.use("C2_reference_grounding", _signal(
             "references.supported_share", pct(r.references_supported, r.references_checked), 0.4,
@@ -220,7 +220,7 @@ def _sensitivity_risk(o: v.VersionObservations) -> _Draft:
     if q is not None:
         d.use("R2_panel_concerns", _signal(
             "quick_read.concerned_share", pct(q.concerned, q.respondents), 0.3,
-            f"{q.concerned} of {q.respondents} synthetic respondents raised a regional concern."))
+            f"{q.concerned} of {q.respondents} respondents raised a regional concern."))
     else:
         d.missing.append("quick_read")
     d.value = _mean(d.signals)

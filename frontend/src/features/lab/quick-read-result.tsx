@@ -47,7 +47,7 @@ export function QuickReadView({ result, onAsk, onNewRun }: { result: QuickReadRe
           <Panel
             id="qr-panel"
             title="The panel"
-            meta={`${pluralise(panel.generated_size, "synthetic participant")} generated${panel.requested_size !== panel.generated_size ? `, ${panel.requested_size} requested` : ""}`}
+            meta={`${pluralise(panel.generated_size, "participant")} generated${panel.requested_size !== panel.generated_size ? `, ${panel.requested_size} requested` : ""}`}
           >
             <dl className="type-ledger grid gap-x-6 gap-y-1 text-[13px] sm:grid-cols-[8rem_minmax(0,1fr)]">
               <dt className="text-ink-muted">Region</dt>
@@ -68,7 +68,7 @@ export function QuickReadView({ result, onAsk, onNewRun }: { result: QuickReadRe
 
           {summary ? (
             <>
-              <Panel id="qr-reactions" title="Reactions" meta="Counts of synthetic participants">
+              <Panel id="qr-reactions" title="Reactions" meta="Counts of participants">
                 <DistributionLedger dist={summary.sentiment} />
               </Panel>
 
@@ -99,7 +99,7 @@ export function QuickReadView({ result, onAsk, onNewRun }: { result: QuickReadRe
                 <StatementList points={summary.regional_concerns} claims={claims} denominator={n} empty="No regional concern was raised." />
               </Panel>
 
-              <Panel id="qr-ratings" title="Ratings" meta="Calculated from synthetic ratings">
+              <Panel id="qr-ratings" title="Ratings" meta="Calculated from the ratings">
                 <ul className="ledger-rules">
                   {ratings.map((r) => (
                     <RatingRow key={r.dimension} result={r} />
@@ -113,7 +113,7 @@ export function QuickReadView({ result, onAsk, onNewRun }: { result: QuickReadRe
                   <>
                     <SegmentTable groups={segments} />
                     <p className="mt-2 max-w-[68ch] text-xs text-ink-secondary">
-                      Slices hold a handful of synthetic participants each, so differences between them are noisy. Read them as questions to ask, not as market segments, and not as findings about real people.
+                      Slices hold a handful of participants each, so differences between them are noisy. Read them as questions to ask, not as market segments.
                     </p>
                   </>
                 ) : (
@@ -173,7 +173,7 @@ export function QuickReadView({ result, onAsk, onNewRun }: { result: QuickReadRe
             </Panel>
           )}
 
-          <Panel id="qr-participants" title="Participants" meta={`${participants.length} synthetic`}>
+          <Panel id="qr-participants" title="Participants" meta={`${participants.length} participants`}>
             <QuickReadParticipants participants={participants} claims={claims} onAsk={(id) => onAsk({ participant: id })} />
           </Panel>
         </>

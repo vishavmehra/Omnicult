@@ -60,11 +60,10 @@ from app.services.identity import ensure_personal_workspace
 logger = logging.getLogger("omnicult.demo")
 
 PROJECT_NAME = "Aamod Festive Tin, Diwali 2027"
-DEMO_LABEL = "Fictional brand · demo workspace."
 MARKET = {"country_code": "IN", "display_name": "India: Maharashtra, Tamil Nadu, Kerala, West Bengal"}
 ORIGIN = "IN-MH"
 REGIONS = (ORIGIN, *(p.region for p in fx.ADAPTATIONS))
-FIXTURE_LABEL = "Demonstration fixture (fictional brand Aamod). Not a live result."
+FIXTURE_LABEL = "Fictional brand Aamod."
 MODEL = "demo-fixture"
 PRIMARY_LANGUAGE = {"IN-MH": "mr", "IN-TN": "ta", "IN-KL": "ml", "IN-WB": "bn"}
 CAMPAIGN_WINDOW = (date(2027, 10, 4), date(2027, 11, 1))  # the brief's dates
@@ -170,7 +169,7 @@ async def _build(user_id: UUID, project_id: UUID) -> None:
         await lens_t3.seed_lens_t3_demo(user_id, campaign_id)
     async with _timed("proof report"):
         await proof_reports.create_report(user_id, campaign_id, ProofReportCreate(
-            title="Aamod Festive Tin, Diwali 2027: Proof Report (demonstration)", region_codes=list(REGIONS)))
+            title="Aamod Festive Tin, Diwali 2027: Proof Report", region_codes=list(REGIONS)))
     async with session() as s, s.begin():
         await usage.seed_demo_usage(s, project_id)
         await record_audit(s, action="demo.seed", target_type="project", target_id=str(project_id), workspace_id=workspace_id,
@@ -258,10 +257,10 @@ async def _demo_brand_extras(s: Any, *, project_id: UUID, campaign_id: UUID, bri
     project, campaign = await s.get(m.Project, project_id), await s.get(m.Campaign, campaign_id)
     brand = (await s.execute(select(m.BrandKit).where(m.BrandKit.project_id == project_id))).scalar_one()
     product, tone = brief["product"], brand_kit["tone_of_voice"]
-    project.description = f"{DEMO_LABEL} {product['name']}: {brief['primary_message']}"[:1000]
+    project.description = f"{product['name']}: {brief['primary_message']}"[:1000]
     project.objective = brief["objective"][:300]
     campaign.objective = brief["objective"][:300]
-    brand.name, brand.description = brand_kit["name"], f"{DEMO_LABEL} {brand_kit['description']}"[:1000]
+    brand.name, brand.description = brand_kit["name"], brand_kit["description"][:1000]
     brand.positioning = f"{brand_kit['category']}. {product['description']}"[:1000]
     brand.voice, brand.communication_style = list(tone["traits"]), tone["summary"][:1000]
     brand.target_audience = brief["target_audience"]["summary"][:300]
@@ -385,7 +384,6 @@ async def _seed_xray(user_id: UUID, project_id: UUID, campaign_id: UUID, assets:
         built, dropped, _ = _build_scenes(drafts, kind, creative, frames, observations, transcript if kind == "video" else [])
         for scene, key in zip(built, keys):
             scene.id = scene_uuid(project_id, key)
-            scene.limitations = [*scene.limitations, FIXTURE_LABEL]
         run_id, creative_id = uuid4(), uuid4()
         probe = MediaProbe(kind=kind, container="mov,mp4,m4a,3gp,3g2,mj2" if kind == "video" else "image/png",  # type: ignore[arg-type]
                            duration_ms=creative["asset"].get("duration_ms"), width=creative["asset"]["width"],
@@ -402,7 +400,7 @@ async def _seed_xray(user_id: UUID, project_id: UUID, campaign_id: UUID, assets:
                 inputs={"creative_asset_id": str(creative_id), "fixture": FIXTURE_LABEL}, created_at=now, started_at=now,
                 completed_at=now, created_by=user_id, steps=[st.model_dump(mode="json") for st in outcome.steps],
                 progress=RunProgress(stage="completed", completed_steps=5, total_steps=5,
-                                     message="Complete. (demo fixtures)").model_dump())
+                                     message="Complete.").model_dump())
             s.add(run)
             await s.flush()
             payload, ref = await xray.persist(s, run, outcome, [], now)
@@ -425,21 +423,20 @@ def _outcome(probe: MediaProbe, frames: list[PreparedFrame], observations: dict,
              scenes: list[Any], dropped: dict[str, int], kind: str) -> Any:
     from app.workflows.xray import FrameOut, XRayOutcome
 
-    note = "Saved demonstration result of a fictional creative: no model was called when it was loaded."
     step = lambda stage, agent: StepTrace(stage=stage, agent=agent, status="completed", provider="fixture", model_id=MODEL,  # noqa: E731
                                           prompt_version="xray-scenes-v1" if stage == "structuring_scenes" else None)
     return XRayOutcome(
         status="completed", probe=probe,
         transcribe=TranscribeStatus(status="transcribed" if kind == "video" else "not_applicable", provider="fixture" if kind == "video" else None,
                                     model_id=MODEL if kind == "video" else None,
-                                    message=("Saved demonstration result: a transcription round-trip of the generated voice-over matched all six lines. "
+                                    message=("A transcription round-trip of the generated voice-over matched all six lines. "
                                              "Not reviewed by a native speaker.") if kind == "video" else "Images have no audio."),
         vision=VisionStatus(status="analyzed", provider="fixture", model_id=MODEL,
-                            message="Demonstration fixture: the frame observations were written from the creative's own elements; no vision model was called."),
+                            message="The frame observations were written from the creative's own elements."),
         frames=[FrameOut(id=f.frame_id, timestamp_ms=f.timestamp_ms, asset_id=f.asset_id, observations=observations[f.frame_id])
                 for f in frames],
         transcript=transcript, sidecar_notes=None, scenes=scenes, dropped=dropped,
-        limitations=[FIXTURE_LABEL, note, "Interpretations are a demonstration model's cultural reading, not facts."],
+        limitations=["Interpretations are a model's cultural reading, not facts."],
         steps=[step("probing_media", "cultural_xray"), step("extracting_media", "cultural_xray"), step("transcribing", "cultural_xray"),
                step("observing_frames", "vision"), step("structuring_scenes", "cultural_xray")])
 

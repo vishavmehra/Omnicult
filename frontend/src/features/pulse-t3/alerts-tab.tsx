@@ -21,7 +21,7 @@ import { AlertRules } from "./alert-rules";
 import {
   ALERT_TYPES, alertFigures, EVENT_LABEL, evaluationLine, eventActor, RESOLUTION_LABEL, STATUS_LABEL, TRIGGER_LABEL, type AlertRecord, type AlertRuleType,
 } from "./logic";
-import { PulseTabPage, SourceLine } from "./ui";
+import { PulseTabPage } from "./ui";
 
 type NotRead = components["schemas"]["AlertNotRead"];
 type Filter = "open" | "acknowledged" | "resolved" | "all";
@@ -172,7 +172,6 @@ export function AlertsTab({ campaignId }: { campaignId: string }) {
   return (
     <PulseTabPage>
       <Section id="alerts-inbox" title="Alerts" meta={last ? <span>Last evaluated {formatRelative(last.evaluated_at)}</span> : undefined}>
-        <SourceLine />
         <div className="flex flex-wrap items-end gap-x-5 gap-y-3">
           <div className="space-y-1">
             <p className="text-[12px] font-medium text-ink-secondary">Show</p>
@@ -207,7 +206,7 @@ export function AlertsTab({ campaignId }: { campaignId: string }) {
             title={filter === "open" ? "No open alerts" : filter === "all" ? "No alerts yet" : `No ${filter} alerts`}
             description={
               data.evaluations.length === 0
-                ? "No rule has run yet. Add rules below, then evaluate them; they also run on every sample refresh and on the schedule."
+                ? "No rule has run yet. Add rules below, then evaluate them; they also run on every data refresh and on the schedule."
                 : "Every rule was evaluated and none is firing in this view. A rule that cannot read a version and region says so below instead of staying silent."
             }
           />

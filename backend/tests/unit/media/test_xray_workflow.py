@@ -216,7 +216,7 @@ async def test_demo_mode_never_sends_an_upload_to_a_model() -> None:
     assert vision.calls == 0 and transcribe.calls == []
     assert outcome.vision.status == "unavailable" and outcome.transcribe.status == "unavailable"
     assert outcome.status == "partial" and outcome.error is None
-    assert any("Demo fixtures do not cover Creative X-Ray" in note for note in outcome.limitations)
+    assert any("keyframe timings only" in note for note in outcome.limitations)
     assert [(s.start_ms, s.end_ms) for s in outcome.scenes] == [(0, 3500), (3500, 6800), (6800, 9000)]
 
 

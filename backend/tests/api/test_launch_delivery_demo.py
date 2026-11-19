@@ -40,7 +40,7 @@ async def test_the_hook_populates_review_links_the_region_plan_and_the_asset_pac
         states = {r["region_code"]: (r["ready"]["state"], r["version"]["state"], r["pack_available"]) for r in plan["regions"]}
         assert states == {"IN-MH": ("not_ready", "candidate", False), "IN-TN": ("ready", "approved", True),
                           "IN-KL": ("not_ready", "candidate", False), "IN-WB": ("ready", "approved", True)}
-        assert plan["mode"] == "demo" and plan["budget_sample"] is True and plan["source_line"].startswith("Source: demo fixtures")
+        assert plan["mode"] == "demo" and plan["budget_sample"] is True and "fixture" not in plan["source_line"].lower()
         mh = next(r for r in plan["regions"] if r["region_code"] == "IN-MH")
         assert [e["title"] for e in mh["timeline"] if e["kind"] == "key_moment"][:2] == ["Dhanteras", "Narak Chaturdashi"]
         assert {c["id"]: c["status"] for c in mh["checklist"]}["creatives"] == "done"

@@ -21,8 +21,7 @@ export type FatigueRow = S["FatigueRow"];
 export type FatigueSignal = S["FatigueSignal"];
 export type FatiguePoint = S["FatiguePoint"];
 
-export const SOURCE_LINE = "Source: sample dataset.";
-export const CALIBRATION_LINE = "This shows the method working on the sample dataset; it does not show that the panel is calibrated.";
+export const CALIBRATION_LINE = "This shows the method working; it does not show that the panel is calibrated.";
 
 // ---------------------------------------------------------------- Predicted vs Actual
 
@@ -222,7 +221,7 @@ export const RESOLUTION_LABEL: Record<string, string> = {
   rule_disabled: "The rule was switched off",
 };
 export const EVENT_LABEL = { opened: "Opened", acknowledged: "Acknowledged", resolved: "Resolved", reopened: "Reopened" } as const;
-export const TRIGGER_LABEL = { refresh: "sample refresh", manual: "on demand", scheduler: "scheduled run", user: "a person" } as const;
+export const TRIGGER_LABEL = { refresh: "data refresh", manual: "on demand", scheduler: "scheduled run", user: "a person" } as const;
 
 export function eventActor(e: AlertRecordEvent): string {
   if (e.trigger === "user") return "a person";

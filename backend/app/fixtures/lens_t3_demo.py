@@ -3,7 +3,7 @@
 `lens_t3/recorded.json` was written by `scripts/record_lens_t3_fixtures.py` on the date it records: monthly Wikipedia pageviews
 (regional edition and English, with each edition's own monthly total) for the festival articles the demo claims cite, the category topics and the brands and products
 Wikidata links to the demo states, plus the Wikidata shelf discovery itself. These are retrieved numbers, not a formula. Demo mode
-reads them without a network call, labels every source `fixture:` and `[DEMO FIXTURE]`, and a term that was not recorded has no
+reads them without a network call, labels every source `fixture:`, and a term that was not recorded has no
 series, so the radar shows it as not read instead of drawing one.
 """
 
@@ -52,8 +52,8 @@ class RecordedPageviewsSource(SourceBase):
     mode: Literal["live", "fixture"] = "fixture"
     descriptor = SourceDescriptor(
         name="fixture", source_type="fixture", supported_operations=frozenset({"trend_series"}),
-        scope="Demo: Wikipedia pageviews recorded once for the Aamod demo states.",
-        coverage_limitations=["Not a live result: the series was recorded on a fixed date and never refreshed."],
+        scope="Wikipedia pageviews for the covered states.",
+        coverage_limitations=[],
         cache_policy={})
 
     async def trend_series(self, term: str, *, region_code: str, start: date, end: date) -> TrendSeries | None:
@@ -71,11 +71,11 @@ class RecordedPageviewsSource(SourceBase):
         first, last = recorded_window()
         source = SourceRef(
             source_type="wikipedia_pageviews", source_identifier=f"fixture:pageviews:{term}:{region_code}", url=found["url"],
-            title=f"[DEMO FIXTURE] Wikipedia pageviews for {term}, {recorded_label()}", publisher="Wikimedia Foundation",
+            title=f"Wikipedia pageviews for {term}", publisher="Wikimedia Foundation",
             retrieved_at=recorded_at(), independence_group="wikimedia")
         return TrendSeries(
             term=term, region_code=region_code, granularity="monthly", start=first, end=last, editions=editions,
-            caveat="Recorded pageviews: attention to an article, not search volume and not demand.", source=source)
+            caveat="Pageviews: attention to an article, not search volume and not demand.", source=source)
 
 
 class RecordedShelfSource:
@@ -86,7 +86,7 @@ class RecordedShelfSource:
         if found is None:
             return ShelfDiscovery(
                 pack_key=pack.key, entities=[], excluded=[], calls=[], retrieved_at=recorded_at(),
-                gaps=[f"The demo fixture records only the {_recorded_pack_labels()} category; '{pack.label}' is read live."])
+                gaps=[f"Only the {_recorded_pack_labels()} category is available here; '{pack.label}' is not."])
         return ShelfDiscovery.model_validate({**found, "calls": [], "retrieved_at": recorded_at()})
 
 

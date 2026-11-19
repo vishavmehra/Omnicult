@@ -1,8 +1,8 @@
 """Demo-mode "model" outputs for Creative Studio: a small hand-written phrasebook for Transcreate and Tweak Chips.
 
-These are fixtures, labelled as such by the workflows ("Demo fixture output, not a live model response."). They cover a
+These are hand-written fixtures. They cover a
 few generic festive lines in Marathi and Tamil, with a formal and a casual rendering each (so the Tone Dials visibly
-change the output); any other input returns None, which the fixture provider reports as "No demo fixture for this input"
+change the output); any other input returns None, which the fixture provider reports as "This input is not available in the demo"
 instead of inventing text. Back-translations are literal English renderings of the regional copy written here by hand.
 """
 

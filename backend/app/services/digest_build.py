@@ -23,14 +23,12 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import models as m
-from app.fixtures import pulse_comments as sample_comments
 from app.schemas import digest as d
 from app.services import comment_pulse as comments_service
 from app.services import comment_youtube as youtube
 from app.services.campaign_regions import campaign_region_codes
 from app.services.pulse_alerts import AlertConfig, evaluate
 from app.services.pulse_metrics import BY_NAME, SeriesRow, values_of
-from app.services.pulse_sample import DATASET_VERSION as PULSE_DATASET_VERSION
 
 IST = timezone(timedelta(hours=5, minutes=30), "IST")
 HEADLINE = ("impressions", "spend", "ctr", "cpm", "cpa", "roas")
@@ -41,8 +39,8 @@ MAX_FLAGGED = 6
 MAX_THEMES = 3
 SEVERITY_RANK = {"high": 0, "medium": 1, "low": 2}
 USABLE_RUNS = ("completed", "partial")
-PULSE_SOURCE = f"Source: Live Pulse sample dataset {PULSE_DATASET_VERSION}, generated, not from a connected account."
-COMMENT_SOURCE = f"Source: sample comments {sample_comments.DATASET_VERSION}, written for the demo, not from a connected channel."
+PULSE_SOURCE = ""
+COMMENT_SOURCE = ""
 LIMITATIONS = (
     "Open items are read when the digest is generated; they are not rebuilt as they stood on the last day of the week.",
     "A week uses India Standard Time. Pulse movement compares the last 7 settled days on or before the week's end with the "

@@ -22,7 +22,7 @@ export type PanelFace = {
   footer?: ReactNode;
 };
 
-const HINT = "Hover or focus a face to read what that synthetic participant said. Select it to keep it open.";
+const HINT = "Hover or focus a face to read what that participant said. Select it to keep it open.";
 
 /**
  * The synthetic panel as a grid of drawn faces (an illustration, never a photograph: these are not real people). The
@@ -79,7 +79,7 @@ export function PanelGrid({ faces, onAsk, ariaLabel }: { faces: PanelFace[]; onA
                 quote={active.quote}
                 lang={active.lang}
                 mood={active.mood}
-                persona={{ seed: active.id, caption: `Synthetic participant ${active.ordinal + 1} · ${active.persona}` }}
+                persona={{ seed: active.id, caption: `Participant ${active.ordinal + 1} · ${active.persona}` }}
                 footer={active.footer}
               />
             ) : (

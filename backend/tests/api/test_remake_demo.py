@@ -52,7 +52,7 @@ async def test_a_demo_visual_remake_needs_no_provider_and_still_restores_locked_
     out = await output_of(client, world, run)
     visual = out["visual"]
     assert out["mode"] == "demo" and visual["source"] == "demo_fixture" and visual["model"] == "gemini-3.1-flash-image"
-    assert out["estimated_cost_usd"] is None and any("Saved demonstration result" in n for n in out["limitations"])
+    assert out["estimated_cost_usd"] is None and not any(w in n.lower() for n in out["limitations"] for w in ("fixture", "demonstration"))
     original = Image.open(io.BytesIO(remake_demo.demo_original())).convert("RGB")
     stored = Image.open(io.BytesIO((await client.get(visual["output_url"])).content)).convert("RGB")
     assert stored.size == original.size and visual["original_asset_id"] is None
@@ -80,7 +80,7 @@ async def test_a_demo_sound_remake_matches_recordings_by_exact_text_and_voice(cl
     assert [(x["start_ms"], x["end_ms"]) for x in sound["lines"]] == [(0, 1500), (1950, 3950)]
     assert any("music bed is kept" in n for n in out["limitations"]) and out["estimated_cost_usd"] is None
     other_voice = await finish(client, world, "sound", {"region_code": "IN-TN", "language": "ta", "voice": "Kore"})
-    assert other_voice["status"] == "failed" and "No demonstration recording" in other_voice["error"]["message"]
+    assert other_voice["status"] == "failed" and "not available in the demo" in other_voice["error"]["message"]
 
 
 async def test_a_demo_line_without_a_recording_is_reported_not_voiced(client: httpx.AsyncClient) -> None:
@@ -90,7 +90,7 @@ async def test_a_demo_line_without_a_recording_is_reported_not_voiced(client: ht
     run = await finish(client, world, "sound", {"region_code": "IN-TN", "language": "ta"})
     assert run["status"] == "partial"
     lines = {x["element_id"]: x for x in (await output_of(client, world, run))["sound"]["lines"]}
-    assert not lines["cap-1"]["problems"] and lines["cap-2"]["duration_ms"] == 0 and "No demonstration recording" in lines["cap-2"]["problems"][0]
+    assert not lines["cap-1"]["problems"] and lines["cap-2"]["duration_ms"] == 0 and "not available in the demo" in lines["cap-2"]["problems"][0]
 
 
 async def test_demo_projects_skip_the_cost_confirmation_and_never_reach_a_provider(client: httpx.AsyncClient) -> None:

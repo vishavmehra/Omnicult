@@ -93,7 +93,7 @@ class CuratedReferenceSource(SourceBase):
             "A snapshot, not a feed: each entry carries the date its page was read.",
             "Mostly English Wikipedia plus a few government tourism pages; regional-language sources are not yet included.",
             "Excerpts are what the page says, which is not always what a local community would say.",
-            "Only the four demo states are covered.",
+            "Only four states are covered.",
         ],
         cache_policy={"related_signals": timedelta(days=7), "moments": timedelta(days=7)},
     )

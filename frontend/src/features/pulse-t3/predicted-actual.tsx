@@ -19,9 +19,9 @@ import { VersionLinks } from "./version-links";
 import {
   AGREEMENT_HELP, AGREEMENT_LABEL, formatRank, PVA_METRICS, snapshotNote, summaryDetail, summaryHeadline, type PvaCheck, type PvaMetric, type PvaPair, type PvaSummary,
 } from "./logic";
-import { PulseTabPage, SourceLine } from "./ui";
+import { PulseTabPage } from "./ui";
 
-const SOURCE = "Source: sample dataset, simulated panel. This shows the method working; it does not show that the panel is calibrated.";
+const CAVEAT = "This shows the method working; it does not show that the panel is calibrated.";
 
 function AgreementTag({ agreement }: { agreement: PvaCheck["agreement"] }) {
   const tone = agreement === "agree" ? "border-success/25 bg-success-soft text-success" : agreement === "near" ? "border-border bg-surface-muted text-ink" : "border-warning/30 bg-warning-soft text-warning";
@@ -99,7 +99,7 @@ function PairsTable({ pairs, metricLabel, unit, names }: { pairs: PvaPair[]; met
                   {qr ? (
                     <>
                       <span className="font-semibold text-ink tabular-nums">{qr.positive} of {qr.respondents}</span> positive
-                      <span className="block text-[11.5px] text-ink-muted">{Math.round(qr.favourable_share * 100)}%, simulated respondents</span>
+                      <span className="block text-[11.5px] text-ink-muted">{Math.round(qr.favourable_share * 100)}% of respondents</span>
                     </>
                   ) : (
                     <span className="text-ink-muted">No Quick Read stored</span>
@@ -171,7 +171,7 @@ export function PredictedActualTab({ campaignId }: { campaignId: string }) {
   return (
     <PulseTabPage>
       <Section id="pva" title="Predicted vs Actual">
-        <SourceLine>{SOURCE}</SourceLine>
+        <p className="type-meta max-w-[78ch]">{CAVEAT}</p>
         <div className="flex flex-wrap items-end gap-x-5 gap-y-3">
           <div className="space-y-1">
             <p className="text-[12px] font-medium text-ink-secondary">Compared with</p>

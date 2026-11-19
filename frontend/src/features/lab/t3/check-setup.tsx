@@ -16,7 +16,7 @@ import type { LabSessionDefaults, MessageCheckCreate } from "./check-api";
 
 const RUN_NOTE = {
   live: "Live run: calls the configured language model twice per batch (restating, then comparing). Usually finishes within a minute or two.",
-  demo: "Demo project: runs on labelled fixtures. It is free, calls no model, and its results are not research.",
+  demo: "",
 } as const;
 
 /** The states the campaign names, when they are known states; otherwise Tamil Nadu, the demo's first adaptation. */

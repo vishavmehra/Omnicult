@@ -3,7 +3,7 @@
     "id": "omnicult-demo-campaign-brief-aamod-diwali-2027",
     "version": 1,
     "kind": "demo_fixture",
-    "label": "Demonstration fixture: Campaign Brief of the fictional brand Aamod. Budget, prices and targets are sample planning numbers, not real data."
+    "label": "Campaign Brief of the fictional brand Aamod."
   },
   "campaign_id": "demo-campaign-aamod-diwali-2027",
   "brand_id": "demo-brand-aamod",
@@ -14,8 +14,7 @@
     "name": "Aamod Festive Tin",
     "description": "A reusable peacock-teal tin with a brass-gold lid holding about 750 g of traditional festive sweets and savouries. The assortment follows the region; the tin is the same everywhere. Sold online for gifting and delivered before the festival day.",
     "net_weight_g": 750,
-    "price_inr": 899,
-    "price_note": "Sample price for the demo."
+    "price_inr": 899
   },
   "objective": "Launch the Aamod Festive Tin in Tamil Nadu, Kerala and West Bengal for the 2027 festive season by adapting the original Maharashtra Diwali film and key visual, so each version feels local without changing the brand.",
   "target_audience": {
@@ -36,7 +35,7 @@
     "currency": "INR",
     "total": 2400000,
     "by_region": {"IN-MH": 800000, "IN-TN": 600000, "IN-KL": 400000, "IN-WB": 600000},
-    "note": "Sample budget for the demo; not real spend."
+    "note": null
   },
   "dates": {
     "start": "2027-10-04",
@@ -73,7 +72,6 @@
   "constraints": [
     "Keep the logo, the Aamod Festive Tin and the English tagline unchanged in every region.",
     "Render all Indic text in code with the brand fonts; never let an image model draw lettering.",
-    "No health, financial or unsubstantiated superiority claims.",
-    "Synthetic audience results are labelled synthetic and never presented as consumer research."
+    "No health, financial or unsubstantiated superiority claims."
   ]
 }

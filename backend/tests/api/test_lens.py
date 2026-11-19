@@ -108,7 +108,7 @@ async def built_demo(client: httpx.AsyncClient, *codes: str) -> tuple[dict[str, 
 # --- demo builds and the five reads -----------------------------------------------------------------------------------
 
 
-async def test_a_demo_build_stores_labelled_fixture_claims_only(client: httpx.AsyncClient, seeded: Any) -> None:
+async def test_a_demo_build_stores_fixture_claims_only(client: httpx.AsyncClient, seeded: Any) -> None:
     _, base = await demo_campaign(client)
     batch = await build(client, base, "IN-TN", "IN-AN")
     first, second = batch["builds"]
@@ -122,7 +122,7 @@ async def test_a_demo_build_stores_labelled_fixture_claims_only(client: httpx.As
         claims = list((await s.execute(select(m.Claim))).scalars())
         assert claims and {c.mode for c in claims} == {"demo"} and {c.workspace_id for c in claims} != {None}
         titles = (await s.execute(select(m.ClaimSource.title, m.ClaimSource.source_identifier))).all()
-        assert all(t.startswith("[DEMO FIXTURE]") and ident.startswith("fixture:") for t, ident in titles)
+        assert all(ident.startswith("fixture:") and "DEMO FIXTURE" not in (t or "") for t, ident in titles)  # the identifier separates fixtures; no title says so
         assert await s.scalar(select(func.count()).select_from(m.AuditLog).where(m.AuditLog.action == "lens.build")) == 2
 
 
@@ -146,7 +146,7 @@ async def test_rebuilding_versions_the_build_and_does_not_duplicate_claims(clien
 async def test_state_profile_shows_every_fact_as_a_claim_with_its_five_tags(client: httpx.AsyncClient, seeded: Any) -> None:
     _, base = await built_demo(client, "IN-TN")
     body = (await client.get(f"{base}/regions/IN-TN/profile")).json()
-    assert body["mode"] == "demo" and "Demo fixtures" in body["mode_label"] and body["region"]["code"] == "IN-TN"
+    assert body["mode"] == "demo" and body["mode_label"] == "" and body["region"]["code"] == "IN-TN"
     assert [s["key"] for s in body["sections"]] == ["languages", "festivals", "references", "tone", "trends"]
     assert body["meter"]["claims"] > 80 and body["meter"]["strength"] in ("partial", "solid")
     festivals = next(s for s in body["sections"] if s["key"] == "festivals")
@@ -242,7 +242,7 @@ async def test_the_atlas_lists_every_state_with_its_evidence_strength(client: ht
     assert ka["built"] is False and ka["claims"] == 0 and ka["strength"] == "weak" and ka["last_build"] is None
     assert ka["strength_reasons"] and ka["name"] == "Karnataka" and ka["primary_script"] == "Knda"
     assert states["IN-MH"]["open_conflicts"] == 1 and states["IN-TN"]["open_conflicts"] == 0 and states["IN-KL"]["built"] is False
-    assert "Demo fixtures" in empty["mode_label"] and {s["source_type"] for s in empty["sources"]} >= {"census_2011", "holidays_package"}
+    assert empty["mode_label"] == "" and {s["source_type"] for s in empty["sources"]} >= {"census_2011", "holidays_package"}
     await build(client, base, "IN-KA")  # a state with public holidays only stays weak: one category, no Moderate claim
     ka = {s["code"]: s for s in (await client.get(f"{base}/atlas")).json()["states"]}["IN-KA"]
     assert ka["built"] is True and ka["claims"] > 10 and ka["strength"] == "weak" and ka["categories_covered"] == 1
@@ -290,8 +290,8 @@ async def test_a_live_build_stores_live_claims_and_reports_a_rate_limited_source
     assert b["sources_skipped"] == [] and b["include_grounding"] is False  # grounding is opt-in, so it is not a gap here
     async with read_session() as s:
         assert {c.mode for c in await s.scalars(select(m.Claim))} == {"live"}
-        titles = list(await s.scalars(select(m.ClaimSource.title)))
-        assert not any(t and t.startswith("[DEMO FIXTURE]") for t in titles)
+        identifiers = list(await s.scalars(select(m.ClaimSource.source_identifier)))
+        assert not any(i.startswith("fixture:") for i in identifiers)
     profile = (await client.get(f"{base}/regions/IN-TN/profile")).json()
     assert profile["mode"] == "live" and profile["build"]["status"] == "partial" and "Live sources" in profile["mode_label"]
     assert any("rate_limited" in g for g in profile["gaps"]) and profile["meter"]["claims"] == b["claim_count"]

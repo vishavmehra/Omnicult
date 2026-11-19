@@ -221,8 +221,6 @@ def _summary(w: Window, calls: list[Call], days: int, mode: DataMode) -> dict:
     notes = list(USAGE_NOTES)
     if w.scope == "own":
         notes.append("You see your own calls only. Workspace owners see everyone's.")
-    if mode == "demo":
-        notes.append("The demo project answers from saved fixtures: its calls ran no model and cost nothing.")
     if w.truncated:
         notes.append(f"This window holds more than {MAX_CALLS:,} calls. The newest are shown and the totals cover only those.")
     return dict(

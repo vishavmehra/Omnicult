@@ -41,7 +41,7 @@ export function MessageCheckTab({ loc }: { loc: Loc }) {
   return (
     <div className="space-y-5">
       <p className="max-w-[68ch] text-[14px] text-ink-secondary">
-        Simulated panel: synthetic participants read only the regional copy, restate it in their own words and say what stayed with them. Then a comparison marks each key point of the message, and the counts are made in code.
+        Participants read only the regional copy, restate it in their own words and say what stayed with them. Then a comparison marks each key point of the message, and the counts are made in code.
       </p>
 
       <SetupPanel title="New Message Check" meta={runs.data.length ? undefined : "Start here"} open={setupOpen} onOpenChange={setOpen}>
@@ -65,7 +65,7 @@ export function MessageCheckTab({ loc }: { loc: Loc }) {
         selectedId={selectedId}
         onSelect={loc.selectRun}
         regionName={regionName}
-        describe={(r) => pluralise(r.participant_count, "synthetic participant")}
+        describe={(r) => pluralise(r.participant_count, "participant")}
       />
 
       {selectedId && result.error && <ErrorState error={result.error} onRetry={() => void result.refetch()} />}

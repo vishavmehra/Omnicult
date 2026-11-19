@@ -104,7 +104,7 @@ async def test_a_demo_focus_group_saves_a_transcript_of_the_moderator_and_replyi
     meta = result["run_metadata"]
     assert meta["providers"] == ["fixture"] and meta["model_ids"] == [] and meta["prompt_versions"] == ["focus-round-v1"]
     assert meta["usage"]["model_stages"] == 0 and [s["stage"] for s in meta["steps"]] == ["loading_context", "moderated_discussion", "analysing_themes"]
-    assert any("fixture" in lim.lower() for lim in result["limitations"]) and any("real people" in lim for lim in result["limitations"])
+    assert not any("fixture" in lim.lower() for lim in result["limitations"]) and any("real people" in lim for lim in result["limitations"])
     assert result["disclosure"]["is_synthetic"] is True and result["disclosure"]["independent_human_sample"] is False
 
     async with read_session() as s:
@@ -384,7 +384,7 @@ async def test_a_demo_buzz_simulation_counts_spread_sentiment_and_cohorts_from_t
     assert all(a["changed_message"] == (a["wording_overlap"] < 0.34) for a in acts if a["wording_overlap"] is not None)
     assert s["confusion"]["count"] == sum(a["stance"] == "confused" for a in expressed)
     assert all(e["from_participant_id"] in by_id for e in s["influence"]) and s["network_method"].startswith("Each account sees posts from 4")
-    assert any("not a forecast" in lim for lim in result["limitations"]) and any("fixture" in lim.lower() for lim in result["limitations"])
+    assert any("not a forecast" in lim for lim in result["limitations"]) and not any("fixture" in lim.lower() for lim in result["limitations"])
     meta = result["run_metadata"]
     assert meta["providers"] == ["fixture"] and meta["prompt_versions"] == ["buzz-round-v1"] and meta["usage"]["model_stages"] == 0
 

@@ -292,7 +292,7 @@ function NewLinkDialog({ campaignId, open, onOpenChange, onCreated }: { campaign
  * A reviewer's decision is advice recorded against the version; approvals stay with signed-in members on the Readiness Board.
  */
 export function ReviewLinksTab() {
-  const { campaign, project } = useCampaign();
+  const { campaign } = useCampaign();
   const caps = useCapabilities();
   const links = useReviewLinks(campaign.id);
   const responses = useReviewResponses(campaign.id);
@@ -300,7 +300,6 @@ export function ReviewLinksTab() {
   const [creating, setCreating] = useState(false);
   const [created, setCreated] = useState<ReviewLinkCreated | null>(null);
   const [revoking, setRevoking] = useState<string | null>(null);
-  const demo = project.mode === "demo";
   const total = links.data?.total ?? 0;
   const active = useMemo(() => (links.data?.items ?? []).filter((l) => l.status === "active").length, [links.data]);
 
@@ -355,7 +354,6 @@ export function ReviewLinksTab() {
           </ul>
         )}
         {revoke.error && <ErrorState error={revoke.error} />}
-        {demo && <p className="type-meta">Source: demonstration data. The sample link and its two responses are fixtures; a link you create works for real.</p>}
       </section>
 
       <section aria-labelledby="responses-title" className="space-y-3">

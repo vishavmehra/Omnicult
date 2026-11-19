@@ -35,7 +35,7 @@ async def test_two_instances_produce_identical_output():
     assert await snapshot(FixtureCultureSource()) == await snapshot(FixtureCultureSource())
 
 
-async def test_every_source_is_labelled_as_fixture_with_a_fixed_timestamp():
+async def test_every_source_is_marked_by_identifier_with_a_fixed_timestamp():
     source = FixtureCultureSource()
     claims = [*await source.related_signals("region:IN-KL", region_code="IN-KL", limit=500), *await source.audience_facts("IN-KL"),
               *await source.moments("IN-KL", year=2026)]
@@ -43,12 +43,12 @@ async def test_every_source_is_labelled_as_fixture_with_a_fixed_timestamp():
     for claim in claims:
         assert claim.retrieved_at == FIXTURE_TIME
         for s in claim.sources:
-            assert s.source_identifier.startswith("fixture:") and s.title.startswith("[DEMO FIXTURE]") and s.retrieved_at == FIXTURE_TIME
+            assert s.source_identifier.startswith("fixture:") and "DEMO FIXTURE" not in s.title and s.retrieved_at == FIXTURE_TIME
 
 
-async def test_trend_series_is_synthetic_and_says_so_everywhere():
+async def test_trend_series_is_synthetic_by_identifier_and_kind():
     series = await FixtureCultureSource().trend_series("Onam", region_code="IN-KL", start=date(2026, 8, 1), end=date(2026, 8, 31))
-    assert series.caveat.startswith("FIXTURE") and series.source.source_identifier.startswith("fixture:")
+    assert "FIXTURE" not in series.caveat and series.source.source_identifier.startswith("fixture:")
     assert [e.language for e in series.editions] == ["ml", "en"] and len(series.editions[0].points) == 31
     claim = series_to_claim(series)
     assert claim.kind == "synthetic" and "not demand" in claim.value_text

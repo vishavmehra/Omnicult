@@ -18,7 +18,7 @@ import { FatigueChart } from "./fatigue-chart";
 import {
   FATIGUE_DEFAULTS, FATIGUE_STATUS, parseFatigueForm, PATTERN_LABEL, type FatigueForm, type FatigueRow, type FatigueSignal,
 } from "./logic";
-import { NumberField, PulseTabPage, SourceLine } from "./ui";
+import { NumberField, PulseTabPage } from "./ui";
 
 const STATUS_STYLE: Record<FatigueRow["status"], { tone: string; Icon: LucideIcon }> = {
   fatigued: { tone: "border-danger/30 bg-danger-soft text-danger", Icon: Flame },
@@ -163,7 +163,6 @@ export function FatigueTab({ campaignId }: { campaignId: string }) {
   return (
     <PulseTabPage>
       <Section id="fatigue" title="Fatigue Watch">
-        <SourceLine />
         <details className="rounded-card border border-border bg-surface" open={false}>
           <summary className="cursor-pointer px-4 py-2.5 text-[13px] text-ink-secondary hover:text-ink">How a version is read, and the thresholds</summary>
           <div className="space-y-4 border-t border-border px-4 py-3">

@@ -36,7 +36,7 @@ function DemoButton() {
         {demo.isPending ? "Preparing the demo…" : "Try the demo"}
       </Button>
       <p className="text-[12.5px] leading-relaxed text-ink-muted">
-        Opens a sample brand and campaign on labelled fixture data{env.authMode === "firebase" ? " in an anonymous session" : ""}. It is never mixed with your records.
+        Opens a ready-made brand and campaign{env.authMode === "firebase" ? " in an anonymous session" : ""}. It is never mixed with your records.
       </p>
       {demo.error &&
         (demo.error instanceof DemoSignInError ? (

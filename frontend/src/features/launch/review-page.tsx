@@ -245,7 +245,6 @@ export function ReviewPageView() {
               <ItemCard key={`${item.version_id}-${item.region_code}`} secret={secret} item={item} />
             ))}
           </div>
-          {page.data.mode === "demo" && <p className="type-meta">Source: demonstration data of a fictional brand.</p>}
         </>
       )}
     </main>

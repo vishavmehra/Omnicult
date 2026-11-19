@@ -228,7 +228,6 @@ export function CategoryShelfView({ campaignId }: { campaignId: string }) {
           </details>
         </>
       )}
-      <p className="type-meta">{data.source_line}</p>
     </div>
   );
 }

@@ -184,7 +184,7 @@ async def _plan(s: AsyncSession, user_id: UUID, campaign_id: UUID, req: v.Youtub
     Returns the video this version and region held before, which a different video replaces."""
     _, project = await _access(s, user_id, campaign_id)
     if project.mode != "live":
-        raise Conflict("Demo projects use the sample comments and never call YouTube. Create a live project to read real comments.")
+        raise Conflict("Demo projects never call YouTube. Create a live project to read real comments.")
     settings = get_settings()
     if settings.youtube_api_key is None:
         raise ProviderNotConfigured("YouTube comments are not set up on this server.")

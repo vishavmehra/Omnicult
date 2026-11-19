@@ -96,7 +96,6 @@ export function RunStatusPanel({ run, operation, onRetry }: { run: Run | undefin
   const start = Date.parse(run.started_at ?? run.created_at);
   const end = run.completed_at ? Date.parse(run.completed_at) : now;
   const elapsed = formatElapsed(end - start);
-  const demo = run.mode === "demo" && <Meta>Demo run: labeled fixtures only; no external provider was called.</Meta>;
   const stage = run.progress && run.progress.stage !== "completed" ? humanize(run.progress.stage) : null;
 
   switch (run.status) {
@@ -104,7 +103,6 @@ export function RunStatusPanel({ run, operation, onRetry }: { run: Run | undefin
       return (
         <Panel tone="info" Icon={LoaderCircle} spin title={`${operation}: queued`}>
           <Meta>Waiting to start · {elapsed}</Meta>
-          {demo}
         </Panel>
       );
     case "running":
@@ -116,7 +114,6 @@ export function RunStatusPanel({ run, operation, onRetry }: { run: Run | undefin
             {run.progress && <>{run.progress.completed_steps} of {run.progress.total_steps} stages done · </>}
             {elapsed} elapsed
           </Meta>
-          {demo}
         </Panel>
       );
     case "completed":
@@ -125,7 +122,6 @@ export function RunStatusPanel({ run, operation, onRetry }: { run: Run | undefin
           <Meta>
             Finished {formatRelative(run.completed_at)} · took {elapsed}
           </Meta>
-          {demo}
         </Panel>
       );
     case "partial":
@@ -139,7 +135,6 @@ export function RunStatusPanel({ run, operation, onRetry }: { run: Run | undefin
             {run.error?.stage && <>Incomplete stage: {humanize(run.error.stage)} · </>}
             took {elapsed}
           </Meta>
-          {demo}
         </Panel>
       );
     case "failed":

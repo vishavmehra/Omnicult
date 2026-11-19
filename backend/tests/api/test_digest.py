@@ -110,7 +110,7 @@ async def test_pulse_movement_compares_the_last_settled_week_with_the_week_befor
     assert ctr["delta"] == pytest.approx(now_ctr - before_ctr) and ctr["delta_pct"] == pytest.approx(now_ctr / before_ctr - 1)
     assert ctr["delta_pct"] < -0.1, "the wearing-out Kerala original is the sample's story"
     assert [x["metric"] for x in kl["metrics"]] == ["impressions", "spend", "ctr", "cpm", "cpa", "roas"]
-    assert pulse["source"].startswith("Source: Live Pulse sample dataset")
+    assert pulse["source"] == ""  # no origin disclaimer reaches the UI
 
     # the alerts are the preview's rules run over the data up to that day: the same alerts the dashboard shows
     preview = (await client.get(f"{API}/campaigns/{cid}/pulse/alerts")).json()
@@ -295,7 +295,7 @@ async def test_export_markdown_and_pdf_reuse_the_proof_exporters(client: httpx.A
     kl = next(s for s in digest["content"]["pulse"]["slices"] if s["region_code"] == "IN-KL" and s["version_label"] == ORIGINAL)
     ctr = next(x for x in kl["metrics"] if x["metric"] == "ctr")
     assert f"{ctr['current'] * 100:.2f}% ({ctr['delta_pct'] * 100:+.1f}%)" in text, "the exported figures are the stored ones"
-    assert "Theme (Model interpretation)" in text and "Source: Live Pulse sample dataset" in text
+    assert "Theme (Model interpretation)" in text and "sample dataset" not in text
     assert any(ord(ch) > 0x900 for ch in text), "Indic comments stay in their own script in Markdown"
     assert (await client.get(url + "?format=md")).text == text, "an export of equal records is equal"
     pdf = await client.get(url + "?format=pdf")

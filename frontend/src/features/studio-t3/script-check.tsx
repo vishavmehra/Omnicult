@@ -143,7 +143,7 @@ export function ScriptCheckPanel({ campaignId, versionId }: { campaignId: string
       <p className="type-meta flex items-start gap-1.5">
         <Languages aria-hidden className="mt-0.5 size-3.5 shrink-0" />
         <span>
-          Source: checks run in code ({data.check_version}, shaping engine {data.shaping_engine}) against the Brand Glossary; no model. Code cannot judge meaning: a native reader confirms spelling and tone.
+          Checks run in code ({data.check_version}, shaping engine {data.shaping_engine}) against the Brand Glossary; no model. Code cannot judge meaning: a native reader confirms spelling and tone.
         </span>
       </p>
     </div>

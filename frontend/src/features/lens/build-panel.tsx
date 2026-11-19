@@ -149,8 +149,8 @@ export function BuildPanel({
         <h3 className="text-[14px] font-semibold text-ink">{title}</h3>
         <p className="text-[13px] leading-snug text-ink-secondary">
           {live
-            ? "Reads the offline datasets (curated references, Census 2011, public holidays) and calls the public sources (Wikidata, Wikipedia pageviews). A state can be rebuilt once every few minutes; a source that is rate limited or not configured is reported, not hidden."
-            : "Reads labelled demo fixtures. No network call, no model, no cost. The claims are marked DEMO FIXTURE wherever they appear."}
+            ? "Reads the bundled datasets (curated references, Census 2011, public holidays) and calls the public sources (Wikidata, Wikipedia pageviews). A state can be rebuilt once every few minutes; a source that is rate limited or not configured is reported, not hidden."
+            : "Builds the state from the curated reference datasets. No network call, no model, no cost."}
         </p>
       </div>
       <div className="space-y-2 text-[13px]">
@@ -158,7 +158,7 @@ export function BuildPanel({
           <Checkbox id={trendsId} checked={trends} onCheckedChange={(v) => setTrends(v === true)} className="mt-0.5" />
           <span>
             Include public attention (Wikipedia pageviews for the festivals cited).{" "}
-            <span className="text-ink-secondary">{live ? "Attention, not demand." : "Demo uses a synthetic series, labelled so."}</span>
+            <span className="text-ink-secondary">Attention, not demand.</span>
           </span>
         </label>
         {live && (
@@ -177,7 +177,7 @@ export function BuildPanel({
         </Button>
         {build.isPending && (
           <p role="status" className="text-[12.5px] text-ink-secondary">
-            {live ? "Calling the sources. This can take up to a minute." : "Reading the fixtures."}
+            {live ? "Calling the sources. This can take up to a minute." : "Building the state."}
           </p>
         )}
       </div>

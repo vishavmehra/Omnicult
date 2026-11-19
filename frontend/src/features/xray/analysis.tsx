@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import { LimitationList } from "@/components/evidence/limitation-list";
 import { LedgerList } from "@/features/workspaces/parts";
 import { formatBytes } from "@/features/assets/asset-uploader";
-import { humanize } from "@/lib/format";
+import { humanize, shownModel } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import type { Creative } from "./api";
@@ -21,7 +21,7 @@ function Status({ Icon, tone, children }: { Icon: LucideIcon; tone: string; chil
   );
 }
 
-const source = (provider: string | null, model: string | null) => [provider, model].filter(Boolean).join(" · ");
+const source = (provider: string | null, model: string | null) => [shownModel(provider), shownModel(model)].filter(Boolean).join(" · ");
 
 /** The transcript row: what the run found out about speech, in plain words, never a guess. */
 function TranscriptStatus({ creative }: { creative: Creative }) {
@@ -97,7 +97,7 @@ export function AnalysisPanel({ creative }: { creative: Creative }) {
                 <>
                   <Status Icon={CircleCheck} tone="text-success">Read by a vision model</Status>
                   <span className="block text-ink-secondary">
-                    {a.frames.length} {a.frames.length === 1 ? "frame" : "frames"} · {source(vision.provider, vision.model_id)}
+                    {a.frames.length} {a.frames.length === 1 ? "frame" : "frames"}{source(vision.provider, vision.model_id) && ` · ${source(vision.provider, vision.model_id)}`}
                   </span>
                 </>
               ) : (

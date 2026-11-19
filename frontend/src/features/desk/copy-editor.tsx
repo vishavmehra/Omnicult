@@ -73,7 +73,7 @@ export function CopyEditor({ campaign, demo, onDone, onCancel }: { campaign: Cam
         {demo && (
           <p className="flex items-start gap-2 text-[13px] text-ink-secondary">
             <Lock aria-hidden className="mt-0.5 size-3.5 shrink-0" />
-            Demo copy is fixed so the saved demonstration results stay truthful. Create a live brand and campaign to test your own copy.
+            This copy is fixed. Create a live brand and campaign to test your own copy.
           </p>
         )}
         <Field label="Headline" htmlFor={`${uid}-h`} hint={`${headline.length}/300`}>

@@ -9,7 +9,7 @@ import { LimitationList } from "@/components/evidence/limitation-list";
 import { Button } from "@/components/ui/button";
 import { Verdict } from "@/components/workflow/verdict";
 import { LedgerList } from "@/features/workspaces/parts";
-import { formatDateTime, formatRelative, shortId } from "@/lib/format";
+import { formatDateTime, formatRelative, shortId, shownModel } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { ApprovalDialog, ApprovalLine } from "./approvals";
@@ -198,7 +198,7 @@ export function RegionPanel({
             </dd>
             <dt className="text-ink-muted">Observations from</dt>
             <dd className="text-ink-body">
-              {[v.provenance.model_id, v.provenance.prompt_version, v.provenance.criteria_version, v.provenance.evidence_snapshot].filter(Boolean).join(" · ") || "Not recorded"}
+              {[shownModel(v.provenance.model_id), v.provenance.prompt_version, v.provenance.criteria_version, shownModel(v.provenance.evidence_snapshot)].filter(Boolean).join(" · ") || "Not recorded"}
             </dd>
           </dl>
         </div>

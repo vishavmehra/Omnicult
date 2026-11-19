@@ -26,8 +26,8 @@ class FixtureLLMProvider:
     async def complete(self, request: ChatRequest) -> Completion:
         responder = self._responders.get(request.prompt_version)
         if responder is None:
-            raise ProviderError(f"No demo fixture for {request.prompt_version}.", transient=False)
+            raise ProviderError(f"This step is not available in the demo: {request.prompt_version}.", transient=False)
         output = responder(request.fixture_context or {})
         if output is None:  # the fixtures do not cover this input: report it, never invent output
-            raise ProviderError("No demo fixture for this input.", transient=False)
+            raise ProviderError("This input is not available in the demo.", transient=False)
         return Completion(text=json.dumps(output))

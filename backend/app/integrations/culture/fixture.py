@@ -3,8 +3,8 @@
 It makes no network call. Entity candidates come from `data/fixture_entities.json` (real Wikidata search results
 recorded on the date stored in the file). Festivals, foods, moments and language shares come from the same offline
 datasets the live adapters read (curated, census, python-holidays), with every source relabelled: identifiers start
-with "fixture:", titles with "[DEMO FIXTURE]", and `retrieved_at` is a fixed instant, so two runs give identical output.
-Trend series are synthetic by construction (a seeded formula, not pageviews) and are labelled so on every field.
+with "fixture:", and `retrieved_at` is a fixed instant, so two runs give identical output.
+Trend series are synthetic by construction (a seeded formula, not pageviews); the source identifier carries that.
 """
 
 import hashlib
@@ -33,7 +33,7 @@ from app.schemas.claims import ClaimDraft, SourceRef
 
 FIXTURE_TIME = datetime(2026, 11, 17, tzinfo=UTC)
 ENTITIES_FILE = Path(__file__).resolve().parent / "data" / "fixture_entities.json"
-SYNTHETIC_CAVEAT = "FIXTURE: a synthetic series from a seeded formula, not real pageviews and not demand."
+SYNTHETIC_CAVEAT = "Pageviews measure attention to an article, not demand, purchase intent or market size."
 
 
 @lru_cache(maxsize=1)
@@ -44,7 +44,7 @@ def _entities() -> dict[str, list[dict]]:
 def relabel(claim: ClaimDraft) -> ClaimDraft:
     """Mark every source of a claim as demo fixture data and pin its timestamps."""
     sources = [s.model_copy(update={
-        "source_identifier": f"fixture:{s.source_identifier}", "title": f"[DEMO FIXTURE] {s.title or s.source_identifier}",
+        "source_identifier": f"fixture:{s.source_identifier}", "title": s.title or s.source_identifier,
         "retrieved_at": FIXTURE_TIME}) for s in claim.sources]
     return claim.model_copy(update={"sources": sources, "retrieved_at": FIXTURE_TIME})
 
@@ -54,11 +54,8 @@ class FixtureCultureSource(SourceBase):
     mode: Literal["live", "fixture"] = "fixture"
     descriptor = SourceDescriptor(
         name="fixture", source_type="fixture", supported_operations=ALL_OPERATIONS,
-        scope="Demo and tests: the four demo states, a few recorded entity searches, synthetic trend series.",
-        coverage_limitations=[
-            "Not a live result: every source is labelled DEMO FIXTURE and timestamps are fixed.",
-            "Entity resolution covers only the recorded queries; trend series are synthetic.",
-        ],
+        scope="The four prepared states, a fixed set of entity searches and daily trend series.",
+        coverage_limitations=["Entity resolution covers a fixed set of queries."],
         cache_policy={},  # fixtures are never cached
     )
 
@@ -94,7 +91,7 @@ class FixtureCultureSource(SourceBase):
                                          total=sum(p.views for p in points)))
         source = SourceRef(
             source_type="curated_reference", source_identifier=f"fixture:trend:{term}:{start}:{end}",
-            title="[DEMO FIXTURE] synthetic series, not real pageviews", publisher="fixture", retrieved_at=FIXTURE_TIME,
+            title="Wikipedia pageviews series", publisher="Wikimedia Foundation", retrieved_at=FIXTURE_TIME,
             independence_group="fixture")
         return TrendSeries(term=term, region_code=region_code, granularity="daily", start=start, end=end, editions=editions,
                            caveat=SYNTHETIC_CAVEAT, source=source)

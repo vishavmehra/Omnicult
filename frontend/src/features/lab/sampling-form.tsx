@@ -91,7 +91,7 @@ export function SetupPanel({ title, meta, open, onOpenChange, children }: { titl
 
 const RUN_NOTE: Record<"live" | "demo", string> = {
   live: "Live run: calls the configured language model. Quick Reads usually finish within a minute; larger studies take longer.",
-  demo: "Demo project: runs on fixtures. It is free and calls no model.",
+  demo: "",
 };
 
 /** The one primary action of a setup form, with what pressing it will do and cost. */
@@ -105,7 +105,7 @@ export function RunButton({ kind, pending, mode, blocked, error, onRetry }: { ki
           <Play aria-hidden />
           {pending ? "Starting…" : label}
         </Button>
-        <p className="max-w-[60ch] text-[12.5px] text-ink-secondary">{blocked ?? RUN_NOTE[mode]}</p>
+        {(blocked ?? RUN_NOTE[mode]) && <p className="max-w-[60ch] text-[12.5px] text-ink-secondary">{blocked ?? RUN_NOTE[mode]}</p>}
       </div>
     </div>
   );

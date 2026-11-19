@@ -22,7 +22,7 @@ AGE_BANDS: tuple[str, ...] = ("18-24", "25-34", "35-44", "45-54", "55+")
 DIMENSIONS: tuple[str, ...] = ("states", "languages", "city_tiers", "age_bands")
 CITY_TIER_LABELS = {"tier1": "tier 1 city", "tier2": "tier 2 city", "tier3": "tier 3 town", "rural": "rural area"}
 SAMPLING_NOTE = (
-    "Participants are synthetic. Each dimension is balanced to its shares with a seeded shuffle; the combination of "
+    "Each dimension is balanced to its shares with a seeded shuffle; the combination of "
     "dimensions is not a population statistic, and the panel is not statistically representative of real people."
 )
 

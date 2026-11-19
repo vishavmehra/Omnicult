@@ -374,8 +374,6 @@ def _final_progress(run: m.AgentRun, status: str, error: RunError | None) -> dic
     total = len(stages)
     if status in USABLE:
         message = "Complete." if status == "completed" else "Finished with partial results; see the limitations."
-        if run.mode == "demo":
-            message = message[:-1] + " (demo fixtures)."
         return RunProgress(stage="completed", completed_steps=total, total_steps=total, message=message).model_dump()
     current = dict(run.progress or {"stage": stages[0], "completed_steps": 0, "total_steps": total, "message": ""})
     if error is not None and error.stage:

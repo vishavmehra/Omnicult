@@ -54,7 +54,7 @@ async def test_every_generator_works_in_the_demo_without_a_provider_or_a_cost_co
     assert run["status"] == "completed" and run["mode"] == "demo", run["error"]
     item = await item_of(client, campaign, run)
     assert item["source"] == "demo_fixture" and item["model"] == "gemini-3.1-flash-image" and item["estimated_cost_usd"] is None
-    assert any("Saved demonstration scene" in n for n in item["limitations"])
+    assert not any(w in n.lower() for n in item["limitations"] for w in ("fixture", "demonstration"))
     detail = item["image"]
     assert (detail["width"], detail["height"]) == (1080, 1920) and {p["kind"] for p in detail["placements"]} == {"logo", "product"}
     assert detail["headline"]["script"] == "Taml" and detail["headline"]["fits"] and all(c["passed"] for c in detail["checks"])
@@ -78,7 +78,7 @@ async def test_every_generator_works_in_the_demo_without_a_provider_or_a_cost_co
     assert run["status"] == "completed" and run["mode"] == "demo", run["error"]
     item = await item_of(client, campaign, run)
     assert item["source"] == "demo_fixture" and item["model"] == "lyria-002" and item["jingle"]["duration_ms"] == 10000
-    assert item["jingle"]["generated_seconds"] > 29 and any("Saved demonstration clip" in n for n in item["limitations"])
+    assert item["jingle"]["generated_seconds"] > 29 and not any(w in n.lower() for n in item["limitations"] for w in ("fixture", "demonstration"))
     with wave.open(io.BytesIO((await client.get(item["asset"]["url"])).content)) as clip:
         assert clip.getnframes() == 10 * clip.getframerate()
 
@@ -94,9 +94,9 @@ async def test_a_demo_line_without_a_recording_is_reported_not_voiced(aamod: htt
     run = await finish(client, campaign, "voice", {"region_code": "IN-TN", "language": "ta", "lines": [{"text": t} for t in lines]})
     assert run["status"] == "partial"
     voice = (await item_of(client, campaign, run))["voice"]
-    assert voice["lines"][0]["spoken"] and not voice["lines"][1]["spoken"] and "No demonstration recording" in voice["lines"][1]["problems"][0]
+    assert voice["lines"][0]["spoken"] and not voice["lines"][1]["spoken"] and "not available in the demo" in voice["lines"][1]["problems"][0]
     only = await finish(client, campaign, "voice", {"region_code": "IN-TN", "language": "ta", "lines": [{"text": lines[1]}]})
-    assert only["status"] == "failed" and "No demonstration recording" in only["error"]["message"]
+    assert only["status"] == "failed" and "not available in the demo" in only["error"]["message"]
 
 
 async def test_a_demo_project_still_checks_the_headline_script_before_composing(aamod: httpx.AsyncClient) -> None:

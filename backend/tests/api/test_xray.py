@@ -280,7 +280,7 @@ async def test_a_demo_project_never_sends_an_upload_to_a_model(client: httpx.Asy
     creative = (await client.get(run["result"]["url"])).json()
     assert creative["mode"] == "demo" and creative["analysis"]["vision"]["status"] == "unavailable"
     assert "Demo projects do not analyze uploads" in creative["analysis"]["vision"]["message"]
-    assert any("Demo fixtures do not cover Creative X-Ray" in limit for limit in creative["limitations"])
+    assert any("keyframe timings only" in limit for limit in creative["limitations"])
     (scene,) = (await client.get(f"{API}/creatives/{creative['id']}/scenes")).json()["items"]
     assert scene["on_screen_text"] == [] and scene["people"] == [] and any("not analysed" in limit for limit in scene["limitations"])
 

@@ -47,7 +47,7 @@ export function CampaignSelector({ campaignId, workspace }: { campaignId: string
               const items = campaigns.filter((c) => c.brand.id === brand.id);
               if (!items.length) return null;
               return (
-                <CommandGroup key={brand.id} heading={brand.mode === "demo" ? `${brand.name} · demo data` : brand.name}>
+                <CommandGroup key={brand.id} heading={brand.name}>
                   {items.map((c) => (
                     <CommandItem key={c.id} value={`${c.name} ${brand.name} ${c.id}`} onSelect={() => go(workspaceHref(c.id, workspace ?? "desk"))}>
                       <span className="min-w-0 flex-1 truncate">{c.name}</span>

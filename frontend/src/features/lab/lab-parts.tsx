@@ -265,7 +265,7 @@ export function RunBanner({ run, label, onNewRun }: { run: BannerRun; label: str
     title = notConfigured ? "No language model provider is configured" : `${label}: ${run.status === "cancelled" ? "cancelled" : "failed"}`;
     lines = [
       <p key="m" className="text-ink">{err?.message ?? "The run stopped without an error message. No results were saved."}</p>,
-      notConfigured && <p key="n" className="text-ink-secondary">Demo projects run on labelled fixtures and need no provider. A live project needs a provider configured on the server.</p>,
+      notConfigured && <p key="n" className="text-ink-secondary">A live project needs a provider configured on the server.</p>,
       <p key="s" className="type-meta">
         {err?.stage && <>Failed at: {humanize(err.stage)} · </>}
         {err && <span className="font-mono">{err.code}</span>}
@@ -365,7 +365,7 @@ export function RunPicker({
 // ---------- reaction distribution ----------
 
 /** Reaction counts as ruled rows: a word and icon per reaction, a count out of the denominator, and a bar that only repeats the count. */
-export function DistributionLedger({ dist, noun = "synthetic participants" }: { dist: ReactionDistribution; noun?: string }) {
+export function DistributionLedger({ dist, noun = "participants" }: { dist: ReactionDistribution; noun?: string }) {
   return (
     <div className="space-y-2">
       <ul className="ledger-rules type-ledger text-[13.5px]">
