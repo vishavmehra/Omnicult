@@ -97,6 +97,14 @@ def test_wav_info_derives_the_duration_from_the_bytes():
     assert media.wav_info(wav_bytes(1.5, rate=24000, channels=1)) == (24000, 1, 1.5)
 
 
+def test_a_wav_nested_in_a_wav_is_unwrapped_so_its_header_is_not_played_as_a_click():
+    inner = wav_bytes(1.0, rate=48000, channels=2)
+    nested = inner[:40] + (len(inner) * 2).to_bytes(4, "little") + inner  # lyria-002: a second header inside data, size doubled
+    clean = media.single_header_wav(nested)
+    assert clean == media.single_header_wav(inner) and clean[44:48] != b"RIFF" and media.wav_info(clean) == (48000, 2, 1.0)
+    assert media.single_header_wav(clean) == clean  # a clean WAV passes through unchanged
+
+
 async def test_music_reads_the_documented_audio_content_field_as_well():
     async def poster(url, body, headers):
         return {"predictions": [{"audioContent": base64.b64encode(wav_bytes(1.0)).decode(), "mimeType": "audio/wav"}],

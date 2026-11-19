@@ -6,11 +6,11 @@ about severity is used. The model may never state that a creative is legally com
 """
 
 import re
-from typing import ClassVar
+from typing import Annotated, ClassVar
 
 from pydantic import Field, field_validator
 
-from app.agents._common import Strict, untrusted
+from app.agents._common import Strict, clipped, untrusted
 from app.llm.gateway import LLMGateway, LLMResult
 from app.schemas.audience import RiskCategory
 
@@ -40,13 +40,13 @@ def no_clearance(value: str | None) -> str | None:
 
 class FindingOut(Strict):
     element: str = Field(description="Element handle (E1, ...).")
-    quote: str | None = Field(default=None, max_length=300, description="Exact text from that element; null for a non-text element.")
+    quote: Annotated[str | None, clipped(300)] = Field(default=None, max_length=300, description="Exact text from that element; null for a non-text element.")
     category: RiskCategory
-    observation: str = Field(min_length=1, max_length=300, description="What is there. State it neutrally; do not judge.")
-    interpretation: str = Field(min_length=1, max_length=500, description="Why it may matter in this region. Say 'may'; never state a violation as fact.")
-    suggested_fix: str | None = Field(default=None, max_length=300)
-    ad_codes: list[str] = Field(default=[], max_length=4, description="Ad-code handles (A1, ...) that bear on the finding.")
-    claims: list[str] = Field(default=[], max_length=4, description="Region claim handles (C1, ...) that bear on the finding.")
+    observation: Annotated[str, clipped(300)] = Field(min_length=1, max_length=300, description="What is there. State it neutrally; do not judge.")
+    interpretation: Annotated[str, clipped(500)] = Field(min_length=1, max_length=500, description="Why it may matter in this region. Say 'may'; never state a violation as fact.")
+    suggested_fix: Annotated[str | None, clipped(300)] = Field(default=None, max_length=300)
+    ad_codes: Annotated[list[str], clipped(4)] = Field(default=[], max_length=4, description="Ad-code handles (A1, ...) that bear on the finding.")
+    claims: Annotated[list[str], clipped(4)] = Field(default=[], max_length=4, description="Region claim handles (C1, ...) that bear on the finding.")
 
     @field_validator("observation", "interpretation", "suggested_fix")
     @classmethod
@@ -56,7 +56,7 @@ class FindingOut(Strict):
 
 class RiskCheckOut(Strict):
     schema_version: ClassVar[str] = "risk-check-v1"
-    findings: list[FindingOut] = Field(default=[], max_length=12)
+    findings: Annotated[list[FindingOut], clipped(12)] = Field(default=[], max_length=12)
 
 
 RISK_CHECK_SYSTEM = """You are the Risk Check in Omnicult. You screen one creative, element by element, for things that may need a
@@ -89,4 +89,5 @@ async def check(
     return await llm.generate_structured(
         task="risk_analysis", stage=stage, agent="red_team", system=RISK_CHECK_SYSTEM, user=user, schema=RiskCheckOut,
         prompt_version=RISK_CHECK_PROMPT_VERSION, temperature=0.2, max_tokens=4000, fixture_context=payload,
+        constrained=False,  # with the schema enforced, a live run spent its whole 6,000-token budget and was cut off (2026-11-19)
     )

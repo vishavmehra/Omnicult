@@ -336,7 +336,7 @@ def map_exception(exc: BaseException) -> ProviderError:
         if code in (408, 504):
             return ProviderError(f"HTTP {code}", transient=True, timeout=True)
         if code == 429:
-            return ProviderError("HTTP 429", transient=True, retry_after=_retry_after(exc))
+            return ProviderError("HTTP 429", transient=True, retry_after=_retry_after(exc), rate_limited=True)
         if code >= 500:
             return ProviderError(f"HTTP {code}", transient=True, retry_after=_retry_after(exc))
         return ProviderError(f"HTTP {code}", transient=False)
@@ -395,7 +395,7 @@ class GoogleGenAIProvider:
             system_instruction=system, temperature=request.temperature, seed=to_int32(request.seed),
             max_output_tokens=request.max_tokens,
             response_mime_type="application/json" if request.json_schema else None,
-            response_json_schema=to_gemini_schema(request.json_schema) if request.json_schema else None,
+            response_json_schema=to_gemini_schema(request.json_schema) if request.json_schema and request.constrained else None,
             thinking_config=thinking_config(request.thinking_level),
         )
         try:

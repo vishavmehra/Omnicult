@@ -51,7 +51,7 @@ BLOCKED_MESSAGE = (
 CHAT_DEADLINE_FACTOR = 2.5  # one generate_structured call: LLM_REQUEST_TIMEOUT_SECONDS x 2.5 (150 s by default)
 CAPABILITY_LIMITS: dict[str, tuple[float, float]] = {  # name -> (per request, deadline)
     "embeddings": (30.0, 60.0),  # the deadline applies per batch of up to the adapter's max_batch texts
-    "vision": (40.0, 75.0),  # per image
+    "vision": (60.0, 130.0),  # per image; a keyframe with boxes took up to 55 s live (2026-11-19)
     "image_generation": (90.0, 120.0),
     "tts": (60.0, 90.0),
     "grounded_research": (60.0, 90.0),
@@ -96,13 +96,20 @@ class ProviderError(Exception):
 
     def __init__(
         self, message: str, *, transient: bool, timeout: bool = False, retry_after: float | None = None,
-        blocked: bool = False,
+        blocked: bool = False, rate_limited: bool = False,
     ):
         super().__init__(message)
         self.transient = transient
-        self.timeout = timeout
+        self.timeout = timeout  # no answer within the request timeout (or HTTP 408/504): a fallback model is tried at once
         self.retry_after = retry_after
         self.blocked = blocked
+        self.rate_limited = rate_limited  # HTTP 429: the model's quota is spent; a fallback model is tried at once
+
+
+# A model that answered 429 (quota exhausted) is skipped for this long while a fallback exists: on 2026-11-19 gemini-4-argon
+# answered every call with 429 RESOURCE_EXHAUSTED, and each Risk Check and Claim Guard spent three retries on it first.
+RATE_LIMIT_COOLDOWN_SECONDS = 120.0
+_cooldown: dict[str, float] = {}  # model id -> monotonic time until which it is skipped
 
 
 @dataclass(frozen=True)
@@ -116,6 +123,7 @@ class ChatRequest:
     prompt_version: str
     fixture_context: Mapping[str, Any] | None = None
     thinking_level: str | None = None
+    constrained: bool = True  # send `json_schema` for constrained decoding; False: JSON mode only, the schema stays in the prompt
 
 
 @dataclass(frozen=True)
@@ -314,7 +322,10 @@ class LLMGateway:
             return [_Target(self._primary, "fixture")]
         if self._primary is None:
             return []
-        return [_Target(self._primary, model, tier) for tier, model in tier_chain(self._settings, task)]
+        targets = [_Target(self._primary, model, tier) for tier, model in tier_chain(self._settings, task)]
+        now = time.monotonic()
+        ready = [t for t in targets if _cooldown.get(t.model, 0.0) <= now]
+        return ready or targets[-1:]  # a model in its 429 cooldown is skipped, never the last one left
 
     async def generate_structured(
         self,
@@ -330,7 +341,11 @@ class LLMGateway:
         seed: int | None = None,
         max_tokens: int | None = None,
         fixture_context: Mapping[str, Any] | None = None,
+        constrained: bool = True,
     ) -> LLMResult[T]:
+        """`constrained=False` asks for JSON without sending the schema for constrained decoding (it is still in the prompt
+        and Pydantic still validates): for long free-text answers, where Gemini's constrained decoding can run one string on
+        until the token limit (seen live on X-Ray scene structuring)."""
         state = _CallState()
         schema_version = getattr(schema, "schema_version", schema.__name__)
         sampling = None if self.is_fixture else Sampling(temperature=temperature, seed=seed)
@@ -353,6 +368,8 @@ class LLMGateway:
         targets = self._targets(task)
         if not targets:
             raise fail("PROVIDER_NOT_CONFIGURED", "The language model provider is not configured.", False, None)
+        chain = [] if self.is_fixture else tier_chain(self._settings, task)
+        state.fallback_used = bool(chain) and targets[0].model != chain[0][1]  # the task's own model is in its 429 cooldown
         json_schema = schema.model_json_schema()
         messages = [
             {
@@ -371,7 +388,7 @@ class LLMGateway:
                 model=target.model, messages=messages, temperature=temperature, seed=seed,
                 max_tokens=(max_tokens or DEFAULT_MAX_TOKENS) + (spec.thinking_headroom if spec else 0),
                 json_schema=json_schema, prompt_version=prompt_version, fixture_context=fixture_context,
-                thinking_level=thinking_level_for(target.model, target.tier),
+                thinking_level=thinking_level_for(target.model, target.tier), constrained=constrained,
             )
             if self._meter is None or self.is_fixture:
                 return await target.provider.complete(request)
@@ -404,6 +421,13 @@ class LLMGateway:
                             raise fail("CONTENT_BLOCKED", BLOCKED_MESSAGE, False, target) from exc
                         if not exc.transient:
                             raise fail("PROVIDER_ERROR", "The model provider rejected the request.", False, target) from exc
+                        if (exc.rate_limited or exc.timeout) and index + 1 < len(target_list):
+                            # Go to the fallback now. 429: the quota is spent. Timeout: a retry of the same model would
+                            # use up the deadline the fallback needs (on 2026-11-19 Vertex answered gemini-3.8-flash with
+                            # 504s after about 57 s for an hour, and Ask the Panel lost 16 of 20 answers that way).
+                            if exc.rate_limited:
+                                _cooldown[target.model] = time.monotonic() + RATE_LIMIT_COOLDOWN_SECONDS
+                            break
                         if retry < self._max_retries:
                             await asyncio.sleep(exc.retry_after or self._backoff * 2**retry)
                         continue

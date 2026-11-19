@@ -104,3 +104,11 @@ def test_cutdowns_are_chronological_and_reasoned() -> None:
     (cut,) = ff.suggest_cutdowns(scenes(), [20000])
     assert [g.position for g in cut.segments] == sorted(g.position for g in cut.segments)
     assert any("End card" in r for r in cut.segments[-1].reasons)
+
+
+def test_an_element_left_wholly_outside_the_frame_has_no_output_box() -> None:
+    crop, _ = plan("1x1", [PACK, SMALL])  # the window slides down to keep the locked pack: the top band falls outside
+    top = ff.Box("top", "headline", (0.05, 0.0, 0.5, 0.04), text="x")
+    placed = ff._measure(top, SOURCE, ff.Layout("crop", (0, 270, 1080, 1080), (0, 0, 1080, 1080), 1.0), ff.BY_ID["1x1"])  # noqa: SLF001
+    assert placed.placement == "outside" and placed.bbox_out is None  # clipping alone gave a negative height here
+    assert all(p.bbox_out is None or (p.bbox_out[2] > 0 and p.bbox_out[3] > 0) for p in crop.placed)

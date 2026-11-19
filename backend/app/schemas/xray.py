@@ -32,6 +32,7 @@ SCENE_PROVENANCE: dict[str, Provenance] = {
     "claims": "model_generated",  # the quote is verified in code; whether it is a claim is the model's reading
     "cultural_observations": "model_generated",
     "cultural_interpretations": "interpretation",
+    "layout": "model_generated",  # the role is the model's reading; the box is the vision model's; the cited ids are checked in code
 }
 _SPACES = re.compile(r"\s+")
 
@@ -84,6 +85,17 @@ class OnScreenText(ApiModel):
     frame_ms: int | None = Field(description="Keyframe at which a vision model reported this text.")
 
 
+class LayoutItem(ApiModel):
+    """One part of a scene's layout: an on-screen text, logo or pack, with the box a vision model located it in."""
+
+    role: Literal["headline", "body", "cta", "tagline", "caption", "logo", "product", "packshot"] = Field(
+        description="The part it plays, as a model read it.")
+    text: str | None = Field(description="Text roles: the text as the vision model reported it. Null for a logo or pack.")
+    frame_ms: int = Field(description="The keyframe the box belongs to.")
+    observation_id: str = Field(description="The vision observation (vis-N) of that keyframe the box comes from.")
+    bbox: list[float] = Field(min_length=4, max_length=4, description="[x, y, w, h], each 0-1 of the keyframe.")
+
+
 class AdClaim(ApiModel):
     text: str = Field(description="The exact quote, found in the scene's on-screen text or transcript.")
     source: Literal["on_screen_text", "transcript"]
@@ -132,6 +144,7 @@ class Scene(ApiModel):
     claims: list[AdClaim]
     cultural_observations: list[SceneObservation]
     cultural_interpretations: list[SceneInterpretation]
+    layout: list[LayoutItem] = Field(default=[], description="Where the scene's text, logo and pack sit, located by a vision model.")
     provenance: dict[str, Provenance]
     limitations: list[str]
     anchor: Anchor

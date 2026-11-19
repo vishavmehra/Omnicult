@@ -89,7 +89,8 @@ async def test_an_image_run_composites_logo_product_and_headline_in_code_and_sto
     image = adapter(rig, "image_generation")
     assert len(image.calls) == 1 and image.calls[0]["aspect_ratio"] == "4:5" and image.calls[0]["reference_image"]
     prompt = image.calls[0]["prompt"]
-    assert "Brass lamps on a teal table" in prompt and "Tamil Nadu" in prompt and "#0E4D58" in prompt and "warm" in prompt
+    assert "Brass lamps on a teal table" in prompt and "Tamil Nadu" in prompt and "warm" in prompt
+    assert "#0E4D58" not in prompt and "Never show colour swatches" in prompt  # colours by name: hex codes came back as swatches
     assert "social media post" in prompt and prompt == item["prompt"]
     # the finished picture: the exact format size, logo and product placed in code, the headline drawn in code in Tamil
     detail = item["image"]
@@ -103,13 +104,13 @@ async def test_an_image_run_composites_logo_product_and_headline_in_code_and_sto
     scene = Image.open(io.BytesIO((await client.get(detail["scene"]["url"])).content))
     assert scene.size == (800, 1000)  # the model's scene alone, kept for before and after
     # provenance: model, prompt version, cost and inputs, on the item and on the asset row
-    assert (item["model"], item["prompt_version"], item["source"], item["mode"]) == ("gemini-3.1-flash-image", "generate-image-v2", "provider", "live")
+    assert (item["model"], item["prompt_version"], item["source"], item["mode"]) == ("gemini-3.1-flash-image", "generate-image-v3", "provider", "live")
     assert item["estimated_cost_usd"] == pytest.approx(0.067) and item["request"]["idea"] == "Brass lamps on a teal table"
     async with read_session() as s:
         rows = list((await s.execute(select(m.Asset).where(m.Asset.derived_role == "generate_image"))).scalars())
     final_row = next(r for r in rows if r.media_info["generate"]["part"] == "final")
     info = final_row.media_info["generate"]
-    assert info["ai_generated"] is True and info["model"] == "gemini-3.1-flash-image" and info["prompt_version"] == "generate-image-v2"
+    assert info["ai_generated"] is True and info["model"] == "gemini-3.1-flash-image" and info["prompt_version"] == "generate-image-v3"
     assert info["estimated_cost_usd"] == pytest.approx(0.067) and info["request"]["format"] == "4:5" and final_row.parent_asset_id is not None
     listed = (await client.get(f"{API}/projects/{world.project}/assets")).json()
     assert listed["total"] == 3  # the uploaded logo, product and reference photo; the generated files are derived
@@ -318,7 +319,7 @@ async def test_use_in_studio_adds_the_output_as_an_element_of_a_new_version(clie
         kinds[kind] = added
         assert node["parent_id"] == world.version and node["actor"] == "user" and len(node["elements"]) == 2
         generation = node["settings"]["generation"]  # the new node records the run, model and prompt version of the file it holds
-        assert generation["run_id"] == run["id"] and generation["prompt_version"] == f"generate-{kind}-v{2 if kind == 'image' else 1}" and generation["provider"] == "google"
+        assert generation["run_id"] == run["id"] and generation["prompt_version"] == f"generate-{kind}-v{3 if kind == 'image' else 1}" and generation["provider"] == "google"
         op = (await client.get(f"{API}/campaigns/{world.campaign}/operations/{used['operation_id']}")).json()
         assert op["kind"] == "manual_edit" and op["actor"] == "user" and op["params"]["generate"]["run_id"] == run["id"]
     item = await item_of(client, world.campaign, runs["image"])

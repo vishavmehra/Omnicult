@@ -9,7 +9,7 @@ import re
 from collections.abc import Mapping, Sequence
 from typing import Any, TypeVar
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, BeforeValidator, ConfigDict
 
 from app.schemas.evidence import EvidenceRecord
 
@@ -20,6 +20,13 @@ class Strict(BaseModel):
     """Base of every model-output schema: unknown keys are invalid output (repair, then RUN_FAILED), never ignored."""
 
     model_config = ConfigDict(extra="forbid")
+
+
+def clipped(limit: int) -> BeforeValidator:
+    """A descriptive text or list the model writes longer than `limit` (characters, or items) is cut to it instead of failing
+    the run: Gemini is not sent these bounds (app/llm/google.py drops them). Use it only where a cut keeps the meaning (a
+    description, a list of phrases); never on copy that is applied as written."""
+    return BeforeValidator(lambda v: (" ".join(v.split())[:limit] if isinstance(v, str) else v[:limit] if isinstance(v, list) else v))
 
 AFFINITY_NOTE = "Aggregate affinity; not evidence of demand, purchase intent, or individual preference."
 DROPPED_NOTE = "Some references in the model output did not match the supplied items and were removed."

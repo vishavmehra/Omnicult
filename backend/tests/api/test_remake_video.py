@@ -100,7 +100,7 @@ async def test_a_clip_starts_from_the_remade_scene_and_lands_in_a_new_version_wi
     assert len(new["elements"]) == len(old["elements"]) + 1
     # operation: actor ai, reason, prompt version and the estimated cost recorded; kind remake shows in the Version Tree as an AI proposal
     op = (await client.get(f"{API}/campaigns/{world.campaign}/operations/{out['id']}")).json()
-    assert (op["kind"], op["actor"], op["prompt_version"], op["status"]) == ("remake", "ai", "remake-video-v2", "applied")
+    assert (op["kind"], op["actor"], op["prompt_version"], op["status"]) == ("remake", "ai", "remake-video-v3", "applied")
     assert op["estimated_cost_usd"] == pytest.approx(0.48) and "Tamil Nadu" in op["reason"] and "6 s clip" in op["reason"]
     assert out["kind"] == "video" and out["passed"] and out["mode"] == "live" and out["estimated_cost_usd"] == pytest.approx(0.48)
     # what the clip says about itself
@@ -108,7 +108,7 @@ async def test_a_clip_starts_from_the_remade_scene_and_lands_in_a_new_version_wi
     assert (clip["seconds"], clip["resolution"], clip["aspect_ratio"], clip["operation_id"]) == (6, "720p", "9:16", "op-1234")
     assert clip["audio_generated_by_model"] is False and not clip["with_voiceover"] and clip["video_asset_id"] == clip["silent_asset_id"]
     assert [r["element_id"] for r in clip["kept_regions"]] == ["kv-pack"]  # the pack has no Brand Kit file here, so it stays in the frame as pixels
-    assert all(c["passed"] for c in clip["checks"]) and clip["prompt_version"] == "remake-video-v2"
+    assert all(c["passed"] for c in clip["checks"]) and clip["prompt_version"] == "remake-video-v3"
     brand = {c["name"]: c for c in clip["checks"] if c["element_id"]}  # the logo and headline are drawn in code over every frame, then measured
     assert {c["element_id"] for c in brand.values()} == {"kv-logo", "kv-headline"} and all(c["frames_checked"] >= 10 and c["failed_at_ms"] == [] for c in brand.values())
     assert all("held for all" in c["detail"] for c in brand.values())
@@ -121,7 +121,7 @@ async def test_a_clip_starts_from_the_remade_scene_and_lands_in_a_new_version_wi
         rows = {r.derived_role: r for r in (await s.execute(select(m.Asset).where(m.Asset.derived_role.in_(["remake_video", "remake_frame"])))).scalars()}
     assert set(rows) == {"remake_video", "remake_frame"} and rows["remake_video"].kind == "video"
     info = rows["remake_video"].media_info["remake"]
-    assert (info["model"], info["prompt_version"], info["seconds"], info["ai_generated"]) == ("veo-3.1-fast-generate-001", "remake-video-v2", 6, True)
+    assert (info["model"], info["prompt_version"], info["seconds"], info["ai_generated"]) == ("veo-3.1-fast-generate-001", "remake-video-v3", 6, True)
     assert info["estimated_cost_usd"] == pytest.approx(0.48) and info["run_id"] == run["id"]
     assert rows["remake_frame"].parent_asset_id == UUID(world.original)  # the start frame descends from the finished creative
 
@@ -177,7 +177,7 @@ async def test_the_preview_shows_the_frame_the_prompt_and_the_cost_and_makes_no_
     plan = response.json()
     assert not video.calls and plan["can_run"] and plan["blocked_reason"] is None and plan["mode"] == "live"
     assert plan["source_version_id"] == remade and plan["model"] == "veo-3.1-fast-generate-001" and plan["location"] == "us-central1"
-    assert (plan["seconds"], plan["resolution"], plan["prompt_version"]) == (6, "720p", "remake-video-v2")
+    assert (plan["seconds"], plan["resolution"], plan["prompt_version"]) == (6, "720p", "remake-video-v3")
     assert plan["price_per_second_usd"] == pytest.approx(0.08) and plan["estimated_cost_usd"] == pytest.approx(0.48)
     assert plan["run_budget_usd"] == pytest.approx(0.50) and plan["within_budget"]
     frame = plan["start_frame"]

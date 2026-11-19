@@ -161,7 +161,7 @@ export function TextPreviewTool({ creative, scene }: { creative: Creative; scene
           This server has no complex-script shaping engine, so only Latin text can be previewed. Indic text is refused rather than drawn unshaped.
         </p>
       )}
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <div className="space-y-2">
           <p className="text-[13px] font-medium text-ink">Place the boxes</p>
           <p className="type-meta">Drag on the frame to set the active box, or type its position below.</p>
@@ -192,7 +192,7 @@ export function TextPreviewTool({ creative, scene }: { creative: Creative; scene
         </div>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <div className="space-y-3">
           <div className="flex flex-wrap gap-2">
             <Button type="button" variant="outline" size="sm" onClick={() => add("text")} disabled={texts.length >= 12 || !defaultLanguage}>

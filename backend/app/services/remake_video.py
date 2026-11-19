@@ -130,10 +130,53 @@ async def _kit_asset(s: AsyncSession, project: m.Project, asset_id: UUID | None)
     return asset.id if ok and asset else None
 
 
+def _logo_contrast(lockup_png: bytes, background: Any, bbox: list[float]) -> float:
+    """How far the lockup's own colour (its opaque pixels) stands from the scene behind its box (|luminance difference|), or
+    -1 when its shape does not fit the box (a stacked or icon-only lockup in a wide box)."""
+    import io
+
+    from PIL import Image, ImageStat
+
+    from app.media import textrender
+
+    logo = Image.open(io.BytesIO(lockup_png)).convert("RGBA")
+    box = textrender.pixel_rect(bbox, background.size)
+    shape = (logo.width / logo.height) / max((box[2] - box[0]) / max(box[3] - box[1], 1), 1e-6)
+    if not 0.4 <= shape <= 2.5:
+        return -1.0
+    ink = ImageStat.Stat(logo.convert("L"), mask=logo.getchannel("A").point(lambda a: 255 if a > 128 else 0)).mean[0]
+    behind = ImageStat.Stat(background.convert("L").crop(box)).mean[0]
+    return abs(ink - behind)
+
+
+async def _pick_lockup(s: AsyncSession, lockups: list[Any], background: bytes | None, bbox: list[float]) -> Any:
+    """With no lockup named, the one that reads best on the scene behind the logo box: a teal wordmark on dark photography
+    was nearly invisible in a live clip, where the original key visual used the reversed (cream) lockup."""
+    if background is None or len(lockups) < 2:
+        return lockups[0] if lockups else None
+    import io
+
+    from PIL import Image
+
+    scene = Image.open(io.BytesIO(background))
+    scored = []
+    for lockup in lockups:
+        data = await _bytes(s, str(lockup.asset_id))
+        if not data:
+            continue
+        try:
+            scored.append((_logo_contrast(data, scene, bbox), lockup))
+        except Exception:  # an unreadable Brand Kit image is simply not a candidate
+            continue
+    best = max(scored, key=lambda x: x[0], default=None)
+    return best[1] if best and best[0] >= 0 else lockups[0]
+
+
 async def _brand_specs(s: AsyncSession, project: m.Project, elements: list[dict[str, Any]], locked: list[LockedSpec],
-                       texts: list[TextSpec]) -> list[BrandSpec]:
+                       texts: list[TextSpec], background: bytes | None = None) -> list[BrandSpec]:
     """The elements to draw in code over the clip: the logo, tagline and (when the Brand Kit has its file) product tin that the
-    key visual locks, and its headline. Logo and tin come from the Brand Kit files; text comes from the version's elements."""
+    key visual locks, and its headline. Logo and tin come from the Brand Kit files; text comes from the version's elements.
+    `background` (the scene the clip starts from) picks the logo lockup when the element names none."""
     row = await s.scalar(select(m.BrandKitDesignRow).where(m.BrandKitDesignRow.project_id == project.id))
     try:
         design = KitDesign.model_validate(row.design) if row else None
@@ -148,7 +191,7 @@ async def _brand_specs(s: AsyncSession, project: m.Project, elements: list[dict[
         if spec.kind == "logo":
             stem = Path(str(element.get("value") or "")).stem
             named = next((x for x in lockups if stem and stem in {Path(str(x.vector_path or "")).stem, Path(str(x.source_path or "")).stem}), None)
-            lockup = named or (lockups[0] if lockups else None)
+            lockup = named or await _pick_lockup(s, lockups, background, spec.bbox)
             specs.append(BrandSpec(element_id=spec.element_id, role="logo", label=spec.label, bbox=spec.bbox,
                                    asset_id=await _kit_asset(s, project, lockup.asset_id if lockup else None)))
         elif spec.kind == "tagline":
@@ -225,7 +268,8 @@ async def plan(s: AsyncSession, user_id: UUID, campaign_id: UUID, body: r.Remake
     if body.add_voiceover and (found := await _voiceover(s, project, source.elements)):
         p.voiceover_element, p.voiceover = found
     if p.start_source in ("remake_scene", "demo_fixture") and p.locked + texts:
-        p.brand = await _brand_specs(s, project, source.elements, p.locked, texts)
+        p.brand = await _brand_specs(s, project, source.elements, p.locked, texts,
+                                     await _bytes(s, str(p.scene.id)) if p.scene else None)
     if p.brand:
         pinned = sorted({pipeline.ROLE_LABELS[b.role].lower() for b in p.brand})
         p.notes.append(f"The {', '.join(pinned)} are drawn in code over every frame of the clip, from the Brand Kit files, and compared with "

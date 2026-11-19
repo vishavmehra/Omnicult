@@ -61,7 +61,7 @@ export function GenerateReport({
         <Input id={`${uid}-title`} value={title} maxLength={200} onChange={(e) => setTitle(e.target.value)} placeholder="Leave empty for the default title" className="max-w-md" />
       </div>
 
-      <fieldset className="space-y-2">
+      <fieldset className="min-w-0 space-y-2">
         <legend className="text-[13px] font-medium text-ink">Regions to report on</legend>
         <label className="flex items-start gap-2 text-[13.5px] text-ink-body">
           <input type="radio" name={`${uid}-regions`} checked={!choose} onChange={() => setChoose(false)} className="mt-1 size-4 accent-[var(--primary)]" />

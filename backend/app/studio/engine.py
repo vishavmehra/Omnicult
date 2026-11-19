@@ -224,6 +224,8 @@ def _apply_edits(source: Snapshot, result: Snapshot, spec: OpSpec, locked_ids: s
         element = elements[edit.element_id]
         _validate_edit(spec.kind, element, dict(edit.set), allowed, text_only)
         element.update(edit.set)  # `element` is the clone's dict, so the source is untouched
+        if "bbox" in edit.set:
+            element["bbox_source"] = None  # a box set by hand is no longer the one a vision model located
     if not touched_by(source, result):
         raise OperationRejected("INVALID", "The edit leaves every element unchanged.", ids)
     # An edit may carry the settings it was made under (a transcreation records its region, language and tone dials).

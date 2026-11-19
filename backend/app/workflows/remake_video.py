@@ -41,8 +41,10 @@ from app.workflows.types import OutcomeStatus, WorkflowContext, WorkflowDeps
 
 VIDEO = "remake_video"
 V1, V2, V3, V4 = STAGES[VIDEO]
-VIDEO_PROMPT_VERSION = "remake-video-v2"
-NEGATIVE_PROMPT = "text, letters, subtitles, captions, watermark, extra logos, warped packaging, distorted product, blurry, low quality"
+VIDEO_PROMPT_VERSION = "remake-video-v3"  # v3: camera movement in the negative prompt
+# camera moves: a live clip drifted and zoomed although the prompt says the camera is locked off, so the overlay tin floated
+NEGATIVE_PROMPT = ("text, letters, subtitles, captions, watermark, extra logos, warped packaging, distorted product, blurry, low quality, "
+                   "camera movement, zoom, pan, tilt, dolly")
 INTERPRETATION_NOTE = "The clip is a model interpretation. Confirm props, symbols and motion with someone from the region."
 NO_TEXT_NOTE = "The model is never asked to draw text: the clip has no model-made on-screen text, and any text shown is rendered in code."
 LOCK_NOTE = ("Video models cannot guarantee that the logo, the pack and the tagline stay undistorted from frame to frame. They are "

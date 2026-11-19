@@ -49,10 +49,10 @@ const LABELS: Record<Provenance, Label> = {
 };
 
 /** Says what kind of thing a scene field is. The kind comes from the backend (set by code), never from a model. */
-export function ProvenanceTag({ kind, className }: { kind: Provenance; className?: string }) {
+export function ProvenanceTag({ kind, className, title: override }: { kind: Provenance; className?: string; title?: string }) {
   const { text, Icon, className: tone, title } = LABELS[kind];
   return (
-    <Tag className={cn(tone, className)} title={title}>
+    <Tag className={cn(tone, className)} title={override ?? title}>
       <Icon aria-hidden />
       {text}
     </Tag>

@@ -141,9 +141,10 @@ function useStudioMutation<V, R>(campaignId: string, fn: (vars: V) => Promise<R>
 
 const path = (campaignId: string) => ({ params: { path: { campaign_id: campaignId } } });
 
+/** A root version: the campaign copy (language read from the copy itself), or with `from_xray` the X-Ray layout of the campaign's creatives. */
 export function useCreateVersion(campaignId: string) {
-  return useStudioMutation(campaignId, (vars: { label: string; language: string }) =>
-    unwrap(api.POST("/api/v1/campaigns/{campaign_id}/versions", { ...path(campaignId), body: vars })),
+  return useStudioMutation(campaignId, (vars: { label: string; language?: string; from_xray?: boolean }) =>
+    unwrap(api.POST("/api/v1/campaigns/{campaign_id}/versions", { ...path(campaignId), body: { ...vars, from_xray: Boolean(vars.from_xray) } })),
   );
 }
 

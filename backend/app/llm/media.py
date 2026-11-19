@@ -281,11 +281,42 @@ class MusicClip:
 
 
 def wav_info(data: bytes) -> tuple[int, int, float]:
-    """(sample rate, channels, seconds) of a PCM WAV. The duration comes from the byte count, not the header: Lyria's
-    header frame count is unreliable."""
+    """(sample rate, channels, seconds) of a PCM WAV with one correct header (see `single_header_wav`)."""
     with wave.open(io.BytesIO(data)) as clip:
-        rate, channels, width = clip.getframerate(), clip.getnchannels(), clip.getsampwidth()
-    return rate, channels, round(max(0, len(data) - 44) / (rate * channels * width), 2)
+        return clip.getframerate(), clip.getnchannels(), round(clip.getnframes() / clip.getframerate(), 2)
+
+
+def _payload_offset(data: bytes, base: int) -> int | None:
+    """Where the `data` chunk's samples start in the WAV that begins at `base`, or None."""
+    pos = base + 12
+    while pos + 8 <= len(data):
+        size = int.from_bytes(data[pos + 4:pos + 8], "little")
+        if data[pos:pos + 4] == b"data":
+            return pos + 8
+        pos += 8 + size + (size & 1)
+    return None
+
+
+def single_header_wav(data: bytes) -> bytes:
+    """The WAV rewritten with one header whose sizes match the samples. lyria-002 returns a WAV whose data chunk begins with
+    a second complete WAV header (and an outer data size about twice the real one): played as delivered, those 44 bytes
+    are a loud click at 0 s. Nested headers are unwrapped; the samples are never changed."""
+    start = 0
+    for _ in range(4):
+        offset = _payload_offset(data, start)
+        if offset is None or data[offset:offset + 4] != b"RIFF" or data[offset + 8:offset + 12] != b"WAVE":
+            break
+        start = offset
+    with wave.open(io.BytesIO(data[start:])) as clip:
+        channels, width, rate = clip.getnchannels(), clip.getsampwidth(), clip.getframerate()
+        frames = clip.readframes(clip.getnframes())
+    out = io.BytesIO()
+    with wave.open(out, "wb") as clean:
+        clean.setnchannels(channels)
+        clean.setsampwidth(width)
+        clean.setframerate(rate)
+        clean.writeframes(frames)
+    return out.getvalue()
 
 
 async def post_json(url: str, body: dict[str, Any], headers: dict[str, str], timeout: float) -> dict[str, Any]:
@@ -388,6 +419,7 @@ class MusicClient(_Adapter):
             raise provider_llm_error(exc, failure_trace(stage, agent, "google", model, started, code),
                                      timeout_seconds=self._settings.llm_request_timeout_seconds) from exc
         try:
+            wav = single_header_wav(wav)
             rate, channels, seconds = wav_info(wav)
         except (wave.Error, EOFError):
             raise LLMError("PROVIDER_ERROR", "The music model returned audio that could not be read.", retryable=False,

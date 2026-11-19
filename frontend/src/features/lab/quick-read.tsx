@@ -5,6 +5,7 @@ import { useState, type FormEvent } from "react";
 import { ErrorState, LoadingState } from "@/components/states";
 import { Textarea } from "@/components/ui/textarea";
 import { useCapabilities } from "@/hooks/use-capabilities";
+import { useVersions } from "@/features/studio/api";
 import { useCampaign } from "@/features/workspaces/campaign-context";
 
 import { useQuickRead, useRuns, useSamplingOptions, useStartQuickRead } from "./api";
@@ -44,6 +45,11 @@ function QuickReadForm({ options, onStarted }: { options: SamplingOptions; onSta
 
   const [region, setRegion] = useState(() => defaultRegion(options, campaign.target_markets.map((m) => m.display_name)));
   const [versionId, setVersionId] = useState(campaign.current_version.id);
+  // A Creative Studio version: the panel reads that version's own copy, and Launch Room links the result to it (version_ref).
+  const studio = useVersions(campaign.id);
+  const studioVersions = [...(studio.data?.items ?? [])].reverse();
+  const [studioChoice, setStudioChoice] = useState<string | null>(null);
+  const studioId = studioChoice ?? studioVersions.find((v) => v.region_code === region)?.id ?? "";
   const [message, setMessage] = useState("");
   const [size, setSize] = useState(Math.min(12, max));
   const [seed, setSeed] = useState(42);
@@ -58,7 +64,8 @@ function QuickReadForm({ options, onStarted }: { options: SamplingOptions; onSta
     if (sizeError || seedError || !region) return;
     const body: QuickReadCreate = {
       region_code: region,
-      content_version_id: versionId === campaign.current_version.id ? null : versionId,
+      content_version_id: studioId || versionId === campaign.current_version.id ? null : versionId,
+      version_ref: studioId || null,
       intended_message: message.trim() || null,
       size,
       sampling: toPlan(dims),
@@ -95,7 +102,20 @@ function QuickReadForm({ options, onStarted }: { options: SamplingOptions; onSta
         </FieldBlock>
       </div>
 
-      {campaign.versions.length > 1 && (
+      {studioVersions.length > 0 && (
+        <FieldBlock label="Creative Studio version" htmlFor="qr-studio" hint="The panel reads this version's own headline, body and call to action, and Launch Room scores the version with this read.">
+          <NativeSelect id="qr-studio" value={studioId} onChange={(e) => setStudioChoice(e.target.value)} aria-describedby="qr-studio-hint">
+            <option value="">None: the campaign copy below</option>
+            {studioVersions.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.label} · {v.region_code ?? "no region"} · {v.language ?? "no language"}
+              </option>
+            ))}
+          </NativeSelect>
+        </FieldBlock>
+      )}
+
+      {campaign.versions.length > 1 && !studioId && (
         <FieldBlock label="Creative version" htmlFor="qr-version" hint="The copy the panel reacts to.">
           <NativeSelect id="qr-version" value={versionId} onChange={(e) => setVersionId(e.target.value)} aria-describedby="qr-version-hint">
             {campaign.versions.map((v) => (

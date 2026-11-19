@@ -33,9 +33,11 @@ export function planVisual(elements: CreativeElement[], plateId: string | null, 
   return { plate, locked, texts, blocked: locks.has(plate.id) ? `${plate.id} is locked. Unlock it in Creative Studio to remake it.` : null };
 }
 
-/** The lines Remake: Sound speaks by default: the version's voiceover and caption text, in order. */
+/** The lines Remake: Sound speaks by default (mirrors the server): the version's voice-over script, else its captions. Never both,
+ *  because a caption usually repeats a spoken line. */
 export function defaultVoiceLines(elements: CreativeElement[]): CreativeElement[] {
-  return elements.filter((e) => VOICE_KINDS.has(e.kind) && isText(e));
+  const script = elements.filter((e) => e.kind === "voiceover" && isText(e));
+  return script.length ? script : elements.filter((e) => e.kind === "caption" && isText(e));
 }
 
 /** Pick a likely original and clean plate by file name, so the common case needs no clicks. */

@@ -18,6 +18,7 @@ import { ElementEditor } from "@/features/studio/elements";
 import { GlossaryPanel } from "@/features/studio/glossary";
 import { formatCost, dialWord, lineage, numberVersions, OPERATION_LABEL, originalOf, pairElements, placeTag, TONE_DIALS } from "@/features/studio/model";
 import { MutationError, StudioProvider, useStudio, type StudioContextValue } from "@/features/studio/parts";
+import { UseXRayLayoutButton, useXRayLayoutReady } from "@/features/studio/start-version";
 import { TranscreatePanel } from "@/features/studio/transcreate";
 import type { Operation, RegionLanguage, VersionNode, VersionSummary } from "@/features/studio/types";
 import { VersionTree } from "@/features/studio/version-tree";
@@ -172,6 +173,7 @@ export function StudioWorkspace() {
   const locksQ = useLocks(campaignId);
   const regionsQ = useRegions();
   const create = useCreateVersion(campaignId);
+  const xrayReady = useXRayLayoutReady(campaignId);
   const params = useSearchParams();
   const [selectedId, setSelectedId] = useState<string | null>(() => params.get("v"));
   const tab = asTab(params.get("tab"));
@@ -268,20 +270,25 @@ export function StudioWorkspace() {
                 title="No versions yet"
                 description={
                   <>
-                    A version is one saved state of the creative. Start by importing the original: the headline, body and call to action of this campaign become version 1. After that every edit, tweak chip, transcreation or restore makes a new version beside it, and the original is never overwritten.
+                    A version is one saved state of the creative. Start from the X-Ray layout, where every text, logo and pack the X-Ray found keeps its scene and position (Remake, Risk Check and Format Fit need them), or from the campaign copy: its headline, body and call to action. After that every edit, tweak chip, transcreation or restore makes a new version beside it, and the original is never overwritten.
                   </>
                 }
                 needs={[
-                  { label: "Campaign copy to import (headline, body or call to action)", met: hasCopy },
+                  { label: "A creative read by Creative X-Ray, or campaign copy to import", met: xrayReady.ready.length > 0 || hasCopy },
                   { label: "An original version in the tree", met: false },
                 ]}
                 action={
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Button size="lg" disabled={!hasCopy || create.isPending} onClick={() => create.mutate({ label: "Original", language: "en" }, { onSuccess: () => toast.success("Original imported as version 1") })}>
+                  <div className="flex flex-wrap items-start gap-3">
+                    {xrayReady.ready.length > 0 && <UseXRayLayoutButton campaignId={campaignId} onCreated={open} />}
+                    <Button size="lg" variant={xrayReady.ready.length > 0 ? "outline" : "default"} disabled={!hasCopy || create.isPending} onClick={() => create.mutate({ label: "Original" }, { onSuccess: () => toast.success("Original imported as version 1") })}>
                       {create.isPending ? "Importing…" : "Start from the campaign copy"}
                     </Button>
-                    <span className="text-[13px] text-ink-muted">or decompose an uploaded video, image or audio creative first:</span>
-                    <XRayLink campaignId={campaignId} />
+                    {xrayReady.ready.length === 0 && !xrayReady.loading && (
+                      <>
+                        <span className="self-center text-[13px] text-ink-muted">or decompose an uploaded video, image or audio creative first:</span>
+                        <XRayLink campaignId={campaignId} />
+                      </>
+                    )}
                   </div>
                 }
               />

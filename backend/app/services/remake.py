@@ -86,6 +86,13 @@ async def _source(s: AsyncSession, campaign: m.Campaign, version_id: UUID | None
     return source
 
 
+def default_voice_lines(elements: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """The lines Remake: Sound speaks when none are chosen: the version's voice-over script, else its captions (a film whose
+    script is only on screen). Never both: a caption usually repeats a spoken line, and it would be spoken twice."""
+    lines = {kind: [e for e in elements if e["kind"] == kind and isinstance(e.get("value"), str) and e["value"].strip()] for kind in VOICE_KINDS}
+    return lines["voiceover"] or lines["caption"]
+
+
 def regions_around(elements: list[dict[str, Any]], plate: dict, locks: set[str]) -> tuple[list[LockedSpec], list[TextSpec]]:
     """The locked regions and the text boxes that share `plate`'s scene: what Remake: Visuals restores and draws, and what
     Remake: Video carries into its start frame."""
@@ -202,7 +209,7 @@ async def start_sound(user_id: UUID, campaign_id: UUID, body: r.RemakeSoundReque
         locks = await active_locks(s, campaign.id)
         by_id = {e["id"]: e for e in source.elements}
         if body.element_ids is None:
-            chosen = [e for e in source.elements if e["kind"] in VOICE_KINDS and isinstance(e.get("value"), str) and e["value"].strip()]
+            chosen = default_voice_lines(source.elements)
             if not chosen:
                 raise conflict("element_ids", "This version has no voiceover or caption line to speak. Choose text elements.")
         else:
@@ -346,7 +353,8 @@ async def persist(s: AsyncSession, run: m.AgentRun, outcome: Any, new_ids: list[
                            "ai_generated": True, "native_speaker_reviewed": False,
                            "lines": [{"element_id": x["element_id"], "start_ms": x["start_ms"], "end_ms": x["end_ms"]} for x in outcome.lines if x["spoken"]]}
         edits, adds, targets = [], [], set()
-        vo_element = next((e for e in source.elements if e["kind"] == "voiceover"), None)
+        # the audio goes into the voice-over element that holds audio, never over a line of the script (a text voiceover element)
+        vo_element = next((e for e in source.elements if e["kind"] == "voiceover" and not isinstance(e.get("value"), str)), None)
         if vo_element is not None:
             edits.append(Edit(vo_element["id"], {"value": voiceover_value, "language": d["language"], "script": d["script"]}))
             targets.add(vo_element["id"])

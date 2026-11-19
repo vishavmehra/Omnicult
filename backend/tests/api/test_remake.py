@@ -66,7 +66,7 @@ async def test_visual_remake_creates_a_new_version_with_locked_pixels_identical_
     assert {k: v["value"] for k, v in by_new.items() if k != "kv-plate"} == {e["id"]: e["value"] for e in old["elements"] if e["id"] != "kv-plate"}
     # operation: actor ai, reason, prompt version and cost recorded
     op = (await client.get(f"{API}/campaigns/{world.campaign}/operations/{out['id']}")).json()
-    assert (op["kind"], op["actor"], op["prompt_version"], op["status"]) == ("remake", "ai", "remake-visual-v1", "applied")
+    assert (op["kind"], op["actor"], op["prompt_version"], op["status"]) == ("remake", "ai", "remake-visual-v2", "applied")
     assert op["estimated_cost_usd"] == pytest.approx(0.067) and "Tamil Nadu" in op["reason"] and op["params"]["run_id"] == run["id"]
     assert out["estimated_cost_usd"] == pytest.approx(0.067) and out["passed"] and out["mode"] == "live"
     # locked regions: never-change kinds and the lock, each proven identical from the STORED bytes

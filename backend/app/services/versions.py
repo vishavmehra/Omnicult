@@ -191,24 +191,134 @@ def raise_if_rejected(op: m.Operation) -> None:
 
 
 def _campaign_elements(content: Mapping[str, Any], language: str | None) -> list[v.CreativeElement]:
-    script = "Latn" if language in (None, "en") else None
-    lang = language or "en"
-    return [
-        v.CreativeElement(id=eid, kind=kind, value=content[field], language=lang, script=script)  # type: ignore[arg-type]
-        for eid, kind, field in (("headline", "headline", "headline"), ("body", "body", "body"), ("cta", "cta", "call_to_action"))
-        if content.get(field)
-    ]
+    """The campaign copy as elements. Language and script come from each line's own letters (Marathi copy is not tagged
+    English): Latin is English, any other script takes `language` (the brief's origin language) when that is not English."""
+    declared = language if language and language != "en" else None
+    out = []
+    for eid, kind, field in (("headline", "headline", "headline"), ("body", "body", "body"), ("cta", "cta", "call_to_action")):
+        if content.get(field):
+            lang, script = _text_language(content[field], declared)
+            out.append(v.CreativeElement(id=eid, kind=kind, value=content[field], language=lang, script=script))  # type: ignore[arg-type]
+    return out
+
+
+async def _origin_language(s: AsyncSession, campaign_id: UUID) -> str | None:
+    """The first language the brief lists for the region the original was made in."""
+    row = await s.scalar(select(m.CampaignBriefRow).where(m.CampaignBriefRow.campaign_id == campaign_id)
+                         .order_by(m.CampaignBriefRow.version_number.desc()).limit(1))
+    content = (row.content if row else None) or {}
+    origin = (content.get("regions") or {}).get("origin")
+    first = next(iter(((content.get("languages") or {}).get(origin) or [])), None) if origin else None
+    return first if isinstance(first, str) else None
+
+
+XRAY_TAGS = {"video": "film", "image": "kv", "audio": "audio"}
+
+
+def _text_language(text: str, declared: str | None) -> tuple[str | None, str]:
+    """(language, script) of a line read from a creative: English for Latin script, else the creative's declared language."""
+    from app.media.remake import dominant_script
+
+    script = dominant_script(text)
+    return ("en" if script == "Latn" else declared), script
+
+
+def merge_marks(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """A logo read as an icon and the brand name beside it becomes ONE logo with the union of both boxes: locked, restored
+    and drawn as one mark (Remake: Video draws the Brand Kit lockup once per logo). Marks merge when their boxes share most
+    of a row and sit close together."""
+    others = [i for i in items if i["role"] != "logo"]
+    marks: list[dict[str, Any]] = []
+    for item in sorted((i for i in items if i["role"] == "logo"), key=lambda i: i["bbox"][0]):
+        x, y, w, h = item["bbox"]
+        last = marks[-1]["bbox"] if marks else None
+        if last is not None:
+            lx, ly, lw, lh = last
+            shared = min(ly + lh, y + h) - max(ly, y)
+            if shared > 0.5 * min(lh, h) and x - (lx + lw) < 0.05:
+                x0, y0 = min(lx, x), min(ly, y)
+                marks[-1] = {**marks[-1], "bbox": [round(x0, 4), round(y0, 4), round(max(lx + lw, x + w) - x0, 4), round(max(ly + lh, y + h) - y0, 4)]}
+                continue
+        marks.append(dict(item))
+    return others + marks
+
+
+def layout_elements(creatives: list[tuple[m.CreativeAsset, list[m.CreativeScene]]]) -> list[v.CreativeElement]:
+    """The elements X-Ray found, with their positions: per scene a `scene` element (pictures only), the text, logo and pack
+    the vision model located (box from its observation, `bbox_source` model_detected), and the transcript as voice-over lines.
+    Every element points at its X-Ray scene, so Remake, Risk Check and Format Fit can place it."""
+    out: list[v.CreativeElement] = []
+    seen: dict[str, int] = {}
+    for creative, scenes in creatives:
+        base = XRAY_TAGS.get(creative.kind, "creative")
+        seen[base] = seen.get(base, 0) + 1
+        tag = base if seen[base] == 1 else f"{base}{seen[base]}"
+        frames = {f.get("timestamp_ms"): f for f in (creative.analysis or {}).get("frames", [])}
+        line = 0
+        for scene in scenes:
+            prefix = tag if creative.kind == "image" else f"{tag}-s{scene.position + 1}"
+            payload = scene.payload or {}
+            if creative.kind != "audio":
+                keyframe = scene.keyframe_asset_id or creative.asset_id
+                out.append(v.CreativeElement(id=f"{prefix}-scene", kind="scene", value=f"asset:{keyframe}", bbox=[0.0, 0.0, 1.0, 1.0],
+                                             scene_id=str(scene.id)))
+            used: dict[str, int] = {}
+            for item in sorted(merge_marks(payload.get("layout") or []), key=lambda i: (i["bbox"][1], i["bbox"][0])):
+                role = item["role"]
+                used[role] = used.get(role, 0) + 1
+                eid = f"{prefix}-{role}" if used[role] == 1 else f"{prefix}-{role}-{used[role]}"
+                if item.get("text"):
+                    language, script = _text_language(item["text"], creative.language)
+                    value: Any = item["text"]
+                else:
+                    observed = next((o for o in (frames.get(item["frame_ms"]) or {}).get("observations", [])
+                                     if o.get("id") == item.get("observation_id")), None)
+                    language, script, value = None, None, (observed or {}).get("description") or role
+                out.append(v.CreativeElement(id=eid, kind=role, value=value, language=language, script=script, bbox=item["bbox"],
+                                             scene_id=str(scene.id), bbox_source="model_detected"))
+            for segment in payload.get("transcript") or []:
+                line += 1
+                language, script = _text_language(segment["text"], segment.get("language") or creative.language)
+                out.append(v.CreativeElement(id=f"{tag}-vo-{line}", kind="voiceover", value=segment["text"], language=language,
+                                             script=script, scene_id=str(scene.id)))
+    return out[:200]
+
+
+async def _xray_elements(s: AsyncSession, campaign: m.Campaign) -> tuple[list[v.CreativeElement], str | None, str | None]:
+    """The X-Ray layout of every analysed creative of the campaign (newest usable run of each), with the region and language
+    the creatives were read for when they agree. 409 when no creative has a usable X-Ray yet."""
+    rows = (await s.execute(select(m.CreativeAsset).where(m.CreativeAsset.campaign_id == campaign.id, m.CreativeAsset.current_run_id.is_not(None))
+                            .order_by(m.CreativeAsset.created_at, m.CreativeAsset.id))).scalars().all()
+    creatives = []
+    for row in rows:
+        scenes = (await s.execute(select(m.CreativeScene).where(m.CreativeScene.creative_asset_id == row.id, m.CreativeScene.run_id == row.current_run_id)
+                                  .order_by(m.CreativeScene.position))).scalars().all()
+        creatives.append((row, list(scenes)))
+    elements = layout_elements(creatives)
+    if not elements:
+        raise conflict("from_xray", "No creative of this campaign has an X-Ray result yet. Run Creative X-Ray first.")
+    regions, languages = {r.region_code for r in rows}, {r.language for r in rows}
+    return elements, (regions.pop() if len(regions) == 1 else None), (languages.pop() if len(languages) == 1 else None)
 
 
 async def create_version(user_id: UUID, campaign_id: UUID, body: v.VersionCreate) -> v.VersionNode:
     async with session() as s, s.begin():
         campaign, project = await campaign_for(s, user_id, campaign_id, writable=True)
-        elements = body.elements or _campaign_elements((await current_version(s, campaign.id)).content, body.language)
+        region_code, language = body.region_code, body.language
+        if body.from_xray:
+            elements, found_region, found_language = await _xray_elements(s, campaign)
+            region_code, language = region_code or found_region, language or found_language
+        else:
+            elements = body.elements or _campaign_elements((await current_version(s, campaign.id)).content,
+                                                           await _origin_language(s, campaign.id) or body.language)
+            if language is None and not body.elements:  # the campaign copy's own language, as its lines were tagged
+                tagged = [e.language for e in elements if e.language]
+                language = max(set(tagged), key=tagged.count) if tagged else None
         locks = await active_locks(s, campaign.id)
         dumped = [{**e.model_dump(mode="json"), "locked": e.id in locks} for e in elements]
         node = m.VersionNode(
             id=uuid4(), campaign_id=campaign.id, project_id=project.id, parent_id=None, label=body.label, created_by=user_id,
-            actor="user", region_code=body.region_code, language=body.language,
+            actor="user", region_code=region_code, language=language,
             settings={"tone": body.tone.model_dump() if body.tone else None, "generation": None}, elements=dumped,
             operation_id=None, created_at=utcnow(),
         )

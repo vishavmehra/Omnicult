@@ -71,6 +71,11 @@ async def test_a_root_version_is_made_from_the_campaign_copy_or_explicit_element
     too_big = await client.post(f"{API}/campaigns/{cid}/versions", json={"elements": [{"id": "body", "kind": "body", "value": "x" * 20_001}]})
     assert too_big.status_code == 422
     assert (await client.get(f"{API}/campaigns/{cid}/versions/{uuid4()}")).status_code == 404
+    # the X-Ray layout needs an X-Ray result, and comes instead of explicit elements, never with them
+    no_xray = await client.post(f"{API}/campaigns/{cid}/versions", json={"from_xray": True})
+    assert no_xray.status_code == 409 and "Run Creative X-Ray first" in no_xray.text
+    both = await client.post(f"{API}/campaigns/{cid}/versions", json={"from_xray": True, "elements": ELEMENTS})
+    assert both.status_code == 422
 
 
 async def test_an_operation_creates_a_new_version_and_never_mutates_the_source(seeded: Any, client: httpx.AsyncClient) -> None:
