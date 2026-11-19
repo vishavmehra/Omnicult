@@ -46882,6 +46882,39 @@
             "title": "Detail",
             "type": "string"
           },
+          "element_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set for a brand-element check (logo, tagline, product tin, headline): the element drawn in code over the clip.",
+            "title": "Element Id"
+          },
+          "failed_at_ms": {
+            "default": [],
+            "description": "Brand checks: the frames (ms into the clip) in which the element did not match its drawing.",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Failed At Ms",
+            "type": "array"
+          },
+          "frames_checked": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Brand checks: how many frames of the finished clip were compared, one every 0.5 s.",
+            "title": "Frames Checked"
+          },
           "name": {
             "title": "Name",
             "type": "string"
@@ -46895,7 +46928,10 @@
         "required": [
           "name",
           "passed",
-          "detail"
+          "detail",
+          "element_id",
+          "frames_checked",
+          "failed_at_ms"
         ],
         "title": "VideoCheck",
         "type": "object"

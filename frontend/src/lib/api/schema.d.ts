@@ -21628,6 +21628,22 @@ export interface components {
         VideoCheck: {
             /** Detail */
             detail: string;
+            /**
+             * Element Id
+             * @description Set for a brand-element check (logo, tagline, product tin, headline): the element drawn in code over the clip.
+             */
+            element_id: string | null;
+            /**
+             * Failed At Ms
+             * @description Brand checks: the frames (ms into the clip) in which the element did not match its drawing.
+             * @default []
+             */
+            failed_at_ms: number[];
+            /**
+             * Frames Checked
+             * @description Brand checks: how many frames of the finished clip were compared, one every 0.5 s.
+             */
+            frames_checked: number | null;
             /** Name */
             name: string;
             /**
