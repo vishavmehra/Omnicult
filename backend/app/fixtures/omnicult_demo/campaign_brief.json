@@ -60,7 +60,7 @@
       {"id": "video_completion_rate", "definition": "Share of video views watched to the end.", "target": "at least 25%"},
       {"id": "click_through_rate", "definition": "Clicks divided by impressions.", "target": "at least 1.2%"}
     ],
-    "note": "Targets are fictional planning numbers."
+    "note": "Targets are planning numbers."
   },
   "primary_message": "Home-style festive sweets, ready to gift and delivered before the festival day.",
   "cta": {

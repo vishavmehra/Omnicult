@@ -10,7 +10,7 @@ import { Section } from "@/features/pulse/ui";
 import { formatDateTime } from "@/lib/format";
 
 import { changeTotal, PRIORITY_LABEL, SENTIMENT_LABEL, SENTIMENTS, sourceHref, WORKSPACE_LABEL, type DigestContent, type DigestSource } from "./logic";
-import { ModelTag, Move, SourceLine } from "./ui";
+import { ModelTag, Move } from "./ui";
 
 type Pulse = DigestContent["pulse"];
 const ALERT_ICON: Record<Pulse["alerts"][number]["alert_type"], LucideIcon> = { ctr_drop: TrendingDown, frequency_fatigue: Repeat, cost_spike: CircleDollarSign };
@@ -230,7 +230,6 @@ export function CommentsSection({ campaignId, content }: { campaignId: string; c
               ))}
             </ul>
           )}
-          <SourceLine>{c.source}</SourceLine>
         </>
       )}
     </Section>

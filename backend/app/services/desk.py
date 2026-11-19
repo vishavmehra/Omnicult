@@ -29,7 +29,7 @@ from app.services.common import get_owned, get_project, not_found, paginate, req
 from app.services.identity import WRITE_ROLES
 
 REGION_NAME = {r.code: r.name for r in REGIONS}
-DEMO_LOCKED = "Demo records are fixed. Create a live brand and campaign to write your own."
+DEMO_LOCKED = "This brand and campaign are fixed and cannot be edited. Create your own brand and campaign to make changes."
 REQUIRED_LABELS: dict[str, str] = {
     "objective": "an objective",
     "origin_region": "the region the original was made for",

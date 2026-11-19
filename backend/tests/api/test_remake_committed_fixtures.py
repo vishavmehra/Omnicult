@@ -20,7 +20,6 @@ KEY_VISUAL_TAMIL = {
     "mh-kv-headline": "தீபாவளி என்றால் பலகாரம்!", "mh-kv-sub": "வீட்டுச் சுவையில் பலகாரம், இப்போது ஒரே டின்னில்",
     "mh-kv-product-name": "ஆமோத் ஃபெஸ்டிவ் டின்*", "mh-kv-cta-hook": "பண்டிகைக்கு முன் வீடு தேடி வரும்",
     "mh-kv-cta-button": "இன்றே ஆர்டர் செய்யுங்கள் · Order now", "mh-kv-small-print": "*நிகர எடை 750 கிராம்.",
-    "mh-kv-demo-label": "கற்பனை பிராண்ட் · Omnicult டெமோ படைப்பு",
 }
 
 
@@ -54,7 +53,7 @@ async def test_the_committed_fixtures_remake_the_tamil_key_visual_and_voice_over
     run = await finish(client, world, "visual", {"region_code": "IN-TN", "language": "ta", "use_region_claims": False})
     assert run["status"] == "completed" and run["mode"] == "demo", run["error"]
     visual = (await output_of(client, world, run))["visual"]
-    assert visual["source"] == "demo_fixture" and all(r["identical"] for r in visual["locked_regions"]) and len(visual["texts"]) == 7
+    assert visual["source"] == "demo_fixture" and all(r["identical"] for r in visual["locked_regions"]) and len(visual["texts"]) == 6
     assert all(t["passed"] for t in visual["texts"]), [t for t in visual["texts"] if not t["passed"]]
 
     sound_run = await finish(client, world, "sound", {"region_code": "IN-TN", "language": "ta"})

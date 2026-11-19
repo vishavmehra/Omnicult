@@ -582,21 +582,6 @@
           "locked": false
         },
         {
-          "id": "mh-vid-demo-label",
-          "kind": "body",
-          "value": "Fictional brand · Omnicult demo creative",
-          "language": "en",
-          "script": "Latn",
-          "bbox": [
-            0.3157,
-            0.8172,
-            0.3694,
-            0.0083
-          ],
-          "scene_id": "mh-s5",
-          "locked": false
-        },
-        {
           "id": "mh-vid-voiceover",
           "kind": "voiceover",
           "value": {
@@ -643,8 +628,8 @@
       ],
       "asset": {
         "path": "creative/mh_original/keyvisual.png",
-        "bytes": 1846871,
-        "sha256": "28c568e717e90474effcdc398784a446b19b59f42b6bbd98bdb74d583f2f67c3",
+        "bytes": 1843756,
+        "sha256": "765ef46d7dfe3131716d46070d48f9c9821205f60427d5d941bc92f9642df777",
         "mime_type": "image/png",
         "width": 1080,
         "height": 1350
@@ -806,21 +791,6 @@
             0.9578,
             0.3602,
             0.017
-          ],
-          "scene_id": null,
-          "locked": false
-        },
-        {
-          "id": "mh-kv-demo-label",
-          "kind": "body",
-          "value": "Fictional brand · Omnicult demo creative",
-          "language": "en",
-          "script": "Latn",
-          "bbox": [
-            0.6843,
-            0.9667,
-            0.2639,
-            0.0081
           ],
           "scene_id": null,
           "locked": false
