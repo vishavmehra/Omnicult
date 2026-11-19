@@ -12,7 +12,7 @@ what was left out and why), versioned per workspace, mode and pack.
 from datetime import date, datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import CheckConstraint, ForeignKey, Index, UniqueConstraint
+from sqlalchemy import BigInteger, CheckConstraint, ForeignKey, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base, utcnow
@@ -95,4 +95,30 @@ class LensShelfSnapshot(Base):
         UniqueConstraint("workspace_id", "mode", "pack_key", "version"),
         CheckConstraint("mode IN ('live', 'demo')", name="mode"),
         Index("ix_lens_shelf_snapshots_workspace_id_mode_pack_key", "workspace_id", "mode", "pack_key"),
+    )
+
+
+class LensSearchPulse(Base):
+    """Search pulse (migration 0034): one row per state, kind, term and week of Google's public search-interest lists, as BigQuery
+    returned them. Public data shared by every workspace; demo reads a recorded file instead. A refresh replaces a state's rows
+    (each carries the refresh_date, retrieval time, BigQuery job id and bytes processed it came from)."""
+
+    __tablename__ = "lens_search_pulse"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    region_code: Mapped[str]  # Omnicult code, e.g. IN-CG (the dataset says IN-CT)
+    kind: Mapped[str]  # top | rising
+    term: Mapped[str]
+    week: Mapped[date]  # the Sunday starting the week
+    rank: Mapped[int | None]
+    score: Mapped[int | None]  # 0 to 100, null where Google reported none
+    percent_gain: Mapped[int | None]  # rising terms only
+    refresh_date: Mapped[date]  # the dataset partition read
+    retrieved_at: Mapped[datetime] = mapped_column(default=utcnow)
+    job_id: Mapped[str | None]
+    bytes_processed: Mapped[int | None] = mapped_column(BigInteger)
+
+    __table_args__ = (
+        UniqueConstraint("region_code", "kind", "term", "week"),
+        CheckConstraint("kind IN ('top', 'rising')", name="kind"),
     )

@@ -19,6 +19,8 @@ export type ShelfEntity = S["LensShelfEntity"];
 export type ShelfAttention = S["LensShelfAttention"];
 export type SourceLink = S["LensSourceLink"];
 export type LensMonth = S["LensMonth"];
+export type SearchPulseData = S["LensSearchPulse"];
+export type PulseTerm = S["SearchPulseTerm"];
 
 const keys = {
   all: (campaignId: string) => ["lens-t3", campaignId] as const,
@@ -69,5 +71,23 @@ export function useRefreshShelf(campaignId: string) {
         }),
       ),
     onSuccess: () => qc.invalidateQueries({ queryKey: keys.all(campaignId) }),
+  });
+}
+
+const pulsePath = (campaignId: string, code: string) => ({ campaign_id: campaignId, code });
+
+/** The state's top and rising search terms with their weekly scores. */
+export function useSearchPulse(campaignId: string, region: string) {
+  return useQuery({
+    queryKey: ["lens-t3", campaignId, "pulse", region] as const,
+    queryFn: () => unwrap(api.GET("/api/v1/campaigns/{campaign_id}/lens/regions/{code}/search-pulse", { params: { path: pulsePath(campaignId, region) } })),
+  });
+}
+
+export function useRefreshSearchPulse(campaignId: string, region: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => unwrap(api.POST("/api/v1/campaigns/{campaign_id}/lens/regions/{code}/search-pulse/refresh", { params: { path: pulsePath(campaignId, region) } })),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["lens-t3", campaignId, "pulse"] }),
   });
 }

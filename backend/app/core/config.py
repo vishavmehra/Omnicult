@@ -201,8 +201,13 @@ class Settings(BaseSettings):
     lab_t3_buzz_max_rounds: int = Field(default=4, ge=1)
     lab_t3_message_check_max_per_region: int = Field(default=12, ge=3)
     lab_t3_message_check_max_regions: int = Field(default=4, ge=1)
+    # --- search pulse (Google Trends public dataset in BigQuery; Market Lens) ----------------------------------------
+    bigquery_project: str | None = None  # project the query jobs run in (needs roles/bigquery.jobUser); falls back to GOOGLE_CLOUD_PROJECT
+    search_pulse_weeks: int = Field(default=12, ge=2, le=52)  # latest week plus the weeks before it that are kept
+    search_pulse_max_bytes: int = Field(default=2_000_000_000, ge=10_000_000)  # hard maximum_bytes_billed per query
+    search_pulse_timeout_seconds: float = Field(default=90, gt=0)
 
-    @field_validator("google_cloud_project", "gemini_api_key", mode="before")
+    @field_validator("google_cloud_project", "bigquery_project", "gemini_api_key", mode="before")
     @classmethod
     def _blank_google_is_unset(cls, value: object) -> object:
         return None if isinstance(value, str) and not value.strip() else value

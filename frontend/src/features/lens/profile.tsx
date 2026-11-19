@@ -7,6 +7,7 @@ import { EvidenceMeter } from "@/components/evidence/evidence-meter";
 import type { ClaimKind } from "@/components/evidence/evidence-row";
 import { Button } from "@/components/ui/button";
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
+import { SearchPulse } from "@/features/lens-t3/search-pulse";
 import { SectionTitle } from "@/features/workspaces/parts";
 import { formatDate } from "@/lib/format";
 
@@ -143,6 +144,8 @@ export function ProfileView({
               {data.region.kind === "union_territory" ? "Union territory" : "State"} · {data.region.code} · principal language {languageName(data.region.primary_language)} ({scriptName(data.region.primary_script)} script)
             </p>
           </header>
+
+          <SearchPulse key={data.region.code} campaignId={campaignId} region={data.region.code} />
 
           {claims === 0 ? (
             <EmptyState
