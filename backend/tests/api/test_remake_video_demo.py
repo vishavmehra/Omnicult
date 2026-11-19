@@ -52,7 +52,7 @@ def test_the_committed_clip_matches_its_manifest_and_stays_small():
     data = (FIXTURES / "remake" / entry["file"]).read_bytes()
     assert hashlib.sha256(data).hexdigest() == entry["sha256"] and len(data) == entry["size_bytes"] < 4 * 1024 * 1024
     assert (entry["model"], entry["location"], entry["seconds"], entry["resolution"]) == ("veo-3.1-fast-generate-001", "us-central1", 6, "720p")
-    assert entry["prompt_version"] == "remake-video-v1" and entry["generated_at"] and "text" in entry["prompt"]
+    assert entry["prompt_version"] == "remake-video-v2" and entry["generated_at"] and "text" in entry["prompt"]
     assert remake_demo.demo_video_regions() == ["IN-TN"] and remake_demo.video_clip("IN-KL") is None
     clip = remake_demo.video_clip("IN-TN")
     assert clip is not None and clip.data == data and clip.seconds == 6 and clip.prompt == entry["prompt"]
@@ -71,8 +71,9 @@ async def test_a_demo_clip_needs_no_confirmation_no_provider_and_is_built_from_t
     assert clip["prompt"] == saved["prompt"]  # what the saved clip was really made from, not this project's own prompt
     assert (clip["width"], clip["height"], clip["duration_ms"], clip["with_voiceover"]) == (720, 1280, 6000, False)
     assert (await content(client, clip["video_url"])).content == (FIXTURES / "remake" / saved["file"]).read_bytes()
-    assert [r["element_id"] for r in clip["kept_regions"]] == ["mh-kv-logo", "mh-kv-packshot", "mh-kv-tagline"]
+    assert [r["element_id"] for r in clip["kept_regions"]] == ["mh-kv-packshot"]  # the demo project has no Brand Kit pack file linked here
     assert all(c["passed"] for c in clip["checks"]) and clip["start_frame_asset_id"]
+    assert {c["element_id"] for c in clip["checks"] if c["element_id"]} == {"mh-kv-logo", "mh-kv-tagline"}
     assert any("Saved demonstration result" in n for n in out["limitations"]) and any("cannot guarantee" in n for n in out["limitations"])
     frame = (await content(client, clip["start_frame_url"])).content
     assert frame[:8] == b"\x89PNG\r\n\x1a\n"

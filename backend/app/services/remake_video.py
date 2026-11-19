@@ -1,8 +1,8 @@
 """Remake: Video as a run: plan it (the preview), validate and start it, build the workflow input, and persist the outcome.
 
-One clip per request, from the regional key visual (the generated scene of a Remake: Visuals result with the locked regions
-restored from the original, no text) or an image the person chose, plus a prompt built in code from the brief, the region and
-the creative's scenes. The estimate is shown first, a live run needs `confirm_cost`, and the per-run AI budget is checked before
+One clip per request, from the regional key visual (the generated scene of a Remake: Visuals result, no text and no brand
+elements: the logo, tagline and product tin are wiped from it and drawn in code over the clip instead, from the Brand Kit files)
+or an image the person chose, plus a prompt built in code from the brief, the region and the creative's scenes. The estimate is shown first, a live run needs `confirm_cost`, and the per-run AI budget is checked before
 any call. The outcome becomes ONE `remake` operation (actor ai) that writes the clip into a NEW version node as a `scene`
 element named `remake-video` whose value is `{"media": "video", "asset_id": ...}`: the source version is untouched, a locked
 `remake-video` element refuses the whole operation (before the paid call, and again when the result is saved). Every file
@@ -13,6 +13,7 @@ import asyncio
 import base64
 from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -28,9 +29,10 @@ from app.fixtures import remake_demo
 from app.llm.media import VIDEO_RESOLUTION
 from app.llm.registry import capability_model, estimate_cost, price_for
 from app.media import remake_video as pipeline
+from app.media.remake_video import BrandSpec
 from app.schemas import remake as r
 from app.schemas import versions as v
-from app.schemas.desk import BriefContent
+from app.schemas.desk import BriefContent, KitDesign
 from app.schemas.runs import RunAccepted, RunError
 from app.services import studio_context as ctx
 from app.services.assets import content_path
@@ -43,7 +45,7 @@ from app.services.results import API
 from app.services.runs import _create_run
 from app.services.versions import active_locks, campaign_for, record_operation
 from app.studio.engine import Edit, OpSpec
-from app.workflows.remake import LockedSpec
+from app.workflows.remake import LockedSpec, TextSpec
 from app.workflows.types import BrandContext, WorkflowContext
 from app.workflows.remake_video import (
     NEGATIVE_PROMPT, VIDEO_PROMPT_VERSION, RemakeVideoInput, RemakeVideoOutcome, VideoPromptParts, prepare_frame, video_prompt,
@@ -72,6 +74,7 @@ class Plan:
     scene: m.Asset | None = None
     start: m.Asset | None = None
     locked: list[LockedSpec] = field(default_factory=list)
+    brand: list[BrandSpec] = field(default_factory=list)
     voiceover_element: dict[str, Any] | None = None
     voiceover: m.Asset | None = None
     prompt: str = ""
@@ -118,8 +121,53 @@ def _setting(payload: dict[str, Any]) -> str | None:
     return " ".join(str(payload.get("setting") or "").split()) or None
 
 
+async def _kit_asset(s: AsyncSession, project: m.Project, asset_id: UUID | None) -> UUID | None:
+    asset = await s.get(m.Asset, asset_id) if asset_id else None
+    ok = asset is not None and asset.project_id == project.id and asset.kind == "image" and asset.upload_status == "stored"
+    return asset.id if ok and asset else None
+
+
+async def _brand_specs(s: AsyncSession, project: m.Project, elements: list[dict[str, Any]], locked: list[LockedSpec],
+                       texts: list[TextSpec]) -> list[BrandSpec]:
+    """The elements to draw in code over the clip: the logo, tagline and (when the Brand Kit has its file) product tin that the
+    key visual locks, and its headline. Logo and tin come from the Brand Kit files; text comes from the version's elements."""
+    row = await s.scalar(select(m.BrandKitDesignRow).where(m.BrandKitDesignRow.project_id == project.id))
+    try:
+        design = KitDesign.model_validate(row.design) if row else None
+    except ValidationError:
+        design = None
+    lockups = [x for x in design.logo.lockups if x.asset_id] if design else []
+    pack = next((x for x in design.product_images if x.asset_id), None) if design else None
+    by_id = {e["id"]: e for e in elements}
+    specs: list[BrandSpec] = []
+    for spec in locked:
+        element = by_id.get(spec.element_id, {})
+        if spec.kind == "logo":
+            stem = Path(str(element.get("value") or "")).stem
+            named = next((x for x in lockups if stem and stem in {Path(str(x.vector_path or "")).stem, Path(str(x.source_path or "")).stem}), None)
+            lockup = named or (lockups[0] if lockups else None)
+            specs.append(BrandSpec(element_id=spec.element_id, role="logo", label=spec.label, bbox=spec.bbox,
+                                   asset_id=await _kit_asset(s, project, lockup.asset_id if lockup else None)))
+        elif spec.kind == "tagline":
+            value = element.get("value")
+            specs.append(BrandSpec(element_id=spec.element_id, role="tagline", label=spec.label, bbox=spec.bbox,
+                                   text=value.strip() if isinstance(value, str) and value.strip() else None,
+                                   language=element.get("language"), script=element.get("script")))
+        elif spec.kind in ("packshot", "product") and (asset_id := await _kit_asset(s, project, pack.asset_id if pack else None)):
+            specs.append(BrandSpec(element_id=spec.element_id, role="tin", label=spec.label, bbox=spec.bbox, asset_id=asset_id))
+    specs.extend(BrandSpec(element_id=t.element_id, role="headline", label=t.kind, bbox=t.bbox, text=t.text, language=t.language, script=t.script)
+                 for t in texts if t.kind == "headline")
+    return specs
+
+
+def _bands(specs: list[BrandSpec]) -> list[str]:
+    """The bands of the frame the logo and tagline sit in (the key visual's upper or lower half), kept clear in the prompt."""
+    halves = {"upper" if s.bbox[1] + s.bbox[3] / 2 < 0.5 else "lower" for s in specs if s.role in ("logo", "tagline")}
+    return [b for b in ("upper", "lower") if b in halves]
+
+
 async def _prompt_parts(s: AsyncSession, campaign: m.Campaign, region: m.Region, language: m.Language, direction: str | None,
-                        has_frame: bool) -> VideoPromptParts:
+                        has_frame: bool, brand: list[BrandSpec]) -> VideoPromptParts:
     row = await s.scalar(select(m.CampaignBriefRow).where(m.CampaignBriefRow.campaign_id == campaign.id)
                          .order_by(m.CampaignBriefRow.version_number.desc()).limit(1))
     try:
@@ -133,7 +181,8 @@ async def _prompt_parts(s: AsyncSession, campaign: m.Campaign, region: m.Region,
                               .order_by(m.CreativeScene.position).limit(MAX_SCENES))).scalars()
     settings = [x for row_ in scenes if (x := _setting(row_.payload or {}))]
     return VideoPromptParts(region_name=region.name, language_name=language.name, product=product or campaign.name,
-                            message=brief.primary_message if brief else None, settings=settings, direction=direction, has_start_frame=has_frame)
+                            message=brief.primary_message if brief else None, settings=settings, direction=direction, has_start_frame=has_frame,
+                            pinned=[b.role for b in brand], clear_bands=_bands(brand))  # type: ignore[arg-type]
 
 
 async def plan(s: AsyncSession, user_id: UUID, campaign_id: UUID, body: r.RemakeVideoRequest) -> Plan:
@@ -145,6 +194,7 @@ async def plan(s: AsyncSession, user_id: UUID, campaign_id: UUID, body: r.Remake
     locks = await active_locks(s, campaign.id)
     demo = project.mode == "demo"
     p = Plan(campaign, project, source, region, language, body.seconds, "none")
+    texts: list[TextSpec] = []
     p.model = capability_model(settings, "video")
     p.estimate_usd = 0.0 if demo else (estimate_cost(p.model, video_seconds=body.seconds).usd if p.model else None)
     if VIDEO_ELEMENT_ID in locks:
@@ -156,7 +206,7 @@ async def plan(s: AsyncSession, user_id: UUID, campaign_id: UUID, body: r.Remake
         if remade:
             _, p.scene, p.original = remade
         scene_element = remade[0] if remade else first_scene
-        p.locked = regions_around(source.elements, scene_element, locks)[0] if scene_element else []
+        p.locked, texts = regions_around(source.elements, scene_element, locks) if scene_element else ([], [])
         if body.region_code not in remake_demo.demo_video_regions() and p.blocked is None:
             p.blocked, p.blocked_field = (f"The demonstration clip covers {', '.join(remake_demo.demo_video_regions()) or 'no region'} only. "
                                           "Use a live project for other regions."), "region_code"
@@ -167,11 +217,17 @@ async def plan(s: AsyncSession, user_id: UUID, campaign_id: UUID, body: r.Remake
         p.start_source = "asset"
     elif remade and remade[2] is not None:
         scene_element, p.scene, p.original = remade
-        p.locked = regions_around(source.elements, scene_element, locks)[0]
+        p.locked, texts = regions_around(source.elements, scene_element, locks)
         p.start_source = "remake_scene"
     if body.add_voiceover and (found := await _voiceover(s, project, source.elements)):
         p.voiceover_element, p.voiceover = found
-    parts = await _prompt_parts(s, campaign, region, language, body.direction, p.start_source != "none")
+    if p.start_source in ("remake_scene", "demo_fixture") and p.locked + texts:
+        p.brand = await _brand_specs(s, project, source.elements, p.locked, texts)
+    if p.brand:
+        pinned = sorted({pipeline.ROLE_LABELS[b.role].lower() for b in p.brand})
+        p.notes.append(f"The {', '.join(pinned)} are drawn in code over every frame of the clip, from the Brand Kit files, and compared with "
+                       "that drawing in frames sampled every 0.5 s. The model is never shown or asked to draw them.")
+    parts = await _prompt_parts(s, campaign, region, language, body.direction, p.start_source != "none", p.brand)
     p.prompt = video_prompt(parts)
     if not demo and p.blocked is None and p.start_source == "none":
         p.notes.append(FRAME_NOTES["none"])
@@ -190,7 +246,10 @@ def _voiceover_plan(p: Plan) -> r.VideoVoiceoverPlan | None:
 
 
 def _kept(p: Plan) -> list[r.LockedRegionPreview]:
-    return [r.LockedRegionPreview(element_id=x.element_id, label=x.label, kind=x.kind, source=x.source, bbox=x.bbox) for x in p.locked]
+    """The locked regions the start frame carries as the original holds them (the pinned brand elements are drawn in code instead)."""
+    drawn = {b.element_id for b in p.brand}
+    return [r.LockedRegionPreview(element_id=x.element_id, label=x.label, kind=x.kind, source=x.source, bbox=x.bbox) for x in p.locked
+            if x.element_id not in drawn]
 
 
 async def _workflow_input(s: AsyncSession, p: Plan) -> RemakeVideoInput:
@@ -203,7 +262,7 @@ async def _workflow_input(s: AsyncSession, p: Plan) -> RemakeVideoInput:
         original=await _bytes(s, str(p.original.id) if p.original else None), scene=await _bytes(s, str(p.scene.id) if p.scene else None),
         start_image=await _bytes(s, str(p.start.id) if p.start else None), locked=p.locked,
         original_asset_id=p.original.id if p.original else None, scene_asset_id=p.scene.id if p.scene else None,
-        start_asset_id=p.start.id if p.start else None,
+        start_asset_id=p.start.id if p.start else None, script=p.language.script, brand=p.brand,
     )
 
 
@@ -263,7 +322,7 @@ async def start(user_id: UUID, campaign_id: UUID, body: r.RemakeVideoRequest) ->
         "negative_prompt": NEGATIVE_PROMPT, "seconds": p.seconds, "start_source": p.start_source, "locked": [x.model_dump() for x in p.locked],
         "original_asset_id": str(p.original.id) if p.original else None, "scene_asset_id": str(p.scene.id) if p.scene else None,
         "start_asset_id": str(p.start.id) if p.start else None, "voiceover_asset_id": str(p.voiceover.id) if p.voiceover else None,
-        "direction": body.direction,
+        "direction": body.direction, "script": p.language.script, "brand": [b.model_dump(mode="json", exclude={"image"}) for b in p.brand],
     }
     return await _create_run(user_id, p.project, "remake_video", inputs, campaign_id=p.campaign.id)
 
@@ -276,6 +335,8 @@ async def build_input(s: AsyncSession, run: m.AgentRun, context: Any) -> RemakeV
         language=d["language"], language_name=d["language_name"], prompt=d["prompt"], negative_prompt=d["negative_prompt"],
         seconds=d["seconds"], start_source=d["start_source"], original=await _bytes(s, d.get("original_asset_id")),
         scene=await _bytes(s, d.get("scene_asset_id")), start_image=await _bytes(s, d.get("start_asset_id")),
+        script=d.get("script", "Latn"),
+        brand=[BrandSpec(**x, image=await _bytes(s, x.get("asset_id"))) for x in d.get("brand", [])],
         locked=[LockedSpec(**x) for x in d["locked"]], voiceover=await _bytes(s, asset),
         voiceover_asset_id=UUID(asset) if asset else None,
         original_asset_id=UUID(d["original_asset_id"]) if d.get("original_asset_id") else None,

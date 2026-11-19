@@ -242,3 +242,33 @@ async def mux_audio(video: Path, audio: Path, out: Path, *, max_seconds: float) 
     if done.returncode != 0 or not data:
         raise MediaProcessingFailed("The voice-over could not be joined to the clip.")
     return data
+
+
+async def overlay_png(video: Path, layer: Path, out: Path) -> bytes:
+    """`layer` (a transparent PNG the size of the video) drawn over every frame, so what it holds is pixel-identical for the whole
+    clip. The video is re-encoded (H.264, high quality); audio, when there is any, is copied untouched."""
+    exe = require("ffmpeg")
+    args = [
+        exe, "-nostdin", "-hide_banner", "-loglevel", "error", "-protocol_whitelist", "file", "-i", str(video), "-i", str(layer),
+        "-filter_complex", "[0:v][1:v]overlay=0:0:format=auto,format=yuv420p[v]", "-map", "[v]", "-map", "0:a?", "-c:v", "libx264",
+        "-preset", "medium", "-crf", "17", "-c:a", "copy", "-movflags", "+faststart", "-y", str(out),
+    ]
+    done = await _run(args, timeout=get_settings().media_tool_timeout_seconds, what="Drawing the brand elements over the clip")
+    data = out.read_bytes() if out.exists() else b""
+    if done.returncode != 0 or not data:
+        raise MediaProcessingFailed("The brand elements could not be drawn over the clip.")
+    return data
+
+
+async def extract_frames(path: Path, folder: Path, *, every_ms: int, limit: int) -> list[tuple[int, Path]]:
+    """Lossless frames at 0, `every_ms`, 2 x `every_ms` ... as (time in ms, PNG path), at most `limit` of them."""
+    exe = require("ffmpeg")
+    args = [
+        exe, "-nostdin", "-hide_banner", "-loglevel", "error", "-protocol_whitelist", "file", "-i", str(path), "-an", "-vf",
+        f"fps={1000 / every_ms:.6f}", "-frames:v", str(limit), "-y", str(folder / "f%03d.png"),
+    ]
+    done = await _run(args, timeout=get_settings().media_tool_timeout_seconds, what="Sampling frames")
+    files = sorted(folder.glob("f*.png"))
+    if done.returncode != 0 or not files:
+        raise MediaProcessingFailed("Frames could not be sampled from the clip.")
+    return [(index * every_ms, file) for index, file in enumerate(files)]
