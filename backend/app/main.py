@@ -27,6 +27,7 @@ from app.api.routes import (
     lab_t3,
     launch,
     lens,
+    lens_search_pulse,
     lens_t3,
     media,
     projects,
@@ -84,6 +85,7 @@ ROUTERS = (
     remake,
     generate,
     studio_t3,
+    lens_search_pulse,
 )
 
 API_PREFIX = "/api/v1"

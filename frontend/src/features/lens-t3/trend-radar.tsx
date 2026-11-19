@@ -15,6 +15,7 @@ import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { useRefreshRadar, useTrendRadar, type TrendEdition, type TrendItem, type TrendMoment, type TrendRadar, type TrendRegion } from "./api";
+import { SearchPulse } from "./search-pulse";
 import { DirectionTag, Sparkline, SourceChip, monthName, num, percent } from "./parts";
 
 function Fact({ label, children }: { label: string; children: React.ReactNode }) {
@@ -271,6 +272,10 @@ export function TrendRadarView({ campaignId }: { campaignId: string }) {
           {error.details.map((d) => ` ${d.message}`).join("")}
         </p>
       )}
+
+      {shown.map((r) => (
+        <SearchPulse key={`pulse-${r.region_code}`} campaignId={campaignId} region={r.region_code} label={r.region_name} limit={6} />
+      ))}
 
       {read.length === 0 && !data.refreshed_at ? (
         <EmptyState

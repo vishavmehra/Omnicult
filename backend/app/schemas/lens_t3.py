@@ -299,3 +299,50 @@ class LensShelf(ApiModel):
 class LensShelfRefreshRequest(ApiModel):
     pack_key: str | None = Field(default=None, max_length=60, description="Choose a category pack when the brand kit's category names none.")
     region_codes: list[RegionCodeStr] | None = Field(default=None, max_length=4)
+
+
+# --- search pulse ----------------------------------------------------------------------------------------------------------
+
+
+class SearchPulseWeek(ApiModel):
+    week: Day = Field(description="The Sunday that starts the week.")
+    rank: int | None
+    score: int | None = Field(description="Relative interest 0 to 100 in the state that week, as the dataset gives it; null where it gives none.")
+    percent_gain: int | None = Field(description="Rising terms only.")
+
+
+class SearchPulseTerm(ApiModel):
+    term: str
+    rank: int | None = Field(description="Rank in the dataset's list for the latest week.")
+    score: int | None = Field(description="Score in the latest week, as the dataset gives it.")
+    percent_gain: int | None = Field(description="Rising terms: the gain the dataset reports.")
+    week: Day = Field(description="The latest week in the dataset.")
+    weeks_seen: int = Field(description="Weeks, among the ones kept, in which the term has a score.")
+    history: list[SearchPulseWeek] = Field(description="Oldest first, one entry per kept week the dataset has a row for.")
+
+
+class LensSearchPulse(ApiModel):
+    campaign_id: UUID
+    mode: DataMode
+    region_code: str
+    region_name: str
+    supported: bool = Field(description="False for a state the dataset has no region for (Ladakh, Dadra and Nagar Haveli and Daman and Diu).")
+    week: Day | None = Field(description="The latest week.")
+    weeks: list[Day] = Field(description="The weeks kept, oldest first.")
+    refresh_date: Day | None = Field(description="The dataset partition the rows were read from.")
+    retrieved_at: datetime | None
+    top: list[SearchPulseTerm]
+    rising: list[SearchPulseTerm]
+    gaps: list[str]
+    can_refresh: bool
+
+
+class SearchPulseRefresh(ApiModel):
+    """What one refresh did. `skipped`: the newest partition was already stored, so no query ran and no bytes were read."""
+
+    refresh_date: Day | None
+    skipped: bool
+    states: int
+    rows: int
+    job_id: str | None
+    bytes_processed: int | None

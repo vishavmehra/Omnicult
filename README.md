@@ -125,6 +125,7 @@ Omnicult has 55 features across seven workspaces and a platform layer. On top of
 | Moment Calendar | Public holidays and festivals that matter for timing |
 | Market Compare | States side by side on the same evidence |
 | Trend Radar | Public-interest trends by region from open data, shown as attention, not demand |
+| Search Pulse | A state's top and rising Google searches of the latest week, with each term's weekly score, in the State Profile and the Trend Radar |
 | Category Shelf | How the product category shows up regionally |
 | Evidence Meter | Sources, supported claims, freshness, coverage, open conflicts and stale claims, rated weak, partial or solid by named thresholds |
 
@@ -316,12 +317,15 @@ Open sources become cited **claims**. Code then decides confidence, finds confli
 |---|---|---|
 | Wikidata | Entity resolution, region and language facts | CC0 |
 | Wikipedia text | Short cited excerpts as supporting evidence | CC BY-SA 4.0; page URL and title kept as attribution |
+| Google Trends public dataset (BigQuery) | Search Pulse: the top and rising search terms and weekly scores for every state, as the dataset reports them | Google dataset `bigquery-public-data.google_trends`, read through the BigQuery free tier |
 | Wikipedia pageviews | Attention trends in the regional and English editions | Wikimedia analytics data; aggregate counts, attributed |
 | Census of India 2011, table C-16 | Mother-tongue counts and shares | Published by the Registrar General; only counts are stored, cited to the source |
 | python-holidays | Public holidays by state | MIT |
 | ASCI Code and guidelines | Cited clauses for Risk Check | Published by ASCI; short exact excerpts with page URL, partial index, not legal advice |
 | State tourism and government pages | Short cited excerpts for festivals, food and customs | Each site's own terms |
 | Noto Sans fonts | Rendering Indic text in code | SIL Open Font License 1.1 |
+
+**Search Pulse data.** `international_top_terms` and `international_top_rising_terms` hold, per refresh date, the current top 25 terms and their rank, a 0 to 100 `score` per state and week (empty where Google reports none) and, for rising terms, `percent_gain`. Within one refresh the term list and ranks are the same for every state; the score is what differs by state and week. Omnicult stores the newest 12 weeks per state and shows ranks, scores and gains unchanged; "scored in N of 12 weeks" counts the weeks with a score. One query a day (about 0.74 GB, capped at 2 GB) serves every state; the dataset has no Ladakh or merged Dadra and Nagar Haveli and Daman and Diu, and uses `IN-CT`, `IN-OR` and `IN-TG` for Chhattisgarh, Odisha and Telangana. Demo mode reads a recorded snapshot of the four demo states and never queries BigQuery.
 
 Source coverage is uneven by design and reported as such: the curated references cover the four demo states, Wikidata is rate-limited and sparse for some regions, and a region with little evidence is shown as weak. Measured: a live Market Lens build of Tamil Nadu took 10 s.
 
@@ -435,7 +439,7 @@ Full lists are in `backend/.env.example` and `frontend/.env.example`. All settin
 
 ## Database migrations
 
-Schema changes are additive Alembic migrations in `backend/migrations/versions/` (currently 0001 to 0031).
+Schema changes are additive Alembic migrations in `backend/migrations/versions/` (currently 0001 to 0034).
 
 ```bash
 cd backend
