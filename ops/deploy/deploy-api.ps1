@@ -24,7 +24,8 @@ param(
     [string]$AuthMode = 'firebase',
     [string]$WebUrl,                 # CORS origin; default: the omnicult-web URL
     [string]$WikimediaUserAgent,     # default: Omnicult/0.1 (<web URL>) python-httpx
-    [switch]$Public
+    [switch]$Public,
+    [switch]$DataGovKey              # mount DATA_GOV_IN_API_KEY (off: data.gov.in refuses Google Cloud addresses)
 )
 . "$PSScriptRoot\_common.ps1"
 
@@ -50,9 +51,12 @@ $envFile = New-EnvFile @{
     BIGQUERY_PROJECT      = $script:Project
 }
 $secrets = "DATABASE_URL=omnicult-database-url:latest,YOUTUBE_API_KEY=$($script:YoutubeSecret):latest"
-if (Get-GcloudValue secrets describe $script:DataGovSecret --project $script:Project --format 'value(name)') {
+# data.gov.in answers 403 to every request from Google Cloud (checked 19 Nov 2026 from Cloud Run with three clients), so the
+# key is not mounted by default: State facts serve the all-states recording the seed job loads (scripts/seed_state_facts.py),
+# and the daily refresh skips data.gov.in instead of failing. -DataGovKey mounts it again if that ever changes.
+if ($DataGovKey -and (Get-GcloudValue secrets describe $script:DataGovSecret --project $script:Project --format 'value(name)')) {
     $secrets += ",DATA_GOV_IN_API_KEY=$($script:DataGovSecret):latest"
-} else {
+} elseif ($DataGovKey) {
     Write-Warning "$($script:DataGovSecret) does not exist: DATA_GOV_IN_API_KEY is not mounted. Run secrets.ps1 with the key in the env file."
 }
 # Search pulse reads Google's public Trends dataset in BigQuery: the runtime account only needs to run query jobs in this

@@ -9,7 +9,7 @@ import importlib.util
 import subprocess
 import sys
 
-SEEDS = ("scripts.seed_reference_data", "scripts.seed_demo_claims")  # demo claims need the reference regions first
+SEEDS = ("scripts.seed_reference_data", "scripts.seed_demo_claims", "scripts.seed_state_facts")  # demo claims need the reference regions first
 
 for module in SEEDS:
     if importlib.util.find_spec(module) is None:

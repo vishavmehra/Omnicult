@@ -43,6 +43,7 @@ from app.integrations.culture.adapters.datagov import (
     NATIONAL,
     RESOURCES,
     DataGovClient,
+    Pull,
     Resource,
     Snapshot,
     parse_records,
@@ -55,6 +56,7 @@ from app.services.common import WRITE_ROLES, get_owned
 logger = logging.getLogger(__name__)
 
 RECORDED_FILE = Path(__file__).resolve().parent.parent / "fixtures" / "state_facts" / "recorded.json"
+ALL_STATES_FILE = RECORDED_FILE.with_name("all_states.json")  # every state, recorded for the deployed database
 MANUAL_REFRESH_GAP = timedelta(seconds=60)  # an editor's refresh is refused when every resource was checked this recently
 FAILURE_BACKOFF_SECONDS = 300.0  # after a failed pull the read path leaves that resource alone for this long
 _LOCK = asyncio.Lock()  # one pull at a time per process: the reads and the scheduler never both download the same resource
@@ -139,6 +141,35 @@ def recorded_rows() -> list[Snapshot]:
 
 def recorded_at() -> datetime:
     return datetime.combine(date.fromisoformat(recorded()["recorded_on"]), datetime.min.time(), tzinfo=UTC)
+
+
+class RecordedClient:
+    """data.gov.in as `scripts/record_state_facts.py --all` saved it: answers `probe` and `pull` from the file, so loading it
+    runs the same parsing and upsert code as a live refresh. data.gov.in refuses requests from Google Cloud addresses, so the
+    deployed database is filled from this recording (the seed job) instead of a live pull."""
+
+    def __init__(self, resources: dict[str, Any]) -> None:
+        self.resources = resources
+
+    def _updated(self, resource: Resource) -> datetime | None:
+        value = self.resources[resource.key]["updated_date"]
+        return datetime.fromisoformat(value) if value else None
+
+    async def probe(self, resource: Resource) -> tuple[datetime | None, int]:
+        return self._updated(resource), int(self.resources[resource.key]["total"])
+
+    async def pull(self, resource: Resource) -> Pull:
+        saved = self.resources[resource.key]
+        rows, unmapped = parse_records(resource, saved["records"])
+        return Pull(resource.resource_id, self._updated(resource), int(saved["total"]), rows, unmapped)
+
+
+async def load_recording(s: AsyncSession, path: Path = ALL_STATES_FILE) -> v.StateFactsRefreshSummary:
+    """Store the all-states recording as snapshots (retrieved at its recording date). Idempotent: a resource whose recorded
+    `updated_date` is already stored is skipped. The caller commits."""
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    when = datetime.combine(date.fromisoformat(payload["recorded_on"]), datetime.min.time(), tzinfo=UTC)
+    return await refresh_state_facts(s, client=RecordedClient(payload["resources"]), now=when)  # type: ignore[arg-type]
 
 
 # --- pulling ------------------------------------------------------------------------------------------------------------

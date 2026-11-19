@@ -260,3 +260,15 @@ async def test_a_failed_resource_makes_the_scheduler_call_500_so_it_retries_whil
 
 async def test_the_scheduler_refresh_is_refused_when_scheduling_is_not_configured(client: httpx.AsyncClient, with_key: None) -> None:
     assert (await client.post(URL, headers=bearer("good"))).status_code == 403
+
+
+async def test_the_all_states_recording_loads_every_state_once(client: httpx.AsyncClient) -> None:
+    async with session() as s, s.begin():
+        first = await state_facts.load_recording(s)
+    assert (first.updated, first.failed) == (len(RESOURCES), 0)
+    async with read_session() as s:
+        regions = set((await s.execute(select(m.StateFactSnapshot.region_code))).scalars())
+    assert len(regions) >= 36 and {"IN-TN", "IN-UP", "IN-LA"} <= regions
+    async with session() as s, s.begin():
+        again = await state_facts.load_recording(s)
+    assert (again.updated, again.unchanged) == (0, len(RESOURCES))  # the same recording is not stored twice

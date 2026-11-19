@@ -1,0 +1,1541 @@
+{
+ "recorded_on": "2026-11-19",
+ "regions": "all",
+ "resources": {
+  "nfhs5": {
+   "resource_id": "7c568619-b9b4-40bb-b563-68c28c27a6c1",
+   "title": "All India and State/UT-wise Factsheets of NFHS-5, 2019-2021",
+   "total": 37,
+   "updated_date": "2026-02-10T07:49:27+00:00",
+   "records": [
+    {
+     "states_uts": "India",
+     "population_living_in_households_with_electricity____": 96.8,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "54",
+     "women__age_15_49___who_have_ever_used_the_internet____": "33.3",
+     "men__age_15_49___who_have_ever_used_the_internet____": "57.1"
+    },
+    {
+     "states_uts": "Andaman & Nicobar Islands",
+     "population_living_in_households_with_electricity____": 97.6,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "80.8",
+     "women__age_15_49___who_have_ever_used_the_internet____": "34.8",
+     "men__age_15_49___who_have_ever_used_the_internet____": "46.5"
+    },
+    {
+     "states_uts": "Andhra Pradesh",
+     "population_living_in_households_with_electricity____": 99.5,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "48.9",
+     "women__age_15_49___who_have_ever_used_the_internet____": "21",
+     "men__age_15_49___who_have_ever_used_the_internet____": "48.8"
+    },
+    {
+     "states_uts": "Arunachal Pradesh",
+     "population_living_in_households_with_electricity____": 94.8,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "76.4",
+     "women__age_15_49___who_have_ever_used_the_internet____": "52.9",
+     "men__age_15_49___who_have_ever_used_the_internet____": "71.6"
+    },
+    {
+     "states_uts": "Assam",
+     "population_living_in_households_with_electricity____": 92.6,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "57.2",
+     "women__age_15_49___who_have_ever_used_the_internet____": "28.2",
+     "men__age_15_49___who_have_ever_used_the_internet____": "42.3"
+    },
+    {
+     "states_uts": "Bihar",
+     "population_living_in_households_with_electricity____": 96.3,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "51.4",
+     "women__age_15_49___who_have_ever_used_the_internet____": "20.6",
+     "men__age_15_49___who_have_ever_used_the_internet____": "43.6"
+    },
+    {
+     "states_uts": "Chandigarh",
+     "population_living_in_households_with_electricity____": 99.9,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "70",
+     "women__age_15_49___who_have_ever_used_the_internet____": "75.2",
+     "men__age_15_49___who_have_ever_used_the_internet____": "91.9"
+    },
+    {
+     "states_uts": "Chhattisgarh",
+     "population_living_in_households_with_electricity____": 98.8,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "40.7",
+     "women__age_15_49___who_have_ever_used_the_internet____": "26.7",
+     "men__age_15_49___who_have_ever_used_the_internet____": "56.3"
+    },
+    {
+     "states_uts": "Dadra and Nagar Haveli & Daman and Diu",
+     "population_living_in_households_with_electricity____": 99.7,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "60.5",
+     "women__age_15_49___who_have_ever_used_the_internet____": "36.7",
+     "men__age_15_49___who_have_ever_used_the_internet____": "68.3"
+    },
+    {
+     "states_uts": "Goa",
+     "population_living_in_households_with_electricity____": 100,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "91.2",
+     "women__age_15_49___who_have_ever_used_the_internet____": "73.7",
+     "men__age_15_49___who_have_ever_used_the_internet____": "82.9"
+    },
+    {
+     "states_uts": "Gujarat",
+     "population_living_in_households_with_electricity____": 97.6,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "48.8",
+     "women__age_15_49___who_have_ever_used_the_internet____": "30.8",
+     "men__age_15_49___who_have_ever_used_the_internet____": "58.9"
+    },
+    {
+     "states_uts": "Haryana",
+     "population_living_in_households_with_electricity____": 99.6,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "50.4",
+     "women__age_15_49___who_have_ever_used_the_internet____": "48.4",
+     "men__age_15_49___who_have_ever_used_the_internet____": "72.4"
+    },
+    {
+     "states_uts": "Himachal Pradesh",
+     "population_living_in_households_with_electricity____": 99.5,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "79.5",
+     "women__age_15_49___who_have_ever_used_the_internet____": "49.7",
+     "men__age_15_49___who_have_ever_used_the_internet____": "67.9"
+    },
+    {
+     "states_uts": "Jammu & Kashmir",
+     "population_living_in_households_with_electricity____": 99.3,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "75.2",
+     "women__age_15_49___who_have_ever_used_the_internet____": "43.3",
+     "men__age_15_49___who_have_ever_used_the_internet____": "72"
+    },
+    {
+     "states_uts": "Jharkhand",
+     "population_living_in_households_with_electricity____": 94.3,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "49",
+     "women__age_15_49___who_have_ever_used_the_internet____": "31.4",
+     "men__age_15_49___who_have_ever_used_the_internet____": "58"
+    },
+    {
+     "states_uts": "Karnataka",
+     "population_living_in_households_with_electricity____": 99.1,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "61.8",
+     "women__age_15_49___who_have_ever_used_the_internet____": "35",
+     "men__age_15_49___who_have_ever_used_the_internet____": "62.4"
+    },
+    {
+     "states_uts": "Kerala",
+     "population_living_in_households_with_electricity____": 99.6,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "86.6",
+     "women__age_15_49___who_have_ever_used_the_internet____": "61.1",
+     "men__age_15_49___who_have_ever_used_the_internet____": "76.1"
+    },
+    {
+     "states_uts": "Ladakh",
+     "population_living_in_households_with_electricity____": 99.5,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "81.2",
+     "women__age_15_49___who_have_ever_used_the_internet____": "56.4",
+     "men__age_15_49___who_have_ever_used_the_internet____": "67.8"
+    },
+    {
+     "states_uts": "Lakshadweep",
+     "population_living_in_households_with_electricity____": 99.8,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "84",
+     "women__age_15_49___who_have_ever_used_the_internet____": "56.4",
+     "men__age_15_49___who_have_ever_used_the_internet____": "80.3"
+    },
+    {
+     "states_uts": "Madhya Pradesh",
+     "population_living_in_households_with_electricity____": 98.4,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "38.5",
+     "women__age_15_49___who_have_ever_used_the_internet____": "26.9",
+     "men__age_15_49___who_have_ever_used_the_internet____": "55.7"
+    },
+    {
+     "states_uts": "Maharastra",
+     "population_living_in_households_with_electricity____": 97.8,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "54.8",
+     "women__age_15_49___who_have_ever_used_the_internet____": "38",
+     "men__age_15_49___who_have_ever_used_the_internet____": "61.5"
+    },
+    {
+     "states_uts": "Manipur",
+     "population_living_in_households_with_electricity____": 98.1,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "72.2",
+     "women__age_15_49___who_have_ever_used_the_internet____": "44.8",
+     "men__age_15_49___who_have_ever_used_the_internet____": "73.9"
+    },
+    {
+     "states_uts": "Meghalaya",
+     "population_living_in_households_with_electricity____": 91.9,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "67.5",
+     "women__age_15_49___who_have_ever_used_the_internet____": "34.7",
+     "men__age_15_49___who_have_ever_used_the_internet____": "42.1"
+    },
+    {
+     "states_uts": "Mizoram",
+     "population_living_in_households_with_electricity____": 98.2,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "82.3",
+     "women__age_15_49___who_have_ever_used_the_internet____": "67.6",
+     "men__age_15_49___who_have_ever_used_the_internet____": "79.7"
+    },
+    {
+     "states_uts": "Nagaland",
+     "population_living_in_households_with_electricity____": 98.6,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "82.5",
+     "women__age_15_49___who_have_ever_used_the_internet____": "49.9",
+     "men__age_15_49___who_have_ever_used_the_internet____": "64.6"
+    },
+    {
+     "states_uts": "NCT of Delhi",
+     "population_living_in_households_with_electricity____": 99.9,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "73.8",
+     "women__age_15_49___who_have_ever_used_the_internet____": "63.8",
+     "men__age_15_49___who_have_ever_used_the_internet____": "85.2"
+    },
+    {
+     "states_uts": "Odisha",
+     "population_living_in_households_with_electricity____": 97,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "50.1",
+     "women__age_15_49___who_have_ever_used_the_internet____": "24.9",
+     "men__age_15_49___who_have_ever_used_the_internet____": "50.7"
+    },
+    {
+     "states_uts": "Puducherry",
+     "population_living_in_households_with_electricity____": 99.9,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "82.9",
+     "women__age_15_49___who_have_ever_used_the_internet____": "61.9",
+     "men__age_15_49___who_have_ever_used_the_internet____": "80.7"
+    },
+    {
+     "states_uts": "Punjab",
+     "population_living_in_households_with_electricity____": 99.7,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "61.2",
+     "women__age_15_49___who_have_ever_used_the_internet____": "54.8",
+     "men__age_15_49___who_have_ever_used_the_internet____": "78.2"
+    },
+    {
+     "states_uts": "Rajasthan",
+     "population_living_in_households_with_electricity____": 98.1,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "50.2",
+     "women__age_15_49___who_have_ever_used_the_internet____": "36.9",
+     "men__age_15_49___who_have_ever_used_the_internet____": "65.2"
+    },
+    {
+     "states_uts": "Sikkim",
+     "population_living_in_households_with_electricity____": 99.3,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "88.6",
+     "women__age_15_49___who_have_ever_used_the_internet____": "76.7",
+     "men__age_15_49___who_have_ever_used_the_internet____": "78.2"
+    },
+    {
+     "states_uts": "Tamil Nadu",
+     "population_living_in_households_with_electricity____": 99.3,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "74.6",
+     "women__age_15_49___who_have_ever_used_the_internet____": "46.9",
+     "men__age_15_49___who_have_ever_used_the_internet____": "70.2"
+    },
+    {
+     "states_uts": "Telangana",
+     "population_living_in_households_with_electricity____": 99.6,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "60",
+     "women__age_15_49___who_have_ever_used_the_internet____": "26.5",
+     "men__age_15_49___who_have_ever_used_the_internet____": "57.4"
+    },
+    {
+     "states_uts": "Tripura",
+     "population_living_in_households_with_electricity____": 98.2,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "53.1",
+     "women__age_15_49___who_have_ever_used_the_internet____": "22.9",
+     "men__age_15_49___who_have_ever_used_the_internet____": "45.7"
+    },
+    {
+     "states_uts": "Uttar Pradesh",
+     "population_living_in_households_with_electricity____": 91,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "46.5",
+     "women__age_15_49___who_have_ever_used_the_internet____": "30.6",
+     "men__age_15_49___who_have_ever_used_the_internet____": "59.1"
+    },
+    {
+     "states_uts": "Uttarakhand",
+     "population_living_in_households_with_electricity____": 99.6,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "60.9",
+     "women__age_15_49___who_have_ever_used_the_internet____": "45.1",
+     "men__age_15_49___who_have_ever_used_the_internet____": "74.6"
+    },
+    {
+     "states_uts": "West Bengal",
+     "population_living_in_households_with_electricity____": 97.5,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "50.1",
+     "women__age_15_49___who_have_ever_used_the_internet____": "25.5",
+     "men__age_15_49___who_have_ever_used_the_internet____": "46.7"
+    }
+   ]
+  },
+  "teledensity": {
+   "resource_id": "64da9332-95e7-4ba9-8919-0f47911f4c78",
+   "title": "State/UT-wise Total Tele Density as on 30-06-2024",
+   "total": 37,
+   "updated_date": "2025-05-22T07:40:16+00:00",
+   "records": [
+    {
+     "state_ut": "Andhra Pradesh",
+     "total_teledensity__in___": 84.99
+    },
+    {
+     "state_ut": "Arunachal Pradesh",
+     "total_teledensity__in___": 82.13
+    },
+    {
+     "state_ut": "Assam",
+     "total_teledensity__in___": 74.25
+    },
+    {
+     "state_ut": "Bihar",
+     "total_teledensity__in___": 55.8
+    },
+    {
+     "state_ut": "Chhattisgarh",
+     "total_teledensity__in___": 69.5
+    },
+    {
+     "state_ut": "Goa",
+     "total_teledensity__in___": 160.06
+    },
+    {
+     "state_ut": "Gujarat",
+     "total_teledensity__in___": 91.4
+    },
+    {
+     "state_ut": "Haryana",
+     "total_teledensity__in___": 118.77
+    },
+    {
+     "state_ut": "Himachal Pradesh",
+     "total_teledensity__in___": 119.81
+    },
+    {
+     "state_ut": "Jharkhand",
+     "total_teledensity__in___": 62.62
+    },
+    {
+     "state_ut": "Karnataka",
+     "total_teledensity__in___": 103.99
+    },
+    {
+     "state_ut": "Kerala",
+     "total_teledensity__in___": 120.93
+    },
+    {
+     "state_ut": "Madhya Pradesh",
+     "total_teledensity__in___": 69.37
+    },
+    {
+     "state_ut": "Maharashtra",
+     "total_teledensity__in___": 102.14
+    },
+    {
+     "state_ut": "Manipur",
+     "total_teledensity__in___": 77.04
+    },
+    {
+     "state_ut": "Meghalaya",
+     "total_teledensity__in___": 79.52
+    },
+    {
+     "state_ut": "Mizoram",
+     "total_teledensity__in___": 115.4
+    },
+    {
+     "state_ut": "Nagaland",
+     "total_teledensity__in___": 76.54
+    },
+    {
+     "state_ut": "Odisha",
+     "total_teledensity__in___": 78.05
+    },
+    {
+     "state_ut": "Punjab",
+     "total_teledensity__in___": 111.56
+    },
+    {
+     "state_ut": "Rajasthan",
+     "total_teledensity__in___": 82.66
+    },
+    {
+     "state_ut": "Sikkim",
+     "total_teledensity__in___": 115.48
+    },
+    {
+     "state_ut": "Tamil Nadu",
+     "total_teledensity__in___": 104.29
+    },
+    {
+     "state_ut": "Telangana",
+     "total_teledensity__in___": 111.03
+    },
+    {
+     "state_ut": "Tripura",
+     "total_teledensity__in___": 79.18
+    },
+    {
+     "state_ut": "Uttar Pradesh",
+     "total_teledensity__in___": 70.32
+    },
+    {
+     "state_ut": "Uttarakhand",
+     "total_teledensity__in___": 107.31
+    },
+    {
+     "state_ut": "West Bengal",
+     "total_teledensity__in___": 81.84
+    },
+    {
+     "state_ut": "Andaman and Nicobar Islands",
+     "total_teledensity__in___": 131.93
+    },
+    {
+     "state_ut": "Chandigarh",
+     "total_teledensity__in___": 161.92
+    },
+    {
+     "state_ut": "Dadra and Nagar Haveli and Daman and Diu",
+     "total_teledensity__in___": 67.91
+    },
+    {
+     "state_ut": "Delhi",
+     "total_teledensity__in___": 185.56
+    },
+    {
+     "state_ut": "Jammu and Kashmir",
+     "total_teledensity__in___": 89.17
+    },
+    {
+     "state_ut": "Ladakh",
+     "total_teledensity__in___": 195.88
+    },
+    {
+     "state_ut": "Lakshadweep",
+     "total_teledensity__in___": 103.51
+    },
+    {
+     "state_ut": "Puducherry",
+     "total_teledensity__in___": 73.55
+    },
+    {
+     "state_ut": "Total",
+     "total_teledensity__in___": 85.95
+    }
+   ]
+  },
+  "internet": {
+   "resource_id": "d441cbd3-2143-4c4d-927d-f168ad8a1eb7",
+   "title": "State/UT-wise Internet Penetration as on 31st March 2024",
+   "total": 37,
+   "updated_date": "2024-09-10T13:50:22+00:00",
+   "records": [
+    {
+     "state_ut": "Andhra Pradesh",
+     "teledensity_______total": 66.74,
+     "teledensity_______rural": 53.34,
+     "teledensity_______urban": 89.42
+    },
+    {
+     "state_ut": "Arunachal Pradesh",
+     "teledensity_______total": 56.59,
+     "teledensity_______rural": 45.02,
+     "teledensity_______urban": 89.67
+    },
+    {
+     "state_ut": "Assam",
+     "teledensity_______total": 54.8,
+     "teledensity_______rural": 41.93,
+     "teledensity_______urban": 123.98
+    },
+    {
+     "state_ut": "Bihar",
+     "teledensity_______total": 42.1,
+     "teledensity_______rural": 32.82,
+     "teledensity_______urban": 107.87
+    },
+    {
+     "state_ut": "Chattisgarh",
+     "teledensity_______total": 56.39,
+     "teledensity_______rural": 37.84,
+     "teledensity_______urban": 105.37
+    },
+    {
+     "state_ut": "Goa",
+     "teledensity_______total": 152.48,
+     "teledensity_______rural": 226.62,
+     "teledensity_______urban": 130.21
+    },
+    {
+     "state_ut": "Gujarat",
+     "teledensity_______total": 76.73,
+     "teledensity_______rural": 50.5,
+     "teledensity_______urban": 103.74
+    },
+    {
+     "state_ut": "Haryana",
+     "teledensity_______total": 96.97,
+     "teledensity_______rural": 56.83,
+     "teledensity_______urban": 150.77
+    },
+    {
+     "state_ut": "Himachal Pradesh",
+     "teledensity_______total": 87.96,
+     "teledensity_______rural": 59.83,
+     "teledensity_______urban": 331.77
+    },
+    {
+     "state_ut": "Jharkhand",
+     "teledensity_______total": 49.04,
+     "teledensity_______rural": 37.26,
+     "teledensity_______urban": 81.94
+    },
+    {
+     "state_ut": "Karnataka",
+     "teledensity_______total": 84.93,
+     "teledensity_______rural": 55.4,
+     "teledensity_______urban": 121.13
+    },
+    {
+     "state_ut": "Kerala",
+     "teledensity_______total": 93.74,
+     "teledensity_______rural": 196.98,
+     "teledensity_______urban": 63.89
+    },
+    {
+     "state_ut": "Madhya Pradesh",
+     "teledensity_______total": 55.5,
+     "teledensity_______rural": 32.44,
+     "teledensity_______urban": 111.65
+    },
+    {
+     "state_ut": "Maharashtra",
+     "teledensity_______total": 86.12,
+     "teledensity_______rural": 51.77,
+     "teledensity_______urban": 122.13
+    },
+    {
+     "state_ut": "Manipur",
+     "teledensity_______total": 69.21,
+     "teledensity_______rural": 43.29,
+     "teledensity_______urban": 122.55
+    },
+    {
+     "state_ut": "Meghalaya",
+     "teledensity_______total": 61.28,
+     "teledensity_______rural": 49.3,
+     "teledensity_______urban": 107.22
+    },
+    {
+     "state_ut": "Mizoram",
+     "teledensity_______total": 99.44,
+     "teledensity_______rural": 95.45,
+     "teledensity_______urban": 102.67
+    },
+    {
+     "state_ut": "Nagaland",
+     "teledensity_______total": 73.69,
+     "teledensity_______rural": 82.57,
+     "teledensity_______urban": 63.83
+    },
+    {
+     "state_ut": "Odisha",
+     "teledensity_______total": 55.26,
+     "teledensity_______rural": 44.94,
+     "teledensity_______urban": 99.03
+    },
+    {
+     "state_ut": "Punjab",
+     "teledensity_______total": 88.79,
+     "teledensity_______rural": 54.87,
+     "teledensity_______urban": 135.22
+    },
+    {
+     "state_ut": "Rajasthan",
+     "teledensity_______total": 64.02,
+     "teledensity_______rural": 42.89,
+     "teledensity_______urban": 121.83
+    },
+    {
+     "state_ut": "Sikkim",
+     "teledensity_______total": 85.79,
+     "teledensity_______rural": 90.81,
+     "teledensity_______urban": 81.02
+    },
+    {
+     "state_ut": "Tamil Nadu",
+     "teledensity_______total": 79.41,
+     "teledensity_______rural": 48.74,
+     "teledensity_______urban": 105.35
+    },
+    {
+     "state_ut": "Telangana",
+     "teledensity_______total": 92.96,
+     "teledensity_______rural": 66.68,
+     "teledensity_______urban": 120.65
+    },
+    {
+     "state_ut": "Tripura",
+     "teledensity_______total": 52.08,
+     "teledensity_______rural": 42.51,
+     "teledensity_______urban": 66.19
+    },
+    {
+     "state_ut": "Uttar Pradesh",
+     "teledensity_______total": 54.36,
+     "teledensity_______rural": 35.3,
+     "teledensity_______urban": 114.13
+    },
+    {
+     "state_ut": "Uttarakhand",
+     "teledensity_______total": 83.67,
+     "teledensity_______rural": 65.44,
+     "teledensity_______urban": 115.52
+    },
+    {
+     "state_ut": "West Bengal",
+     "teledensity_______total": 63.44,
+     "teledensity_______rural": 40.23,
+     "teledensity_______urban": 102.54
+    },
+    {
+     "state_ut": "Andaman and Nicobar Islands",
+     "teledensity_______total": 102.02,
+     "teledensity_______rural": 89.6,
+     "teledensity_______urban": 117.45
+    },
+    {
+     "state_ut": "Chandigarh",
+     "teledensity_______total": 106.4,
+     "teledensity_______rural": "NA",
+     "teledensity_______urban": "NA"
+    },
+    {
+     "state_ut": "Dadra and Nagar Haveli and Daman and Diu",
+     "teledensity_______total": 61.25,
+     "teledensity_______rural": 120.04,
+     "teledensity_______urban": 48.69
+    },
+    {
+     "state_ut": "Delhi",
+     "teledensity_______total": 161.48,
+     "teledensity_______rural": "NA",
+     "teledensity_______urban": "NA"
+    },
+    {
+     "state_ut": "Jammu and Kashmir",
+     "teledensity_______total": 69.63,
+     "teledensity_______rural": 45.67,
+     "teledensity_______urban": 123.41
+    },
+    {
+     "state_ut": "Ladakh",
+     "teledensity_______total": 107.46,
+     "teledensity_______rural": 118.37,
+     "teledensity_______urban": 84.1
+    },
+    {
+     "state_ut": "Lakshadweep",
+     "teledensity_______total": 85.68,
+     "teledensity_______rural": "NA",
+     "teledensity_______urban": "NA"
+    },
+    {
+     "state_ut": "Puducherry",
+     "teledensity_______total": 74.07,
+     "teledensity_______rural": 71.59,
+     "teledensity_______urban": 75.11
+    },
+    {
+     "state_ut": "Total",
+     "teledensity_______total": 68.19,
+     "teledensity_______rural": 44.16,
+     "teledensity_______urban": 111.75
+    }
+   ]
+  },
+  "nsdp": {
+   "resource_id": "c9bfd3c0-b9de-4a5b-8752-f72a4f2932ad",
+   "title": "State/UT-wise Per Capita NSDP at Current Prices, 2019-20 to 2022-23",
+   "total": 33,
+   "updated_date": "2025-03-27T19:43:14+00:00",
+   "records": [
+    {
+     "state_ut": "Andhra Pradesh",
+     "_2019_20": 160341,
+     "_2020_21": 163746,
+     "_2021_22": 192587,
+     "_2022_23": 219518
+    },
+    {
+     "state_ut": "Arunachal Pradesh",
+     "_2019_20": 182171,
+     "_2020_21": 181684,
+     "_2021_22": 205645,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Assam",
+     "_2019_20": 90123,
+     "_2020_21": 90482,
+     "_2021_22": 102965,
+     "_2022_23": 118504
+    },
+    {
+     "state_ut": "Bihar",
+     "_2019_20": 44175,
+     "_2020_21": 42083,
+     "_2021_22": 47498,
+     "_2022_23": 54111
+    },
+    {
+     "state_ut": "Chhattisgarh",
+     "_2019_20": 106603,
+     "_2020_21": 104788,
+     "_2021_22": 120704,
+     "_2022_23": 133898
+    },
+    {
+     "state_ut": "Goa",
+     "_2019_20": 435949,
+     "_2020_21": 431351,
+     "_2021_22": 472070,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Gujarat",
+     "_2019_20": 212428,
+     "_2020_21": 207324,
+     "_2021_22": 241930,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Haryana",
+     "_2019_20": 230563,
+     "_2020_21": 229065,
+     "_2021_22": 264835,
+     "_2022_23": 296685
+    },
+    {
+     "state_ut": "Himachal Pradesh",
+     "_2019_20": 186559,
+     "_2020_21": 177924,
+     "_2021_22": 201271,
+     "_2022_23": 222227
+    },
+    {
+     "state_ut": "Jharkhand",
+     "_2019_20": 75016,
+     "_2020_21": 69963,
+     "_2021_22": 84059,
+     "_2022_23": 91874
+    },
+    {
+     "state_ut": "Karnataka",
+     "_2019_20": 221431,
+     "_2020_21": 221310,
+     "_2021_22": 265623,
+     "_2022_23": 301673
+    },
+    {
+     "state_ut": "Kerala",
+     "_2019_20": 208879,
+     "_2020_21": 194432,
+     "_2021_22": 233855,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Madhya Pradesh",
+     "_2019_20": 101909,
+     "_2020_21": 103654,
+     "_2021_22": 121594,
+     "_2022_23": 140583
+    },
+    {
+     "state_ut": "Maharashtra",
+     "_2019_20": 189889,
+     "_2020_21": 183704,
+     "_2021_22": 215233,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Manipur",
+     "_2019_20": 78574,
+     "_2020_21": 75784,
+     "_2021_22": 91560,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Meghalaya",
+     "_2019_20": 87653,
+     "_2020_21": 90751,
+     "_2021_22": 103335,
+     "_2022_23": 112737
+    },
+    {
+     "state_ut": "Mizoram",
+     "_2019_20": 195365,
+     "_2020_21": 173521,
+     "_2021_22": 198962,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Nagaland",
+     "_2019_20": 122759,
+     "_2020_21": 119781,
+     "_2021_22": 125887,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Odisha",
+     "_2019_20": 104633,
+     "_2020_21": 103203,
+     "_2021_22": 128181,
+     "_2022_23": 149902
+    },
+    {
+     "state_ut": "Punjab",
+     "_2019_20": 154385,
+     "_2020_21": 150620,
+     "_2021_22": 168705,
+     "_2022_23": 181716
+    },
+    {
+     "state_ut": "Rajasthan",
+     "_2019_20": 115360,
+     "_2020_21": 115122,
+     "_2021_22": 135962,
+     "_2022_23": 156149
+    },
+    {
+     "state_ut": "Sikkim",
+     "_2019_20": 412627,
+     "_2020_21": 415045,
+     "_2021_22": 463509,
+     "_2022_23": 519964
+    },
+    {
+     "state_ut": "Tamil Nadu",
+     "_2019_20": 206165,
+     "_2020_21": 209628,
+     "_2021_22": 242253,
+     "_2022_23": 275583
+    },
+    {
+     "state_ut": "Telangana",
+     "_2019_20": 231326,
+     "_2020_21": 225663,
+     "_2021_22": 270839,
+     "_2022_23": 312398
+    },
+    {
+     "state_ut": "Tripura",
+     "_2019_20": 121456,
+     "_2020_21": 118401,
+     "_2021_22": 137472,
+     "_2022_23": 159419
+    },
+    {
+     "state_ut": "Uttar Pradesh",
+     "_2019_20": 65660,
+     "_2020_21": 61434,
+     "_2021_22": 73048,
+     "_2022_23": 83565
+    },
+    {
+     "state_ut": "Uttarakhand",
+     "_2019_20": 190543,
+     "_2020_21": 184002,
+     "_2021_22": 211657,
+     "_2022_23": 233565
+    },
+    {
+     "state_ut": "West Bengal",
+     "_2019_20": 110313,
+     "_2020_21": 106510,
+     "_2021_22": 124798,
+     "_2022_23": 141373
+    },
+    {
+     "state_ut": "Andaman and Nicobar Islands",
+     "_2019_20": 219653,
+     "_2020_21": 205368,
+     "_2021_22": 229080,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Chandigarh",
+     "_2019_20": 330703,
+     "_2020_21": 290671,
+     "_2021_22": 333932,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Delhi",
+     "_2019_20": 355798,
+     "_2020_21": 331112,
+     "_2021_22": 389529,
+     "_2022_23": 444768
+    },
+    {
+     "state_ut": "Jammu and Kashmir",
+     "_2019_20": 101868,
+     "_2020_21": 101540,
+     "_2021_22": 120790,
+     "_2022_23": 136771
+    },
+    {
+     "state_ut": "Puducherry",
+     "_2019_20": 217937,
+     "_2020_21": 208453,
+     "_2021_22": 251344,
+     "_2022_23": "NA"
+    }
+   ]
+  },
+  "mpce": {
+   "resource_id": "29d2831a-0ded-45f8-8919-0d1849f1a375",
+   "title": "State/UT-wise Average MPCE, 2022-23 and 2023-24",
+   "total": 37,
+   "updated_date": "2025-08-07T19:26:11+00:00",
+   "records": [
+    {
+     "state_ut": "Andhra Pradesh",
+     "_2022_23___average_mpce__in_rs_____rural": 4870,
+     "_2022_23___average_mpce__in_rs_____urban": 6782,
+     "_2023_24___average_mpce__in_rs_____rural": 5327,
+     "_2023_24___average_mpce__in_rs_____urban": 7182
+    },
+    {
+     "state_ut": "Arunachal Pradesh",
+     "_2022_23___average_mpce__in_rs_____rural": 5276,
+     "_2022_23___average_mpce__in_rs_____urban": 8636,
+     "_2023_24___average_mpce__in_rs_____rural": 5995,
+     "_2023_24___average_mpce__in_rs_____urban": 9832
+    },
+    {
+     "state_ut": "Assam",
+     "_2022_23___average_mpce__in_rs_____rural": 3432,
+     "_2022_23___average_mpce__in_rs_____urban": 6136,
+     "_2023_24___average_mpce__in_rs_____rural": 3793,
+     "_2023_24___average_mpce__in_rs_____urban": 6794
+    },
+    {
+     "state_ut": "Bihar",
+     "_2022_23___average_mpce__in_rs_____rural": 3384,
+     "_2022_23___average_mpce__in_rs_____urban": 4768,
+     "_2023_24___average_mpce__in_rs_____rural": 3670,
+     "_2023_24___average_mpce__in_rs_____urban": 5080
+    },
+    {
+     "state_ut": "Chhattisgarh",
+     "_2022_23___average_mpce__in_rs_____rural": 2466,
+     "_2022_23___average_mpce__in_rs_____urban": 4483,
+     "_2023_24___average_mpce__in_rs_____rural": 2739,
+     "_2023_24___average_mpce__in_rs_____urban": 4927
+    },
+    {
+     "state_ut": "Delhi",
+     "_2022_23___average_mpce__in_rs_____rural": 6576,
+     "_2022_23___average_mpce__in_rs_____urban": 8217,
+     "_2023_24___average_mpce__in_rs_____rural": 7400,
+     "_2023_24___average_mpce__in_rs_____urban": 8534
+    },
+    {
+     "state_ut": "Goa",
+     "_2022_23___average_mpce__in_rs_____rural": 7367,
+     "_2022_23___average_mpce__in_rs_____urban": 8734,
+     "_2023_24___average_mpce__in_rs_____rural": 8048,
+     "_2023_24___average_mpce__in_rs_____urban": 9726
+    },
+    {
+     "state_ut": "Gujarat",
+     "_2022_23___average_mpce__in_rs_____rural": 3798,
+     "_2022_23___average_mpce__in_rs_____urban": 6621,
+     "_2023_24___average_mpce__in_rs_____rural": 4116,
+     "_2023_24___average_mpce__in_rs_____urban": 7175
+    },
+    {
+     "state_ut": "Haryana",
+     "_2022_23___average_mpce__in_rs_____rural": 4859,
+     "_2022_23___average_mpce__in_rs_____urban": 7911,
+     "_2023_24___average_mpce__in_rs_____rural": 5377,
+     "_2023_24___average_mpce__in_rs_____urban": 8427
+    },
+    {
+     "state_ut": "Himachal Pradesh",
+     "_2022_23___average_mpce__in_rs_____rural": 5561,
+     "_2022_23___average_mpce__in_rs_____urban": 8075,
+     "_2023_24___average_mpce__in_rs_____rural": 5825,
+     "_2023_24___average_mpce__in_rs_____urban": 9223
+    },
+    {
+     "state_ut": "Jharkhand",
+     "_2022_23___average_mpce__in_rs_____rural": 2763,
+     "_2022_23___average_mpce__in_rs_____urban": 4931,
+     "_2023_24___average_mpce__in_rs_____rural": 2946,
+     "_2023_24___average_mpce__in_rs_____urban": 5393
+    },
+    {
+     "state_ut": "Karnataka",
+     "_2022_23___average_mpce__in_rs_____rural": 4397,
+     "_2022_23___average_mpce__in_rs_____urban": 7666,
+     "_2023_24___average_mpce__in_rs_____rural": 4903,
+     "_2023_24___average_mpce__in_rs_____urban": 8076
+    },
+    {
+     "state_ut": "Kerala",
+     "_2022_23___average_mpce__in_rs_____rural": 5924,
+     "_2022_23___average_mpce__in_rs_____urban": 7078,
+     "_2023_24___average_mpce__in_rs_____rural": 6611,
+     "_2023_24___average_mpce__in_rs_____urban": 7783
+    },
+    {
+     "state_ut": "Madhya Pradesh",
+     "_2022_23___average_mpce__in_rs_____rural": 3113,
+     "_2022_23___average_mpce__in_rs_____urban": 4987,
+     "_2023_24___average_mpce__in_rs_____rural": 3441,
+     "_2023_24___average_mpce__in_rs_____urban": 5538
+    },
+    {
+     "state_ut": "Maharashtra",
+     "_2022_23___average_mpce__in_rs_____rural": 4010,
+     "_2022_23___average_mpce__in_rs_____urban": 6657,
+     "_2023_24___average_mpce__in_rs_____rural": 4145,
+     "_2023_24___average_mpce__in_rs_____urban": 7363
+    },
+    {
+     "state_ut": "Manipur",
+     "_2022_23___average_mpce__in_rs_____rural": 4360,
+     "_2022_23___average_mpce__in_rs_____urban": 4880,
+     "_2023_24___average_mpce__in_rs_____rural": 4531,
+     "_2023_24___average_mpce__in_rs_____urban": 5945
+    },
+    {
+     "state_ut": "Meghalaya",
+     "_2022_23___average_mpce__in_rs_____rural": 3514,
+     "_2022_23___average_mpce__in_rs_____urban": 6433,
+     "_2023_24___average_mpce__in_rs_____rural": 3852,
+     "_2023_24___average_mpce__in_rs_____urban": 7839
+    },
+    {
+     "state_ut": "Mizoram",
+     "_2022_23___average_mpce__in_rs_____rural": 5224,
+     "_2022_23___average_mpce__in_rs_____urban": 7655,
+     "_2023_24___average_mpce__in_rs_____rural": 5963,
+     "_2023_24___average_mpce__in_rs_____urban": 8709
+    },
+    {
+     "state_ut": "Nagaland",
+     "_2022_23___average_mpce__in_rs_____rural": 4393,
+     "_2022_23___average_mpce__in_rs_____urban": 7098,
+     "_2023_24___average_mpce__in_rs_____rural": 5155,
+     "_2023_24___average_mpce__in_rs_____urban": 8022
+    },
+    {
+     "state_ut": "Odisha",
+     "_2022_23___average_mpce__in_rs_____rural": 2950,
+     "_2022_23___average_mpce__in_rs_____urban": 5187,
+     "_2023_24___average_mpce__in_rs_____rural": 3357,
+     "_2023_24___average_mpce__in_rs_____urban": 5825
+    },
+    {
+     "state_ut": "Punjab",
+     "_2022_23___average_mpce__in_rs_____rural": 5315,
+     "_2022_23___average_mpce__in_rs_____urban": 6544,
+     "_2023_24___average_mpce__in_rs_____rural": 5817,
+     "_2023_24___average_mpce__in_rs_____urban": 7359
+    },
+    {
+     "state_ut": "Rajasthan",
+     "_2022_23___average_mpce__in_rs_____rural": 4263,
+     "_2022_23___average_mpce__in_rs_____urban": 5913,
+     "_2023_24___average_mpce__in_rs_____rural": 4510,
+     "_2023_24___average_mpce__in_rs_____urban": 6574
+    },
+    {
+     "state_ut": "Sikkim",
+     "_2022_23___average_mpce__in_rs_____rural": 7731,
+     "_2022_23___average_mpce__in_rs_____urban": 12105,
+     "_2023_24___average_mpce__in_rs_____rural": 9377,
+     "_2023_24___average_mpce__in_rs_____urban": 13927
+    },
+    {
+     "state_ut": "Tamil Nadu",
+     "_2022_23___average_mpce__in_rs_____rural": 5310,
+     "_2022_23___average_mpce__in_rs_____urban": 7630,
+     "_2023_24___average_mpce__in_rs_____rural": 5701,
+     "_2023_24___average_mpce__in_rs_____urban": 8165
+    },
+    {
+     "state_ut": "Telangana",
+     "_2022_23___average_mpce__in_rs_____rural": 4802,
+     "_2022_23___average_mpce__in_rs_____urban": 8158,
+     "_2023_24___average_mpce__in_rs_____rural": 5435,
+     "_2023_24___average_mpce__in_rs_____urban": 8978
+    },
+    {
+     "state_ut": "Tripura",
+     "_2022_23___average_mpce__in_rs_____rural": 5206,
+     "_2022_23___average_mpce__in_rs_____urban": 7405,
+     "_2023_24___average_mpce__in_rs_____rural": 6259,
+     "_2023_24___average_mpce__in_rs_____urban": 8034
+    },
+    {
+     "state_ut": "Uttar Pradesh",
+     "_2022_23___average_mpce__in_rs_____rural": 3191,
+     "_2022_23___average_mpce__in_rs_____urban": 5040,
+     "_2023_24___average_mpce__in_rs_____rural": 3481,
+     "_2023_24___average_mpce__in_rs_____urban": 5395
+    },
+    {
+     "state_ut": "Uttarakhand",
+     "_2022_23___average_mpce__in_rs_____rural": 4641,
+     "_2022_23___average_mpce__in_rs_____urban": 7004,
+     "_2023_24___average_mpce__in_rs_____rural": 5003,
+     "_2023_24___average_mpce__in_rs_____urban": 7486
+    },
+    {
+     "state_ut": "West Bengal",
+     "_2022_23___average_mpce__in_rs_____rural": 3239,
+     "_2022_23___average_mpce__in_rs_____urban": 5267,
+     "_2023_24___average_mpce__in_rs_____rural": 3620,
+     "_2023_24___average_mpce__in_rs_____urban": 5775
+    },
+    {
+     "state_ut": "Andaman and Nicobar Islands",
+     "_2022_23___average_mpce__in_rs_____rural": 7332,
+     "_2022_23___average_mpce__in_rs_____urban": 10268,
+     "_2023_24___average_mpce__in_rs_____rural": 7771,
+     "_2023_24___average_mpce__in_rs_____urban": 10453
+    },
+    {
+     "state_ut": "Chandigarh",
+     "_2022_23___average_mpce__in_rs_____rural": 7467,
+     "_2022_23___average_mpce__in_rs_____urban": 12575,
+     "_2023_24___average_mpce__in_rs_____rural": 8857,
+     "_2023_24___average_mpce__in_rs_____urban": 13425
+    },
+    {
+     "state_ut": "Dadra and Nagar Haveli and Daman and Diu",
+     "_2022_23___average_mpce__in_rs_____rural": 4184,
+     "_2022_23___average_mpce__in_rs_____urban": 6298,
+     "_2023_24___average_mpce__in_rs_____rural": 4311,
+     "_2023_24___average_mpce__in_rs_____urban": 6837
+    },
+    {
+     "state_ut": "Jammu and Kashmir",
+     "_2022_23___average_mpce__in_rs_____rural": 4296,
+     "_2022_23___average_mpce__in_rs_____urban": 6179,
+     "_2023_24___average_mpce__in_rs_____rural": 4774,
+     "_2023_24___average_mpce__in_rs_____urban": 6327
+    },
+    {
+     "state_ut": "Ladakh",
+     "_2022_23___average_mpce__in_rs_____rural": 4035,
+     "_2022_23___average_mpce__in_rs_____urban": 6215,
+     "_2023_24___average_mpce__in_rs_____rural": 5010,
+     "_2023_24___average_mpce__in_rs_____urban": 7533
+    },
+    {
+     "state_ut": "Lakshadweep",
+     "_2022_23___average_mpce__in_rs_____rural": 5895,
+     "_2022_23___average_mpce__in_rs_____urban": 5475,
+     "_2023_24___average_mpce__in_rs_____rural": 6350,
+     "_2023_24___average_mpce__in_rs_____urban": 6377
+    },
+    {
+     "state_ut": "Puducherry",
+     "_2022_23___average_mpce__in_rs_____rural": 6590,
+     "_2022_23___average_mpce__in_rs_____urban": 7706,
+     "_2023_24___average_mpce__in_rs_____rural": 7598,
+     "_2023_24___average_mpce__in_rs_____urban": 8637
+    },
+    {
+     "state_ut": "All-India",
+     "_2022_23___average_mpce__in_rs_____rural": 3773,
+     "_2022_23___average_mpce__in_rs_____urban": 6459,
+     "_2023_24___average_mpce__in_rs_____rural": 4122,
+     "_2023_24___average_mpce__in_rs_____urban": 6996
+    }
+   ]
+  },
+  "literacy": {
+   "resource_id": "5b9c2422-d8e4-4f57-9585-2831aaf18a1a",
+   "title": "State/UTs-wise Literacy Rates, Census 2001 and 2011",
+   "total": 36,
+   "updated_date": "2023-11-19T18:51:41+00:00",
+   "records": [
+    {
+     "india_states_uts": "India",
+     "census_2001": 64.84,
+     "census_2011": 72.98
+    },
+    {
+     "india_states_uts": "Andhra Pradesh",
+     "census_2001": 60.47,
+     "census_2011": 67.02
+    },
+    {
+     "india_states_uts": "Arunachal Pradesh",
+     "census_2001": 54.34,
+     "census_2011": 65.38
+    },
+    {
+     "india_states_uts": "Assam",
+     "census_2001": 63.25,
+     "census_2011": 72.19
+    },
+    {
+     "india_states_uts": "Bihar",
+     "census_2001": 47,
+     "census_2011": 61.8
+    },
+    {
+     "india_states_uts": "Chhattisgarh",
+     "census_2001": 64.66,
+     "census_2011": 70.28
+    },
+    {
+     "india_states_uts": "Goa",
+     "census_2001": 82.01,
+     "census_2011": 88.7
+    },
+    {
+     "india_states_uts": "Gujarat",
+     "census_2001": 69.14,
+     "census_2011": 78.03
+    },
+    {
+     "india_states_uts": "Haryana",
+     "census_2001": 67.91,
+     "census_2011": 75.55
+    },
+    {
+     "india_states_uts": "Himachal Pradesh",
+     "census_2001": 76.48,
+     "census_2011": 82.8
+    },
+    {
+     "india_states_uts": "Jammu and Kashmir",
+     "census_2001": 55.52,
+     "census_2011": 67.16
+    },
+    {
+     "india_states_uts": "Jharkhand",
+     "census_2001": 53.56,
+     "census_2011": 66.41
+    },
+    {
+     "india_states_uts": "Karnataka",
+     "census_2001": 66.64,
+     "census_2011": 75.36
+    },
+    {
+     "india_states_uts": "Kerala",
+     "census_2001": 90.86,
+     "census_2011": 94
+    },
+    {
+     "india_states_uts": "Madhya Pradesh",
+     "census_2001": 63.74,
+     "census_2011": 69.32
+    },
+    {
+     "india_states_uts": "Maharashtra",
+     "census_2001": 76.88,
+     "census_2011": 82.34
+    },
+    {
+     "india_states_uts": "Manipur",
+     "census_2001": 69.93,
+     "census_2011": 76.94
+    },
+    {
+     "india_states_uts": "Meghalaya",
+     "census_2001": 62.56,
+     "census_2011": 74.43
+    },
+    {
+     "india_states_uts": "Mizoram",
+     "census_2001": 88.8,
+     "census_2011": 91.33
+    },
+    {
+     "india_states_uts": "Nagaland",
+     "census_2001": 66.59,
+     "census_2011": 79.55
+    },
+    {
+     "india_states_uts": "Odisha",
+     "census_2001": 63.08,
+     "census_2011": 72.87
+    },
+    {
+     "india_states_uts": "Punjab",
+     "census_2001": 69.65,
+     "census_2011": 75.84
+    },
+    {
+     "india_states_uts": "Rajasthan",
+     "census_2001": 60.41,
+     "census_2011": 66.11
+    },
+    {
+     "india_states_uts": "Sikkim",
+     "census_2001": 68.81,
+     "census_2011": 81.42
+    },
+    {
+     "india_states_uts": "Tamil Nadu",
+     "census_2001": 73.45,
+     "census_2011": 80.09
+    },
+    {
+     "india_states_uts": "Tripura",
+     "census_2001": 73.19,
+     "census_2011": 87.22
+    },
+    {
+     "india_states_uts": "Uttar Pradesh",
+     "census_2001": 56.27,
+     "census_2011": 67.68
+    },
+    {
+     "india_states_uts": "Uttrakhand",
+     "census_2001": 71.62,
+     "census_2011": 78.82
+    },
+    {
+     "india_states_uts": "West Bengal",
+     "census_2001": 68.64,
+     "census_2011": 76.26
+    },
+    {
+     "india_states_uts": "Andaman and Nicobar Islands",
+     "census_2001": 81.3,
+     "census_2011": 86.63
+    },
+    {
+     "india_states_uts": "Chandigarh",
+     "census_2001": 81.94,
+     "census_2011": 86.05
+    },
+    {
+     "india_states_uts": "Dadra and Nagar Haveli",
+     "census_2001": 57.63,
+     "census_2011": 76.24
+    },
+    {
+     "india_states_uts": "Daman and Diu",
+     "census_2001": 78.18,
+     "census_2011": 87.1
+    },
+    {
+     "india_states_uts": "Delhi",
+     "census_2001": 81.67,
+     "census_2011": 86.21
+    },
+    {
+     "india_states_uts": "Lakshadweep",
+     "census_2001": 86.66,
+     "census_2011": 91.85
+    },
+    {
+     "india_states_uts": "Puducherry",
+     "census_2001": 81.24,
+     "census_2011": 85.85
+    }
+   ]
+  },
+  "urban": {
+   "resource_id": "8cf7eeb8-cefa-4416-b84c-4f7c9c369424",
+   "title": "State/UT-wise Percentage of Urban Population, Census 2001 and 2011",
+   "total": 36,
+   "updated_date": "2021-01-24T16:47:01+00:00",
+   "records": [
+    {
+     "state_union_territory": "India",
+     "__of_urban_population_to_total_population___2001": 27.8,
+     "__of_urban_population_to_total_population___2011": 31.1
+    },
+    {
+     "state_union_territory": "Andhra Pradesh(old)",
+     "__of_urban_population_to_total_population___2001": 27.3,
+     "__of_urban_population_to_total_population___2011": 33.4
+    },
+    {
+     "state_union_territory": "Arunachal Pradesh",
+     "__of_urban_population_to_total_population___2001": 20.8,
+     "__of_urban_population_to_total_population___2011": 22.9
+    },
+    {
+     "state_union_territory": "Assam",
+     "__of_urban_population_to_total_population___2001": 12.9,
+     "__of_urban_population_to_total_population___2011": 14.1
+    },
+    {
+     "state_union_territory": "Bihar",
+     "__of_urban_population_to_total_population___2001": 10.5,
+     "__of_urban_population_to_total_population___2011": 11.3
+    },
+    {
+     "state_union_territory": "Chhattisgarh",
+     "__of_urban_population_to_total_population___2001": 20.1,
+     "__of_urban_population_to_total_population___2011": 23.2
+    },
+    {
+     "state_union_territory": "Delhi",
+     "__of_urban_population_to_total_population___2001": 93.2,
+     "__of_urban_population_to_total_population___2011": 97.5
+    },
+    {
+     "state_union_territory": "Goa",
+     "__of_urban_population_to_total_population___2001": 49.8,
+     "__of_urban_population_to_total_population___2011": 62.2
+    },
+    {
+     "state_union_territory": "Gujarat",
+     "__of_urban_population_to_total_population___2001": 37.4,
+     "__of_urban_population_to_total_population___2011": 42.6
+    },
+    {
+     "state_union_territory": "Haryana",
+     "__of_urban_population_to_total_population___2001": 28.9,
+     "__of_urban_population_to_total_population___2011": 34.9
+    },
+    {
+     "state_union_territory": "Himachal Pradesh",
+     "__of_urban_population_to_total_population___2001": 9.8,
+     "__of_urban_population_to_total_population___2011": 10
+    },
+    {
+     "state_union_territory": "Jammu & Kashmir",
+     "__of_urban_population_to_total_population___2001": 24.8,
+     "__of_urban_population_to_total_population___2011": 27.4
+    },
+    {
+     "state_union_territory": "Jharkhand",
+     "__of_urban_population_to_total_population___2001": 22.2,
+     "__of_urban_population_to_total_population___2011": 24
+    },
+    {
+     "state_union_territory": "Karnataka",
+     "__of_urban_population_to_total_population___2001": 34,
+     "__of_urban_population_to_total_population___2011": 38.7
+    },
+    {
+     "state_union_territory": "Kerala",
+     "__of_urban_population_to_total_population___2001": 26,
+     "__of_urban_population_to_total_population___2011": 47.7
+    },
+    {
+     "state_union_territory": "Madhya Pradesh",
+     "__of_urban_population_to_total_population___2001": 26.5,
+     "__of_urban_population_to_total_population___2011": 27.6
+    },
+    {
+     "state_union_territory": "Maharastra",
+     "__of_urban_population_to_total_population___2001": 42.4,
+     "__of_urban_population_to_total_population___2011": 45.2
+    },
+    {
+     "state_union_territory": "Manipur",
+     "__of_urban_population_to_total_population___2001": 25.1,
+     "__of_urban_population_to_total_population___2011": 29.2
+    },
+    {
+     "state_union_territory": "Meghalaya",
+     "__of_urban_population_to_total_population___2001": 19.6,
+     "__of_urban_population_to_total_population___2011": 20.1
+    },
+    {
+     "state_union_territory": "Mizoram",
+     "__of_urban_population_to_total_population___2001": 49.6,
+     "__of_urban_population_to_total_population___2011": 52.1
+    },
+    {
+     "state_union_territory": "Nagaland",
+     "__of_urban_population_to_total_population___2001": 17.2,
+     "__of_urban_population_to_total_population___2011": 28.9
+    },
+    {
+     "state_union_territory": "Odisha",
+     "__of_urban_population_to_total_population___2001": 15,
+     "__of_urban_population_to_total_population___2011": 16.7
+    },
+    {
+     "state_union_territory": "Punjab",
+     "__of_urban_population_to_total_population___2001": 33.9,
+     "__of_urban_population_to_total_population___2011": 37.5
+    },
+    {
+     "state_union_territory": "Rajasthan",
+     "__of_urban_population_to_total_population___2001": 23.4,
+     "__of_urban_population_to_total_population___2011": 24.9
+    },
+    {
+     "state_union_territory": "Sikkim",
+     "__of_urban_population_to_total_population___2001": 11.1,
+     "__of_urban_population_to_total_population___2011": 25.2
+    },
+    {
+     "state_union_territory": "Tamil Nadu",
+     "__of_urban_population_to_total_population___2001": 44,
+     "__of_urban_population_to_total_population___2011": 48.4
+    },
+    {
+     "state_union_territory": "Tripura",
+     "__of_urban_population_to_total_population___2001": 17.1,
+     "__of_urban_population_to_total_population___2011": 26.2
+    },
+    {
+     "state_union_territory": "Uttar Pradesh",
+     "__of_urban_population_to_total_population___2001": 20.8,
+     "__of_urban_population_to_total_population___2011": 22.3
+    },
+    {
+     "state_union_territory": "Uttarakhand",
+     "__of_urban_population_to_total_population___2001": 25.7,
+     "__of_urban_population_to_total_population___2011": 30.2
+    },
+    {
+     "state_union_territory": "West Bengal",
+     "__of_urban_population_to_total_population___2001": 28,
+     "__of_urban_population_to_total_population___2011": 31.9
+    },
+    {
+     "state_union_territory": "Andaman & Nicobar Islands",
+     "__of_urban_population_to_total_population___2001": 32.6,
+     "__of_urban_population_to_total_population___2011": 37.7
+    },
+    {
+     "state_union_territory": "Chandigarh",
+     "__of_urban_population_to_total_population___2001": 89.8,
+     "__of_urban_population_to_total_population___2011": 97.3
+    },
+    {
+     "state_union_territory": "D&N Haveli",
+     "__of_urban_population_to_total_population___2001": 22.9,
+     "__of_urban_population_to_total_population___2011": 46.7
+    },
+    {
+     "state_union_territory": "Daman & Diu",
+     "__of_urban_population_to_total_population___2001": 36.2,
+     "__of_urban_population_to_total_population___2011": 75.2
+    },
+    {
+     "state_union_territory": "Lakshadweep",
+     "__of_urban_population_to_total_population___2001": 44.5,
+     "__of_urban_population_to_total_population___2011": 78.1
+    },
+    {
+     "state_union_territory": "Puducherry",
+     "__of_urban_population_to_total_population___2001": 66.6,
+     "__of_urban_population_to_total_population___2011": 68.3
+    }
+   ]
+  }
+ }
+}
