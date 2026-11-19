@@ -55,8 +55,8 @@ from app.services.common import WRITE_ROLES, get_owned
 
 logger = logging.getLogger(__name__)
 
-RECORDED_FILE = Path(__file__).resolve().parent.parent / "fixtures" / "state_facts" / "recorded.json"
-ALL_STATES_FILE = RECORDED_FILE.with_name("all_states.json")  # every state, recorded for the deployed database
+# Every state, as the API sent it: demo campaigns read it, and the seed job loads it into the deployed database.
+ALL_STATES_FILE = RECORDED_FILE = Path(__file__).resolve().parent.parent / "fixtures" / "state_facts" / "all_states.json"
 MANUAL_REFRESH_GAP = timedelta(seconds=60)  # an editor's refresh is refused when every resource was checked this recently
 FAILURE_BACKOFF_SECONDS = 300.0  # after a failed pull the read path leaves that resource alone for this long
 _LOCK = asyncio.Lock()  # one pull at a time per process: the reads and the scheduler never both download the same resource
@@ -77,19 +77,32 @@ class FactDef:
 
 
 GROUPS: tuple[tuple[v.FactGroupKey, str], ...] = (
-    ("connectivity", "Phones, internet and power"), ("economy", "Income and spending"), ("people", "People and learning"))
+    ("connectivity", "Phones and internet"), ("economy", "Income and spending"), ("homes", "Homes"), ("people", "People and learning"),
+    ("visitors", "Visitors"))
 FACTS: tuple[FactDef, ...] = (
-    FactDef("electricity", "connectivity", "People in homes with electricity", "percent", "electricity"),
     FactDef("women_mobile", "connectivity", "Women with a phone of their own", "percent", "women_mobile"),
     FactDef("women_internet", "connectivity", "Women who have used the internet", "percent", "women_internet"),
     FactDef("men_internet", "connectivity", "Men who have used the internet", "percent", "men_internet"),
     FactDef("teledensity", "connectivity", "Phone connections per 100 people", "per100", "teledensity"),
     FactDef("internet_per100", "connectivity", "Internet subscribers per 100 people", "per100", "internet_per100",
             (("Rural", "internet_per100_rural"), ("Urban", "internet_per100_urban"))),
+    FactDef("home_no_internet", "connectivity", "Households without internet at home", "percent", "home_no_internet",
+            (("Rural", "home_no_internet_rural"), ("Urban", "home_no_internet_urban"))),
+    FactDef("youth_email", "connectivity", "People aged 15 to 29 who can email a file", "percent", "youth_email_attachment"),
     FactDef("nsdp", "economy", "Income per person, per year", "inr", "nsdp"),
     FactDef("mpce", "economy", "Spending per person, per month", "inr", "", (("Rural", "mpce_rural"), ("Urban", "mpce_urban"))),
+    FactDef("women_bank", "economy", "Women with a bank account they use", "percent", "women_bank"),
+    FactDef("health_insurance", "economy", "Households with health insurance", "percent", "health_insurance"),
+    FactDef("electricity", "homes", "People in homes with electricity", "percent", "electricity"),
+    FactDef("clean_fuel", "homes", "Households cooking with clean fuel", "percent", "clean_fuel"),
+    FactDef("sanitation", "homes", "People in homes with improved sanitation", "percent", "sanitation"),
     FactDef("literacy", "people", "People who can read and write", "percent", "literacy"),
     FactDef("urban_share", "people", "People living in towns and cities", "percent", "urban_share"),
+    FactDef("under15", "people", "People under 15", "percent", "under15"),
+    FactDef("schooling", "people", "Adults (15 to 49) with ten or more years of school", "percent", "",
+            (("Women", "women_school10"), ("Men", "men_school10"))),
+    FactDef("tourist_visits_domestic", "visitors", "Domestic tourist visits in a year", "million", "tourist_visits_domestic"),
+    FactDef("tourist_visits_foreign", "visitors", "Foreign tourist visits in a year", "million", "tourist_visits_foreign"),
 )
 
 
@@ -191,7 +204,10 @@ def _error_for(kind: str | None, message: str | None) -> AppError:
 async def _refresh_one(s: AsyncSession, client: DataGovClient, resource: Resource, now: datetime) -> v.StateFactsResourceResult:
     stored, stored_at = (await s.execute(select(func.count(m.StateFactSnapshot.id), func.max(m.StateFactSnapshot.source_updated_at))
                                          .where(m.StateFactSnapshot.resource_id == resource.resource_id))).one()
-    if stored:
+    metrics = set((await s.execute(select(m.StateFactSnapshot.metric).where(
+        m.StateFactSnapshot.resource_id == resource.resource_id).distinct())).scalars())
+    complete = {metric.key for metric in resource.metrics} <= metrics  # a metric added to the catalogue needs one full pull
+    if stored and complete:
         updated, _ = await client.probe(resource)
         if updated is not None and stored_at is not None and updated == stored_at:
             await s.execute(update(m.StateFactSnapshot).where(m.StateFactSnapshot.resource_id == resource.resource_id)

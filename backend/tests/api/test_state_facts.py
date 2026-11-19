@@ -104,7 +104,8 @@ async def test_a_demo_campaign_reads_the_recorded_snapshot_with_no_network_call_
         maharashtra = (await client.get(f"{base}/regions/IN-MH/state-facts")).json()
         andaman = (await client.get(f"{base}/regions/IN-AN/state-facts")).json()
     assert body["mode"] == "demo" and body["region_name"] == "Tamil Nadu" and body["can_refresh"] is False
-    assert [g["key"] for g in body["groups"]] == ["connectivity", "economy", "people"]
+    assert [g["key"] for g in body["groups"]] == ["connectivity", "economy", "homes", "people", "visitors"]
+    assert fact(body, "home_no_internet")["period"] == "2025" and fact(body, "tourist_visits_domestic")["unit"] == "million"
     internet = fact(body, "women_internet")
     assert (internet["value"], internet["national"], internet["period"]) == (46.9, 33.3, "2019-21")
     literacy = fact(body, "literacy")
@@ -118,7 +119,7 @@ async def test_a_demo_campaign_reads_the_recorded_snapshot_with_no_network_call_
     assert refreshed.status_code == 200 and refreshed.json()["groups"] == body["groups"]
     for state in (kerala, maharashtra):  # every demo state is recorded in full, including the table that spells it "Maharastra"
         assert {f["key"] for g in state["groups"] for f in g["facts"]} == {f["key"] for g in body["groups"] for f in g["facts"]}
-    assert andaman["groups"] == [] and andaman["fetched_at"] is not None  # a state outside the recording has no facts, and no error
+    assert andaman["groups"] and andaman["fetched_at"] is not None  # the recording holds every state
     assert await stored_rows() == 0
     assert (await client.get(f"{base}/regions/IN-XX/state-facts")).status_code == 404
 

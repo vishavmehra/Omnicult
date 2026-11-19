@@ -11,8 +11,8 @@ from uuid import UUID
 from app.schemas.common import ApiModel, DataMode
 from app.schemas.lens import RegionCodeStr
 
-FactUnit = Literal["percent", "per100", "inr"]
-FactGroupKey = Literal["connectivity", "economy", "people"]
+FactUnit = Literal["percent", "per100", "inr", "million"]
+FactGroupKey = Literal["connectivity", "economy", "homes", "people", "visitors"]
 
 
 class StateFactPoint(ApiModel):

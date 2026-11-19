@@ -3,114 +3,17 @@
 import { CalendarCheck, GitCompareArrows } from "lucide-react";
 import { useId, useState } from "react";
 
-import { TimelineRibbon, roleColor } from "@/components/creative";
 import { Button } from "@/components/ui/button";
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
 import { SectionTitle } from "@/features/workspaces/parts";
-import { cn } from "@/lib/utils";
 
-import { useCalendar, type LensCalendar, type LensDatedMoment, type LensTimedMoment } from "./api";
+import { useCalendar, type LensTimedMoment } from "./api";
+import { MomentCalendar } from "./calendar-year";
 import { ClaimEntry } from "./claim-entry";
 import { ConflictList } from "./conflicts";
-import { MONTHS, dayLabel, dayOfMonth } from "./format";
-import { Labelled, NativeSelect, SourcesPanel } from "./parts";
+import { MONTHS, dayLabel } from "./format";
+import { DataSources, Labelled, NativeSelect, SourcesPanel } from "./parts";
 import { StateSelect } from "./state-select";
-
-const BASIS: Record<LensDatedMoment["date_basis"], string> = {
-  public_holiday_list: "Public holiday list",
-  source_text: "Date stated by a source",
-};
-
-function windowMonths(from: string, to: string) {
-  const out = new Set<number>();
-  const end = new Date(to);
-  for (let d = new Date(from); d <= end; d = new Date(d.getFullYear(), d.getMonth() + 1, 1)) out.add(d.getMonth() + 1);
-  return out;
-}
-
-function MonthGrid({
-  calendar,
-  selected,
-  onSelect,
-}: {
-  calendar: LensCalendar;
-  selected: string | null;
-  onSelect(key: string): void;
-}) {
-  const inWindow = calendar.window ? windowMonths(calendar.window.date_from, calendar.window.date_to) : new Set<number>();
-  return (
-    <ol aria-label={`Moments in ${calendar.year}`} className="grid gap-px overflow-hidden rounded-card border border-border bg-border sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {calendar.months.map((m) => (
-        <li key={m.month} className="min-w-0 bg-surface px-3 py-2.5">
-          <div className="mb-1.5 flex items-baseline justify-between gap-2">
-            <h3 className="text-[13.5px] font-semibold text-ink">{MONTHS[m.month - 1]}</h3>
-            {inWindow.has(m.month) && (
-              <span className="inline-flex items-center gap-1 text-[11.5px] font-medium text-ink-secondary">
-                <CalendarCheck aria-hidden className="size-3" />
-                Campaign window
-              </span>
-            )}
-          </div>
-          {m.dated.length === 0 ? (
-            <p className="text-[12.5px] text-ink-muted">No dated moment</p>
-          ) : (
-            <ul className="-mx-1.5 space-y-px">
-              {m.dated.map((d) => {
-                const on = d.key === selected;
-                return (
-                  <li key={d.key}>
-                    <button
-                      type="button"
-                      onClick={() => onSelect(d.key)}
-                      aria-pressed={on}
-                      className={cn(
-                        "flex min-h-8 w-full items-start gap-2 rounded-md px-1.5 py-1 text-left text-[13px] hover:bg-surface-muted",
-                        on && "bg-surface-raised outline-1 -outline-offset-1 outline-pop",
-                      )}
-                    >
-                      <span className="type-ledger w-5 shrink-0 text-right text-ink-secondary">{dayOfMonth(d.date)}</span>
-                      <span className="min-w-0 flex-1 text-ink">
-                        {d.name}
-                        {d.in_window && <span className="ml-1.5 rounded-stamp border border-border-strong/60 px-1 text-[11px] text-ink-secondary">In window</span>}
-                        {d.claim.conflict_ids.length > 0 && <GitCompareArrows aria-label="Open conflict" className="ml-1 inline size-3 text-warning" />}
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-function DatedDetail({ moment }: { moment: LensDatedMoment }) {
-  return (
-    <section aria-label={`${moment.name} evidence`} className="space-y-3 rounded-card border border-border bg-surface-muted/50 px-4 py-4">
-      <div>
-        <h3 className="text-[15px] font-semibold text-ink">
-          {moment.name}: {dayLabel(moment.date)}
-        </h3>
-        <p className="type-meta">
-          {BASIS[moment.date_basis]}
-          {moment.in_window === true && " · inside the campaign window"}
-          {moment.in_window === false && " · outside the campaign window"}
-        </p>
-      </div>
-      <ClaimEntry claim={moment.claim} />
-      {moment.also_stated_by.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-[12.5px] text-ink-secondary">Another source gives the same date in its own words. It is a separate claim with its own tags.</p>
-          {moment.also_stated_by.map((c) => (
-            <ClaimEntry key={c.id} claim={c} />
-          ))}
-        </div>
-      )}
-    </section>
-  );
-}
 
 function TimedRow({ moment }: { moment: LensTimedMoment }) {
   const [open, setOpen] = useState(false);
@@ -168,6 +71,11 @@ function TimedRow({ moment }: { moment: LensTimedMoment }) {
   );
 }
 
+/**
+ * Moment Calendar: a state's year as a real calendar (every dated moment by kind, the campaign dates as a band, a card for
+ * each day), an agenda that reads the same moments as a list, the festivals sources describe without an exact date, and
+ * the datasets and sources behind it all.
+ */
 export function CalendarView({
   campaignId,
   region,
@@ -183,87 +91,52 @@ export function CalendarView({
   const yearId = useId();
   const fromId = useId();
   const toId = useId();
-  const [selected, setSelected] = useState<string | null>(null);
   const validWindow = from !== "" && to !== "" && from <= to;
   const cal = useCalendar(campaignId, region, year, validWindow ? from : null, validWindow ? to : null);
   const data = cal.data;
   const thisYear = new Date().getFullYear();
-  const years = Array.from(new Set([...(data?.years_available ?? []), thisYear, thisYear + 1, ...(year ? [year] : [])])).sort();
-  const dated = data?.months.flatMap((m) => m.dated) ?? [];
-  const moment = dated.find((d) => d.key === selected) ?? null;
-  const total = dated.length;
+  const years = Array.from(new Set([thisYear - 1, thisYear, thisYear + 1, thisYear + 2, ...(data?.years_available ?? []), ...(year ? [year] : [])])).sort((a, b) => a - b);
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end gap-3">
         <StateSelect campaignId={campaignId} value={region} onChange={onRegion} className="w-full sm:w-64" />
         <Labelled label="Year" htmlFor={yearId}>
-          <NativeSelect id={yearId} value={year ?? data?.year ?? thisYear} onChange={(e) => setYear(Number(e.target.value))}>
+          <NativeSelect id={yearId} value={year ?? data?.year ?? thisYear} onChange={(e) => setYear(Number(e.target.value))} className="max-sm:h-11">
             {years.map((y) => (
               <option key={y} value={y}>
                 {y}
-                {data && !data.years_available.includes(y) ? " (no data yet)" : ""}
               </option>
             ))}
           </NativeSelect>
         </Labelled>
         <Labelled label="Campaign window from" htmlFor={fromId}>
-          <input id={fromId} type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="clay-well h-8 rounded-lg border border-border-strong/55 bg-surface-muted px-2 text-[13.5px] text-ink" />
+          <input id={fromId} type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="clay-well h-11 rounded-lg border border-border-strong/55 bg-surface-muted px-2 text-[13.5px] text-ink sm:h-8" />
         </Labelled>
         <Labelled label="to" htmlFor={toId}>
-          <input id={toId} type="date" value={to} min={from || undefined} onChange={(e) => setTo(e.target.value)} className="clay-well h-8 rounded-lg border border-border-strong/55 bg-surface-muted px-2 text-[13.5px] text-ink" />
+          <input id={toId} type="date" value={to} min={from || undefined} onChange={(e) => setTo(e.target.value)} className="clay-well h-11 rounded-lg border border-border-strong/55 bg-surface-muted px-2 text-[13.5px] text-ink sm:h-8" />
         </Labelled>
         {(from || to) && (
-          <Button type="button" variant="ghost" onClick={() => { setFrom(""); setTo(""); }}>
+          <Button type="button" variant="ghost" className="max-sm:h-11" onClick={() => { setFrom(""); setTo(""); }}>
             Clear window
           </Button>
         )}
       </div>
       {(from || to) && !validWindow && <p role="status" className="text-[13px] text-warning">Give both dates, with the start on or before the end, to compare moments with a campaign window.</p>}
 
-      {!region && <EmptyState title="Choose a state" description="The calendar shows dated moments for a year, each date a claim with its source, and the festivals sources describe without an exact date." />}
+      {!region && (
+        <EmptyState
+          title="Choose a state"
+          description="The calendar shows every dated moment of a state's year: what each one is, why it matters for a campaign and where its date comes from, with the festivals sources describe without an exact date."
+        />
+      )}
       {region && cal.isPending && <LoadingState label="Reading the calendar…" />}
       {region && cal.isError && <ErrorState error={cal.error} onRetry={() => void cal.refetch()} />}
 
       {data && (
         <>
-          <section aria-labelledby="cal-grid" className="space-y-3">
-            <SectionTitle id="cal-grid" meta={`${total} dated ${total === 1 ? "moment" : "moments"} in ${data.region.name}`}>
-              {data.region.name} in {data.year}
-            </SectionTitle>
-            {data.gaps.length > 0 && (
-              <ul className="space-y-1 text-[13.5px] text-ink-body">
-                {data.gaps.map((g) => (
-                  <li key={g}>{g}</li>
-                ))}
-              </ul>
-            )}
-            {data.window && (
-              <p className="text-[13px] text-ink-secondary">
-                Comparing with the campaign window {dayLabel(data.window.date_from)} to {dayLabel(data.window.date_to)}. Moments inside it are marked.
-              </p>
-            )}
-            {total > 0 && (
-              <TimelineRibbon
-                ariaLabel={`Dated moments in ${data.year}, in date order. Arrow keys move; Enter selects.`}
-                scale="time"
-                formatAt={dayLabel}
-                value={selected ?? dated[0]?.key ?? null}
-                onChange={setSelected}
-                onActivate={setSelected}
-                items={dated.map((d) => ({
-                  id: d.key,
-                  at: d.date,
-                  label: d.name,
-                  detail: [BASIS[d.date_basis], d.in_window === true ? "inside the campaign window" : d.in_window === false ? "outside the campaign window" : null].filter(Boolean).join(", "),
-                  color: d.in_window ? roleColor("lens", true) : undefined,
-                }))}
-                className="pb-1"
-              />
-            )}
-            <MonthGrid calendar={data} selected={selected} onSelect={setSelected} />
-            {moment ? <DatedDetail moment={moment} /> : total > 0 && <p className="text-[13px] text-ink-muted">Select a moment to see its source, date and confidence.</p>}
-          </section>
+          {/* Keyed so a new state, year or window starts on its own opening day and plays its entrance again. */}
+          <MomentCalendar key={`${data.region.code}:${data.year}:${data.window?.date_from ?? ""}:${data.window?.date_to ?? ""}`} data={data} />
 
           <section aria-labelledby="cal-timed" className="space-y-3">
             <SectionTitle id="cal-timed" meta={`${data.timed.length} festivals and moments`}>
@@ -289,7 +162,8 @@ export function CalendarView({
               <ConflictList conflicts={data.conflicts} campaignId={campaignId} workspaceId={data.workspace_id} />
             </section>
           )}
-          <SourcesPanel sources={data.sources} limitations={data.limitations} modeLabel={data.mode_label} />
+          <DataSources sources={data.data_sources} />
+          <SourcesPanel sources={data.sources} limitations={data.limitations} />
         </>
       )}
     </div>

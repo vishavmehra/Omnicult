@@ -13,259 +13,1280 @@
      "population_living_in_households_with_electricity____": 96.8,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "54",
      "women__age_15_49___who_have_ever_used_the_internet____": "33.3",
-     "men__age_15_49___who_have_ever_used_the_internet____": "57.1"
+     "men__age_15_49___who_have_ever_used_the_internet____": "57.1",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "78.6",
+     "households_using_clean_fuel_for_cooking3____": "58.6",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 70.2,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "41",
+     "population_below_age_15_years____": 26.5,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 41,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "50.2"
     },
     {
      "states_uts": "Andaman & Nicobar Islands",
      "population_living_in_households_with_electricity____": 97.6,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "80.8",
      "women__age_15_49___who_have_ever_used_the_internet____": "34.8",
-     "men__age_15_49___who_have_ever_used_the_internet____": "46.5"
+     "men__age_15_49___who_have_ever_used_the_internet____": "46.5",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "89.2",
+     "households_using_clean_fuel_for_cooking3____": "79.8",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 88,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "1.6",
+     "population_below_age_15_years____": 20.8,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 52.5,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "52.3"
     },
     {
      "states_uts": "Andhra Pradesh",
      "population_living_in_households_with_electricity____": 99.5,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "48.9",
      "women__age_15_49___who_have_ever_used_the_internet____": "21",
-     "men__age_15_49___who_have_ever_used_the_internet____": "48.8"
+     "men__age_15_49___who_have_ever_used_the_internet____": "48.8",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "81.8",
+     "households_using_clean_fuel_for_cooking3____": "83.6",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 77.3,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "70.2",
+     "population_below_age_15_years____": 22.2,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 39.6,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "47.9"
     },
     {
      "states_uts": "Arunachal Pradesh",
      "population_living_in_households_with_electricity____": 94.8,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "76.4",
      "women__age_15_49___who_have_ever_used_the_internet____": "52.9",
-     "men__age_15_49___who_have_ever_used_the_internet____": "71.6"
+     "men__age_15_49___who_have_ever_used_the_internet____": "71.6",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "78.2",
+     "households_using_clean_fuel_for_cooking3____": "53.2",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 82.9,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "29.3",
+     "population_below_age_15_years____": 27.1,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 39.4,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "48.2"
     },
     {
      "states_uts": "Assam",
      "population_living_in_households_with_electricity____": 92.6,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "57.2",
      "women__age_15_49___who_have_ever_used_the_internet____": "28.2",
-     "men__age_15_49___who_have_ever_used_the_internet____": "42.3"
+     "men__age_15_49___who_have_ever_used_the_internet____": "42.3",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "78.5",
+     "households_using_clean_fuel_for_cooking3____": "42.1",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 68.6,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "60",
+     "population_below_age_15_years____": 28.3,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 29.6,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "35.5"
     },
     {
      "states_uts": "Bihar",
      "population_living_in_households_with_electricity____": 96.3,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "51.4",
      "women__age_15_49___who_have_ever_used_the_internet____": "20.6",
-     "men__age_15_49___who_have_ever_used_the_internet____": "43.6"
+     "men__age_15_49___who_have_ever_used_the_internet____": "43.6",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "76.7",
+     "households_using_clean_fuel_for_cooking3____": "37.8",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 49.4,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "14.6",
+     "population_below_age_15_years____": 36.4,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 28.8,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "42.8"
     },
     {
      "states_uts": "Chandigarh",
      "population_living_in_households_with_electricity____": 99.9,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "70",
      "women__age_15_49___who_have_ever_used_the_internet____": "75.2",
-     "men__age_15_49___who_have_ever_used_the_internet____": "91.9"
+     "men__age_15_49___who_have_ever_used_the_internet____": "91.9",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "87.1",
+     "households_using_clean_fuel_for_cooking3____": "95.8",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 85,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "32.2",
+     "population_below_age_15_years____": 23.3,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 59.6,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "64.5"
     },
     {
      "states_uts": "Chhattisgarh",
      "population_living_in_households_with_electricity____": 98.8,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "40.7",
      "women__age_15_49___who_have_ever_used_the_internet____": "26.7",
-     "men__age_15_49___who_have_ever_used_the_internet____": "56.3"
+     "men__age_15_49___who_have_ever_used_the_internet____": "56.3",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "80.3",
+     "households_using_clean_fuel_for_cooking3____": "33",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 76.8,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "71.4",
+     "population_below_age_15_years____": 25.4,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 36.9,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "41.5"
     },
     {
      "states_uts": "Dadra and Nagar Haveli & Daman and Diu",
      "population_living_in_households_with_electricity____": 99.7,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "60.5",
      "women__age_15_49___who_have_ever_used_the_internet____": "36.7",
-     "men__age_15_49___who_have_ever_used_the_internet____": "68.3"
+     "men__age_15_49___who_have_ever_used_the_internet____": "68.3",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "83.6",
+     "households_using_clean_fuel_for_cooking3____": "79.9",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 65.8,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "52",
+     "population_below_age_15_years____": 25.4,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 35.8,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "49.4"
     },
     {
      "states_uts": "Goa",
      "population_living_in_households_with_electricity____": 100,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "91.2",
      "women__age_15_49___who_have_ever_used_the_internet____": "73.7",
-     "men__age_15_49___who_have_ever_used_the_internet____": "82.9"
+     "men__age_15_49___who_have_ever_used_the_internet____": "82.9",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "88.3",
+     "households_using_clean_fuel_for_cooking3____": "96.5",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 87.9,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "66",
+     "population_below_age_15_years____": 19.1,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 71.5,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "76.6"
     },
     {
      "states_uts": "Gujarat",
      "population_living_in_households_with_electricity____": 97.6,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "48.8",
      "women__age_15_49___who_have_ever_used_the_internet____": "30.8",
-     "men__age_15_49___who_have_ever_used_the_internet____": "58.9"
+     "men__age_15_49___who_have_ever_used_the_internet____": "58.9",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "70",
+     "households_using_clean_fuel_for_cooking3____": "66.9",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 74,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "39",
+     "population_below_age_15_years____": 24,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 33.8,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "45.6"
     },
     {
      "states_uts": "Haryana",
      "population_living_in_households_with_electricity____": 99.6,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "50.4",
      "women__age_15_49___who_have_ever_used_the_internet____": "48.4",
-     "men__age_15_49___who_have_ever_used_the_internet____": "72.4"
+     "men__age_15_49___who_have_ever_used_the_internet____": "72.4",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "73.6",
+     "households_using_clean_fuel_for_cooking3____": "59.5",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 85,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "25.7",
+     "population_below_age_15_years____": 25.3,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 49.5,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "62.2"
     },
     {
      "states_uts": "Himachal Pradesh",
      "population_living_in_households_with_electricity____": 99.5,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "79.5",
      "women__age_15_49___who_have_ever_used_the_internet____": "49.7",
-     "men__age_15_49___who_have_ever_used_the_internet____": "67.9"
+     "men__age_15_49___who_have_ever_used_the_internet____": "67.9",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "83.1",
+     "households_using_clean_fuel_for_cooking3____": "51.7",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 81.8,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "34.5",
+     "population_below_age_15_years____": 21.8,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 65.9,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "71.3"
     },
     {
      "states_uts": "Jammu & Kashmir",
      "population_living_in_households_with_electricity____": 99.3,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "75.2",
      "women__age_15_49___who_have_ever_used_the_internet____": "43.3",
-     "men__age_15_49___who_have_ever_used_the_internet____": "72"
+     "men__age_15_49___who_have_ever_used_the_internet____": "72",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "84.9",
+     "households_using_clean_fuel_for_cooking3____": "69.2",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 75.7,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "12.7",
+     "population_below_age_15_years____": 24.1,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 51.3,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "68.2"
     },
     {
      "states_uts": "Jharkhand",
      "population_living_in_households_with_electricity____": 94.3,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "49",
      "women__age_15_49___who_have_ever_used_the_internet____": "31.4",
-     "men__age_15_49___who_have_ever_used_the_internet____": "58"
+     "men__age_15_49___who_have_ever_used_the_internet____": "58",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "79.6",
+     "households_using_clean_fuel_for_cooking3____": "31.9",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 56.7,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "50.3",
+     "population_below_age_15_years____": 31.3,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 33.2,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "46.6"
     },
     {
      "states_uts": "Karnataka",
      "population_living_in_households_with_electricity____": 99.1,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "61.8",
      "women__age_15_49___who_have_ever_used_the_internet____": "35",
-     "men__age_15_49___who_have_ever_used_the_internet____": "62.4"
+     "men__age_15_49___who_have_ever_used_the_internet____": "62.4",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "88.7",
+     "households_using_clean_fuel_for_cooking3____": "79.7",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 74.8,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "28.1",
+     "population_below_age_15_years____": 22.9,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 50.2,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "56.5"
     },
     {
      "states_uts": "Kerala",
      "population_living_in_households_with_electricity____": 99.6,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "86.6",
      "women__age_15_49___who_have_ever_used_the_internet____": "61.1",
-     "men__age_15_49___who_have_ever_used_the_internet____": "76.1"
+     "men__age_15_49___who_have_ever_used_the_internet____": "76.1",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "78.5",
+     "households_using_clean_fuel_for_cooking3____": "72.1",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 98.7,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "51.5",
+     "population_below_age_15_years____": 20.6,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 77,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "73.3"
     },
     {
      "states_uts": "Ladakh",
      "population_living_in_households_with_electricity____": 99.5,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "81.2",
      "women__age_15_49___who_have_ever_used_the_internet____": "56.4",
-     "men__age_15_49___who_have_ever_used_the_internet____": "67.8"
+     "men__age_15_49___who_have_ever_used_the_internet____": "67.8",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "88.4",
+     "households_using_clean_fuel_for_cooking3____": "76.3",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 42.3,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "14.9",
+     "population_below_age_15_years____": 22.8,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 50,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "72.7"
     },
     {
      "states_uts": "Lakshadweep",
      "population_living_in_households_with_electricity____": 99.8,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "84",
      "women__age_15_49___who_have_ever_used_the_internet____": "56.4",
-     "men__age_15_49___who_have_ever_used_the_internet____": "80.3"
+     "men__age_15_49___who_have_ever_used_the_internet____": "80.3",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "66.9",
+     "households_using_clean_fuel_for_cooking3____": "59.4",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 99.8,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "60.1",
+     "population_below_age_15_years____": 22.3,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 67.8,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "80.9"
     },
     {
      "states_uts": "Madhya Pradesh",
      "population_living_in_households_with_electricity____": 98.4,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "38.5",
      "women__age_15_49___who_have_ever_used_the_internet____": "26.9",
-     "men__age_15_49___who_have_ever_used_the_internet____": "55.7"
+     "men__age_15_49___who_have_ever_used_the_internet____": "55.7",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "74.7",
+     "households_using_clean_fuel_for_cooking3____": "40.1",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 65.1,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "38.1",
+     "population_below_age_15_years____": 26.5,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 29.3,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "39.9"
     },
     {
      "states_uts": "Maharastra",
      "population_living_in_households_with_electricity____": 97.8,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "54.8",
      "women__age_15_49___who_have_ever_used_the_internet____": "38",
-     "men__age_15_49___who_have_ever_used_the_internet____": "61.5"
+     "men__age_15_49___who_have_ever_used_the_internet____": "61.5",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "72.8",
+     "households_using_clean_fuel_for_cooking3____": "79.7",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 72,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "20",
+     "population_below_age_15_years____": 22.8,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 50.4,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "61"
     },
     {
      "states_uts": "Manipur",
      "population_living_in_households_with_electricity____": 98.1,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "72.2",
      "women__age_15_49___who_have_ever_used_the_internet____": "44.8",
-     "men__age_15_49___who_have_ever_used_the_internet____": "73.9"
+     "men__age_15_49___who_have_ever_used_the_internet____": "73.9",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "74",
+     "households_using_clean_fuel_for_cooking3____": "70.4",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 64.9,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "14.2",
+     "population_below_age_15_years____": 28,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 48.1,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "58.7"
     },
     {
      "states_uts": "Meghalaya",
      "population_living_in_households_with_electricity____": 91.9,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "67.5",
      "women__age_15_49___who_have_ever_used_the_internet____": "34.7",
-     "men__age_15_49___who_have_ever_used_the_internet____": "42.1"
+     "men__age_15_49___who_have_ever_used_the_internet____": "42.1",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "70.4",
+     "households_using_clean_fuel_for_cooking3____": "33.7",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 82.9,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "63.5",
+     "population_below_age_15_years____": 37.3,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 35.1,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "34.7"
     },
     {
      "states_uts": "Mizoram",
      "population_living_in_households_with_electricity____": 98.2,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "82.3",
      "women__age_15_49___who_have_ever_used_the_internet____": "67.6",
-     "men__age_15_49___who_have_ever_used_the_internet____": "79.7"
+     "men__age_15_49___who_have_ever_used_the_internet____": "79.7",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "80.7",
+     "households_using_clean_fuel_for_cooking3____": "83.8",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 95.3,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "46.4",
+     "population_below_age_15_years____": 27.3,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 50,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "49.1"
     },
     {
      "states_uts": "Nagaland",
      "population_living_in_households_with_electricity____": 98.6,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "82.5",
      "women__age_15_49___who_have_ever_used_the_internet____": "49.9",
-     "men__age_15_49___who_have_ever_used_the_internet____": "64.6"
+     "men__age_15_49___who_have_ever_used_the_internet____": "64.6",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "63.7",
+     "households_using_clean_fuel_for_cooking3____": "43",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 87.7,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "20.5",
+     "population_below_age_15_years____": 24.7,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 44.4,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "53.1"
     },
     {
      "states_uts": "NCT of Delhi",
      "population_living_in_households_with_electricity____": 99.9,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "73.8",
      "women__age_15_49___who_have_ever_used_the_internet____": "63.8",
-     "men__age_15_49___who_have_ever_used_the_internet____": "85.2"
+     "men__age_15_49___who_have_ever_used_the_internet____": "85.2",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "72.5",
+     "households_using_clean_fuel_for_cooking3____": "98.9",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 81.1,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "25",
+     "population_below_age_15_years____": 24.3,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 59.7,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "60.9"
     },
     {
      "states_uts": "Odisha",
      "population_living_in_households_with_electricity____": 97,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "50.1",
      "women__age_15_49___who_have_ever_used_the_internet____": "24.9",
-     "men__age_15_49___who_have_ever_used_the_internet____": "50.7"
+     "men__age_15_49___who_have_ever_used_the_internet____": "50.7",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "86.5",
+     "households_using_clean_fuel_for_cooking3____": "34.7",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 60.5,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "47.9",
+     "population_below_age_15_years____": 24.9,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 33,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "38.6"
     },
     {
      "states_uts": "Puducherry",
      "population_living_in_households_with_electricity____": 99.9,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "82.9",
      "women__age_15_49___who_have_ever_used_the_internet____": "61.9",
-     "men__age_15_49___who_have_ever_used_the_internet____": "80.7"
+     "men__age_15_49___who_have_ever_used_the_internet____": "80.7",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "92.6",
+     "households_using_clean_fuel_for_cooking3____": "92.3",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 84.9,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "30.1",
+     "population_below_age_15_years____": 20.4,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 65.4,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "74.2"
     },
     {
      "states_uts": "Punjab",
      "population_living_in_households_with_electricity____": 99.7,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "61.2",
      "women__age_15_49___who_have_ever_used_the_internet____": "54.8",
-     "men__age_15_49___who_have_ever_used_the_internet____": "78.2"
+     "men__age_15_49___who_have_ever_used_the_internet____": "78.2",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "81.6",
+     "households_using_clean_fuel_for_cooking3____": "76.7",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 86.6,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "25.2",
+     "population_below_age_15_years____": 22,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 56,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "58.7"
     },
     {
      "states_uts": "Rajasthan",
      "population_living_in_households_with_electricity____": 98.1,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "50.2",
      "women__age_15_49___who_have_ever_used_the_internet____": "36.9",
-     "men__age_15_49___who_have_ever_used_the_internet____": "65.2"
+     "men__age_15_49___who_have_ever_used_the_internet____": "65.2",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "79.6",
+     "households_using_clean_fuel_for_cooking3____": "41.4",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 71.1,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "87.8",
+     "population_below_age_15_years____": 28.3,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 33.4,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "51.9"
     },
     {
      "states_uts": "Sikkim",
      "population_living_in_households_with_electricity____": 99.3,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "88.6",
      "women__age_15_49___who_have_ever_used_the_internet____": "76.7",
-     "men__age_15_49___who_have_ever_used_the_internet____": "78.2"
+     "men__age_15_49___who_have_ever_used_the_internet____": "78.2",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "76.4",
+     "households_using_clean_fuel_for_cooking3____": "78.4",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 87.3,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "25.7",
+     "population_below_age_15_years____": 19.5,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 49,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "55"
     },
     {
      "states_uts": "Tamil Nadu",
      "population_living_in_households_with_electricity____": 99.3,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "74.6",
      "women__age_15_49___who_have_ever_used_the_internet____": "46.9",
-     "men__age_15_49___who_have_ever_used_the_internet____": "70.2"
+     "men__age_15_49___who_have_ever_used_the_internet____": "70.2",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "92.2",
+     "households_using_clean_fuel_for_cooking3____": "82.9",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 72.6,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "66.5",
+     "population_below_age_15_years____": 21,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 56.6,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "59.1"
     },
     {
      "states_uts": "Telangana",
      "population_living_in_households_with_electricity____": 99.6,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "60",
      "women__age_15_49___who_have_ever_used_the_internet____": "26.5",
-     "men__age_15_49___who_have_ever_used_the_internet____": "57.4"
+     "men__age_15_49___who_have_ever_used_the_internet____": "57.4",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "84.4",
+     "households_using_clean_fuel_for_cooking3____": "91.8",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 76.2,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "60.8",
+     "population_below_age_15_years____": 22.5,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 45.5,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "61.2"
     },
     {
      "states_uts": "Tripura",
      "population_living_in_households_with_electricity____": 98.2,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "53.1",
      "women__age_15_49___who_have_ever_used_the_internet____": "22.9",
-     "men__age_15_49___who_have_ever_used_the_internet____": "45.7"
+     "men__age_15_49___who_have_ever_used_the_internet____": "45.7",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "76.9",
+     "households_using_clean_fuel_for_cooking3____": "45.3",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 73.6,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "33",
+     "population_below_age_15_years____": 23.7,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 23.2,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "29.4"
     },
     {
      "states_uts": "Uttar Pradesh",
      "population_living_in_households_with_electricity____": 91,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "46.5",
      "women__age_15_49___who_have_ever_used_the_internet____": "30.6",
-     "men__age_15_49___who_have_ever_used_the_internet____": "59.1"
+     "men__age_15_49___who_have_ever_used_the_internet____": "59.1",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "75.4",
+     "households_using_clean_fuel_for_cooking3____": "49.5",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 68.8,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "15.9",
+     "population_below_age_15_years____": 31,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 39.3,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "48.6"
     },
     {
      "states_uts": "Uttarakhand",
      "population_living_in_households_with_electricity____": 99.6,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "60.9",
      "women__age_15_49___who_have_ever_used_the_internet____": "45.1",
-     "men__age_15_49___who_have_ever_used_the_internet____": "74.6"
+     "men__age_15_49___who_have_ever_used_the_internet____": "74.6",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "80.2",
+     "households_using_clean_fuel_for_cooking3____": "59.2",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 78.8,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "62.5",
+     "population_below_age_15_years____": 26.3,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 50.4,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "59.8"
     },
     {
      "states_uts": "West Bengal",
      "population_living_in_households_with_electricity____": 97.5,
      "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "50.1",
      "women__age_15_49___who_have_ever_used_the_internet____": "25.5",
-     "men__age_15_49___who_have_ever_used_the_internet____": "46.7"
+     "men__age_15_49___who_have_ever_used_the_internet____": "46.7",
+     "women__age_15_49_years__having_a_bank_or_savings_account_that_they_themselves_use____": "76.5",
+     "households_using_clean_fuel_for_cooking3____": "40.2",
+     "population_living_in_households_that_use_an_improved_sanitation_facility2____": 68,
+     "households_with_any_usual_member_covered_under_a_health_insurance_financing_scheme____": "29.3",
+     "population_below_age_15_years____": 23.5,
+     "_women__age_15_49___with_10_or_more_years_of_schooling____": 32.9,
+     "men__age_15_49___with_10_or_more_years_of_schooling____": "34.7"
+    }
+   ]
+  },
+  "home_internet": {
+   "resource_id": "ec6c66b2-ff53-48b5-b3cc-f1dac5283d2c",
+   "title": "State/UT-wise Percentage of Households without Internet Facility within Household Premises (Rajya Sabha, 29 January 2026)",
+   "total": 37,
+   "updated_date": "2026-10-14T18:01:44+00:00",
+   "records": [
+    {
+     "state__ut": "Andhra Pradesh",
+     "overall": 22.3,
+     "rural": 26.7,
+     "urban": 14.6
+    },
+    {
+     "state__ut": "Arunachal Pradesh",
+     "overall": 22.2,
+     "rural": 26.7,
+     "urban": 9
+    },
+    {
+     "state__ut": "Assam",
+     "overall": 9.1,
+     "rural": 9.7,
+     "urban": 5.6
+    },
+    {
+     "state__ut": "Bihar",
+     "overall": 11.7,
+     "rural": 12.3,
+     "urban": 7.1
+    },
+    {
+     "state__ut": "Chhattisgarh",
+     "overall": 15.4,
+     "rural": 17.2,
+     "urban": 8.6
+    },
+    {
+     "state__ut": "Delhi",
+     "overall": 2.6,
+     "rural": 5.2,
+     "urban": 2.6
+    },
+    {
+     "state__ut": "Goa",
+     "overall": 9.2,
+     "rural": 15.5,
+     "urban": 4.7
+    },
+    {
+     "state__ut": "Gujarat",
+     "overall": 10.5,
+     "rural": 14.4,
+     "urban": 7
+    },
+    {
+     "state__ut": "Haryana",
+     "overall": 8.4,
+     "rural": 7.5,
+     "urban": 9.4
+    },
+    {
+     "state__ut": "Himachal Pradesh",
+     "overall": 7,
+     "rural": 8.6,
+     "urban": 1.3
+    },
+    {
+     "state__ut": "Jharkhand",
+     "overall": 14.8,
+     "rural": 16.6,
+     "urban": 8.4
+    },
+    {
+     "state__ut": "Karnataka",
+     "overall": 10.9,
+     "rural": 13.7,
+     "urban": 7.9
+    },
+    {
+     "state__ut": "Kerala",
+     "overall": 8.3,
+     "rural": 10.4,
+     "urban": 6.4
+    },
+    {
+     "state__ut": "Madhya Pradesh",
+     "overall": 15.4,
+     "rural": 17.3,
+     "urban": 11.4
+    },
+    {
+     "state__ut": "Maharashtra",
+     "overall": 10.4,
+     "rural": 15.3,
+     "urban": 5.2
+    },
+    {
+     "state__ut": "Manipur",
+     "overall": 2.6,
+     "rural": 3.2,
+     "urban": 1.2
+    },
+    {
+     "state__ut": "Meghalaya",
+     "overall": 8.8,
+     "rural": 9.8,
+     "urban": 4.6
+    },
+    {
+     "state__ut": "Mizoram",
+     "overall": 3.2,
+     "rural": 5.3,
+     "urban": 0.8
+    },
+    {
+     "state__ut": "Nagaland",
+     "overall": 11.6,
+     "rural": 11.8,
+     "urban": 11.2
+    },
+    {
+     "state__ut": "Odisha",
+     "overall": 22,
+     "rural": 24.8,
+     "urban": 8.6
+    },
+    {
+     "state__ut": "Punjab",
+     "overall": 10.6,
+     "rural": 12.5,
+     "urban": 8.3
+    },
+    {
+     "state__ut": "Rajasthan",
+     "overall": 13.2,
+     "rural": 17.2,
+     "urban": 4.6
+    },
+    {
+     "state__ut": "Sikkim",
+     "overall": 2.4,
+     "rural": 3.5,
+     "urban": "NA"
+    },
+    {
+     "state__ut": "Tamil Nadu",
+     "overall": 21.1,
+     "rural": 28.2,
+     "urban": 13.4
+    },
+    {
+     "state__ut": "Telangana",
+     "overall": 15.1,
+     "rural": 23.9,
+     "urban": 5.3
+    },
+    {
+     "state__ut": "Tripura",
+     "overall": 18.8,
+     "rural": 21,
+     "urban": 12.1
+    },
+    {
+     "state__ut": "Uttarakhand",
+     "overall": 8.5,
+     "rural": 10.4,
+     "urban": 6
+    },
+    {
+     "state__ut": "Uttar Pradesh",
+     "overall": 13.9,
+     "rural": 14.9,
+     "urban": 11
+    },
+    {
+     "state__ut": "West Bengal",
+     "overall": 16,
+     "rural": 18.5,
+     "urban": 10.9
+    },
+    {
+     "state__ut": "Andaman and Nicobar Islands",
+     "overall": 6.3,
+     "rural": 9,
+     "urban": 3.4
+    },
+    {
+     "state__ut": "Chandigarh",
+     "overall": "NA",
+     "rural": "NA",
+     "urban": "NA"
+    },
+    {
+     "state__ut": "Dadra and Nagar Haveli and Daman and Diu",
+     "overall": 5.3,
+     "rural": 18.6,
+     "urban": 0.8
+    },
+    {
+     "state__ut": "Jammu and Kashmir",
+     "overall": 7.3,
+     "rural": 7.5,
+     "urban": 6.6
+    },
+    {
+     "state__ut": "Ladakh",
+     "overall": "NA",
+     "rural": "NA",
+     "urban": "NA"
+    },
+    {
+     "state__ut": "Lakshadweep",
+     "overall": "NA",
+     "rural": "NA",
+     "urban": "NA"
+    },
+    {
+     "state__ut": "Puducherry",
+     "overall": 18.1,
+     "rural": 21.9,
+     "urban": 16.5
+    },
+    {
+     "state__ut": "All-India",
+     "overall": 13.7,
+     "rural": 16.7,
+     "urban": 8.4
+    }
+   ]
+  },
+  "tourism": {
+   "resource_id": "515c5fea-46b9-438e-b8c3-db01d4afc8c4",
+   "title": "State/UT-wise Details of Domestic and Foreign Tourist Visits during 2024-25",
+   "total": 42,
+   "updated_date": "2026-08-24T18:42:09+00:00",
+   "records": [
+    {
+     "state_ut": "Chandigarh",
+     "_2023___domestic__in_million_": 0.366,
+     "_2023___foreign__in_million_": 0.031,
+     "_2024___domestic__in_million_": 0.999,
+     "_2024___foreign__in_million_": 0.039
+    },
+    {
+     "state_ut": "Delhi",
+     "_2023___domestic__in_million_": 39.415,
+     "_2023___foreign__in_million_": 1.828,
+     "_2024___domestic__in_million_": 46.257,
+     "_2024___foreign__in_million_": 1.999
+    },
+    {
+     "state_ut": "Haryana",
+     "_2023___domestic__in_million_": 2.012,
+     "_2023___foreign__in_million_": 0.001,
+     "_2024___domestic__in_million_": 1.892,
+     "_2024___foreign__in_million_": 0.001
+    },
+    {
+     "state_ut": "Himachal Pradesh",
+     "_2023___domestic__in_million_": 15.942,
+     "_2023___foreign__in_million_": 0.063,
+     "_2024___domestic__in_million_": 18.042,
+     "_2024___foreign__in_million_": 0.083
+    },
+    {
+     "state_ut": "Jammu and Kashmir",
+     "_2023___domestic__in_million_": 20.679,
+     "_2023___foreign__in_million_": 0.055,
+     "_2024___domestic__in_million_": 23.013,
+     "_2024___foreign__in_million_": 0.065
+    },
+    {
+     "state_ut": "Ladakh",
+     "_2023___domestic__in_million_": 0.4891,
+     "_2023___foreign__in_million_": 0.036,
+     "_2024___domestic__in_million_": 0.3367,
+     "_2024___foreign__in_million_": 0.0397
+    },
+    {
+     "state_ut": "Punjab",
+     "_2023___domestic__in_million_": 35.708,
+     "_2023___foreign__in_million_": 0.742,
+     "_2024___domestic__in_million_": 27.745,
+     "_2024___foreign__in_million_": 0.542
+    },
+    {
+     "state_ut": "Rajasthan",
+     "_2023___domestic__in_million_": 179.052,
+     "_2023___foreign__in_million_": 1.7,
+     "_2024___domestic__in_million_": 230.084,
+     "_2024___foreign__in_million_": 2.072
+    },
+    {
+     "state_ut": "Uttar Pradesh",
+     "_2023___domestic__in_million_": 478.526,
+     "_2023___foreign__in_million_": 1.602,
+     "_2024___domestic__in_million_": 646.807,
+     "_2024___foreign__in_million_": 2.269
+    },
+    {
+     "state_ut": "Uttarakhand",
+     "_2023___domestic__in_million_": 57.571,
+     "_2023___foreign__in_million_": 0.143,
+     "_2024___domestic__in_million_": 60.849,
+     "_2024___foreign__in_million_": 0.139
+    },
+    {
+     "state_ut": "Total",
+     "_2023___domestic__in_million_": 829.759,
+     "_2023___foreign__in_million_": 6.202,
+     "_2024___domestic__in_million_": 1056.025,
+     "_2024___foreign__in_million_": 7.25
+    },
+    {
+     "state_ut": "Andaman and Nicobar Islands",
+     "_2023___domestic__in_million_": 0.323,
+     "_2023___foreign__in_million_": 0.009,
+     "_2024___domestic__in_million_": 0.71,
+     "_2024___foreign__in_million_": 0.011
+    },
+    {
+     "state_ut": "Bihar",
+     "_2023___domestic__in_million_": 81.586,
+     "_2023___foreign__in_million_": 0.547,
+     "_2024___domestic__in_million_": 65.463,
+     "_2024___foreign__in_million_": 0.737
+    },
+    {
+     "state_ut": "Jharkhand",
+     "_2023___domestic__in_million_": 35.776,
+     "_2023___foreign__in_million_": 0.189,
+     "_2024___domestic__in_million_": 54.041,
+     "_2024___foreign__in_million_": 0.045
+    },
+    {
+     "state_ut": "Odisha",
+     "_2023___domestic__in_million_": 9.725,
+     "_2023___foreign__in_million_": 0.045,
+     "_2024___domestic__in_million_": 10.999,
+     "_2024___foreign__in_million_": 0.0879
+    },
+    {
+     "state_ut": "West Bengal",
+     "_2023___domestic__in_million_": 145.669,
+     "_2023___foreign__in_million_": 2.707,
+     "_2024___domestic__in_million_": 184.476,
+     "_2024___foreign__in_million_": 3.124
+    },
+    {
+     "state_ut": "Total",
+     "_2023___domestic__in_million_": 273.079,
+     "_2023___foreign__in_million_": 3.497,
+     "_2024___domestic__in_million_": 315.689,
+     "_2024___foreign__in_million_": 4.006
+    },
+    {
+     "state_ut": "Arunachal Pradesh",
+     "_2023___domestic__in_million_": 1.041,
+     "_2023___foreign__in_million_": 0.004,
+     "_2024___domestic__in_million_": 0.87,
+     "_2024___foreign__in_million_": 0.005
+    },
+    {
+     "state_ut": "Assam",
+     "_2023___domestic__in_million_": 7.613,
+     "_2023___foreign__in_million_": 0.024,
+     "_2024___domestic__in_million_": 7.608,
+     "_2024___foreign__in_million_": 0.027
+    },
+    {
+     "state_ut": "Manipur",
+     "_2023___domestic__in_million_": 0.058,
+     "_2023___foreign__in_million_": 0.004,
+     "_2024___domestic__in_million_": 0.029,
+     "_2024___foreign__in_million_": 0.003
+    },
+    {
+     "state_ut": "Meghalaya",
+     "_2023___domestic__in_million_": 1.403,
+     "_2023___foreign__in_million_": 0.02,
+     "_2024___domestic__in_million_": 1.586,
+     "_2024___foreign__in_million_": 0.023
+    },
+    {
+     "state_ut": "Mizoram",
+     "_2023___domestic__in_million_": 0.209,
+     "_2023___foreign__in_million_": 0.004,
+     "_2024___domestic__in_million_": 0.422,
+     "_2024___foreign__in_million_": 0.005
+    },
+    {
+     "state_ut": "Nagaland",
+     "_2023___domestic__in_million_": 0.1,
+     "_2023___foreign__in_million_": 0.005,
+     "_2024___domestic__in_million_": 0.126,
+     "_2024___foreign__in_million_": 0.006
+    },
+    {
+     "state_ut": "Sikkim",
+     "_2023___domestic__in_million_": 1.321,
+     "_2023___foreign__in_million_": 0.094,
+     "_2024___domestic__in_million_": 1.54,
+     "_2024___foreign__in_million_": 0.085
+    },
+    {
+     "state_ut": "Tripura",
+     "_2023___domestic__in_million_": 0.366,
+     "_2023___foreign__in_million_": 0.067,
+     "_2024___domestic__in_million_": 0.601,
+     "_2024___foreign__in_million_": 0.091
+    },
+    {
+     "state_ut": "Total",
+     "_2023___domestic__in_million_": 12.11,
+     "_2023___foreign__in_million_": 0.221,
+     "_2024___domestic__in_million_": 12.781,
+     "_2024___foreign__in_million_": 0.244
+    },
+    {
+     "state_ut": "Chhattisgarh",
+     "_2023___domestic__in_million_": 26.022,
+     "_2023___foreign__in_million_": 0.001,
+     "_2024___domestic__in_million_": 31.488,
+     "_2024___foreign__in_million_": 0.003
+    },
+    {
+     "state_ut": "Goa",
+     "_2023___domestic__in_million_": 8.175,
+     "_2023___foreign__in_million_": 0.453,
+     "_2024___domestic__in_million_": 9.941,
+     "_2024___foreign__in_million_": 0.468
+    },
+    {
+     "state_ut": "Gujarat",
+     "_2023___domestic__in_million_": 178.067,
+     "_2023___foreign__in_million_": 2.807,
+     "_2024___domestic__in_million_": 184.014,
+     "_2024___foreign__in_million_": 2.274
+    },
+    {
+     "state_ut": "Madhya Pradesh",
+     "_2023___domestic__in_million_": 111.946,
+     "_2023___foreign__in_million_": 0.183,
+     "_2024___domestic__in_million_": 133.176,
+     "_2024___foreign__in_million_": 0.168
+    },
+    {
+     "state_ut": "Maharashtra",
+     "_2023___domestic__in_million_": 161.36,
+     "_2023___foreign__in_million_": 3.388,
+     "_2024___domestic__in_million_": 189.372,
+     "_2024___foreign__in_million_": 3.705
+    },
+    {
+     "state_ut": "Dadra and Nagar Haveli and Daman and Diu",
+     "_2023___domestic__in_million_": 1.004,
+     "_2023___foreign__in_million_": 0.004,
+     "_2024___domestic__in_million_": 1.359,
+     "_2024___foreign__in_million_": 0.003
+    },
+    {
+     "state_ut": "Total",
+     "_2023___domestic__in_million_": 486.574,
+     "_2023___foreign__in_million_": 6.835,
+     "_2024___domestic__in_million_": 549.35,
+     "_2024___foreign__in_million_": 6.621
+    },
+    {
+     "state_ut": "Andhra Pradesh",
+     "_2023___domestic__in_million_": 254.706,
+     "_2023___foreign__in_million_": 0.06,
+     "_2024___domestic__in_million_": 290.266,
+     "_2024___foreign__in_million_": 0.262
+    },
+    {
+     "state_ut": "Karnataka",
+     "_2023___domestic__in_million_": 284.121,
+     "_2023___foreign__in_million_": 0.409,
+     "_2024___domestic__in_million_": 304.564,
+     "_2024___foreign__in_million_": 0.485
+    },
+    {
+     "state_ut": "Kerala",
+     "_2023___domestic__in_million_": 21.872,
+     "_2023___foreign__in_million_": 0.649,
+     "_2024___domestic__in_million_": 22.247,
+     "_2024___foreign__in_million_": 0.738
+    },
+    {
+     "state_ut": "Lakshadweep",
+     "_2023___domestic__in_million_": 0.046,
+     "_2023___foreign__in_million_": 0.001,
+     "_2024___domestic__in_million_": 0.067,
+     "_2024___foreign__in_million_": 0.001
+    },
+    {
+     "state_ut": "Puducherry",
+     "_2023___domestic__in_million_": 2.092,
+     "_2023___foreign__in_million_": 0.031,
+     "_2024___domestic__in_million_": 2.12,
+     "_2024___foreign__in_million_": 0.018
+    },
+    {
+     "state_ut": "Tamil Nadu",
+     "_2023___domestic__in_million_": 286.012,
+     "_2023___foreign__in_million_": 1.175,
+     "_2024___domestic__in_million_": 306.842,
+     "_2024___foreign__in_million_": 1.161
+    },
+    {
+     "state_ut": "Telangana",
+     "_2023___domestic__in_million_": 58.448,
+     "_2023___foreign__in_million_": 0.161,
+     "_2024___domestic__in_million_": 88.24,
+     "_2024___foreign__in_million_": 0.155
+    },
+    {
+     "state_ut": "Total",
+     "_2023___domestic__in_million_": 907.295,
+     "_2023___foreign__in_million_": 2.487,
+     "_2024___domestic__in_million_": 1014.346,
+     "_2024___foreign__in_million_": 2.821
+    },
+    {
+     "state_ut": "Overall",
+     "_2023___domestic__in_million_": 2508.818,
+     "_2023___foreign__in_million_": 19.241,
+     "_2024___domestic__in_million_": 2948.191,
+     "_2024___foreign__in_million_": 20.942
+    }
+   ]
+  },
+  "ict_youth": {
+   "resource_id": "28969f46-bcdf-4c38-9b8c-0d2b178e7b46",
+   "title": "State/UT-wise Persons Aged 15-29 Years with ICT Skills, 2020-21",
+   "total": 37,
+   "updated_date": "2024-02-23T14:52:49+00:00",
+   "records": [
+    {
+     "state_uts": "Andhra Pradesh",
+     "copy_or_move_a_file_or_folder": 45.6,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 36.4,
+     "find__download__install_and_configure_software": 18.4
+    },
+    {
+     "state_uts": "Arunachal Pradesh",
+     "copy_or_move_a_file_or_folder": 43.9,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 33.2,
+     "find__download__install_and_configure_software": 21.5
+    },
+    {
+     "state_uts": "Assam",
+     "copy_or_move_a_file_or_folder": 23.6,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 13.5,
+     "find__download__install_and_configure_software": 12.3
+    },
+    {
+     "state_uts": "Bihar",
+     "copy_or_move_a_file_or_folder": 26.7,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 14.7,
+     "find__download__install_and_configure_software": 9.6
+    },
+    {
+     "state_uts": "Chhattisgarh",
+     "copy_or_move_a_file_or_folder": 28.2,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 18.4,
+     "find__download__install_and_configure_software": 16.6
+    },
+    {
+     "state_uts": "Delhi",
+     "copy_or_move_a_file_or_folder": 57.7,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 44,
+     "find__download__install_and_configure_software": 35.1
+    },
+    {
+     "state_uts": "Goa",
+     "copy_or_move_a_file_or_folder": 79.5,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 52.9,
+     "find__download__install_and_configure_software": 33.5
+    },
+    {
+     "state_uts": "Gujarat",
+     "copy_or_move_a_file_or_folder": 50.8,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 29.7,
+     "find__download__install_and_configure_software": 20.6
+    },
+    {
+     "state_uts": "Haryana",
+     "copy_or_move_a_file_or_folder": 55,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 30.7,
+     "find__download__install_and_configure_software": 23.2
+    },
+    {
+     "state_uts": "Himachal Pradesh",
+     "copy_or_move_a_file_or_folder": 74,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 46.3,
+     "find__download__install_and_configure_software": 34.4
+    },
+    {
+     "state_uts": "Jharkhand",
+     "copy_or_move_a_file_or_folder": 27.2,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 14.7,
+     "find__download__install_and_configure_software": 15.2
+    },
+    {
+     "state_uts": "Karnataka",
+     "copy_or_move_a_file_or_folder": 64.4,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 45,
+     "find__download__install_and_configure_software": 31
+    },
+    {
+     "state_uts": "Kerala",
+     "copy_or_move_a_file_or_folder": 90.3,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 73.3,
+     "find__download__install_and_configure_software": 59.7
+    },
+    {
+     "state_uts": "MadhyaPradesh",
+     "copy_or_move_a_file_or_folder": 26.6,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 15.4,
+     "find__download__install_and_configure_software": 8.9
+    },
+    {
+     "state_uts": "Maharashtra",
+     "copy_or_move_a_file_or_folder": 54.3,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 35.8,
+     "find__download__install_and_configure_software": 30.2
+    },
+    {
+     "state_uts": "Manipur",
+     "copy_or_move_a_file_or_folder": 52.3,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 42.1,
+     "find__download__install_and_configure_software": 34
+    },
+    {
+     "state_uts": "Meghalaya",
+     "copy_or_move_a_file_or_folder": 43.1,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 17.7,
+     "find__download__install_and_configure_software": 20.5
+    },
+    {
+     "state_uts": "Mizoram",
+     "copy_or_move_a_file_or_folder": 60.5,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 39.5,
+     "find__download__install_and_configure_software": 35.9
+    },
+    {
+     "state_uts": "Nagaland",
+     "copy_or_move_a_file_or_folder": 60,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 35.9,
+     "find__download__install_and_configure_software": 36.5
+    },
+    {
+     "state_uts": "Odisha",
+     "copy_or_move_a_file_or_folder": 32.3,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 19.3,
+     "find__download__install_and_configure_software": 16.5
+    },
+    {
+     "state_uts": "Punjab",
+     "copy_or_move_a_file_or_folder": 60.7,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 28.7,
+     "find__download__install_and_configure_software": 27.4
+    },
+    {
+     "state_uts": "Rajasthan",
+     "copy_or_move_a_file_or_folder": 34,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 23.3,
+     "find__download__install_and_configure_software": 14.1
+    },
+    {
+     "state_uts": "Sikkim",
+     "copy_or_move_a_file_or_folder": 78.4,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 56.5,
+     "find__download__install_and_configure_software": 44.9
+    },
+    {
+     "state_uts": "TamilNadu",
+     "copy_or_move_a_file_or_folder": 72.3,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 55.3,
+     "find__download__install_and_configure_software": 44.8
+    },
+    {
+     "state_uts": "Telangana",
+     "copy_or_move_a_file_or_folder": 53.8,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 45.5,
+     "find__download__install_and_configure_software": 24
+    },
+    {
+     "state_uts": "Tripura",
+     "copy_or_move_a_file_or_folder": 24.6,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 21.1,
+     "find__download__install_and_configure_software": 10.2
+    },
+    {
+     "state_uts": "Uttarakhand",
+     "copy_or_move_a_file_or_folder": 46.4,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 27,
+     "find__download__install_and_configure_software": 24
+    },
+    {
+     "state_uts": "Uttar Pradesh",
+     "copy_or_move_a_file_or_folder": 25.1,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 14.3,
+     "find__download__install_and_configure_software": 12.6
+    },
+    {
+     "state_uts": "WestBengal",
+     "copy_or_move_a_file_or_folder": 43.1,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 20.8,
+     "find__download__install_and_configure_software": 23.6
+    },
+    {
+     "state_uts": "Andaman and Nicobar Islands",
+     "copy_or_move_a_file_or_folder": 51.7,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 41.2,
+     "find__download__install_and_configure_software": 28
+    },
+    {
+     "state_uts": "Chandigarh",
+     "copy_or_move_a_file_or_folder": 84.8,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 67.3,
+     "find__download__install_and_configure_software": 18
+    },
+    {
+     "state_uts": "Dadra and Nagar Haveli and Daman and Diu",
+     "copy_or_move_a_file_or_folder": 35.3,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 23,
+     "find__download__install_and_configure_software": 9.8
+    },
+    {
+     "state_uts": "Jammu and Kashmir",
+     "copy_or_move_a_file_or_folder": 52.1,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 21.3,
+     "find__download__install_and_configure_software": 35.9
+    },
+    {
+     "state_uts": "Ladakh",
+     "copy_or_move_a_file_or_folder": 73.9,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 58.4,
+     "find__download__install_and_configure_software": 46.3
+    },
+    {
+     "state_uts": "Lakshadweep",
+     "copy_or_move_a_file_or_folder": 79.1,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 38.2,
+     "find__download__install_and_configure_software": 28.6
+    },
+    {
+     "state_uts": "Puducherry",
+     "copy_or_move_a_file_or_folder": 80.3,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 71.8,
+     "find__download__install_and_configure_software": 41.7
+    },
+    {
+     "state_uts": "All-India",
+     "copy_or_move_a_file_or_folder": 41.7,
+     "send_e_mails_with_attached_files__documents__pictures_and_videos_": 26.7,
+     "find__download__install_and_configure_software": 20.9
     }
    ]
   },

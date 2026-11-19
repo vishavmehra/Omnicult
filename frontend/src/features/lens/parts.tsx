@@ -8,7 +8,7 @@ import { formatDate, formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { sourceTypeLabel } from "./claim-entry";
-import type { LensSourceSummary } from "./api";
+import type { LensDataSource, LensSourceSummary } from "./api";
 
 export type Strength = "none" | "weak" | "partial" | "solid";
 
@@ -43,7 +43,7 @@ export function SourcesPanel({ sources, limitations }: { sources: LensSourceSumm
         Sources and their dates
       </h2>
       {sources.length === 0 ? (
-        <p className="text-[13.5px] text-ink-secondary">No source is behind this view yet: it is empty until a state is built.</p>
+        <p className="text-[13.5px] text-ink-secondary">No cited claim is behind this view yet. A build of the state gathers them.</p>
       ) : (
         <ul className="ledger-rules rounded-card border border-border bg-surface">
           {sources.map((s) => (
@@ -73,6 +73,39 @@ export function SourcesPanel({ sources, limitations }: { sources: LensSourceSumm
         </ul>
       )}
       <LimitationList items={limitations} />
+    </section>
+  );
+}
+
+/**
+ * The datasets behind a view's state data (figures, searches, languages, holidays): each with its publisher, period and when it
+ * was read. Quiet, one line each; the publisher links out where it has a page.
+ */
+export function DataSources({ sources, className }: { sources: LensDataSource[]; className?: string }) {
+  if (sources.length === 0) return null;
+  return (
+    <section aria-labelledby="lens-data-sources" className={cn("space-y-2", className)}>
+      <h2 id="lens-data-sources" className="text-[15px] font-semibold text-ink">
+        Datasets and their dates
+      </h2>
+      <ul className="ledger-rules rounded-card border border-border bg-surface">
+        {sources.map((s) => (
+          <li key={s.key} className="grid gap-x-6 gap-y-0.5 px-4 py-2.5 sm:grid-cols-[12rem_minmax(0,1fr)]">
+            <p className="text-[13.5px] font-medium text-ink">{s.label}</p>
+            <p className="text-[12.5px] text-ink-secondary">
+              {s.url ? (
+                <a href={s.url} target="_blank" rel="noreferrer" className="text-rose underline-offset-2 hover:underline">
+                  {s.publisher}
+                </a>
+              ) : (
+                s.publisher
+              )}
+              {s.period ? ` · ${s.period}` : ""}
+              {s.retrieved_at ? ` · read ${formatDate(s.retrieved_at)}` : ""}. {s.detail}
+            </p>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

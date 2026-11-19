@@ -5,7 +5,7 @@ import { useId } from "react";
 import { useAtlas } from "./api";
 import { Labelled, NativeSelect } from "./parts";
 
-/** Every state and union territory, from the atlas (already cached by the other views). Built states say so. */
+/** Every state and union territory, from the atlas (already cached by the other views). The campaign's states say so. */
 export function StateSelect({
   campaignId,
   value,
@@ -33,7 +33,7 @@ export function StateSelect({
         {states.map((s) => (
           <option key={s.code} value={s.code}>
             {s.name}
-            {s.claims > 0 ? "" : " (no claims)"}
+            {s.campaign_role ? ` (campaign ${s.campaign_role})` : ""}
           </option>
         ))}
       </NativeSelect>

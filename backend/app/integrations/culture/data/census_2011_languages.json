@@ -4,7 +4,7 @@
   "title": "C-16: Population by mother tongue",
   "year": "2011",
   "publisher": "Office of the Registrar General & Census Commissioner, India (Census of India 2011)",
-  "retrieved_on": "2026-11-17",
+  "retrieved_on": "2026-11-19",
   "published_at_note": "catalog_created is the date the table was added to the Census Digital Library, not the survey date; the data year is 2011.",
   "note": "Speaker counts are persons by mother tongue as tabulated in the 2011 census. Shares are computed from the table. This is a 2011 snapshot and must never be presented as current.",
   "states": {
@@ -285,6 +285,1842 @@
       "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10226",
       "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10226/download/13338/DDW-C16-STMT-MDDS-1900.XLSX",
       "file": "DDW-C16-STMT-MDDS-1900.XLSX"
+    },
+    "IN-HP": {
+      "state_code": "02",
+      "state_name": "Himachal Pradesh",
+      "population": 6864602,
+      "languages": [
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 5895529
+        },
+        {
+          "mother_tongue_code": "016000",
+          "name": "Punjabi",
+          "iso639_1": "pa",
+          "speakers": 615022
+        },
+        {
+          "mother_tongue_code": "014000",
+          "name": "Nepali",
+          "iso639_1": "ne",
+          "speakers": 89508
+        },
+        {
+          "mother_tongue_code": "059000",
+          "name": "Kinnauri",
+          "iso639_1": null,
+          "speakers": 82712
+        },
+        {
+          "mother_tongue_code": "008000",
+          "name": "Kashmiri",
+          "iso639_1": "ks",
+          "speakers": 57050
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 1043
+        },
+        {
+          "mother_tongue_code": "017000",
+          "name": "Sanskrit",
+          "iso639_1": "sa",
+          "speakers": 936
+        }
+      ],
+      "other_speakers": 122802,
+      "reference_id": "PC11_C16-02",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Himachal Pradesh - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10205",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10205/download/13317/DDW-C16-STMT-MDDS-0200.XLSX",
+      "file": "DDW-C16-STMT-MDDS-0200.XLSX"
+    },
+    "IN-PB": {
+      "state_code": "03",
+      "state_name": "Punjab",
+      "population": 27743338,
+      "languages": [
+        {
+          "mother_tongue_code": "016000",
+          "name": "Punjabi",
+          "iso639_1": "pa",
+          "speakers": 24917885
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 2594831
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 1888
+        }
+      ],
+      "other_speakers": 228734,
+      "reference_id": "PC11_C16-03",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Punjab - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10219",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10219/download/13331/DDW-C16-STMT-MDDS-0300.XLSX",
+      "file": "DDW-C16-STMT-MDDS-0300.XLSX"
+    },
+    "IN-CH": {
+      "state_code": "04",
+      "state_name": "Chandigarh",
+      "population": 1055450,
+      "languages": [
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 776775
+        },
+        {
+          "mother_tongue_code": "016000",
+          "name": "Punjabi",
+          "iso639_1": "pa",
+          "speakers": 232516
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 10595
+        },
+        {
+          "mother_tongue_code": "014000",
+          "name": "Nepali",
+          "iso639_1": "ne",
+          "speakers": 6546
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 6236
+        },
+        {
+          "mother_tongue_code": "020000",
+          "name": "Tamil",
+          "iso639_1": "ta",
+          "speakers": 5579
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 436
+        }
+      ],
+      "other_speakers": 16767,
+      "reference_id": "PC11_C16-04",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Chandigarh - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10197",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10197/download/13309/DDW-C16-STMT-MDDS-0400.XLSX",
+      "file": "DDW-C16-STMT-MDDS-0400.XLSX"
+    },
+    "IN-UT": {
+      "state_code": "05",
+      "state_name": "Uttarakhand",
+      "population": 10086292,
+      "languages": [
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 8992114
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 425752
+        },
+        {
+          "mother_tongue_code": "016000",
+          "name": "Punjabi",
+          "iso639_1": "pa",
+          "speakers": 263310
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 150933
+        },
+        {
+          "mother_tongue_code": "014000",
+          "name": "Nepali",
+          "iso639_1": "ne",
+          "speakers": 106399
+        },
+        {
+          "mother_tongue_code": "010000",
+          "name": "Maithili",
+          "iso639_1": null,
+          "speakers": 54553
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 1385
+        },
+        {
+          "mother_tongue_code": "017000",
+          "name": "Sanskrit",
+          "iso639_1": "sa",
+          "speakers": 386
+        }
+      ],
+      "other_speakers": 91460,
+      "reference_id": "PC11_C16-05",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Uttarakhand - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10225",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10225/download/13337/DDW-C16-STMT-MDDS-0500.XLSX",
+      "file": "DDW-C16-STMT-MDDS-0500.XLSX"
+    },
+    "IN-HR": {
+      "state_code": "06",
+      "state_name": "Haryana",
+      "population": 25351462,
+      "languages": [
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 22322157
+        },
+        {
+          "mother_tongue_code": "016000",
+          "name": "Punjabi",
+          "iso639_1": "pa",
+          "speakers": 2400883
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 374353
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 3852
+        }
+      ],
+      "other_speakers": 250217,
+      "reference_id": "PC11_C16-06",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Haryana - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10204",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10204/download/13316/DDW-C16-STMT-MDDS-0600.XLSX",
+      "file": "DDW-C16-STMT-MDDS-0600.XLSX"
+    },
+    "IN-DL": {
+      "state_code": "07",
+      "state_name": "NCT of Delhi",
+      "population": 16787941,
+      "languages": [
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 14255526
+        },
+        {
+          "mother_tongue_code": "016000",
+          "name": "Punjabi",
+          "iso639_1": "pa",
+          "speakers": 873477
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 867673
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 215960
+        },
+        {
+          "mother_tongue_code": "010000",
+          "name": "Maithili",
+          "iso639_1": null,
+          "speakers": 122956
+        },
+        {
+          "mother_tongue_code": "011000",
+          "name": "Malayalam",
+          "iso639_1": "ml",
+          "speakers": 88662
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 6236
+        }
+      ],
+      "other_speakers": 357451,
+      "reference_id": "PC11_C16-07",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, NCT of Delhi - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10201",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10201/download/13313/DDW-C16-STMT-MDDS-0700.XLSX",
+      "file": "DDW-C16-STMT-MDDS-0700.XLSX"
+    },
+    "IN-RJ": {
+      "state_code": "08",
+      "state_name": "Rajasthan",
+      "population": 68548437,
+      "languages": [
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 61274274
+        },
+        {
+          "mother_tongue_code": "030000",
+          "name": "Bhili/Bhilodi",
+          "iso639_1": null,
+          "speakers": 3592208
+        },
+        {
+          "mother_tongue_code": "016000",
+          "name": "Punjabi",
+          "iso639_1": "pa",
+          "speakers": 2274342
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 664915
+        },
+        {
+          "mother_tongue_code": "019000",
+          "name": "Sindhi",
+          "iso639_1": "sd",
+          "speakers": 386569
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 13202
+        }
+      ],
+      "other_speakers": 342927,
+      "reference_id": "PC11_C16-08",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Rajasthan - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10220",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10220/download/13332/DDW-C16-STMT-MDDS-0800.XLSX",
+      "file": "DDW-C16-STMT-MDDS-0800.XLSX"
+    },
+    "IN-UP": {
+      "state_code": "09",
+      "state_name": "Uttar Pradesh",
+      "population": 199812341,
+      "languages": [
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 187979055
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 10820232
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 13085
+        }
+      ],
+      "other_speakers": 999969,
+      "reference_id": "PC11_C16-09",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Uttar Pradesh - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10224",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10224/download/13336/DDW-C16-STMT-MDDS-0900.XLSX",
+      "file": "DDW-C16-STMT-MDDS-0900.XLSX"
+    },
+    "IN-BR": {
+      "state_code": "10",
+      "state_name": "Bihar",
+      "population": 104099452,
+      "languages": [
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 80698466
+        },
+        {
+          "mother_tongue_code": "010000",
+          "name": "Maithili",
+          "iso639_1": null,
+          "speakers": 13063042
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 8770002
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 810771
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 4652
+        }
+      ],
+      "other_speakers": 752519,
+      "reference_id": "PC11_C16-10",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Bihar - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10196",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10196/download/13308/DDW-C16-STMT-MDDS-1000.XLSX",
+      "file": "DDW-C16-STMT-MDDS-1000.XLSX"
+    },
+    "IN-SK": {
+      "state_code": "11",
+      "state_name": "Sikkim",
+      "population": 610577,
+      "languages": [
+        {
+          "mother_tongue_code": "014000",
+          "name": "Nepali",
+          "iso639_1": "ne",
+          "speakers": 382200
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 48586
+        },
+        {
+          "mother_tongue_code": "031000",
+          "name": "Bhotia",
+          "iso639_1": null,
+          "speakers": 41889
+        },
+        {
+          "mother_tongue_code": "080000",
+          "name": "Limbu",
+          "iso639_1": null,
+          "speakers": 38733
+        },
+        {
+          "mother_tongue_code": "078000",
+          "name": "Lepcha",
+          "iso639_1": null,
+          "speakers": 38313
+        },
+        {
+          "mother_tongue_code": "108000",
+          "name": "Sherpa",
+          "iso639_1": null,
+          "speakers": 13681
+        },
+        {
+          "mother_tongue_code": "111000",
+          "name": "Tamang",
+          "iso639_1": null,
+          "speakers": 11734
+        },
+        {
+          "mother_tongue_code": "103000",
+          "name": "Rai",
+          "iso639_1": null,
+          "speakers": 7471
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 6986
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 112
+        }
+      ],
+      "other_speakers": 20872,
+      "reference_id": "PC11_C16-11",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Sikkim - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10221",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10221/download/13333/DDW-C16-STMT-MDDS-1100.XLSX",
+      "file": "DDW-C16-STMT-MDDS-1100.XLSX"
+    },
+    "IN-AR": {
+      "state_code": "12",
+      "state_name": "Arunachal Pradesh",
+      "population": 1383727,
+      "languages": [
+        {
+          "mother_tongue_code": "094000",
+          "name": "Nissi/Dafla",
+          "iso639_1": null,
+          "speakers": 395745
+        },
+        {
+          "mother_tongue_code": "023000",
+          "name": "Adi",
+          "iso639_1": null,
+          "speakers": 240026
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 100579
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 98187
+        },
+        {
+          "mother_tongue_code": "014000",
+          "name": "Nepali",
+          "iso639_1": "ne",
+          "speakers": 95317
+        },
+        {
+          "mother_tongue_code": "031000",
+          "name": "Bhotia",
+          "iso639_1": null,
+          "speakers": 62458
+        },
+        {
+          "mother_tongue_code": "119000",
+          "name": "Wancho",
+          "iso639_1": null,
+          "speakers": 58450
+        },
+        {
+          "mother_tongue_code": "001000",
+          "name": "Assamese",
+          "iso639_1": "as",
+          "speakers": 53951
+        },
+        {
+          "mother_tongue_code": "088000",
+          "name": "Mishmi",
+          "iso639_1": null,
+          "speakers": 42017
+        },
+        {
+          "mother_tongue_code": "113000",
+          "name": "Tangsa",
+          "iso639_1": null,
+          "speakers": 36546
+        },
+        {
+          "mother_tongue_code": "095000",
+          "name": "Nocte",
+          "iso639_1": null,
+          "speakers": 30308
+        },
+        {
+          "mother_tongue_code": "090000",
+          "name": "Monpa",
+          "iso639_1": null,
+          "speakers": 12398
+        },
+        {
+          "mother_tongue_code": "087000",
+          "name": "Miri/Mishing",
+          "iso639_1": null,
+          "speakers": 10402
+        },
+        {
+          "mother_tongue_code": "003000",
+          "name": "Bodo",
+          "iso639_1": null,
+          "speakers": 7095
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 108
+        }
+      ],
+      "other_speakers": 140140,
+      "reference_id": "PC11_C16-12",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Arunachal Pradesh - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10194",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10194/download/13306/DDW-C16-STMT-MDDS-1200.XLSX",
+      "file": "DDW-C16-STMT-MDDS-1200.XLSX"
+    },
+    "IN-NL": {
+      "state_code": "13",
+      "state_name": "Nagaland",
+      "population": 1978502,
+      "languages": [
+        {
+          "mother_tongue_code": "066000",
+          "name": "Konyak",
+          "iso639_1": null,
+          "speakers": 244135
+        },
+        {
+          "mother_tongue_code": "027000",
+          "name": "Ao",
+          "iso639_1": null,
+          "speakers": 231084
+        },
+        {
+          "mother_tongue_code": "081000",
+          "name": "Lotha",
+          "iso639_1": null,
+          "speakers": 177488
+        },
+        {
+          "mother_tongue_code": "026000",
+          "name": "Angami",
+          "iso639_1": null,
+          "speakers": 151883
+        },
+        {
+          "mother_tongue_code": "035000",
+          "name": "Chakru/Chokri",
+          "iso639_1": null,
+          "speakers": 91010
+        },
+        {
+          "mother_tongue_code": "105000",
+          "name": "Sangtam",
+          "iso639_1": null,
+          "speakers": 75841
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 74753
+        },
+        {
+          "mother_tongue_code": "120000",
+          "name": "Yimchungre",
+          "iso639_1": null,
+          "speakers": 74156
+        },
+        {
+          "mother_tongue_code": "036000",
+          "name": "Chang",
+          "iso639_1": null,
+          "speakers": 65632
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 62942
+        },
+        {
+          "mother_tongue_code": "057000",
+          "name": "Khiemnungan",
+          "iso639_1": null,
+          "speakers": 61906
+        },
+        {
+          "mother_tongue_code": "104000",
+          "name": "Rengma",
+          "iso639_1": null,
+          "speakers": 61537
+        },
+        {
+          "mother_tongue_code": "121000",
+          "name": "Zeliang",
+          "iso639_1": null,
+          "speakers": 60399
+        },
+        {
+          "mother_tongue_code": "100000",
+          "name": "Phom",
+          "iso639_1": null,
+          "speakers": 53674
+        },
+        {
+          "mother_tongue_code": "014000",
+          "name": "Nepali",
+          "iso639_1": "ne",
+          "speakers": 43481
+        },
+        {
+          "mother_tongue_code": "056000",
+          "name": "Khezha",
+          "iso639_1": null,
+          "speakers": 34218
+        },
+        {
+          "mother_tongue_code": "101000",
+          "name": "Pochury",
+          "iso639_1": null,
+          "speakers": 21446
+        },
+        {
+          "mother_tongue_code": "071000",
+          "name": "Kuki",
+          "iso639_1": null,
+          "speakers": 18392
+        },
+        {
+          "mother_tongue_code": "034000",
+          "name": "Chakhesang",
+          "iso639_1": null,
+          "speakers": 17919
+        },
+        {
+          "mother_tongue_code": "001000",
+          "name": "Assamese",
+          "iso639_1": "as",
+          "speakers": 17201
+        },
+        {
+          "mother_tongue_code": "084000",
+          "name": "Mao",
+          "iso639_1": null,
+          "speakers": 14490
+        },
+        {
+          "mother_tongue_code": "122000",
+          "name": "Zemi",
+          "iso639_1": null,
+          "speakers": 11165
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 419
+        }
+      ],
+      "other_speakers": 313331,
+      "reference_id": "PC11_C16-13",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Nagaland - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10216",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10216/download/13328/DDW-C16-STMT-MDDS-1300.XLSX",
+      "file": "DDW-C16-STMT-MDDS-1300.XLSX"
+    },
+    "IN-MN": {
+      "state_code": "14",
+      "state_name": "Manipur",
+      "population": 2855794,
+      "languages": [
+        {
+          "mother_tongue_code": "012000",
+          "name": "Manipuri",
+          "iso639_1": null,
+          "speakers": 1522132
+        },
+        {
+          "mother_tongue_code": "084000",
+          "name": "Mao",
+          "iso639_1": null,
+          "speakers": 224361
+        },
+        {
+          "mother_tongue_code": "114000",
+          "name": "Thado",
+          "iso639_1": null,
+          "speakers": 223779
+        },
+        {
+          "mother_tongue_code": "112000",
+          "name": "Tangkhul",
+          "iso639_1": null,
+          "speakers": 183091
+        },
+        {
+          "mother_tongue_code": "051000",
+          "name": "Kabui",
+          "iso639_1": null,
+          "speakers": 109616
+        },
+        {
+          "mother_tongue_code": "014000",
+          "name": "Nepali",
+          "iso639_1": "ne",
+          "speakers": 63756
+        },
+        {
+          "mother_tongue_code": "096000",
+          "name": "Paite",
+          "iso639_1": null,
+          "speakers": 55031
+        },
+        {
+          "mother_tongue_code": "047000",
+          "name": "Hmar",
+          "iso639_1": null,
+          "speakers": 49081
+        },
+        {
+          "mother_tongue_code": "079000",
+          "name": "Liangmei",
+          "iso639_1": null,
+          "speakers": 45546
+        },
+        {
+          "mother_tongue_code": "118000",
+          "name": "Vaiphei",
+          "iso639_1": null,
+          "speakers": 39902
+        },
+        {
+          "mother_tongue_code": "071000",
+          "name": "Kuki",
+          "iso639_1": null,
+          "speakers": 37805
+        },
+        {
+          "mother_tongue_code": "085000",
+          "name": "Maram",
+          "iso639_1": null,
+          "speakers": 32098
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 31703
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 30611
+        },
+        {
+          "mother_tongue_code": "025000",
+          "name": "Anal",
+          "iso639_1": null,
+          "speakers": 26508
+        },
+        {
+          "mother_tongue_code": "123000",
+          "name": "Zou",
+          "iso639_1": null,
+          "speakers": 25861
+        },
+        {
+          "mother_tongue_code": "086000",
+          "name": "Maring",
+          "iso639_1": null,
+          "speakers": 25657
+        },
+        {
+          "mother_tongue_code": "122000",
+          "name": "Zemi",
+          "iso639_1": null,
+          "speakers": 18795
+        },
+        {
+          "mother_tongue_code": "042000",
+          "name": "Gangte",
+          "iso639_1": null,
+          "speakers": 15274
+        },
+        {
+          "mother_tongue_code": "064000",
+          "name": "Kom",
+          "iso639_1": null,
+          "speakers": 14621
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 331
+        }
+      ],
+      "other_speakers": 80235,
+      "reference_id": "PC11_C16-14",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Manipur - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10213",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10213/download/13325/DDW-C16-STMT-MDDS-1400.XLSX",
+      "file": "DDW-C16-STMT-MDDS-1400.XLSX"
+    },
+    "IN-MZ": {
+      "state_code": "15",
+      "state_name": "Mizoram",
+      "population": 1097206,
+      "languages": [
+        {
+          "mother_tongue_code": "082000",
+          "name": "Lushai/Mizo",
+          "iso639_1": null,
+          "speakers": 802763
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 107840
+        },
+        {
+          "mother_tongue_code": "076000",
+          "name": "Lakher",
+          "iso639_1": null,
+          "speakers": 41876
+        },
+        {
+          "mother_tongue_code": "116000",
+          "name": "Tripuri",
+          "iso639_1": null,
+          "speakers": 32634
+        },
+        {
+          "mother_tongue_code": "098000",
+          "name": "Pawi",
+          "iso639_1": null,
+          "speakers": 28624
+        },
+        {
+          "mother_tongue_code": "096000",
+          "name": "Paite",
+          "iso639_1": null,
+          "speakers": 22214
+        },
+        {
+          "mother_tongue_code": "047000",
+          "name": "Hmar",
+          "iso639_1": null,
+          "speakers": 17981
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 10677
+        },
+        {
+          "mother_tongue_code": "014000",
+          "name": "Nepali",
+          "iso639_1": "ne",
+          "speakers": 8994
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 61
+        }
+      ],
+      "other_speakers": 23542,
+      "reference_id": "PC11_C16-15",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Mizoram - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10215",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10215/download/13327/DDW-C16-STMT-MDDS-1500.XLSX",
+      "file": "DDW-C16-STMT-MDDS-1500.XLSX"
+    },
+    "IN-TR": {
+      "state_code": "16",
+      "state_name": "Tripura",
+      "population": 3673917,
+      "languages": [
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 2414774
+        },
+        {
+          "mother_tongue_code": "116000",
+          "name": "Tripuri",
+          "iso639_1": null,
+          "speakers": 950875
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 77701
+        },
+        {
+          "mother_tongue_code": "089000",
+          "name": "Mogh",
+          "iso639_1": null,
+          "speakers": 35722
+        },
+        {
+          "mother_tongue_code": "015000",
+          "name": "Odia",
+          "iso639_1": "or",
+          "speakers": 25967
+        },
+        {
+          "mother_tongue_code": "012000",
+          "name": "Manipuri",
+          "iso639_1": null,
+          "speakers": 23779
+        },
+        {
+          "mother_tongue_code": "046000",
+          "name": "Halam",
+          "iso639_1": null,
+          "speakers": 23089
+        },
+        {
+          "mother_tongue_code": "033000",
+          "name": "Bishnupuriya",
+          "iso639_1": null,
+          "speakers": 22112
+        },
+        {
+          "mother_tongue_code": "043000",
+          "name": "Garo",
+          "iso639_1": null,
+          "speakers": 21019
+        },
+        {
+          "mother_tongue_code": "027000",
+          "name": "Ao",
+          "iso639_1": null,
+          "speakers": 19316
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 54
+        }
+      ],
+      "other_speakers": 59509,
+      "reference_id": "PC11_C16-16",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Tripura - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10223",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10223/download/13335/DDW-C16-STMT-MDDS-1600.XLSX",
+      "file": "DDW-C16-STMT-MDDS-1600.XLSX"
+    },
+    "IN-ML": {
+      "state_code": "17",
+      "state_name": "Meghalaya",
+      "population": 2966889,
+      "languages": [
+        {
+          "mother_tongue_code": "055000",
+          "name": "Khasi",
+          "iso639_1": null,
+          "speakers": 1382278
+        },
+        {
+          "mother_tongue_code": "043000",
+          "name": "Garo",
+          "iso639_1": null,
+          "speakers": 936496
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 232525
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 62905
+        },
+        {
+          "mother_tongue_code": "014000",
+          "name": "Nepali",
+          "iso639_1": "ne",
+          "speakers": 54716
+        },
+        {
+          "mother_tongue_code": "001000",
+          "name": "Assamese",
+          "iso639_1": "as",
+          "speakers": 39628
+        },
+        {
+          "mother_tongue_code": "061000",
+          "name": "Koch",
+          "iso639_1": null,
+          "speakers": 23199
+        },
+        {
+          "mother_tongue_code": "102000",
+          "name": "Rabha",
+          "iso639_1": null,
+          "speakers": 21671
+        },
+        {
+          "mother_tongue_code": "013000",
+          "name": "Marathi",
+          "iso639_1": "mr",
+          "speakers": 20751
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 311
+        }
+      ],
+      "other_speakers": 192409,
+      "reference_id": "PC11_C16-17",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Meghalaya - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10214",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10214/download/13326/DDW-C16-STMT-MDDS-1700.XLSX",
+      "file": "DDW-C16-STMT-MDDS-1700.XLSX"
+    },
+    "IN-AS": {
+      "state_code": "18",
+      "state_name": "Assam",
+      "population": 31205576,
+      "languages": [
+        {
+          "mother_tongue_code": "001000",
+          "name": "Assamese",
+          "iso639_1": "as",
+          "speakers": 15095797
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 9024324
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 2101435
+        },
+        {
+          "mother_tongue_code": "003000",
+          "name": "Bodo",
+          "iso639_1": null,
+          "speakers": 1416125
+        },
+        {
+          "mother_tongue_code": "087000",
+          "name": "Miri/Mishing",
+          "iso639_1": null,
+          "speakers": 619197
+        },
+        {
+          "mother_tongue_code": "014000",
+          "name": "Nepali",
+          "iso639_1": "ne",
+          "speakers": 596210
+        },
+        {
+          "mother_tongue_code": "052000",
+          "name": "Karbi/Mikir",
+          "iso639_1": null,
+          "speakers": 511732
+        },
+        {
+          "mother_tongue_code": "015000",
+          "name": "Odia",
+          "iso639_1": "or",
+          "speakers": 218552
+        },
+        {
+          "mother_tongue_code": "018000",
+          "name": "Santali",
+          "iso639_1": null,
+          "speakers": 213139
+        },
+        {
+          "mother_tongue_code": "043000",
+          "name": "Garo",
+          "iso639_1": null,
+          "speakers": 172520
+        },
+        {
+          "mother_tongue_code": "012000",
+          "name": "Manipuri",
+          "iso639_1": null,
+          "speakers": 168133
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 1287
+        }
+      ],
+      "other_speakers": 1067125,
+      "reference_id": "PC11_C16-18",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Assam - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10195",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10195/download/13307/DDW-C16-STMT-MDDS-1800.XLSX",
+      "file": "DDW-C16-STMT-MDDS-1800.XLSX"
+    },
+    "IN-JH": {
+      "state_code": "20",
+      "state_name": "Jharkhand",
+      "population": 32988134,
+      "languages": [
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 20436026
+        },
+        {
+          "mother_tongue_code": "018000",
+          "name": "Santali",
+          "iso639_1": null,
+          "speakers": 3269897
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 3213423
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 1965652
+        },
+        {
+          "mother_tongue_code": "048000",
+          "name": "Ho",
+          "iso639_1": null,
+          "speakers": 994302
+        },
+        {
+          "mother_tongue_code": "072000",
+          "name": "Kurukh/Oraon",
+          "iso639_1": null,
+          "speakers": 952164
+        },
+        {
+          "mother_tongue_code": "092000",
+          "name": "Mundari",
+          "iso639_1": null,
+          "speakers": 942108
+        },
+        {
+          "mother_tongue_code": "015000",
+          "name": "Odia",
+          "iso639_1": "or",
+          "speakers": 531077
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 2431
+        }
+      ],
+      "other_speakers": 681054,
+      "reference_id": "PC11_C16-20",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Jharkhand - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10207",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10207/download/13319/DDW-C16-STMT-MDDS-2000.XLSX",
+      "file": "DDW-C16-STMT-MDDS-2000.XLSX"
+    },
+    "IN-OD": {
+      "state_code": "21",
+      "state_name": "Odisha",
+      "population": 41974218,
+      "languages": [
+        {
+          "mother_tongue_code": "015000",
+          "name": "Odia",
+          "iso639_1": "or",
+          "speakers": 34712170
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 1239037
+        },
+        {
+          "mother_tongue_code": "070000",
+          "name": "Kui",
+          "iso639_1": null,
+          "speakers": 939283
+        },
+        {
+          "mother_tongue_code": "018000",
+          "name": "Santali",
+          "iso639_1": null,
+          "speakers": 862590
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 670572
+        },
+        {
+          "mother_tongue_code": "021000",
+          "name": "Telugu",
+          "iso639_1": "te",
+          "speakers": 667693
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 504570
+        },
+        {
+          "mother_tongue_code": "048000",
+          "name": "Ho",
+          "iso639_1": null,
+          "speakers": 411724
+        },
+        {
+          "mother_tongue_code": "091000",
+          "name": "Munda",
+          "iso639_1": null,
+          "speakers": 335830
+        },
+        {
+          "mother_tongue_code": "106000",
+          "name": "Savara",
+          "iso639_1": null,
+          "speakers": 298655
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 2154
+        }
+      ],
+      "other_speakers": 1329940,
+      "reference_id": "PC11_C16-21",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Odisha - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10217",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10217/download/13329/DDW-C16-STMT-MDDS-2100.XLSX",
+      "file": "DDW-C16-STMT-MDDS-2100.XLSX"
+    },
+    "IN-CG": {
+      "state_code": "22",
+      "state_name": "Chhattisgarh",
+      "population": 25545198,
+      "languages": [
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 21361927
+        },
+        {
+          "mother_tongue_code": "044000",
+          "name": "Gondi",
+          "iso639_1": null,
+          "speakers": 1071400
+        },
+        {
+          "mother_tongue_code": "015000",
+          "name": "Odia",
+          "iso639_1": "or",
+          "speakers": 913581
+        },
+        {
+          "mother_tongue_code": "045000",
+          "name": "Halabi",
+          "iso639_1": null,
+          "speakers": 706304
+        },
+        {
+          "mother_tongue_code": "072000",
+          "name": "Kurukh/Oraon",
+          "iso639_1": null,
+          "speakers": 516778
+        },
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 243597
+        },
+        {
+          "mother_tongue_code": "021000",
+          "name": "Telugu",
+          "iso639_1": "te",
+          "speakers": 152100
+        },
+        {
+          "mother_tongue_code": "013000",
+          "name": "Marathi",
+          "iso639_1": "mr",
+          "speakers": 144035
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 1398
+        }
+      ],
+      "other_speakers": 434078,
+      "reference_id": "PC11_C16-22",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Chhattisgarh - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10198",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10198/download/13310/DDW-C16-STMT-MDDS-2200.XLSX",
+      "file": "DDW-C16-STMT-MDDS-2200.XLSX"
+    },
+    "IN-MP": {
+      "state_code": "23",
+      "state_name": "Madhya Pradesh",
+      "population": 72626809,
+      "languages": [
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 64324963
+        },
+        {
+          "mother_tongue_code": "030000",
+          "name": "Bhili/Bhilodi",
+          "iso639_1": null,
+          "speakers": 3587810
+        },
+        {
+          "mother_tongue_code": "013000",
+          "name": "Marathi",
+          "iso639_1": "mr",
+          "speakers": 1231285
+        },
+        {
+          "mother_tongue_code": "044000",
+          "name": "Gondi",
+          "iso639_1": null,
+          "speakers": 1164290
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 916608
+        },
+        {
+          "mother_tongue_code": "067000",
+          "name": "Korku",
+          "iso639_1": null,
+          "speakers": 470386
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 2381
+        }
+      ],
+      "other_speakers": 929086,
+      "reference_id": "PC11_C16-23",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Madhya Pradesh - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10211",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10211/download/13323/DDW-C16-STMT-MDDS-2300.XLSX",
+      "file": "DDW-C16-STMT-MDDS-2300.XLSX"
+    },
+    "IN-GJ": {
+      "state_code": "24",
+      "state_name": "Gujarat",
+      "population": 60439692,
+      "languages": [
+        {
+          "mother_tongue_code": "005000",
+          "name": "Gujarati",
+          "iso639_1": "gu",
+          "speakers": 51958730
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 4264868
+        },
+        {
+          "mother_tongue_code": "019000",
+          "name": "Sindhi",
+          "iso639_1": "sd",
+          "speakers": 1184024
+        },
+        {
+          "mother_tongue_code": "013000",
+          "name": "Marathi",
+          "iso639_1": "mr",
+          "speakers": 920345
+        },
+        {
+          "mother_tongue_code": "030000",
+          "name": "Bhili/Bhilodi",
+          "iso639_1": null,
+          "speakers": 825942
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 479206
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 4224
+        }
+      ],
+      "other_speakers": 802353,
+      "reference_id": "PC11_C16-24",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Gujarat - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10203",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10203/download/13315/DDW-C16-STMT-MDDS-2400.XLSX",
+      "file": "DDW-C16-STMT-MDDS-2400.XLSX"
+    },
+    "IN-KA": {
+      "state_code": "29",
+      "state_name": "Karnataka",
+      "population": 61095297,
+      "languages": [
+        {
+          "mother_tongue_code": "007000",
+          "name": "Kannada",
+          "iso639_1": "kn",
+          "speakers": 40651090
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 6618324
+        },
+        {
+          "mother_tongue_code": "021000",
+          "name": "Telugu",
+          "iso639_1": "te",
+          "speakers": 3569400
+        },
+        {
+          "mother_tongue_code": "020000",
+          "name": "Tamil",
+          "iso639_1": "ta",
+          "speakers": 2110128
+        },
+        {
+          "mother_tongue_code": "013000",
+          "name": "Marathi",
+          "iso639_1": "mr",
+          "speakers": 2064906
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 2013364
+        },
+        {
+          "mother_tongue_code": "117000",
+          "name": "Tulu",
+          "iso639_1": null,
+          "speakers": 1595038
+        },
+        {
+          "mother_tongue_code": "009000",
+          "name": "Konkani",
+          "iso639_1": null,
+          "speakers": 788294
+        },
+        {
+          "mother_tongue_code": "011000",
+          "name": "Malayalam",
+          "iso639_1": "ml",
+          "speakers": 774057
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 23227
+        }
+      ],
+      "other_speakers": 887469,
+      "reference_id": "PC11_C16-29",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Karnataka - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10208",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10208/download/13320/DDW-C16-STMT-MDDS-2900.XLSX",
+      "file": "DDW-C16-STMT-MDDS-2900.XLSX"
+    },
+    "IN-GA": {
+      "state_code": "30",
+      "state_name": "Goa",
+      "population": 1458545,
+      "languages": [
+        {
+          "mother_tongue_code": "009000",
+          "name": "Konkani",
+          "iso639_1": null,
+          "speakers": 964305
+        },
+        {
+          "mother_tongue_code": "013000",
+          "name": "Marathi",
+          "iso639_1": "mr",
+          "speakers": 158787
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 150017
+        },
+        {
+          "mother_tongue_code": "007000",
+          "name": "Kannada",
+          "iso639_1": "kn",
+          "speakers": 67923
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 41242
+        },
+        {
+          "mother_tongue_code": "011000",
+          "name": "Malayalam",
+          "iso639_1": "ml",
+          "speakers": 12983
+        },
+        {
+          "mother_tongue_code": "021000",
+          "name": "Telugu",
+          "iso639_1": "te",
+          "speakers": 11116
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 9765
+        }
+      ],
+      "other_speakers": 42407,
+      "reference_id": "PC11_C16-30",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Goa - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10202",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10202/download/13314/DDW-C16-STMT-MDDS-3000.XLSX",
+      "file": "DDW-C16-STMT-MDDS-3000.XLSX"
+    },
+    "IN-LD": {
+      "state_code": "31",
+      "state_name": "Lakshadweep",
+      "population": 64473,
+      "languages": [
+        {
+          "mother_tongue_code": "011000",
+          "name": "Malayalam",
+          "iso639_1": "ml",
+          "speakers": 54264
+        },
+        {
+          "mother_tongue_code": "020000",
+          "name": "Tamil",
+          "iso639_1": "ta",
+          "speakers": 364
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 160
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 1
+        }
+      ],
+      "other_speakers": 9684,
+      "reference_id": "PC11_C16-31",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Lakshadweep - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10210",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10210/download/13322/DDW-C16-STMT-MDDS-3100.XLSX",
+      "file": "DDW-C16-STMT-MDDS-3100.XLSX"
+    },
+    "IN-PY": {
+      "state_code": "34",
+      "state_name": "Puducherry",
+      "population": 1247953,
+      "languages": [
+        {
+          "mother_tongue_code": "020000",
+          "name": "Tamil",
+          "iso639_1": "ta",
+          "speakers": 1100976
+        },
+        {
+          "mother_tongue_code": "021000",
+          "name": "Telugu",
+          "iso639_1": "te",
+          "speakers": 74347
+        },
+        {
+          "mother_tongue_code": "011000",
+          "name": "Malayalam",
+          "iso639_1": "ml",
+          "speakers": 47973
+        },
+        {
+          "mother_tongue_code": "022000",
+          "name": "Urdu",
+          "iso639_1": "ur",
+          "speakers": 8627
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 6403
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 518
+        }
+      ],
+      "other_speakers": 9109,
+      "reference_id": "PC11_C16-34",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Puducherry - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10218",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10218/download/13330/DDW-C16-STMT-MDDS-3400.XLSX",
+      "file": "DDW-C16-STMT-MDDS-3400.XLSX"
+    },
+    "IN-AN": {
+      "state_code": "35",
+      "state_name": "Andaman & Nicobar Islands",
+      "population": 380581,
+      "languages": [
+        {
+          "mother_tongue_code": "002000",
+          "name": "Bengali",
+          "iso639_1": "bn",
+          "speakers": 108432
+        },
+        {
+          "mother_tongue_code": "006000",
+          "name": "Hindi",
+          "iso639_1": "hi",
+          "speakers": 73424
+        },
+        {
+          "mother_tongue_code": "020000",
+          "name": "Tamil",
+          "iso639_1": "ta",
+          "speakers": 57830
+        },
+        {
+          "mother_tongue_code": "021000",
+          "name": "Telugu",
+          "iso639_1": "te",
+          "speakers": 50404
+        },
+        {
+          "mother_tongue_code": "093000",
+          "name": "Nicobarese",
+          "iso639_1": null,
+          "speakers": 28912
+        },
+        {
+          "mother_tongue_code": "011000",
+          "name": "Malayalam",
+          "iso639_1": "ml",
+          "speakers": 27475
+        },
+        {
+          "mother_tongue_code": "072000",
+          "name": "Kurukh/Oraon",
+          "iso639_1": null,
+          "speakers": 15064
+        },
+        {
+          "mother_tongue_code": "054000",
+          "name": "Kharia",
+          "iso639_1": null,
+          "speakers": 4069
+        },
+        {
+          "mother_tongue_code": "091000",
+          "name": "Munda",
+          "iso639_1": null,
+          "speakers": 3797
+        },
+        {
+          "mother_tongue_code": "040000",
+          "name": "English",
+          "iso639_1": "en",
+          "speakers": 69
+        }
+      ],
+      "other_speakers": 11105,
+      "reference_id": "PC11_C16-35",
+      "catalog_created": "2022-07-04",
+      "citation": "Office of the Registrar General & Census Commissioner, India. Population Census 2011. Table C-16: Population by mother tongue, Andaman and Nicobar Islands - 2011",
+      "catalog_url": "https://censusindia.gov.in/nada/index.php/catalog/10192",
+      "download_url": "https://censusindia.gov.in/nada/index.php/catalog/10192/download/13304/DDW-C16-STMT-MDDS-3500.XLSX",
+      "file": "DDW-C16-STMT-MDDS-3500.XLSX"
     }
   }
 }

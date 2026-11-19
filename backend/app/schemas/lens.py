@@ -104,6 +104,84 @@ class LensSourceSummary(ApiModel):
     limitations: list[str]
 
 
+# --- state data: published figures, shown as data (never claims, never in the Evidence Meter) --------------------------
+
+FigureUnit = Literal["percent", "per100", "inr", "million"]
+DataFamily = Literal["state_facts", "search_pulse", "census_2011", "public_holidays", "google_calendar", "knowledge_graph", "reference"]
+
+
+class LensFigure(ApiModel):
+    """A published state figure (data.gov.in), with the all-India figure of the same period where the dataset has one."""
+
+    key: str
+    label: str
+    unit: FigureUnit
+    value: float
+    national: float | None
+    period: str
+
+
+class LensSearchTerm(ApiModel):
+    term: str
+    kind: Literal["top", "rising"]
+    score: int = Field(description="Google's 0 to 100 score for this state in the newest week; terms with no score are left out.")
+    percent_gain: int | None
+
+
+class LensLanguageFact(ApiModel):
+    code: str | None
+    name: str
+    role: LanguageRole | None = Field(description="From the reference table (principal or additional official language); not a speaker share.")
+    share: float | None = Field(description="Census 2011 mother-tongue share in percent; null where the census gives none for this state.")
+
+
+class LensHoliday(ApiModel):
+    date: date
+    name: str
+
+
+class LensStateData(ApiModel):
+    """What public datasets say about a state, whether or not it was ever built. Copied from each dataset, never estimated."""
+
+    figures: list[LensFigure]
+    languages: list[LensLanguageFact] = Field(description="Census 2011 mother tongues by share where the census covers the state, else the reference languages.")
+    census_population: int | None = Field(description="2011 population of the state in the census table; null where the territory has changed since.")
+    searches: list[LensSearchTerm] = Field(description="Top searches of the newest week, by this state's score.")
+    rising: list[LensSearchTerm] = Field(description="Rising searches of the newest week, by this state's score.")
+    search_week: date | None
+    holidays_year: int
+    holidays: int = Field(description="Public holidays on the state's list for holidays_year (python-holidays).")
+    next_holidays: list[LensHoliday]
+    families: list[DataFamily] = Field(description="The datasets that hold something for this state.")
+
+
+class LensDataSource(ApiModel):
+    """A dataset behind the state data on a page, with its period and when it was read."""
+
+    key: DataFamily
+    label: str
+    publisher: str
+    url: str | None
+    detail: str
+    period: str | None
+    retrieved_at: datetime | None
+
+
+class LensDataCell(ApiModel):
+    region_code: str
+    value: float | None
+    national: float | None
+    period: str | None
+
+
+class LensDataRow(ApiModel):
+    key: str
+    label: str
+    unit: FigureUnit
+    cells: list[LensDataCell]
+    highest: list[str] = Field(description="Region codes with the highest value in this row (ties kept); empty when fewer than two states have one.")
+
+
 # --- atlas -------------------------------------------------------------------------------------------------------
 
 
@@ -127,11 +205,14 @@ class LensAtlasState(ApiModel):
     stale_claims: int
     built: bool = Field(description="A profile build exists for this state in this mode.")
     last_build: LensBuildView | None
+    campaign_role: Literal["origin", "target"] | None = Field(description="The state's place in the campaign brief, if it has one.")
+    data: LensStateData
 
 
 class LensAtlasSummary(ApiModel):
     states_total: int
     states_with_claims: int
+    states_with_data: int
     weak: int
     partial: int
     solid: int
@@ -148,6 +229,7 @@ class LensAtlas(ApiModel):
     summary: LensAtlasSummary
     states: list[LensAtlasState] = Field(description="Every state and union territory, evidence strength included even when weak or empty.")
     sources: list[LensSourceSummary]
+    data_sources: list[LensDataSource]
     limitations: list[str]
 
 
@@ -181,7 +263,10 @@ class LensStateProfile(ApiModel):
     sections: list[LensProfileSection]
     conflicts: list[Conflict]
     build: LensBuildView | None = Field(description="The latest build; null when the state has never been built in this mode.")
+    campaign_role: Literal["origin", "target"] | None
+    data: LensStateData
     sources: list[LensSourceSummary]
+    data_sources: list[LensDataSource]
     gaps: list[str]
     limitations: list[str]
 
@@ -235,6 +320,7 @@ class LensCompareRegion(ApiModel):
     moderate: int
     high: int
     built: bool
+    data: LensStateData
 
 
 class LensCompare(ApiModel):
@@ -244,8 +330,10 @@ class LensCompare(ApiModel):
     mode_label: str
     generated_at: datetime
     regions: list[LensCompareRegion]
+    data_rows: list[LensDataRow] = Field(description="Published figures side by side: one row per figure any compared state has.")
     rows: list[LensCompareRow]
     sources: list[LensSourceSummary]
+    data_sources: list[LensDataSource]
     limitations: list[str]
 
 
@@ -295,6 +383,48 @@ class LensWindow(ApiModel):
     date_to: date
 
 
+CalendarKind = Literal["public_holiday", "festival", "observance"]
+
+
+class LensMomentAbout(ApiModel):
+    """What a moment is, in a short description with its attribution (never written by a model)."""
+
+    text: str
+    url: str | None
+    attribution: str
+
+
+class LensMomentSource(ApiModel):
+    label: str
+    url: str | None
+    publisher: str
+    retrieved_at: datetime | None
+
+
+class LensCalendarEntry(ApiModel):
+    """One dated moment of the year, from a claim, the state's public-holiday list or Google's Holidays in India calendar."""
+
+    key: str
+    date: date
+    name: str
+    kind: CalendarKind
+    about: LensMomentAbout | None
+    why: list[str] = Field(description="Why it matters for a campaign, each reason computed from data: the lists that name it, the campaign dates, the weekday, this week's searches.")
+    sources: list[LensMomentSource] = Field(description="Every list or claim that gives this date.")
+    claim_id: UUID | None = Field(description="The claim behind the date, when a build stored one.")
+    tentative: bool = Field(description="The source marks the date as tentative (lunar dates announced late).")
+    in_window: bool | None
+
+
+class LensTypicalMoment(ApiModel):
+    name: str
+    kind: str
+    months: list[int]
+    calendar: str
+    note: str
+    dated: bool = Field(description="An exact date for this year is on the calendar.")
+
+
 class LensCalendar(ApiModel):
     campaign_id: UUID
     workspace_id: UUID
@@ -305,12 +435,39 @@ class LensCalendar(ApiModel):
     year: int
     years_available: list[int] = Field(description="Years with stored public-holiday dates for this state. Other years need a build that includes them.")
     window: LensWindow | None
+    window_basis: Literal["request", "campaign"] | None = Field(description="request: the window asked for; campaign: the dates of the campaign brief.")
+    entries: list[LensCalendarEntry] = Field(description="Every dated moment of the year, in date order.")
+    typical: list[LensTypicalMoment] = Field(description="Moments the reference data places in typical months, without an exact date.")
     months: list[LensCalendarMonth]
     timed: list[LensTimedMoment]
     conflicts: list[Conflict]
     sources: list[LensSourceSummary]
+    data_sources: list[LensDataSource]
     gaps: list[str]
     limitations: list[str]
+
+
+# --- auto-build: the campaign's states are built in the background ------------------------------------------------------
+
+AutoBuildState = Literal["queued", "building", "built", "failed", "waiting"]
+
+
+class LensAutoBuildRegion(ApiModel):
+    region_code: str
+    region_name: str
+    role: Literal["origin", "target"]
+    state: AutoBuildState = Field(description="queued or building: in this server's build queue; built: claims are stored; failed: the last attempt stored nothing; waiting: not built and not queued.")
+    message: str | None
+    last_build: LensBuildView | None
+    updated_at: datetime | None
+
+
+class LensAutoBuild(ApiModel):
+    campaign_id: UUID
+    mode: DataMode
+    enabled: bool = Field(description="Live campaigns whose caller may write: missing states are queued when Lens is opened.")
+    running: bool
+    regions: list[LensAutoBuildRegion]
 
 
 # --- language map ------------------------------------------------------------------------------------------------
@@ -330,6 +487,8 @@ class LensLanguageEntry(ApiModel):
     role: LanguageRole | None = Field(description="From the reference table (principal or additional official language); not a speaker share. Null for census-only languages.")
     shares: list[LensShare] = Field(description="Census 2011 mother-tongue shares. More than one value means sources disagree; all are kept.")
     disputed: bool
+    census_share: float | None = Field(default=None, description="The Census 2011 share read straight from the table (data, not a claim); null where the table has none.")
+    census_speakers: int | None = None
 
 
 class LensLanguageRegion(ApiModel):

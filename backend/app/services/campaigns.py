@@ -79,6 +79,9 @@ async def create_campaign(user_id: UUID, project_id: UUID, body: CampaignCreate)
         await s.flush()
         s.add(version)
         touch(project)
+    from app.services import lens_autobuild  # noqa: PLC0415 - Market Lens builds the states it names, in the background
+
+    lens_autobuild.schedule(user_id, campaign.id)
     return to_campaign(campaign, [version])
 
 

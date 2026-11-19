@@ -2,13 +2,15 @@
  * State facts display logic: pure functions with no React, so each rule can be tested on its own (state-facts-logic.test.mjs,
  * run with `node --test`). Nothing here invents a number: it formats, scales and compares what the API returned.
  */
-export type FactUnit = "percent" | "per100" | "inr";
+export type FactUnit = "percent" | "per100" | "inr" | "million";
 
 const rupees = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
 const oneDecimal = new Intl.NumberFormat("en-IN", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const upToTwo = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 });
 
-/** The exact figure as the source gives it: one decimal for a percentage or a rate, whole rupees for money. */
+/** The exact figure as the source gives it: one decimal for a percentage or a rate, whole rupees for money, millions as published. */
 export function formatFact(unit: FactUnit, value: number): string {
+  if (unit === "million") return `${(value >= 10 ? oneDecimal : upToTwo).format(value)} million`;
   return unit === "inr" ? rupees.format(value) : unit === "percent" ? `${oneDecimal.format(value)}%` : oneDecimal.format(value);
 }
 
@@ -28,7 +30,7 @@ export type VersusIndia = { direction: "above" | "below" | "level"; text: string
 
 /** How a state compares with the all-India figure, in the figure's own unit. Null when the dataset has no all-India row. */
 export function versusIndia(unit: FactUnit, value: number, national: number | null | undefined): VersusIndia | null {
-  if (national === null || national === undefined) return null;
+  if (national === null || national === undefined || unit === "million") return null; // a count beside the country's total says nothing
   const gap = Math.round((value - national) * 10) / 10;
   if (gap === 0) return { direction: "level", text: "Level with India" };
   const size = unit === "inr" ? rupees.format(Math.abs(gap)) : `${oneDecimal.format(Math.abs(gap))}${unit === "percent" ? " pts" : ""}`;

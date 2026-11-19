@@ -49,7 +49,8 @@ SOURCE_NOTES: tuple[SourceNote, ...] = (
         "Curated by hand from the legislation. The terms of the underlying texts were not reviewed."),
     SourceNote(
         "census-2011-c16", "Census of India 2011, table C-16 (population by mother tongue)",
-        "Mother-tongue shares for the four covered states.", "https://censusindia.gov.in/nada/",
+        "Mother-tongue shares for the 31 states and union territories whose territory is unchanged since 2011.",
+        "https://censusindia.gov.in/nada/",
         "All rights reserved by the Census Digital Library (catalog page footer)", "checked",
         "Counts are stored as facts with the table's own citation; the workbook is not redistributed. "
         "A 2011 snapshot, never current."),
@@ -81,8 +82,9 @@ SOURCE_NOTES: tuple[SourceNote, ...] = (
 # Gaps that hold today and are not visible from the data itself. Gaps that can be computed (coverage by state, the
 # curated-reference dates, the ad-code limitations) are added by the service.
 STATIC_GAPS = (
-    "Only four states (IN-MH, IN-TN, IN-KL, IN-WB) have curated cultural references, Census 2011 language shares and "
-    "pageview series. The other 32 states and union territories have regions, languages and scripts only.",
+    "Only four states (IN-MH, IN-TN, IN-KL, IN-WB) have curated cultural references and pageview series. Census 2011 "
+    "language shares cover 31 states and union territories; Andhra Pradesh, Telangana, Jammu and Kashmir, Ladakh and Dadra "
+    "and Nagar Haveli and Daman and Diu have none, because their territory changed after 2011.",
     "The Eighth Schedule of the Constitution lists 22 languages; Maithili and Sindhi are not in this pack's language list.",
     "Regions carry principal and additional languages with no speaker share. Sourced figures live in claims, not here.",
     "The moment list gives typical months only. Exact dates come from the public-holiday package or a dated claim.",

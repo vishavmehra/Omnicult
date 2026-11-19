@@ -172,7 +172,12 @@ async def save_brief(user_id: UUID, campaign_id: UUID, body: v.BriefUpdate) -> v
                 actor_user_id=user_id, detail={"campaign_id": str(campaign_id), "version": row.version_number},
             )
         saved = row or latest
-        return _brief_view(campaign, project, saved, await _count(s, campaign_id))
+        view = _brief_view(campaign, project, saved, await _count(s, campaign_id))
+    if row is not None:
+        from app.services import lens_autobuild  # noqa: PLC0415 - Market Lens builds the brief's states in the background
+
+        lens_autobuild.schedule(user_id, campaign_id)
+    return view
 
 
 async def list_brief_versions(user_id: UUID, campaign_id: UUID, limit: int, offset: int) -> v.BriefVersionPage:

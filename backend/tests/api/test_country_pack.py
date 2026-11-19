@@ -45,7 +45,7 @@ async def test_every_data_source_states_its_licence_review_honestly(client: http
         assert (s["licence_status"] == "checked") == (s["licence"] is not None and s["licence_checked_on"] is not None) or s["licence_status"] == "not_checked"
         if s["licence_status"] == "not_checked":
             assert s["licence_checked_on"] is None  # never a made-up review date
-    assert sources["asci-code-index"]["retrieved_on"] and sources["census-2011-c16"]["retrieved_on"] == "2026-11-17"
+    assert sources["asci-code-index"]["retrieved_on"] and sources["census-2011-c16"]["retrieved_on"] == "2026-11-19"
     assert sources["wikidata"]["retrieved_on"] is None  # queried live
 
 

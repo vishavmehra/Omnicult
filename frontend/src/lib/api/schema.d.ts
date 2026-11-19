@@ -992,6 +992,32 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/lens/auto-build": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Auto Build
+         * @description Where each of the campaign's states stands: queued, building, built, failed (with the reason) or waiting.
+         */
+        get: operations["get_auto_build"];
+        put?: never;
+        /**
+         * Start Auto Build
+         * @description Queue, in the background, a build of every state the campaign names (origin and targets) that has no completed build
+         *     yet, and return the queue. Live campaigns, owner or editor role; for anyone else (and for demo campaigns) nothing is queued
+         *     and the status is returned. Idempotent: queued, running and built states are left alone; one state is built at a time.
+         */
+        post: operations["start_auto_build"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/lens/builds": {
         parameters: {
             query?: never;
@@ -12629,6 +12655,8 @@ export interface components {
              * Format: uuid
              */
             campaign_id: string;
+            /** Data Sources */
+            data_sources: components["schemas"]["LensDataSource"][];
             /**
              * Generated At
              * Format: date-time
@@ -12664,6 +12692,11 @@ export interface components {
              * @description A profile build exists for this state in this mode.
              */
             built: boolean;
+            /**
+             * Campaign Role
+             * @description The state's place in the campaign brief, if it has one.
+             */
+            campaign_role: ("origin" | "target") | null;
             /** Categories Covered */
             categories_covered: number;
             /** Categories Total */
@@ -12672,6 +12705,7 @@ export interface components {
             claims: number;
             /** Code */
             code: string;
+            data: components["schemas"]["LensStateData"];
             /**
              * Kind
              * @enum {string}
@@ -12720,8 +12754,55 @@ export interface components {
             states_total: number;
             /** States With Claims */
             states_with_claims: number;
+            /** States With Data */
+            states_with_data: number;
             /** Weak */
             weak: number;
+        };
+        /** LensAutoBuild */
+        LensAutoBuild: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /**
+             * Enabled
+             * @description Live campaigns whose caller may write: missing states are queued when Lens is opened.
+             */
+            enabled: boolean;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /** Regions */
+            regions: components["schemas"]["LensAutoBuildRegion"][];
+            /** Running */
+            running: boolean;
+        };
+        /** LensAutoBuildRegion */
+        LensAutoBuildRegion: {
+            last_build: components["schemas"]["LensBuildView"] | null;
+            /** Message */
+            message: string | null;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "origin" | "target";
+            /**
+             * State
+             * @description queued or building: in this server's build queue; built: claims are stored; failed: the last attempt stored nothing; waiting: not built and not queued.
+             * @enum {string}
+             */
+            state: "queued" | "building" | "built" | "failed" | "waiting";
+            /** Updated At */
+            updated_at: string | null;
         };
         /** LensBuildBatch */
         LensBuildBatch: {
@@ -12861,6 +12942,13 @@ export interface components {
             campaign_id: string;
             /** Conflicts */
             conflicts: components["schemas"]["Conflict"][];
+            /** Data Sources */
+            data_sources: components["schemas"]["LensDataSource"][];
+            /**
+             * Entries
+             * @description Every dated moment of the year, in date order.
+             */
+            entries: components["schemas"]["LensCalendarEntry"][];
             /** Gaps */
             gaps: string[];
             /**
@@ -12884,7 +12972,17 @@ export interface components {
             sources: components["schemas"]["LensSourceSummary"][];
             /** Timed */
             timed: components["schemas"]["LensTimedMoment"][];
+            /**
+             * Typical
+             * @description Moments the reference data places in typical months, without an exact date.
+             */
+            typical: components["schemas"]["LensTypicalMoment"][];
             window: components["schemas"]["LensWindow"] | null;
+            /**
+             * Window Basis
+             * @description request: the window asked for; campaign: the dates of the campaign brief.
+             */
+            window_basis: ("request" | "campaign") | null;
             /**
              * Workspace Id
              * Format: uuid
@@ -12897,6 +12995,49 @@ export interface components {
              * @description Years with stored public-holiday dates for this state. Other years need a build that includes them.
              */
             years_available: number[];
+        };
+        /**
+         * LensCalendarEntry
+         * @description One dated moment of the year, from a claim, the state's public-holiday list or Google's Holidays in India calendar.
+         */
+        LensCalendarEntry: {
+            about: components["schemas"]["LensMomentAbout"] | null;
+            /**
+             * Claim Id
+             * @description The claim behind the date, when a build stored one.
+             */
+            claim_id: string | null;
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** In Window */
+            in_window: boolean | null;
+            /** Key */
+            key: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "public_holiday" | "festival" | "observance";
+            /** Name */
+            name: string;
+            /**
+             * Sources
+             * @description Every list or claim that gives this date.
+             */
+            sources: components["schemas"]["LensMomentSource"][];
+            /**
+             * Tentative
+             * @description The source marks the date as tentative (lunar dates announced late).
+             */
+            tentative: boolean;
+            /**
+             * Why
+             * @description Why it matters for a campaign, each reason computed from data: the lists that name it, the campaign dates, the weekday, this week's searches.
+             */
+            why: string[];
         };
         /** LensCalendarMonth */
         LensCalendarMonth: {
@@ -12986,6 +13127,13 @@ export interface components {
              * Format: uuid
              */
             campaign_id: string;
+            /**
+             * Data Rows
+             * @description Published figures side by side: one row per figure any compared state has.
+             */
+            data_rows: components["schemas"]["LensDataRow"][];
+            /** Data Sources */
+            data_sources: components["schemas"]["LensDataSource"][];
             /**
              * Generated At
              * Format: date-time
@@ -13077,6 +13225,7 @@ export interface components {
             categories_total: number;
             /** Claims */
             claims: number;
+            data: components["schemas"]["LensStateData"];
             /** High */
             high: number;
             /** Low */
@@ -13119,6 +13268,59 @@ export interface components {
             shared_subjects: number;
             /** Title */
             title: string;
+        };
+        /** LensDataCell */
+        LensDataCell: {
+            /** National */
+            national: number | null;
+            /** Period */
+            period: string | null;
+            /** Region Code */
+            region_code: string;
+            /** Value */
+            value: number | null;
+        };
+        /** LensDataRow */
+        LensDataRow: {
+            /** Cells */
+            cells: components["schemas"]["LensDataCell"][];
+            /**
+             * Highest
+             * @description Region codes with the highest value in this row (ties kept); empty when fewer than two states have one.
+             */
+            highest: string[];
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /**
+             * Unit
+             * @enum {string}
+             */
+            unit: "percent" | "per100" | "inr" | "million";
+        };
+        /**
+         * LensDataSource
+         * @description A dataset behind the state data on a page, with its period and when it was read.
+         */
+        LensDataSource: {
+            /** Detail */
+            detail: string;
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "state_facts" | "search_pulse" | "census_2011" | "public_holidays" | "google_calendar" | "knowledge_graph" | "reference";
+            /** Label */
+            label: string;
+            /** Period */
+            period: string | null;
+            /** Publisher */
+            publisher: string;
+            /** Retrieved At */
+            retrieved_at: string | null;
+            /** Url */
+            url: string | null;
         };
         /**
          * LensDatedMoment
@@ -13170,8 +13372,46 @@ export interface components {
              */
             view: "calendar" | "language_map";
         };
+        /**
+         * LensFigure
+         * @description A published state figure (data.gov.in), with the all-India figure of the same period where the dataset has one.
+         */
+        LensFigure: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** National */
+            national: number | null;
+            /** Period */
+            period: string;
+            /**
+             * Unit
+             * @enum {string}
+             */
+            unit: "percent" | "per100" | "inr" | "million";
+            /** Value */
+            value: number;
+        };
+        /** LensHoliday */
+        LensHoliday: {
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Name */
+            name: string;
+        };
         /** LensLanguageEntry */
         LensLanguageEntry: {
+            /**
+             * Census Share
+             * @description The Census 2011 share read straight from the table (data, not a claim); null where the table has none.
+             */
+            census_share: number | null;
+            /** Census Speakers */
+            census_speakers: number | null;
             /** Code */
             code: string | null;
             /** Disputed */
@@ -13192,6 +13432,23 @@ export interface components {
              * @description Census 2011 mother-tongue shares. More than one value means sources disagree; all are kept.
              */
             shares: components["schemas"]["LensShare"][];
+        };
+        /** LensLanguageFact */
+        LensLanguageFact: {
+            /** Code */
+            code: string | null;
+            /** Name */
+            name: string;
+            /**
+             * Role
+             * @description From the reference table (principal or additional official language); not a speaker share.
+             */
+            role: ("primary" | "secondary" | "code_mixed") | null;
+            /**
+             * Share
+             * @description Census 2011 mother-tongue share in percent; null where the census gives none for this state.
+             */
+            share: number | null;
         };
         /** LensLanguageMap */
         LensLanguageMap: {
@@ -13249,6 +13506,29 @@ export interface components {
             region_code: string;
             /** Region Name */
             region_name: string;
+        };
+        /**
+         * LensMomentAbout
+         * @description What a moment is, in a short description with its attribution (never written by a model).
+         */
+        LensMomentAbout: {
+            /** Attribution */
+            attribution: string;
+            /** Text */
+            text: string;
+            /** Url */
+            url: string | null;
+        };
+        /** LensMomentSource */
+        LensMomentSource: {
+            /** Label */
+            label: string;
+            /** Publisher */
+            publisher: string;
+            /** Retrieved At */
+            retrieved_at: string | null;
+            /** Url */
+            url: string | null;
         };
         /** LensMonth */
         LensMonth: {
@@ -13342,6 +13622,23 @@ export interface components {
              * @description The weeks kept, oldest first.
              */
             weeks: string[];
+        };
+        /** LensSearchTerm */
+        LensSearchTerm: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "top" | "rising";
+            /** Percent Gain */
+            percent_gain: number | null;
+            /**
+             * Score
+             * @description Google's 0 to 100 score for this state in the newest week; terms with no score are left out.
+             */
+            score: number;
+            /** Term */
+            term: string;
         };
         /** LensShare */
         LensShare: {
@@ -13613,6 +13910,50 @@ export interface components {
              */
             sources: number;
         };
+        /**
+         * LensStateData
+         * @description What public datasets say about a state, whether or not it was ever built. Copied from each dataset, never estimated.
+         */
+        LensStateData: {
+            /**
+             * Census Population
+             * @description 2011 population of the state in the census table; null where the territory has changed since.
+             */
+            census_population: number | null;
+            /**
+             * Families
+             * @description The datasets that hold something for this state.
+             */
+            families: ("state_facts" | "search_pulse" | "census_2011" | "public_holidays" | "google_calendar" | "knowledge_graph" | "reference")[];
+            /** Figures */
+            figures: components["schemas"]["LensFigure"][];
+            /**
+             * Holidays
+             * @description Public holidays on the state's list for holidays_year (python-holidays).
+             */
+            holidays: number;
+            /** Holidays Year */
+            holidays_year: number;
+            /**
+             * Languages
+             * @description Census 2011 mother tongues by share where the census covers the state, else the reference languages.
+             */
+            languages: components["schemas"]["LensLanguageFact"][];
+            /** Next Holidays */
+            next_holidays: components["schemas"]["LensHoliday"][];
+            /**
+             * Rising
+             * @description Rising searches of the newest week, by this state's score.
+             */
+            rising: components["schemas"]["LensSearchTerm"][];
+            /** Search Week */
+            search_week: string | null;
+            /**
+             * Searches
+             * @description Top searches of the newest week, by this state's score.
+             */
+            searches: components["schemas"]["LensSearchTerm"][];
+        };
         /** LensStateProfile */
         LensStateProfile: {
             /** @description The latest build; null when the state has never been built in this mode. */
@@ -13622,8 +13963,13 @@ export interface components {
              * Format: uuid
              */
             campaign_id: string;
+            /** Campaign Role */
+            campaign_role: ("origin" | "target") | null;
             /** Conflicts */
             conflicts: components["schemas"]["Conflict"][];
+            data: components["schemas"]["LensStateData"];
+            /** Data Sources */
+            data_sources: components["schemas"]["LensDataSource"][];
             /** Gaps */
             gaps: string[];
             /**
@@ -14046,6 +14392,24 @@ export interface components {
             recent_from: string;
             /** Recent To */
             recent_to: string;
+        };
+        /** LensTypicalMoment */
+        LensTypicalMoment: {
+            /** Calendar */
+            calendar: string;
+            /**
+             * Dated
+             * @description An exact date for this year is on the calendar.
+             */
+            dated: boolean;
+            /** Kind */
+            kind: string;
+            /** Months */
+            months: number[];
+            /** Name */
+            name: string;
+            /** Note */
+            note: string;
         };
         /** LensWindow */
         LensWindow: {
@@ -20233,7 +20597,7 @@ export interface components {
              * Unit
              * @enum {string}
              */
-            unit: "percent" | "per100" | "inr";
+            unit: "percent" | "per100" | "inr" | "million";
             /** Value */
             value: number | null;
         };
@@ -20245,7 +20609,7 @@ export interface components {
              * Key
              * @enum {string}
              */
-            key: "connectivity" | "economy" | "people";
+            key: "connectivity" | "economy" | "homes" | "people" | "visitors";
             /** Title */
             title: string;
         };
@@ -30275,6 +30639,248 @@ export interface operations {
             };
         };
     };
+    get_auto_build: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensAutoBuild"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_auto_build: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensAutoBuild"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_builds: {
         parameters: {
             query?: {
@@ -31396,7 +32002,7 @@ export interface operations {
     get_moment_calendar: {
         parameters: {
             query?: {
-                /** @description Default: the current year. */
+                /** @description Default: the year the campaign dates start in, else the current year. */
                 year?: number | null;
                 /** @description Start of a campaign window to compare moments against. */
                 window_from?: string | null;

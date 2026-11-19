@@ -84,8 +84,8 @@ async def test_demo_reads_the_recorded_snapshot_and_never_builds_a_client(aamod:
 
 async def test_demo_states_outside_the_recording_and_states_google_lacks_say_so(aamod: httpx.AsyncClient, no_bigquery: None) -> None:
     _, base = await aamod_campaign(aamod)
-    other = (await aamod.get(url(base, "IN-KA"))).json()
-    assert other["supported"] and other["top"] == [] and "demo recording" in other["gaps"][0]
+    other = (await aamod.get(url(base, "IN-KA"))).json()  # the recording covers every state Google reports
+    assert other["supported"] and other["top"] and other["gaps"] == []
     ladakh = (await aamod.get(url(base, "IN-LA"))).json()
     assert ladakh["supported"] is False and ladakh["top"] == [] and ladakh["can_refresh"] is False
     assert (await aamod.get(url(base, "IN-ZZ"))).status_code == 404

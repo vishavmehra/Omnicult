@@ -1,9 +1,11 @@
-"""Census of India 2011, table C-16 (population by mother tongue): language mix for the four demo states.
+"""Census of India 2011, table C-16 (population by mother tongue): language mix for 31 states and union territories.
 
 Data comes from the official state workbooks in the Census Digital Library, reduced to a small JSON file by
 `scripts/culture_build_census.py`. It is a 2011 snapshot: every claim carries scope period "2011" and says so in its
 text, and it must never be presented as the current language mix. Mother tongue is the language a person reports as
-spoken in childhood; it is not proficiency, media consumption or language preference today.
+spoken in childhood; it is not proficiency, media consumption or language preference today. States whose territory changed
+after 2011 (Andhra Pradesh and Telangana, Jammu and Kashmir and Ladakh, Dadra and Nagar Haveli and Daman and Diu) are not
+in the file, so no 2011 figure is given to today's state.
 """
 
 import json
@@ -11,13 +13,15 @@ import re
 from datetime import UTC, date, datetime, time, timedelta
 from functools import lru_cache
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 from app.integrations.culture.base import SourceBase, SourceDescriptor
-from app.integrations.culture.regions import region_for
+from app.reference.india import REGIONS
 from app.schemas.claims import ClaimDraft, ClaimScope, SourceRef
 
 DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "census_2011_languages.json"
+_NAMES = {r.code: r.name for r in REGIONS}
 
 
 @lru_cache(maxsize=1)
@@ -29,22 +33,24 @@ class CensusSource(SourceBase):
     name = "census_2011"
     descriptor = SourceDescriptor(
         name="census_2011", source_type="public_dataset", supported_operations=frozenset({"audience_facts"}),
-        scope="IN-MH, IN-TN, IN-KL, IN-WB; mother-tongue shares; Census of India 2011 (table C-16).",
+        scope="31 states and union territories whose territory is unchanged since 2011; mother-tongue shares; Census of India 2011 (table C-16).",
         coverage_limitations=[
             "2011 data: more than a decade old, never current; migration and urbanisation have changed language use since.",
             "Mother tongue, not proficiency, media language or purchase language.",
             "State level only; no city tier or age split.",
-            "Languages below 0.5% of a state are folded into other_speakers unless they are one of mr, ta, ml, bn, hi, en.",
+            "Languages below 0.5% of a state are folded into other_speakers unless they are the state's own languages, Hindi or English.",
+            "No figure for states whose territory changed after 2011 (AP and TS, JK and LA, DH).",
         ],
         cache_policy={"audience_facts": timedelta(days=30)},
     )
 
     async def audience_facts(self, region_code: str) -> list[ClaimDraft]:
-        region = region_for(region_code)
+        code = region_code.upper()
         data = load_census()
-        state = data["states"].get(region.code) if region else None
+        state = data["states"].get(code)
         if state is None:
             return []
+        region = SimpleNamespace(code=code, name=_NAMES.get(code, state["state_name"]))  # today's code and name
         retrieved = datetime.combine(date.fromisoformat(data["retrieved_on"]), time.min, tzinfo=UTC)
         population = state["population"]
         languages = state["languages"]
@@ -61,7 +67,7 @@ class CensusSource(SourceBase):
                 url=state["catalog_url"], title=state["citation"], publisher=data["publisher"],
                 published_at=date.fromisoformat(state["catalog_created"]),  # the library entry date; the data year is in scope.period
                 retrieved_at=retrieved, independence_group="census_2011",
-                excerpt=(f"Table C0116, state {region.census_state_code} {state['state_name'].upper()}, mother tongue "
+                excerpt=(f"Table C0116, state {state['state_code']} {state['state_name'].upper()}, mother tongue "
                          f"{lang['mother_tongue_code']} {name.upper()}: total persons {speakers}"))
             row_sources[lang["mother_tongue_code"]] = source
             out.append(ClaimDraft(

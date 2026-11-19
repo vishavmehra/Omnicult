@@ -23548,6 +23548,13 @@
             "title": "Campaign Id",
             "type": "string"
           },
+          "data_sources": {
+            "items": {
+              "$ref": "#/components/schemas/LensDataSource"
+            },
+            "title": "Data Sources",
+            "type": "array"
+          },
           "generated_at": {
             "format": "date-time",
             "title": "Generated At",
@@ -23605,6 +23612,7 @@
           "summary",
           "states",
           "sources",
+          "data_sources",
           "limitations"
         ],
         "title": "LensAtlas",
@@ -23617,6 +23625,22 @@
             "description": "A profile build exists for this state in this mode.",
             "title": "Built",
             "type": "boolean"
+          },
+          "campaign_role": {
+            "anyOf": [
+              {
+                "enum": [
+                  "origin",
+                  "target"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The state's place in the campaign brief, if it has one.",
+            "title": "Campaign Role"
           },
           "categories_covered": {
             "title": "Categories Covered",
@@ -23633,6 +23657,9 @@
           "code": {
             "title": "Code",
             "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/LensStateData"
           },
           "kind": {
             "enum": [
@@ -23756,7 +23783,9 @@
           "open_conflicts",
           "stale_claims",
           "built",
-          "last_build"
+          "last_build",
+          "campaign_role",
+          "data"
         ],
         "title": "LensAtlasState",
         "type": "object"
@@ -23788,6 +23817,10 @@
             "title": "States With Claims",
             "type": "integer"
           },
+          "states_with_data": {
+            "title": "States With Data",
+            "type": "integer"
+          },
           "weak": {
             "title": "Weak",
             "type": "integer"
@@ -23796,6 +23829,7 @@
         "required": [
           "states_total",
           "states_with_claims",
+          "states_with_data",
           "weak",
           "partial",
           "solid",
@@ -23803,6 +23837,126 @@
           "open_conflicts"
         ],
         "title": "LensAtlasSummary",
+        "type": "object"
+      },
+      "LensAutoBuild": {
+        "additionalProperties": false,
+        "properties": {
+          "campaign_id": {
+            "format": "uuid",
+            "title": "Campaign Id",
+            "type": "string"
+          },
+          "enabled": {
+            "description": "Live campaigns whose caller may write: missing states are queued when Lens is opened.",
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "mode": {
+            "enum": [
+              "live",
+              "demo"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "regions": {
+            "items": {
+              "$ref": "#/components/schemas/LensAutoBuildRegion"
+            },
+            "title": "Regions",
+            "type": "array"
+          },
+          "running": {
+            "title": "Running",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "campaign_id",
+          "mode",
+          "enabled",
+          "running",
+          "regions"
+        ],
+        "title": "LensAutoBuild",
+        "type": "object"
+      },
+      "LensAutoBuildRegion": {
+        "additionalProperties": false,
+        "properties": {
+          "last_build": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LensBuildView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "region_code": {
+            "title": "Region Code",
+            "type": "string"
+          },
+          "region_name": {
+            "title": "Region Name",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "origin",
+              "target"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "state": {
+            "description": "queued or building: in this server's build queue; built: claims are stored; failed: the last attempt stored nothing; waiting: not built and not queued.",
+            "enum": [
+              "queued",
+              "building",
+              "built",
+              "failed",
+              "waiting"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "required": [
+          "region_code",
+          "region_name",
+          "role",
+          "state",
+          "message",
+          "last_build",
+          "updated_at"
+        ],
+        "title": "LensAutoBuildRegion",
         "type": "object"
       },
       "LensBuildBatch": {
@@ -24086,6 +24240,21 @@
             "title": "Conflicts",
             "type": "array"
           },
+          "data_sources": {
+            "items": {
+              "$ref": "#/components/schemas/LensDataSource"
+            },
+            "title": "Data Sources",
+            "type": "array"
+          },
+          "entries": {
+            "description": "Every dated moment of the year, in date order.",
+            "items": {
+              "$ref": "#/components/schemas/LensCalendarEntry"
+            },
+            "title": "Entries",
+            "type": "array"
+          },
           "gaps": {
             "items": {
               "type": "string"
@@ -24141,6 +24310,14 @@
             "title": "Timed",
             "type": "array"
           },
+          "typical": {
+            "description": "Moments the reference data places in typical months, without an exact date.",
+            "items": {
+              "$ref": "#/components/schemas/LensTypicalMoment"
+            },
+            "title": "Typical",
+            "type": "array"
+          },
           "window": {
             "anyOf": [
               {
@@ -24150,6 +24327,22 @@
                 "type": "null"
               }
             ]
+          },
+          "window_basis": {
+            "anyOf": [
+              {
+                "enum": [
+                  "request",
+                  "campaign"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "request: the window asked for; campaign: the dates of the campaign brief.",
+            "title": "Window Basis"
           },
           "workspace_id": {
             "format": "uuid",
@@ -24179,14 +24372,115 @@
           "year",
           "years_available",
           "window",
+          "window_basis",
+          "entries",
+          "typical",
           "months",
           "timed",
           "conflicts",
           "sources",
+          "data_sources",
           "gaps",
           "limitations"
         ],
         "title": "LensCalendar",
+        "type": "object"
+      },
+      "LensCalendarEntry": {
+        "additionalProperties": false,
+        "description": "One dated moment of the year, from a claim, the state's public-holiday list or Google's Holidays in India calendar.",
+        "properties": {
+          "about": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LensMomentAbout"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "claim_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The claim behind the date, when a build stored one.",
+            "title": "Claim Id"
+          },
+          "date": {
+            "format": "date",
+            "title": "Date",
+            "type": "string"
+          },
+          "in_window": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "In Window"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "public_holiday",
+              "festival",
+              "observance"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "sources": {
+            "description": "Every list or claim that gives this date.",
+            "items": {
+              "$ref": "#/components/schemas/LensMomentSource"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "tentative": {
+            "description": "The source marks the date as tentative (lunar dates announced late).",
+            "title": "Tentative",
+            "type": "boolean"
+          },
+          "why": {
+            "description": "Why it matters for a campaign, each reason computed from data: the lists that name it, the campaign dates, the weekday, this week's searches.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Why",
+            "type": "array"
+          }
+        },
+        "required": [
+          "key",
+          "date",
+          "name",
+          "kind",
+          "about",
+          "why",
+          "sources",
+          "claim_id",
+          "tentative",
+          "in_window"
+        ],
+        "title": "LensCalendarEntry",
         "type": "object"
       },
       "LensCalendarMonth": {
@@ -24417,6 +24711,21 @@
             "title": "Campaign Id",
             "type": "string"
           },
+          "data_rows": {
+            "description": "Published figures side by side: one row per figure any compared state has.",
+            "items": {
+              "$ref": "#/components/schemas/LensDataRow"
+            },
+            "title": "Data Rows",
+            "type": "array"
+          },
+          "data_sources": {
+            "items": {
+              "$ref": "#/components/schemas/LensDataSource"
+            },
+            "title": "Data Sources",
+            "type": "array"
+          },
           "generated_at": {
             "format": "date-time",
             "title": "Generated At",
@@ -24475,8 +24784,10 @@
           "mode_label",
           "generated_at",
           "regions",
+          "data_rows",
           "rows",
           "sources",
+          "data_sources",
           "limitations"
         ],
         "title": "LensCompare",
@@ -24625,6 +24936,9 @@
             "title": "Claims",
             "type": "integer"
           },
+          "data": {
+            "$ref": "#/components/schemas/LensStateData"
+          },
           "high": {
             "title": "High",
             "type": "integer"
@@ -24708,7 +25022,8 @@
           "low",
           "moderate",
           "high",
-          "built"
+          "built",
+          "data"
         ],
         "title": "LensCompareRegion",
         "type": "object"
@@ -24752,6 +25067,179 @@
           "shared_subjects"
         ],
         "title": "LensCompareRow",
+        "type": "object"
+      },
+      "LensDataCell": {
+        "additionalProperties": false,
+        "properties": {
+          "national": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "National"
+          },
+          "period": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period"
+          },
+          "region_code": {
+            "title": "Region Code",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "region_code",
+          "value",
+          "national",
+          "period"
+        ],
+        "title": "LensDataCell",
+        "type": "object"
+      },
+      "LensDataRow": {
+        "additionalProperties": false,
+        "properties": {
+          "cells": {
+            "items": {
+              "$ref": "#/components/schemas/LensDataCell"
+            },
+            "title": "Cells",
+            "type": "array"
+          },
+          "highest": {
+            "description": "Region codes with the highest value in this row (ties kept); empty when fewer than two states have one.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Highest",
+            "type": "array"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "unit": {
+            "enum": [
+              "percent",
+              "per100",
+              "inr",
+              "million"
+            ],
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "unit",
+          "cells",
+          "highest"
+        ],
+        "title": "LensDataRow",
+        "type": "object"
+      },
+      "LensDataSource": {
+        "additionalProperties": false,
+        "description": "A dataset behind the state data on a page, with its period and when it was read.",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "key": {
+            "enum": [
+              "state_facts",
+              "search_pulse",
+              "census_2011",
+              "public_holidays",
+              "google_calendar",
+              "knowledge_graph",
+              "reference"
+            ],
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "period": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period"
+          },
+          "publisher": {
+            "title": "Publisher",
+            "type": "string"
+          },
+          "retrieved_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retrieved At"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "publisher",
+          "url",
+          "detail",
+          "period",
+          "retrieved_at"
+        ],
+        "title": "LensDataSource",
         "type": "object"
       },
       "LensDatedMoment": {
@@ -24861,9 +25349,105 @@
         "title": "LensElsewhere",
         "type": "object"
       },
+      "LensFigure": {
+        "additionalProperties": false,
+        "description": "A published state figure (data.gov.in), with the all-India figure of the same period where the dataset has one.",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "national": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "National"
+          },
+          "period": {
+            "title": "Period",
+            "type": "string"
+          },
+          "unit": {
+            "enum": [
+              "percent",
+              "per100",
+              "inr",
+              "million"
+            ],
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "unit",
+          "value",
+          "national",
+          "period"
+        ],
+        "title": "LensFigure",
+        "type": "object"
+      },
+      "LensHoliday": {
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "format": "date",
+            "title": "Date",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "name"
+        ],
+        "title": "LensHoliday",
+        "type": "object"
+      },
       "LensLanguageEntry": {
         "additionalProperties": false,
         "properties": {
+          "census_share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The Census 2011 share read straight from the table (data, not a claim); null where the table has none.",
+            "title": "Census Share"
+          },
+          "census_speakers": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Census Speakers"
+          },
           "code": {
             "anyOf": [
               {
@@ -24938,9 +25522,68 @@
           "script",
           "role",
           "shares",
-          "disputed"
+          "disputed",
+          "census_share",
+          "census_speakers"
         ],
         "title": "LensLanguageEntry",
+        "type": "object"
+      },
+      "LensLanguageFact": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "enum": [
+                  "primary",
+                  "secondary",
+                  "code_mixed"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "From the reference table (principal or additional official language); not a speaker share.",
+            "title": "Role"
+          },
+          "share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Census 2011 mother-tongue share in percent; null where the census gives none for this state.",
+            "title": "Share"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "role",
+          "share"
+        ],
+        "title": "LensLanguageFact",
         "type": "object"
       },
       "LensLanguageMap": {
@@ -25081,6 +25724,82 @@
           "conflicts"
         ],
         "title": "LensLanguageRegion",
+        "type": "object"
+      },
+      "LensMomentAbout": {
+        "additionalProperties": false,
+        "description": "What a moment is, in a short description with its attribution (never written by a model).",
+        "properties": {
+          "attribution": {
+            "title": "Attribution",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "text",
+          "url",
+          "attribution"
+        ],
+        "title": "LensMomentAbout",
+        "type": "object"
+      },
+      "LensMomentSource": {
+        "additionalProperties": false,
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "publisher": {
+            "title": "Publisher",
+            "type": "string"
+          },
+          "retrieved_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retrieved At"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "label",
+          "url",
+          "publisher",
+          "retrieved_at"
+        ],
+        "title": "LensMomentSource",
         "type": "object"
       },
       "LensMonth": {
@@ -25316,6 +26035,47 @@
           "can_refresh"
         ],
         "title": "LensSearchPulse",
+        "type": "object"
+      },
+      "LensSearchTerm": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "top",
+              "rising"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "percent_gain": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Percent Gain"
+          },
+          "score": {
+            "description": "Google's 0 to 100 score for this state in the newest week; terms with no score are left out.",
+            "title": "Score",
+            "type": "integer"
+          },
+          "term": {
+            "title": "Term",
+            "type": "string"
+          }
+        },
+        "required": [
+          "term",
+          "kind",
+          "score",
+          "percent_gain"
+        ],
+        "title": "LensSearchTerm",
         "type": "object"
       },
       "LensShare": {
@@ -26044,6 +26804,114 @@
         "title": "LensSourceSummary",
         "type": "object"
       },
+      "LensStateData": {
+        "additionalProperties": false,
+        "description": "What public datasets say about a state, whether or not it was ever built. Copied from each dataset, never estimated.",
+        "properties": {
+          "census_population": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "2011 population of the state in the census table; null where the territory has changed since.",
+            "title": "Census Population"
+          },
+          "families": {
+            "description": "The datasets that hold something for this state.",
+            "items": {
+              "enum": [
+                "state_facts",
+                "search_pulse",
+                "census_2011",
+                "public_holidays",
+                "google_calendar",
+                "knowledge_graph",
+                "reference"
+              ],
+              "type": "string"
+            },
+            "title": "Families",
+            "type": "array"
+          },
+          "figures": {
+            "items": {
+              "$ref": "#/components/schemas/LensFigure"
+            },
+            "title": "Figures",
+            "type": "array"
+          },
+          "holidays": {
+            "description": "Public holidays on the state's list for holidays_year (python-holidays).",
+            "title": "Holidays",
+            "type": "integer"
+          },
+          "holidays_year": {
+            "title": "Holidays Year",
+            "type": "integer"
+          },
+          "languages": {
+            "description": "Census 2011 mother tongues by share where the census covers the state, else the reference languages.",
+            "items": {
+              "$ref": "#/components/schemas/LensLanguageFact"
+            },
+            "title": "Languages",
+            "type": "array"
+          },
+          "next_holidays": {
+            "items": {
+              "$ref": "#/components/schemas/LensHoliday"
+            },
+            "title": "Next Holidays",
+            "type": "array"
+          },
+          "rising": {
+            "description": "Rising searches of the newest week, by this state's score.",
+            "items": {
+              "$ref": "#/components/schemas/LensSearchTerm"
+            },
+            "title": "Rising",
+            "type": "array"
+          },
+          "search_week": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Search Week"
+          },
+          "searches": {
+            "description": "Top searches of the newest week, by this state's score.",
+            "items": {
+              "$ref": "#/components/schemas/LensSearchTerm"
+            },
+            "title": "Searches",
+            "type": "array"
+          }
+        },
+        "required": [
+          "figures",
+          "languages",
+          "census_population",
+          "searches",
+          "rising",
+          "search_week",
+          "holidays_year",
+          "holidays",
+          "next_holidays",
+          "families"
+        ],
+        "title": "LensStateData",
+        "type": "object"
+      },
       "LensStateProfile": {
         "additionalProperties": false,
         "properties": {
@@ -26063,11 +26931,36 @@
             "title": "Campaign Id",
             "type": "string"
           },
+          "campaign_role": {
+            "anyOf": [
+              {
+                "enum": [
+                  "origin",
+                  "target"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Campaign Role"
+          },
           "conflicts": {
             "items": {
               "$ref": "#/components/schemas/Conflict"
             },
             "title": "Conflicts",
+            "type": "array"
+          },
+          "data": {
+            "$ref": "#/components/schemas/LensStateData"
+          },
+          "data_sources": {
+            "items": {
+              "$ref": "#/components/schemas/LensDataSource"
+            },
+            "title": "Data Sources",
             "type": "array"
           },
           "gaps": {
@@ -26138,7 +27031,10 @@
           "sections",
           "conflicts",
           "build",
+          "campaign_role",
+          "data",
           "sources",
+          "data_sources",
           "gaps",
           "limitations"
         ],
@@ -27136,6 +28032,49 @@
           "quarter_ago_to"
         ],
         "title": "LensTrendWindows",
+        "type": "object"
+      },
+      "LensTypicalMoment": {
+        "additionalProperties": false,
+        "properties": {
+          "calendar": {
+            "title": "Calendar",
+            "type": "string"
+          },
+          "dated": {
+            "description": "An exact date for this year is on the calendar.",
+            "title": "Dated",
+            "type": "boolean"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "months": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Months",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "kind",
+          "months",
+          "calendar",
+          "note",
+          "dated"
+        ],
+        "title": "LensTypicalMoment",
         "type": "object"
       },
       "LensWindow": {
@@ -43081,7 +44020,8 @@
             "enum": [
               "percent",
               "per100",
-              "inr"
+              "inr",
+              "million"
             ],
             "title": "Unit",
             "type": "string"
@@ -43125,7 +44065,9 @@
             "enum": [
               "connectivity",
               "economy",
-              "people"
+              "homes",
+              "people",
+              "visitors"
             ],
             "title": "Key",
             "type": "string"
@@ -59151,6 +60093,302 @@
         ]
       }
     },
+    "/api/v1/campaigns/{campaign_id}/lens/auto-build": {
+      "get": {
+        "description": "Where each of the campaign's states stands: queued, building, built, failed (with the reason) or waiting.",
+        "operationId": "get_auto_build",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LensAutoBuild"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Auto Build",
+        "tags": [
+          "lens"
+        ]
+      },
+      "post": {
+        "description": "Queue, in the background, a build of every state the campaign names (origin and targets) that has no completed build\nyet, and return the queue. Live campaigns, owner or editor role; for anyone else (and for demo campaigns) nothing is queued\nand the status is returned. Idempotent: queued, running and built states are left alone; one state is built at a time.",
+        "operationId": "start_auto_build",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Campaign Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LensAutoBuild"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNAUTHENTICATED"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "FORBIDDEN"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "NOT_FOUND"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "CONFLICT"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "VALIDATION_ERROR"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "RATE_LIMITED"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "INTERNAL_ERROR"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "UNSUPPORTED_CAPABILITY"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_ERROR"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_NOT_CONFIGURED"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "PROVIDER_TIMEOUT"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Start Auto Build",
+        "tags": [
+          "lens"
+        ]
+      }
+    },
     "/api/v1/campaigns/{campaign_id}/lens/builds": {
       "get": {
         "description": "Build history of the workspace in the campaign's mode, newest first.",
@@ -60684,7 +61922,7 @@
             }
           },
           {
-            "description": "Default: the current year.",
+            "description": "Default: the year the campaign dates start in, else the current year.",
             "in": "query",
             "name": "year",
             "required": false,
@@ -60699,7 +61937,7 @@
                   "type": "null"
                 }
               ],
-              "description": "Default: the current year.",
+              "description": "Default: the year the campaign dates start in, else the current year.",
               "title": "Year"
             }
           },

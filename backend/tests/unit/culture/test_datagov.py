@@ -55,11 +55,18 @@ def test_the_catalogue_is_consistent() -> None:
         assert len({(m.key, m.period) for m in r.metrics}) == len(r.metrics), r.key  # one column per metric and period
 
 
+CHANGED_SINCE_2011 = {"Andhra Pradesh", "Andhra Pradesh(old)", "Jammu and Kashmir", "Jammu & Kashmir", "Dadra and Nagar Haveli",
+                      "D&N Haveli", "Daman and Diu", "Daman & Diu"}
+
+
 def test_the_recorded_snapshot_parses_to_the_published_figures() -> None:
     by: dict[tuple[str, str, str], float] = {}
     for key, saved in recorded()["resources"].items():
         rows, unmapped = parse_records(BY_KEY[key], saved["records"])
-        assert unmapped == [], (key, unmapped)
+        if BY_KEY[key].census_2011:  # 2011 rows of states whose territory changed since are never given to today's state
+            assert set(unmapped) <= CHANGED_SINCE_2011, (key, unmapped)
+        else:
+            assert unmapped == (["Total"] if key == "tourism" else []), (key, unmapped)  # tourism's regional subtotals are dropped
         by.update({(r.region_code, r.metric, r.period): r.value for r in rows})
     assert by[("IN-TN", "women_internet", "2019-21")] == 46.9 and by[(NATIONAL, "women_internet", "2019-21")] == 33.3
     assert by[("IN-MH", "women_internet", "2019-21")] > 0  # "Maharastra" in the NFHS table
@@ -67,6 +74,9 @@ def test_the_recorded_snapshot_parses_to_the_published_figures() -> None:
     assert by[("IN-TN", "nsdp", "2022-23")] == 275583 and (NATIONAL, "nsdp", "2022-23") not in by  # NSDP has no all-India row
     assert by[("IN-TN", "mpce_urban", "2023-24")] == 8165 and by[(NATIONAL, "teledensity", "Jun 2024")] == 85.95
     assert ("IN-AP", "literacy", "2011") not in by  # undivided-state census rows are not mapped
+    # Tourism names its all-India row "Overall"; its regional "Total" subtotals are never taken for India.
+    assert by[(NATIONAL, "tourist_visits_domestic", "2024")] == 2948.191 and by[("IN-TN", "tourist_visits_domestic", "2024")] == 306.842
+    assert by[("IN-KL", "home_no_internet", "2025")] == 8.3 and by[("IN-MH", "women_bank", "2019-21")] == 72.8
 
 
 def test_unreadable_cells_are_skipped_not_guessed() -> None:

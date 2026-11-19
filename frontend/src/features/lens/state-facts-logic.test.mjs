@@ -9,6 +9,9 @@ test("figures keep the precision the source gives", () => {
   assert.equal(formatFact("percent", 99), "99.0%");
   assert.equal(formatFact("per100", 104.29), "104.3");
   assert.match(formatFact("inr", 275583), /^₹\s?2,75,583$/);
+  assert.equal(formatFact("million", 306.842), "306.8 million");
+  assert.equal(formatFact("million", 0.738), "0.74 million");
+  assert.equal(versusIndia("million", 306.8, 2948.2), null); // a state's visits beside the country's total say nothing
 });
 
 test("a bar for a percentage is out of 100 and any other bar is a little taller than its tallest value", () => {
