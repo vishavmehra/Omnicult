@@ -21,6 +21,9 @@ export function VideoResult({ output }: { output: RemakeOutput }) {
   const poster = useAssetObjectUrl(v?.start_frame_asset_id && v.start_frame_url ? { id: v.start_frame_asset_id, content_url: v.start_frame_url } : null);
   if (!v) return <Notice>This remake has no clip.</Notice>;
   const demo = v.source === "demo_fixture";
+  const brand = v.checks.filter((c) => c.element_id);
+  const checks = v.checks.filter((c) => !c.element_id);
+  const kept = v.kept_regions.filter((r) => !brand.some((c) => c.element_id === r.element_id));
   return (
     <section aria-label="Clip result" className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
@@ -57,11 +60,33 @@ export function VideoResult({ output }: { output: RemakeOutput }) {
         )}
       </div>
 
-      {v.kept_regions.length > 0 && (
-        <section aria-label="Brand elements" className="space-y-2 rounded-card border border-border bg-surface px-3.5 py-3">
-          <h3 className="text-[13.5px] font-semibold text-ink">Brand elements in the start frame</h3>
+      {brand.length > 0 && (
+        <section aria-label="Brand elements" className="rounded-card border border-border bg-surface">
+          <h3 className="border-b border-border px-3.5 py-2.5 text-[13.5px] font-semibold text-ink">
+            Brand elements <span className="type-meta font-normal">compared with their drawing every 0.5 s</span>
+          </h3>
+          <ul className="divide-y divide-border">
+            {brand.map((c) => (
+              <li key={c.element_id} className="flex items-start justify-between gap-3 px-3.5 py-2 text-[13px]">
+                <span className="min-w-0">
+                  <span className="text-ink">{c.name}</span>
+                  <span className="block type-meta">{c.detail}</span>
+                </span>
+                <span className={c.passed ? "inline-flex shrink-0 items-center gap-1 text-[12.5px] text-success" : "inline-flex shrink-0 items-center gap-1 text-[12.5px] text-warning"}>
+                  {c.passed ? <Check aria-hidden className="size-3.5" /> : <X aria-hidden className="size-3.5" />}
+                  {c.passed ? "Held" : "Drifted"}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {kept.length > 0 && (
+        <section aria-label="Locked regions" className="space-y-2 rounded-card border border-border bg-surface px-3.5 py-3">
+          <h3 className="text-[13.5px] font-semibold text-ink">Locked regions in the start frame</h3>
           <ul className="flex flex-wrap gap-1.5">
-            {v.kept_regions.map((r) => (
+            {kept.map((r) => (
               <li key={r.element_id}>
                 <LockChip>{r.kind}</LockChip>
               </li>
@@ -73,13 +98,13 @@ export function VideoResult({ output }: { output: RemakeOutput }) {
         </section>
       )}
 
-      {v.checks.length > 0 && (
+      {checks.length > 0 && (
         <section aria-label="Checks computed in code" className="rounded-card border border-border bg-surface">
           <h3 className="border-b border-border px-3.5 py-2.5 text-[13.5px] font-semibold text-ink">
             Checks of the file <span className="type-meta font-normal">read with ffprobe, not by a model</span>
           </h3>
           <ul className="divide-y divide-border">
-            {v.checks.map((c) => (
+            {checks.map((c) => (
               <li key={c.name} className="flex items-start justify-between gap-3 px-3.5 py-2 text-[13px]">
                 <span className="min-w-0">
                   <span className="text-ink">{c.name}</span>

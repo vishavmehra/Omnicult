@@ -54,6 +54,8 @@ from app.workflows.remake_video import (
 
 VIDEO_ELEMENT_ID = "remake-video"
 MAX_SCENES = 4
+FRAME_NOTE_BRAND = ("The regional scene without its logo and tagline: they are drawn in code over the clip, so the model never sees or draws "
+                    "them. Other locked regions are restored from the original. No text.")
 FRAME_NOTES = {
     "remake_scene": "The generated scene of the Remake: Visuals result in this version, with the locked regions restored from the original. No text.",
     "asset": "The image you chose, used as it is.",
@@ -297,7 +299,8 @@ async def preview(user_id: UUID, campaign_id: UUID, body: r.RemakeVideoRequest) 
         mode=p.project.mode, can_run=problem is None, blocked_reason=problem, source_version_id=p.source.id,  # type: ignore[arg-type]
         region_code=p.region.code, language=p.language.code,
         start_frame=r.VideoStartFrame(
-            source=source, description=FRAME_NOTES[source], aspect_ratio=aspect, width=size[0] if size else None,
+            source=source, description=FRAME_NOTE_BRAND if any(b.role in pipeline.WIPED_ROLES for b in p.brand) and source != "asset" else FRAME_NOTES[source],
+            aspect_ratio=aspect, width=size[0] if size else None,
             height=size[1] if size else None, preview_jpeg_base64=base64.b64encode(thumb).decode("ascii") if thumb else None),
         prompt=p.prompt, negative_prompt=NEGATIVE_PROMPT, prompt_version=VIDEO_PROMPT_VERSION, model=None if demo else p.model,
         location=None if demo else settings.google_video_location, seconds=p.seconds, resolution=VIDEO_RESOLUTION,
