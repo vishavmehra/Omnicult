@@ -4,7 +4,7 @@ import { CircleAlert, LoaderCircle, TriangleAlert } from "lucide-react";
 import { useCallback } from "react";
 
 import { ContextPanel } from "@/components/shell/workspace-shell";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useRuns } from "@/features/lab/api";
 import { AskTab } from "@/features/lab/ask-panel";
 import { QuickReadTab } from "@/features/lab/quick-read";
@@ -14,20 +14,10 @@ import { BuzzTab } from "@/features/lab/t3/buzz";
 import { FocusGroupTab } from "@/features/lab/t3/focus-group";
 import { MessageCheckTab } from "@/features/lab/t3/message-check";
 import { isActive } from "@/features/lab/types";
-import { LAB_TABS, useLabLocation, type LabTab } from "@/features/lab/use-lab-location";
+import { useLabLocation, type LabTab } from "@/features/lab/use-lab-location";
 
 import { useCampaign } from "./campaign-context";
 import { CampaignFacts, CreativeMat, FeatureScope, SectionTitle, WorkspaceHeader } from "./parts";
-
-const TAB_LABEL: Record<LabTab, string> = {
-  quick: "Quick Read",
-  study: "Audience Study",
-  ask: "Ask the Panel",
-  risk: "Risk Check",
-  focus: "Focus Group",
-  buzz: "Buzz Simulator",
-  check: "Message Check",
-};
 
 /**
  * One line that answers "what is going on in this lab": how many runs are moving, finished with gaps, or failed, across
@@ -83,13 +73,6 @@ export function LabWorkspace() {
       </WorkspaceHeader>
 
       <Tabs value={loc.tab} onValueChange={onTab} className="gap-5">
-        <TabsList variant="line" aria-label="Audience Lab" className="h-auto w-full justify-start gap-1 overflow-x-auto border-b border-border pb-1">
-          {LAB_TABS.map((t) => (
-            <TabsTrigger key={t} value={t} className="h-9 flex-none px-3 text-[14px] after:bottom-[-5px]">
-              {TAB_LABEL[t]}
-            </TabsTrigger>
-          ))}
-        </TabsList>
         <TabsContent value="quick">
           <QuickReadTab loc={loc} />
         </TabsContent>

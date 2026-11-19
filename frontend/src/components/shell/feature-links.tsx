@@ -2,47 +2,14 @@
 
 import Link from "next/link";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
-import type { ReactNode } from "react";
-import { toast } from "sonner";
+import { useEffect, useRef, type ReactNode } from "react";
 
-import { useOpenCommandBar } from "@/features/desk/command-bar";
-import { DemoSignInError, useStartDemo } from "@/features/desk/use-start-demo";
 import { cn } from "@/lib/utils";
 
-import { STATUS_WORD, activeFeatureIds, markFeatureNav } from "./feature-nav";
-import { WORKSPACES, featureHref, isOpenable, type Feature, type WorkspaceKey } from "./workspaces";
+import { STATUS_WORD, activeFeatureIds, bestMatches, markFeatureNav } from "./feature-nav";
+import { WORKSPACES, featureHref, isOpenable, workspaceViews, type Feature, type WorkspaceKey } from "./workspaces";
 
-/** A feature that does something (opens the Command Bar, starts the demo) instead of going somewhere. */
-function ActionButton({ feature, className, onDone, children }: { feature: Feature; className: string; onDone?: () => void; children: ReactNode }) {
-  const openBar = useOpenCommandBar();
-  const demo = useStartDemo();
-  return (
-    <button
-      type="button"
-      className={className}
-      disabled={feature.action === "demo" && demo.isPending}
-      aria-keyshortcuts={feature.action === "command-bar" ? "Control+K Meta+K" : undefined}
-      onClick={() => {
-        if (feature.action === "command-bar") {
-          openBar?.(true);
-          onDone?.();
-          return;
-        }
-        demo.mutate(undefined, {
-          onSuccess: onDone,
-          onError: (error) => toast.error(error instanceof DemoSignInError ? error.message : "The demo could not be prepared. Try again in a moment."),
-        });
-      }}
-    >
-      {children}
-    </button>
-  );
-}
-
-/**
- * One feature as a navigation row or chip. Built features go to their deep link (or run their action); features still being
- * built are shown but are not links; roadmap features, muted, point at the roadmap page.
- */
+/** One feature as a navigation row. Built features go to their deep link; any other is shown muted and is not a link. */
 export function FeatureLink({
   feature,
   campaignId,
@@ -67,7 +34,7 @@ export function FeatureLink({
 }) {
   const href = featureHref(feature, campaignId);
   const name = <span className="min-w-0 truncate">{feature.name}</span>;
-  if (!isOpenable(feature) || (!href && !feature.action)) {
+  if (!isOpenable(feature) || !href) {
     return (
       <span title={feature.note} className={cn(className, mutedClassName, "cursor-default")}>
         {name}
@@ -76,23 +43,15 @@ export function FeatureLink({
     );
   }
   const style = cn(className, feature.status === "roadmap" ? mutedClassName : active ? activeClassName : idleClassName);
-  if (feature.action) {
-    return (
-      <ActionButton feature={feature} className={cn(style, "text-left")} onDone={onNavigate}>
-        {name}
-        {trailing}
-      </ActionButton>
-    );
-  }
   return (
     <Link
-      href={href!}
+      href={href}
       title={feature.note}
       aria-current={active ? "page" : undefined}
       className={style}
       onClick={(e) => {
         onNavigate?.();
-        if (!e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) markFeatureNav(href!);
+        if (!e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) markFeatureNav(href);
       }}
     >
       {name}
@@ -129,27 +88,65 @@ export function useActiveFeatureIds(campaignId: string | null) {
   return activeFeatureIds(pathname, search, campaignId);
 }
 
-/** "In this workspace": the built features of the open workspace as chips, each one click to its tab or view. */
+/** The same page with the query values that belong to the open page (the selected state, the open report) carried to the new tab. */
+function withKept(href: string, pathname: string, search: { get(name: string): string | null }, keep: string[]) {
+  const url = new URL(href, "http://omnicult.local");
+  if (url.pathname !== pathname) return href;
+  for (const key of keep) {
+    const value = search.get(key);
+    if (value !== null && !url.searchParams.has(key)) url.searchParams.set(key, value);
+  }
+  return `${url.pathname}${url.search}`;
+}
+
+/**
+ * "In this workspace": one chip for every place the workspace opens, the only row of tabs a workspace page has. Features that
+ * open the same place share a chip. A jump within the page switches the view in place (the page reads its tab from the
+ * address on every render); a jump to another page navigates. On a phone the row scrolls sideways and keeps the open chip in sight.
+ */
 export function WorkspaceFeatureChips({ workspace }: { workspace: WorkspaceKey }) {
   const { campaignId = null } = useParams<{ campaignId?: string }>();
-  const active = useActiveFeatureIds(campaignId);
-  const features = WORKSPACES[workspace].features.filter((f) => f.status === "built" && (f.href || f.action));
-  if (!campaignId || features.length === 0) return null;
+  const pathname = usePathname();
+  const search = useSearchParams();
+  const row = useRef<HTMLElement>(null);
+  const views = workspaceViews(workspace);
+  const hrefs = campaignId ? views.map((v) => v.href(campaignId)) : [];
+  const active = bestMatches(hrefs, pathname, search);
+  const openAt = [...active].join();
+  useEffect(() => {
+    const nav = row.current;
+    const chip = nav?.querySelector<HTMLElement>("[aria-current=page]");
+    if (nav && chip && nav.scrollWidth > nav.clientWidth) nav.scrollLeft = chip.offsetLeft - (nav.clientWidth - chip.offsetWidth) / 2;
+  }, [openAt]);
+  if (!campaignId || views.length === 0) return null;
+  const keep = WORKSPACES[workspace].keepParams ?? [];
   return (
-    <nav aria-label="In this workspace" className="flex flex-wrap items-center gap-1.5 pt-2.5">
-      <span className="mr-1 text-[12.5px] text-ink-muted">In this workspace</span>
-      {features.map((f) => (
-        <FeatureLink
-          key={f.id}
-          feature={f}
-          campaignId={campaignId}
-          active={active.has(f.id)}
-          className="inline-flex h-7 items-center rounded-lg border border-border px-2.5 text-[12.5px] transition-colors duration-150"
-          activeClassName="border-border-strong bg-surface-raised text-ink shadow-clay"
-          idleClassName="text-ink-secondary hover:bg-surface-muted hover:text-ink"
-          mutedClassName="text-ink-muted"
-        />
-      ))}
+    <nav
+      ref={row}
+      aria-label="In this workspace"
+      className="relative flex items-center gap-1.5 pt-3 max-sm:overflow-x-auto max-sm:pr-6 max-sm:[mask-image:linear-gradient(to_right,black_calc(100%-1.5rem),transparent)] max-sm:[scrollbar-width:none] sm:flex-wrap"
+    >
+      <span className="mr-1 shrink-0 text-[12.5px] text-ink-muted">In this workspace</span>
+      {views.map((v, i) => {
+        const here = new URL(hrefs[i], "http://omnicult.local").pathname === pathname;
+        const isOpen = active.has(i);
+        return (
+          <Link
+            key={hrefs[i]}
+            href={withKept(hrefs[i], pathname, search, keep)}
+            title={v.title}
+            replace={here}
+            scroll={!here}
+            aria-current={isOpen ? "page" : undefined}
+            className={cn(
+              "inline-flex h-7 shrink-0 items-center rounded-lg border border-border px-2.5 text-[12.5px] whitespace-nowrap transition-colors duration-150 max-sm:h-9 max-sm:px-3",
+              isOpen ? "border-border-strong bg-surface-raised text-ink shadow-clay" : "text-ink-secondary hover:bg-surface-muted hover:text-ink",
+            )}
+          >
+            {v.name}
+          </Link>
+        );
+      })}
     </nav>
   );
 }

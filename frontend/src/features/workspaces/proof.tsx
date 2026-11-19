@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { ContextPanel } from "@/components/shell/workspace-shell";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { ClaimDrawer } from "@/features/proof-vault/claim-drawer";
 import { useProofReport, useProofReports } from "@/features/proof-vault/api";
 import { DataHealthPanel } from "@/features/proof-vault/data-health";
@@ -14,8 +14,7 @@ import { ReportTab } from "@/features/proof-vault/report-tab";
 import { ReportToc } from "@/features/proof-vault/report-viewer";
 import { RunHistoryPanel } from "@/features/proof-vault/run-history";
 import { SearchPanel } from "@/features/proof-vault/search-panel";
-import type { ProofView } from "@/features/proof-vault/types";
-import { useProofParams, VIEWS } from "@/features/proof-vault/use-proof-params";
+import { useProofParams } from "@/features/proof-vault/use-proof-params";
 
 import { useCampaign } from "./campaign-context";
 import { CampaignFacts, FeatureScope, WorkspaceHeader } from "./parts";
@@ -50,17 +49,7 @@ export function ProofWorkspace() {
         <CampaignFacts />
       </WorkspaceHeader>
 
-      <Tabs value={view} onValueChange={(v) => set({ view: v as ProofView, claim: null })}>
-        <div className="-mx-1 overflow-x-auto px-1">
-          <TabsList variant="line" className="group-data-horizontal/tabs:h-10 border-b border-border">
-            {VIEWS.map((v) => (
-              <TabsTrigger key={v.key} value={v.key} className="flex-none px-3 text-[14px]">
-                {v.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
-
+      <Tabs value={view}>
         <TabsContent value="report" className="pt-5">
           <ReportTab reports={reports} report={report} selectedId={selectedId} generateOpen={generateOpen} onGenerateOpenChange={setGenerateOpen} />
         </TabsContent>

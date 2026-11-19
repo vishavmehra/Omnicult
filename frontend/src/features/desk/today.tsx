@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import type { Run } from "@/lib/api/types";
 
 import { useToday } from "./api";
-import { CommandBarButton } from "./command-bar";
 import { NewCampaign } from "./new-campaign";
 import { ChangesTile, ConflictsTile, HeroCampaign, MoreCampaigns, NextActionsTile, ReadinessTile, RunsTile, TodaySkeleton } from "./today-parts";
 import { DIRECTORY_BRAND_LIMIT, useCampaignDirectory } from "./use-campaign-directory";
@@ -103,7 +102,6 @@ export function TodayView() {
           )}
         </div>
         <div className="flex flex-wrap gap-2">
-          <CommandBarButton />
           <Button variant="outline" onClick={() => demo.mutate()} disabled={demo.isPending}>
             <FlaskConical aria-hidden />
             {demo.isPending ? "Preparing the demo…" : "Try the demo"}

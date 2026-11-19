@@ -16,21 +16,29 @@ function matchSize(href: string, pathname: string, search: Search): number | nul
 }
 
 /**
- * Ids of the built features the current address is showing. The most specific links win, and features that share a link
- * all count (State Profile and Evidence Meter live on one view). A default tab links to the bare workspace, so it matches
- * only when nothing narrower does.
+ * Positions of the links the current address is on. The most specific links win, and links to one place all count. A default
+ * tab links to the bare workspace, so it matches only when nothing narrower does.
  */
-export function activeFeatureIds(pathname: string, search: Search, campaignId: string | null): Set<number> {
+export function bestMatches(hrefs: (string | null)[], pathname: string, search: Search): Set<number> {
   let best = -1;
-  let ids: number[] = [];
-  for (const feature of ALL_FEATURES) {
-    const href = feature.status === "built" ? featureHref(feature, campaignId) : null;
+  let hits: number[] = [];
+  hrefs.forEach((href, i) => {
     const size = href ? matchSize(href, pathname, search) : null;
-    if (size === null) continue;
-    if (size > best) [best, ids] = [size, []];
-    if (size === best) ids.push(feature.id);
-  }
-  return new Set(ids);
+    if (size === null) return;
+    if (size > best) [best, hits] = [size, []];
+    if (size === best) hits.push(i);
+  });
+  return new Set(hits);
+}
+
+/** Ids of the built features the current address is showing (State Profile and Evidence Meter live on one view, so both count). */
+export function activeFeatureIds(pathname: string, search: Search, campaignId: string | null): Set<number> {
+  const hits = bestMatches(
+    ALL_FEATURES.map((feature) => (feature.status === "built" ? featureHref(feature, campaignId) : null)),
+    pathname,
+    search,
+  );
+  return new Set(ALL_FEATURES.filter((_, i) => hits.has(i)).map((feature) => feature.id));
 }
 
 // A link to another tab of the page you are already on only changes the query string. Some workspaces read their tab from

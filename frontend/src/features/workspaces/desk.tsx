@@ -5,17 +5,16 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-import { CompareSlider, TabInk } from "@/components/creative";
+import { CompareSlider } from "@/components/creative";
 import { ContextPanel } from "@/components/shell/workspace-shell";
 import { workspaceHref } from "@/components/shell/workspaces";
 import { ErrorState, LoadingState } from "@/components/states";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useBrief, useBriefVersion, useBriefVersions, useRegions, useToday } from "@/features/desk/api";
 import { BrandKitTab } from "@/features/desk/brand-kit";
 import { BriefEditor } from "@/features/desk/brief-editor";
 import { BriefDocument, VersionBar } from "@/features/desk/brief-view";
-import { CommandBarButton } from "@/features/desk/command-bar";
 import { CopyEditor } from "@/features/desk/copy-editor";
 import { BriefGlance, CreativeAssets, WeightsBar } from "@/features/desk/desk-visuals";
 import type { BriefContent } from "@/features/desk/types";
@@ -25,13 +24,9 @@ import { cn } from "@/lib/utils";
 import { useCampaign } from "./campaign-context";
 import { CampaignFacts, CreativeMat, SectionTitle, WorkspaceHeader, versionsOldestFirst } from "./parts";
 
+// The tabs are chosen in the header's "In this workspace" row, which links to `?tab=`.
 type TabKey = "brief" | "brand-kit" | "creative";
-const TABS: { key: TabKey; label: string }[] = [
-  { key: "brief", label: "Campaign brief" },
-  { key: "brand-kit", label: "Brand Kit" },
-  { key: "creative", label: "Original creative" },
-];
-const isTab = (v: string | null): v is TabKey => TABS.some((t) => t.key === v);
+const isTab = (v: string | null): v is TabKey => v === "brief" || v === "brand-kit" || v === "creative";
 
 /** This campaign's next actions and readiness, from the same API as Today, narrowed to one campaign. */
 function NextForCampaign({ campaignId }: { campaignId: string }) {
@@ -147,30 +142,18 @@ export function DeskWorkspace() {
       <WorkspaceHeader
         workspace="desk"
         actions={
-          <>
-            <CommandBarButton />
-            {tab === "brief" && canEditBrief && !editingBrief && viewing === null && (
-              <Button onClick={() => { setEditFrom(null); setEditingBrief(true); }}>
-                <PencilLine aria-hidden />
-                {brief?.saved ? "Edit brief" : "Write the brief"}
-              </Button>
-            )}
-          </>
+          tab === "brief" && canEditBrief && !editingBrief && viewing === null ? (
+            <Button onClick={() => { setEditFrom(null); setEditingBrief(true); }}>
+              <PencilLine aria-hidden />
+              {brief?.saved ? "Edit brief" : "Write the brief"}
+            </Button>
+          ) : undefined
         }
       >
         <CampaignFacts />
       </WorkspaceHeader>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
-        <TabsList variant="line" className="relative h-10 max-w-full justify-start overflow-x-auto">
-          <TabInk />
-          {TABS.map((t) => (
-            <TabsTrigger key={t.key} value={t.key} className="h-9 flex-none px-3 after:hidden">
-              {t.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-
         <TabsContent value="brief" className="space-y-5 pt-4">
           {briefQ.isPending || regionsQ.isPending ? (
             <LoadingState label="Opening the brief…" />
