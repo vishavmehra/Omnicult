@@ -5,8 +5,9 @@ assets) and the clip comes out as bytes (the service stores it as a derived asse
 
 The model is called through the gateway's `video` capability adapter, once per run, never retried by the app (a retry could
 start and bill a second clip), metered and budget-checked. The start frame is the regional key visual WITHOUT its text and
-WITHOUT its brand elements: the generated scene, with the logo, tagline and product tin wiped out. A video model cannot keep
-those undistorted from frame to frame, so it is never asked to draw them: they are drawn in code on one transparent layer
+WITHOUT its logo and tagline: the generated scene (the plate) with those wiped out. A video model cannot keep brand elements
+undistorted from frame to frame, so it is never asked to draw them: the logo, tagline, product tin and headline are drawn in
+code on one transparent layer
 (Brand Kit files, text through the Indic renderer) that goes over every frame of the clip, and the finished clip is then sampled
 and each element is compared with that layer. Every check is computed in code from the delivered file (ffprobe, ffmpeg, Pillow),
 never by a model. In demo mode no provider is called: the committed demonstration clip is used and the start frame, the brand
@@ -43,12 +44,12 @@ V1, V2, V3, V4 = STAGES[VIDEO]
 VIDEO_PROMPT_VERSION = "remake-video-v2"
 NEGATIVE_PROMPT = "text, letters, subtitles, captions, watermark, extra logos, warped packaging, distorted product, blurry, low quality"
 INTERPRETATION_NOTE = "The clip is a model interpretation. Confirm props, symbols and motion with someone from the region."
-NO_TEXT_NOTE = "The clip has no on-screen text: the model is never asked to draw it, and any text would be added in code."
+NO_TEXT_NOTE = "The model is never asked to draw text: the clip has no model-made on-screen text, and any text shown is rendered in code."
 LOCK_NOTE = ("Video models cannot guarantee that the logo, the pack and the tagline stay undistorted from frame to frame. They are "
              "in the start frame and the prompt asks for them unchanged, but nothing here proves it: review the clip frame by frame "
              "before use.")
 PINNED_NOTE = ("The {names} are drawn in code over every frame of the clip, never by the model, and compared with that drawing in "
-               "frames sampled every 0.5 s.")
+               "every 0.5 s.")
 UNPINNED_NOTE = ("Locked regions that are not drawn in code ({names}) are in the start frame as the original holds them; a video model "
                  "cannot guarantee they stay unchanged from frame to frame, so review the clip before use.")
 NO_FRAME_NOTE = "No remade key visual was available, so the clip was generated from the prompt alone: the logo and the pack are not in it."
@@ -105,8 +106,8 @@ def video_prompt(parts: VideoPromptParts) -> str:
         lines.append("The first frame is the finished scene. Keep its framing and composition. The camera is locked off: no zoom, pan or tilt.")
         lines.append((f"Keep the {bands} band{'s' if len(parts.clear_bands) > 1 else ''} of the frame clear and calm for brand graphics. "
                       if bands else "")
-                     + "Brand graphics are added afterwards in editing: never draw any logo, product packaging, label or lettering, and "
-                       "leave the empty patches of the first frame as they are.")
+                     + "Brand graphics are added afterwards in editing: never draw or change any logo, label or lettering, and keep the "
+                       "product tin as it is.")
     elif parts.has_start_frame:
         lines.append("The first frame is the finished scene. Keep the product tin, the logo and the tagline exactly as they appear in "
                      "it: sharp, undistorted and in the same place. Keep the framing and the composition.")
@@ -148,7 +149,7 @@ class VideoCheck(BaseModel):
     passed: bool
     detail: str
     element_id: str | None = None  # set for the brand-element checks
-    sampled: int | None = None  # brand checks: how many frames were compared
+    frames_checked: int | None = None  # brand checks: how many frames were compared
     failed_at_ms: list[int] = []  # brand checks: the sampled frames in which the element did not match its drawing
 
 
@@ -219,13 +220,13 @@ def _times(ms: list[int]) -> str:
 
 
 def _brand_check(result: pipeline.BrandResult) -> VideoCheck:
-    """One element's verdict from the sampled frames: plain words and the timestamps of any frame that did not match."""
-    extra: dict[str, Any] = {"element_id": result.element_id, "sampled": result.sampled, "failed_at_ms": result.failed_ms}
+    """One element's verdict from the frames checked: plain words and the timestamps of any frame that did not match."""
+    extra: dict[str, Any] = {"element_id": result.element_id, "frames_checked": result.sampled, "failed_at_ms": result.failed_ms}
     if not result.checkable:
         return _check(result.label, False, "Nothing was drawn in its box, so there was nothing to compare.", **extra)
     if result.failed_ms:
-        return _check(result.label, False, f"drifted at {_times(result.failed_ms)} ({len(result.failed_ms)} of {result.sampled} sampled frames)", **extra)
-    return _check(result.label, True, f"held for all {result.sampled} sampled frames", **extra)
+        return _check(result.label, False, f"drifted at {_times(result.failed_ms)} ({len(result.failed_ms)} of {result.sampled} frames)", **extra)
+    return _check(result.label, True, f"held for all {result.sampled} frames", **extra)
 
 
 @dataclass
@@ -237,13 +238,11 @@ class StartFrame:
     pinned: list[BrandSpec] = field(default_factory=list)  # elements drawn in code: wiped from the frame, overlaid on the clip
 
 
-WIPED_ROLES = ("logo", "tagline", "tin")  # headlines have no place in the scene: it is generated with calm space for them
-
-
 async def prepare_start(inp: RemakeVideoInput, demo: bool) -> StartFrame:
     """The start frame and what it was built from. Raises ValidationFailed for an image that cannot be read. Shared with the
     preview, so what is shown is what a run would send. A key-visual frame is the generated scene (the plate) with the brand
-    elements wiped out, so the model is never shown, and never asked to draw, a logo, a tagline or a tin."""
+    marks wiped out, so the model is never shown, and never asked to draw, a logo or a tagline; a tin that is drawn in code
+    stays in the frame and the overlay covers it exactly."""
     source: StartSource = inp.start_source
     if demo:  # demo projects always start from the committed key visual and scene; their own choices would not match the saved clip
         original_bytes = inp.original or fixtures.demo_original()
@@ -257,9 +256,10 @@ async def prepare_start(inp: RemakeVideoInput, demo: bool) -> StartFrame:
         original = await asyncio.to_thread(textrender.load_image, original_bytes)
         scene = await asyncio.to_thread(textrender.load_image, scene_bytes) if scene_bytes else None
         pinned = list(inp.brand)
-        pinned_ids = {b.element_id for b in pinned}
-        wipe = [b.bbox for b in pinned if b.role in WIPED_ROLES]
-        layout = await asyncio.to_thread(pipeline.build_layout, original, scene, [r.bbox for r in inp.locked if r.element_id not in pinned_ids], wipe)
+        wiped = [b for b in pinned if b.role in pipeline.WIPED_ROLES]
+        wiped_ids = {b.element_id for b in wiped}
+        layout = await asyncio.to_thread(pipeline.build_layout, original, scene, [r.bbox for r in inp.locked if r.element_id not in wiped_ids],
+                                         [b.bbox for b in wiped])
         layout_size = layout.size
     elif source == "asset" and inp.start_image:
         layout = await asyncio.to_thread(textrender.load_image, inp.start_image)
@@ -391,7 +391,7 @@ async def _brand_checks(state: GState, notes: list[str]) -> list[VideoCheck]:
         return [_check(BRAND_NAME, False, state.get("brand_error") or "The brand elements were not drawn over the clip.")]
     drawn = {item.element_id for item in overlay.placed}
     checks = [_check(pipeline.ROLE_LABELS[b.role], False, "It was left out of the start frame and could not be drawn; see the notes.", element_id=b.element_id)
-              for b in pinned if b.element_id not in drawn and b.role in WIPED_ROLES]
+              for b in pinned if b.element_id not in drawn and b.role in pipeline.WIPED_ROLES]
     try:
         results = await pipeline.check_brand(state["final"], overlay)
     except (ffmpeg.MediaToolMissing, ffmpeg.MediaProcessingFailed) as exc:
@@ -445,7 +445,7 @@ async def run_remake_video(inp: RemakeVideoInput, deps: WorkflowDeps, progress: 
         return RemakeVideoOutcome(status="failed", steps=steps, error=error, limitations=state.get("limitations", []), prompt=inp.prompt)
     meta, facts, checks = state["meta"], state.get("facts"), state["checks"]
     flagged = [c for c in checks if not c.passed]
-    pinned_ids = {b.element_id for b in state.get("pinned") or []}
+    wiped_ids = {b.element_id for b in state.get("pinned") or [] if b.role in pipeline.WIPED_ROLES}
     notes = [*state["limitations"], *([DEMO_RUN_NOTE] if state["demo"] else []),
              *([c.detail if c.name == BRAND_NAME else f"{c.name} {c.detail}." for c in flagged if c.element_id or c.name == BRAND_NAME]),
              *([f"{len(flagged)} of {len(checks)} code checks were flagged; see the checks."] if flagged else [])]
@@ -456,6 +456,6 @@ async def run_remake_video(inp: RemakeVideoInput, deps: WorkflowDeps, progress: 
         width=facts.width if facts else None, height=facts.height if facts else None, duration_ms=facts.duration_ms if facts else None,
         size_bytes=len(state["final"]), seconds=inp.seconds, source=meta["source"], model=meta["model"], location=meta["location"],
         operation_id=meta["operation_id"], prompt=meta.get("prompt") or inp.prompt, negative_prompt=inp.negative_prompt,
-        locked_regions=[r.model_dump() for r in inp.locked if r.element_id not in pinned_ids] if state.get("frame") and state["source"] != "asset" else [],
+        locked_regions=[r.model_dump() for r in inp.locked if r.element_id not in wiped_ids] if state.get("frame") and state["source"] != "asset" else [],
         checks=checks, limitations=list(dict.fromkeys(notes)), steps=steps,
     )

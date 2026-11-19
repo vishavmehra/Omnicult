@@ -35,7 +35,8 @@ SAMPLE_EVERY_MS = 500  # the final clip is sampled this often for the brand chec
 SAMPLE_LIMIT = 40  # at most this many frames (20 s of clip)
 DRIFT_LIMIT = 18.0  # mean absolute difference (0-255, over the element's opaque pixels) above which a frame is flagged
 OPAQUE = 250  # overlay alpha at or above this counts as "drawn" for the comparison
-WIPE_PAD_PX = (8, 40)  # how far past an element's box the start frame is wiped (a model's copy of a mark is never exactly the box)
+WIPE_PAD_PX = 10  # how far past an element's box the start frame is wiped (a model's copy of a mark is never exactly the box)
+WIPED_ROLES = ("logo", "tagline")  # wiped from the start frame; the tin stays in it (the overlay covers it exactly), headlines have no place in the scene
 ROLE_LABELS = {"logo": "Logo", "tagline": "Tagline", "tin": "Product tin", "headline": "Headline"}
 BrandRole = Literal["logo", "tagline", "tin", "headline"]
 
@@ -88,7 +89,7 @@ def wipe_region(image: Image.Image, bbox: list[float]) -> Image.Image:
     out = image.convert("RGB")
     width, height = out.size
     x0, y0, x1, y1 = textrender.pixel_rect(bbox, out.size)
-    pad = min(max(round(0.06 * min(x1 - x0, y1 - y0)), WIPE_PAD_PX[0]), WIPE_PAD_PX[1])
+    pad = WIPE_PAD_PX
     x0, y0, x1, y1 = max(0, x0 - pad), max(0, y0 - pad), min(width, x1 + pad), min(height, y1 + pad)
     w, h = x1 - x0, y1 - y0
     if w < 4 or h < 4:

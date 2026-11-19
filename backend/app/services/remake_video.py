@@ -1,9 +1,10 @@
 """Remake: Video as a run: plan it (the preview), validate and start it, build the workflow input, and persist the outcome.
 
-One clip per request, from the regional key visual (the generated scene of a Remake: Visuals result, no text and no brand
-elements: the logo, tagline and product tin are wiped from it and drawn in code over the clip instead, from the Brand Kit files)
-or an image the person chose, plus a prompt built in code from the brief, the region and the creative's scenes. The estimate is shown first, a live run needs `confirm_cost`, and the per-run AI budget is checked before
-any call. The outcome becomes ONE `remake` operation (actor ai) that writes the clip into a NEW version node as a `scene`
+One clip per request, from the regional key visual (the generated scene of a Remake: Visuals result, no text and without its logo
+and tagline) or an image the person chose, plus a prompt built in code from the brief, the region and the creative's scenes. The
+logo, tagline, product tin and headline are drawn in code over every frame of the clip (Brand Kit files and the Indic renderer) and
+checked in sampled frames; the model never draws them. The estimate is shown first, a live run needs `confirm_cost`, and the per-run
+AI budget is checked before any call. The outcome becomes ONE `remake` operation (actor ai) that writes the clip into a NEW version node as a `scene`
 element named `remake-video` whose value is `{"media": "video", "asset_id": ...}`: the source version is untouched, a locked
 `remake-video` element refuses the whole operation (before the paid call, and again when the result is saved). Every file
 (start frame, the clip as delivered, the clip with the voice-over) is a derived asset with its provenance in `media_info`.
@@ -226,7 +227,7 @@ async def plan(s: AsyncSession, user_id: UUID, campaign_id: UUID, body: r.Remake
     if p.brand:
         pinned = sorted({pipeline.ROLE_LABELS[b.role].lower() for b in p.brand})
         p.notes.append(f"The {', '.join(pinned)} are drawn in code over every frame of the clip, from the Brand Kit files, and compared with "
-                       "that drawing in frames sampled every 0.5 s. The model is never shown or asked to draw them.")
+                       "that drawing every 0.5 s. The model is never shown or asked to draw them.")
     parts = await _prompt_parts(s, campaign, region, language, body.direction, p.start_source != "none", p.brand)
     p.prompt = video_prompt(parts)
     if not demo and p.blocked is None and p.start_source == "none":
@@ -246,10 +247,10 @@ def _voiceover_plan(p: Plan) -> r.VideoVoiceoverPlan | None:
 
 
 def _kept(p: Plan) -> list[r.LockedRegionPreview]:
-    """The locked regions the start frame carries as the original holds them (the pinned brand elements are drawn in code instead)."""
-    drawn = {b.element_id for b in p.brand}
+    """The locked regions the start frame carries as the original holds them (the logo and tagline are wiped from it and drawn in code)."""
+    wiped = {b.element_id for b in p.brand if b.role in pipeline.WIPED_ROLES}
     return [r.LockedRegionPreview(element_id=x.element_id, label=x.label, kind=x.kind, source=x.source, bbox=x.bbox) for x in p.locked
-            if x.element_id not in drawn]
+            if x.element_id not in wiped]
 
 
 async def _workflow_input(s: AsyncSession, p: Plan) -> RemakeVideoInput:

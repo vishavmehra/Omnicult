@@ -183,8 +183,8 @@ class VideoCheck(ApiModel):
     passed: bool = Field(description="Computed in code from the delivered file.")
     detail: str
     element_id: str | None = Field(default=None, description="Set for a brand-element check (logo, tagline, product tin, headline): the element drawn in code over the clip.")
-    sampled: int | None = Field(default=None, description="Brand checks: how many frames sampled from the finished clip were compared.")
-    failed_at_ms: list[int] = Field(default=[], description="Brand checks: the sampled frames (ms into the clip) in which the element did not match its drawing.")
+    frames_checked: int | None = Field(default=None, description="Brand checks: how many frames of the finished clip were compared, one every 0.5 s.")
+    failed_at_ms: list[int] = Field(default=[], description="Brand checks: the frames (ms into the clip) in which the element did not match its drawing.")
 
 
 class VideoRemake(ApiModel):

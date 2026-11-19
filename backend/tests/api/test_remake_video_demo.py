@@ -73,7 +73,7 @@ async def test_a_demo_clip_needs_no_confirmation_no_provider_and_is_built_from_t
     assert (await content(client, clip["video_url"])).content == (FIXTURES / "remake" / saved["file"]).read_bytes()
     assert [r["element_id"] for r in clip["kept_regions"]] == ["mh-kv-packshot"]  # the demo project has no Brand Kit pack file linked here
     assert all(c["passed"] for c in clip["checks"]) and clip["start_frame_asset_id"]
-    assert {c["element_id"] for c in clip["checks"] if c["element_id"]} == {"mh-kv-logo", "mh-kv-tagline"}
+    assert {c["element_id"] for c in clip["checks"] if c["element_id"]} == {"mh-kv-logo", "mh-kv-tagline", "mh-kv-headline"}
     assert any("Saved demonstration result" in n for n in out["limitations"]) and any("cannot guarantee" in n for n in out["limitations"])
     frame = (await content(client, clip["start_frame_url"])).content
     assert frame[:8] == b"\x89PNG\r\n\x1a\n"

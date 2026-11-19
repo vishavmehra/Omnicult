@@ -79,7 +79,7 @@ async def test_a_live_run_makes_one_call_with_the_start_frame_and_checks_the_del
     assert sum(s.usage.estimated_cost_usd for s in outcome.steps if s.usage) == pytest.approx(0.48)
     assert [r["element_id"] for r in outcome.locked_regions] == ["kv-logo", "kv-pack"]
     notes = " ".join(outcome.limitations)
-    assert "cannot guarantee" in notes and "no on-screen text" in notes and "model interpretation" in notes
+    assert "cannot guarantee" in notes and "never asked to draw text" in notes and "model interpretation" in notes
 
 
 @requires_ffmpeg
@@ -207,7 +207,7 @@ def test_a_prompt_with_brand_elements_drawn_in_code_keeps_a_band_clear_and_never
     prompt = video_prompt(parts)
     assert prompt == video_prompt(parts) and prompt.isascii()
     assert "Keep the upper and lower bands of the frame clear and calm for brand graphics" in prompt
-    assert "never draw any logo, product packaging, label or lettering" in prompt and "camera is locked off" in prompt
+    assert "never draw or change any logo, label or lettering" in prompt and "camera is locked off" in prompt
     assert "exactly as they appear" not in prompt and "push-in" not in prompt  # the model is not asked to keep (draw) the marks, nor to move the scene under them
     assert "lower band " in video_prompt(parts.model_copy(update={"clear_bands": ["lower"]})) and "bands" not in video_prompt(parts.model_copy(update={"clear_bands": ["lower"]}))
     assert "Keep the" not in video_prompt(parts.model_copy(update={"clear_bands": []})).split("Brand graphics")[0].split("locked off")[-1]  # only a tin: no band to keep clear
@@ -221,7 +221,7 @@ async def test_the_brand_layer_is_drawn_over_the_clip_the_model_delivers_and_eve
     assert outcome.silent_clip == big_mp4() and outcome.clip != outcome.silent_clip  # the model's file is kept as delivered; the final one carries the overlay
     brand_checks = {c.element_id: c for c in outcome.checks if c.element_id}
     assert set(brand_checks) == {"kv-logo", "kv-tagline"} and [c.name for c in brand_checks.values()] == ["Logo", "Tagline"]
-    assert all(c.passed and c.sampled == 12 and c.failed_at_ms == [] and c.detail == "held for all 12 sampled frames" for c in brand_checks.values())
+    assert all(c.passed and c.frames_checked == 12 and c.failed_at_ms == [] and c.detail == "held for all 12 frames" for c in brand_checks.values())
     logo = pipeline.in_frame(LOCKED[0].bbox, (400, 500), "9:16")
     x0, y0, x1, y1 = (round(v) for v in (logo[0] * 720, logo[1] * 1280, (logo[0] + logo[2]) * 720, (logo[1] + logo[3]) * 1280))
     disc = ((x0 + 28), (y0 + 27))  # the middle of the logo disc in the box
@@ -277,7 +277,7 @@ async def test_an_element_that_does_not_match_its_drawing_marks_the_run_partial_
     assert outcome.status == "partial" and outcome.clip is not None  # the clip is kept, flagged
     flagged = {c.name: c for c in outcome.checks if c.element_id and not c.passed}
     assert set(flagged) == {"Logo", "Tagline"} and flagged["Logo"].failed_at_ms == [i * 500 for i in range(12)]
-    assert flagged["Logo"].detail == "drifted at 0.0 s, 0.5 s, 1.0 s, 1.5 s and 8 more (12 of 12 sampled frames)"
+    assert flagged["Logo"].detail == "drifted at 0.0 s, 0.5 s, 1.0 s, 1.5 s and 8 more (12 of 12 frames)"
     notes = " ".join(outcome.limitations)
     assert "Logo drifted at 0.0 s" in notes and "Tagline drifted at 0.0 s" in notes and "code checks were flagged" in notes
 
@@ -295,3 +295,15 @@ async def test_a_missing_ffmpeg_keeps_the_clip_flags_the_elements_as_not_drawn_a
     outcome = await run_remake_video(branded_input(), deps(FakeVideo(clip=b"\x00\x00\x00\x18ftypmp42" + bytes(64))))
     assert outcome.status == "completed" and outcome.checks == []  # nothing could be checked, and nothing is claimed
     assert any("was not checked" in n for n in outcome.limitations) and any("could not be drawn over the clip" in n for n in outcome.limitations)
+
+
+@requires_ffmpeg
+async def test_a_tin_drawn_in_code_stays_in_the_start_frame_and_the_overlay_covers_it_for_every_frame():
+    pack = BrandSpec(element_id="kv-pack", role="tin", label="tin", bbox=LOCKED[1].bbox, image=logo_png())
+    video = FakeVideo(clip=big_mp4())
+    outcome = await run_remake_video(branded_input(brand=[*brand(), pack]), deps(video))
+    frame = Image.open(io.BytesIO(video.calls[0]["start_image"])).convert("RGB")
+    assert all(abs(a - b) < 12 for a, b in zip(pixel_in(frame, LOCKED[1].bbox), (200, 160, 40), strict=True))  # not wiped: the frame keeps the pack
+    held = {c.name: c for c in outcome.checks if c.element_id}
+    assert set(held) == {"Logo", "Tagline", "Product tin"} and all(c.passed and c.frames_checked == 12 for c in held.values())
+    assert [r["element_id"] for r in outcome.locked_regions] == ["kv-pack"]  # still carried into the frame as pixels; the checks say it is also drawn

@@ -88,7 +88,7 @@ async def test_a_clip_starts_from_the_remade_scene_and_lands_in_a_new_version_wi
     assert (call["seconds"], call["aspect_ratio"], call["start_mime_type"]) == (6, "9:16", "image/png")
     assert Image.open(io.BytesIO(call["start_image"])).size == (720, 1280)
     assert "Tamil Nadu" in call["prompt"] and "Slow push-in on the lamp." in call["prompt"] and call["prompt"].isascii()
-    assert "Brand graphics are added afterwards" in call["prompt"] and "never draw any logo" in call["prompt"]  # the model is told to leave the brand elements to code
+    assert "Brand graphics are added afterwards" in call["prompt"] and "never draw or change any logo" in call["prompt"]  # the model is told to leave the brand elements to code
     assert "exactly as they appear" not in call["prompt"] and not any(e["value"] in call["prompt"] for e in elements() if e["kind"] in ("headline", "cta"))
     # a NEW version: a `remake-video` scene element holds the clip; the source version is untouched
     new = (await client.get(f"{API}/campaigns/{world.campaign}/versions/{out['result_version_id']}")).json()
@@ -110,9 +110,9 @@ async def test_a_clip_starts_from_the_remade_scene_and_lands_in_a_new_version_wi
     assert [r["element_id"] for r in clip["kept_regions"]] == ["kv-pack"]  # the pack has no Brand Kit file here, so it stays in the frame as pixels
     assert all(c["passed"] for c in clip["checks"]) and clip["prompt_version"] == "remake-video-v2"
     brand = {c["name"]: c for c in clip["checks"] if c["element_id"]}  # the logo and headline are drawn in code over every frame, then measured
-    assert {c["element_id"] for c in brand.values()} == {"kv-logo", "kv-headline"} and all(c["sampled"] >= 10 and c["failed_at_ms"] == [] for c in brand.values())
+    assert {c["element_id"] for c in brand.values()} == {"kv-logo", "kv-headline"} and all(c["frames_checked"] >= 10 and c["failed_at_ms"] == [] for c in brand.values())
     assert all("held for all" in c["detail"] for c in brand.values())
-    assert any("drawn in code over every frame" in n for n in out["limitations"]) and any("no on-screen text" in n for n in out["limitations"])
+    assert any("drawn in code over every frame" in n for n in out["limitations"]) and any("never asked to draw text" in n for n in out["limitations"])
     # the files: the clip plays as video/mp4, the start frame is the PNG the model received
     file = await content(client, clip["video_url"])
     assert file.headers["content-type"].startswith("video/mp4") and file.content == mp4(6)
