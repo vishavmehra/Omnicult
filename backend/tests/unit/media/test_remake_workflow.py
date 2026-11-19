@@ -37,6 +37,17 @@ async def test_english_lines_are_spoken_in_english_and_unsupported_languages_are
     assert [c["language"] for c in speech.calls] == ["en", "ta"] and outcome.status == "completed"
 
 
+async def test_a_line_in_another_indian_language_is_not_spoken_into_the_voice_over():
+    speech = FakeSpeech(1.0)
+    deps = WorkflowDeps(llm=FakeLLM({"tts": speech}))  # type: ignore[arg-type]
+    lines = [VoiceLineIn(element_id="a", text="இனிய தீபாவளி", language="ta"),
+             VoiceLineIn(element_id="b", text="आमोद, एव्हरी बॉन्ड", language="mr")]  # a line transcreation flagged and left in Marathi
+    outcome = await run_remake_sound(sound_input(lines), deps)
+    first, second = outcome.lines
+    assert [c["language"] for c in speech.calls] == ["ta"] and second["spoken"] is False and "Transcreate it" in second["problems"][0]
+    assert outcome.status == "partial" and outcome.language_code == "ta-IN"  # the voice-over's language, not the last line's
+
+
 async def test_no_lines_or_too_many_lines_make_no_call():
     speech = FakeSpeech()
     deps = WorkflowDeps(llm=FakeLLM({"tts": speech}))  # type: ignore[arg-type]

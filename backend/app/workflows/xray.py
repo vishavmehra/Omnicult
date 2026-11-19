@@ -31,6 +31,7 @@ from app.schemas.runs import RunError
 from app.schemas.xray import (
     SCENE_PROVENANCE,
     AdClaim,
+    LayoutItem,
     MediaProbe,
     OnScreenText,
     Provenance,
@@ -113,6 +114,7 @@ class SceneDraft(BaseModel):
     claims: list[AdClaim]
     cultural_observations: list[SceneObservation]
     cultural_interpretations: list[SceneInterpretation]
+    layout: list[LayoutItem] = []
     provenance: dict[str, Provenance]
     limitations: list[str]
 
@@ -216,6 +218,41 @@ def skeleton_bounds(kind: str, duration_ms: int | None, frames: list[PreparedFra
     return [(start, end, None) for start, end in zip(starts, ends) if end > start]
 
 
+TEXT_ROLES = frozenset({"headline", "body", "cta", "tagline", "caption"})
+NO_LAYOUT_KINDS = frozenset({"color_or_layout", "person"})
+PACK_ROLES = frozenset({"product", "packshot"})
+
+
+def verify_layout(items: Sequence[agent.LayoutOut], in_frames: list[PreparedFrame],
+                  observations: dict[str, list[VisualObservation]], dropped: dict[str, int]) -> list[LayoutItem]:
+    """The layout items code can check, all from ONE keyframe (the one the model cited most, so every box shares a picture):
+    the cited observation must exist in that frame and carry a box from the vision model, and a text role's text must appear
+    in that observation. Everything else is dropped and counted."""
+    frame_ids = {f.frame_id for f in in_frames}
+    cited = [i.frame.strip().lower() for i in items if i.frame.strip().lower() in frame_ids]
+    if not cited:
+        if items:
+            dropped["layout"] = dropped.get("layout", 0) + len(items)
+        return []
+    chosen = max(dict.fromkeys(cited), key=cited.count)
+    frame = next(f for f in in_frames if f.frame_id == chosen)
+    by_id = {o.id.lower(): o for o in observations.get(chosen, [])}
+    out: list[LayoutItem] = []
+    used: set[str] = set()
+    for item in items:
+        obs = by_id.get(item.observation.strip().lower()) if item.frame.strip().lower() == chosen else None
+        text = " ".join((item.text or "").split()) if item.role in TEXT_ROLES else None
+        ok = (obs is not None and obs.bbox is not None and obs.id not in used and obs.kind not in NO_LAYOUT_KINDS
+              and (text is None or (bool(text) and normalise(text) in normalise(obs.description)))
+              and (item.role not in PACK_ROLES or obs.kind == "object"))  # a product name is text, not the pack
+        if not ok or obs is None or obs.bbox is None:
+            dropped["layout"] = dropped.get("layout", 0) + 1
+            continue
+        used.add(obs.id)
+        out.append(LayoutItem(role=item.role, text=text, frame_ms=frame.timestamp_ms, observation_id=obs.id, bbox=obs.bbox))
+    return out
+
+
 def build_scenes(
     drafts: Sequence[agent.SceneOut] | None, *, kind: str, duration_ms: int | None, frames: list[PreparedFrame],
     observations: dict[str, list[VisualObservation]], transcript: list[TranscriptSegment], music_mood: str | None,
@@ -249,6 +286,7 @@ def build_scenes(
         readings: list[SceneInterpretation] = []
         lists: dict[str, list[str]] = {"people": [], "gestures": [], "objects": [], "colours": []}
         setting: str | None = None
+        layout: list[LayoutItem] = []
         if draft is not None:
             if visual_ok:
                 for quote in draft.on_screen_text:
@@ -297,6 +335,8 @@ def build_scenes(
                     id=f"i{position + 1}.{n}", text=" ".join(reading.text.split()), based_on=basis, category=reading.category,
                     limitations=[INTERPRETATION_NOTE],
                 ))
+            if visual_ok:
+                layout = verify_layout(draft.layout, in_frames, observations, dropped)
         else:
             limits.append("Timing and transcript only: the scene content was not analysed.")
         first = in_frames[0] if in_frames else None
@@ -305,7 +345,7 @@ def build_scenes(
             frame_ms=[f.timestamp_ms for f in in_frames], on_screen_text=texts, transcript=segments, people=lists["people"],
             gestures=lists["gestures"], setting=setting, objects=lists["objects"], colours=lists["colours"],
             music_mood=music_mood, claims=claims, cultural_observations=observed, cultural_interpretations=readings,
-            provenance=dict(SCENE_PROVENANCE), limitations=limits,
+            layout=layout, provenance=dict(SCENE_PROVENANCE), limitations=limits,
         ))
     dropped = {k: v for k, v in dropped.items() if v}
     return scenes, dropped, notes
@@ -498,7 +538,8 @@ def _prompt_transcript(transcript: list[TranscriptSegment]) -> tuple[list[dict],
 def _prompt_frames(prepared: PreparedMedia, observations: dict[str, list[VisualObservation]]) -> list[dict]:
     return [
         {"id": f.frame_id, "at_ms": f.timestamp_ms,
-         "observations": [{"kind": o.kind, "description": o.description, "location": o.location} for o in observations.get(f.frame_id, [])]}
+         "observations": [{"id": o.id, "kind": o.kind, "description": o.description, "location": o.location}
+                          for o in observations.get(f.frame_id, [])]}
         for f in prepared.frames
     ]
 

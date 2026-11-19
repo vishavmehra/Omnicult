@@ -327,7 +327,7 @@ _XRAY_NOTES = {  # a word in a transcript segment -> (observation, category, int
 
 
 def xray_scenes(ctx: Mapping[str, Any]) -> dict[str, Any] | None:
-    """`xray-scenes-v1` for the Aamod film: timing from the fixture, and only observations that rest on a transcript segment
+    """X-Ray scene structuring (app/agents/xray.py) for the Aamod film: timing from the fixture, and only observations that rest on a transcript segment
     (a demo project has no vision model, so visual fields would be discarded by the workflow)."""
     creative = ctx.get("creative") or {}
     transcript = ctx.get("transcript") or []

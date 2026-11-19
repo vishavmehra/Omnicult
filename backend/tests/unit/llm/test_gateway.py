@@ -14,7 +14,7 @@ from pydantic import BaseModel
 
 from app.agents._common import untrusted
 from app.llm.budget import InMemoryUsageSink, run_scope
-from app.llm.gateway import Completion, LLMError, LLMGateway
+from app.llm.gateway import Completion, LLMError, LLMGateway, _cooldown
 from app.schemas.common import Usage
 from tests.unit.llm.genai_fakes import FakeClient, api_error, blocked_prompt, reply, settings
 
@@ -100,10 +100,35 @@ async def test_timeout_after_bounded_retries_is_provider_timeout():
     assert len(client.calls) == 3 and caught.value.trace.retries == 2  # llm_max_retries=2
 
 
-async def test_rate_limit_then_retry_succeeds():
+async def test_a_rate_limit_on_the_only_model_is_retried():
     client = FakeClient([api_error(429, "RESOURCE_EXHAUSTED", retry_after="0"), reply(GOOD)])
-    result = await call(gateway(client))
+    result = await call(gateway(client, gemini_model_fast=DEFAULT))  # one model, so no fallback target
     assert result.trace.retries == 1 and len(client.calls) == 2 and result.trace.model_id == DEFAULT
+
+
+async def test_a_rate_limit_goes_to_the_fallback_at_once_and_cools_the_model_down():
+    _cooldown.clear()
+    try:
+        client = FakeClient([api_error(429, "RESOURCE_EXHAUSTED", retry_after="0"), reply(GOOD), reply(GOOD)])
+        result = await call(gateway(client))  # research_synthesis: default tier, then fast
+        assert (result.trace.model_id, result.trace.fallback_used) == (FAST, True)
+        assert [c.model for c in client.calls] == [DEFAULT, FAST]  # no retry on a model whose quota is spent
+        again = await call(gateway(client))
+        assert (again.trace.model_id, again.trace.fallback_used) == (FAST, True) and len(client.calls) == 3  # skipped in its cooldown
+    finally:
+        _cooldown.clear()
+
+
+async def test_a_timeout_goes_to_the_fallback_at_once_without_a_cooldown():
+    _cooldown.clear()
+    for slow in (httpx.ReadTimeout("slow"), api_error(504)):
+        client = FakeClient([slow, reply(GOOD), reply(GOOD)])
+        result = await call(gateway(client))  # research_synthesis: default tier, then fast
+        assert (result.trace.model_id, result.trace.fallback_used) == (FAST, True)
+        assert [c.model for c in client.calls] == [DEFAULT, FAST]  # a retry would use up the deadline the fallback needs
+        again = await call(gateway(client))
+        assert again.trace.model_id == DEFAULT and not again.trace.fallback_used  # a timeout does not bench the model
+    assert not _cooldown
 
 
 async def test_client_error_is_not_retried_and_hides_provider_detail():

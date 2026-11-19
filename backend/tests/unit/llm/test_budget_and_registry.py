@@ -165,7 +165,7 @@ def test_every_task_has_a_tier_and_a_floor_not_above_it():
 def test_capability_models_come_from_settings():
     s = settings(gemini_model_image="img", gemini_model_tts="tts", gemini_embedding_model="emb", gemini_model_live="live")
     assert [registry.capability_model(s, c) for c in ("image_generation", "tts", "embeddings", "live", "vision")] == [
-        "img", "tts", "emb", "live", "gemini-3.8-flash"]
+        "img", "tts", "emb", "live", "gemini-3.5-flash-lite"]  # vision runs on the fast model
 
 
 def test_default_settings_name_only_registered_models_with_the_right_capability():

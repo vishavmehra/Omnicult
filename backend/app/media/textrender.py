@@ -287,10 +287,30 @@ def render_text(
     restored = 0
     if original is not None and rects:
         reference = original.convert("RGBA")
+        band = max(2, round(min(image.size) * FEATHER_SHARE))
         for rect in rects:
+            _feather(image, reference, rect, band)
+        for rect in rects:  # the exact pixels last, after every feather, so each box holds the original's pixels
             image.paste(reference.crop(rect), rect[:2])
             restored += 1
     return RenderResult(image=image, placements=placements, locked_restored=restored, engine=engine)
+
+
+FEATHER_SHARE = 0.012  # width of the soft band around a restored region, as a share of the shorter side (13 px at 1080)
+
+
+def _feather(image: Image.Image, reference: Image.Image, rect: tuple[int, int, int, int], band: int) -> None:
+    """Blend the original into a band just OUTSIDE a restored region, fading from the region's edge outwards, so the
+    region does not sit in the new scene with a hard rectangular seam. The region itself is pasted exactly afterwards."""
+    x0, y0, x1, y1 = rect
+    ex0, ey0 = max(0, x0 - band), max(0, y0 - band)
+    ex1, ey1 = min(image.width, x1 + band), min(image.height, y1 + band)
+    mask = Image.new("L", (ex1 - ex0, ey1 - ey0), 0)
+    draw = ImageDraw.Draw(mask)
+    for step in range(band, 0, -1):  # outermost first: each smaller rectangle is more opaque
+        draw.rectangle((x0 - ex0 - step, y0 - ey0 - step, x1 - ex0 + step - 1, y1 - ey0 + step - 1),
+                       fill=round(255 * (1 - step / (band + 1))))
+    image.paste(reference.crop((ex0, ey0, ex1, ey1)), (ex0, ey0), mask)
 
 
 def load_image(data: bytes) -> Image.Image:

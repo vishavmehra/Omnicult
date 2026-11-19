@@ -34,7 +34,7 @@ from app.workflows.types import OutcomeStatus, WorkflowContext, WorkflowDeps
 VISUAL, SOUND = "remake_visual", "remake_sound"
 V1, V2, V3, V4 = STAGES[VISUAL]
 A1, A2, A3, A4 = STAGES[SOUND]
-VISUAL_PROMPT_VERSION = "remake-visual-v1"
+VISUAL_PROMPT_VERSION = "remake-visual-v2"  # v2: a clear margin around the protected areas
 SOUND_PROMPT_VERSION = "remake-sound-v1"
 DEFAULT_JINGLE_PROMPT = (
     "A short, warm instrumental festive jingle for a family sweets advertisement: gentle percussion, flute and strings, "
@@ -178,6 +178,8 @@ def visual_prompt(inp: RemakeVisualInput, *, has_plate: bool, has_reference: boo
         "The first image shows the layout with the protected areas already in place (logo, product pack, tagline). Keep every "
         "protected area, the framing and the composition exactly as they are, and keep calm, uncluttered space where the "
         "headline and copy will be added later.",
+        "Leave a clear margin around each protected area: no props, flowers or petals touching or crossing its edges, and "
+        "continue the surface and light from its edges, because those areas are pasted back exactly as they are.",
         "Change only the scene itself: props, tableware, textiles, lamps, flowers and lighting, so that it feels natural for the region.",
     ]
     if not has_plate:
@@ -386,6 +388,8 @@ async def speaking_lines(state: SState, config: RunnableConfig) -> dict:
         audio: Any = None
         if stopped is not None:
             problems.append("Not spoken: an earlier line stopped the run.")
+        elif language not in (inp.language, "en"):  # e.g. a Marathi line that transcreation flagged and did not replace
+            problems.append(f"Not spoken: the line is in {language}, not {inp.language_name}. Transcreate it for this region first.")
         elif language not in LANGUAGE_CODES:
             problems.append(f"The speech model does not support {language}.")
         elif state["demo"]:
@@ -394,7 +398,7 @@ async def speaking_lines(state: SState, config: RunnableConfig) -> dict:
                 problems.append("This exact line and voice is not available in the demo.")
             else:
                 meta = {"source": "demo_fixture", "model": audio.model, "location": audio.location, "voice": audio.voice,
-                        "language_code": audio.language_code}
+                        "language_code": LANGUAGE_CODES.get(inp.language, audio.language_code)}
         else:
             try:
                 audio = await state["tts"].synthesize(line.text, language=language, voice=inp.voice, stage=A2, agent="remake_sound")
@@ -406,7 +410,7 @@ async def speaking_lines(state: SState, config: RunnableConfig) -> dict:
             else:
                 steps.append(audio.trace)
                 meta = {"source": "provider", "model": audio.model, "location": "global", "voice": audio.voice,
-                        "language_code": audio.language_code}
+                        "language_code": LANGUAGE_CODES.get(inp.language, audio.language_code)}  # the voice-over's, not the last line's
         clips.append((line, language, audio, problems))
     if not any(a is not None for _, _, a, _ in clips):
         first = next((p for _, _, _, ps in clips for p in ps), "No line could be spoken.")

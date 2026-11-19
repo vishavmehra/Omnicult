@@ -116,8 +116,11 @@ def test_the_image_prompt_asks_for_clear_space_not_lettering_and_marks_the_ideas
     inp = flow.GenerateImageInput(context=WorkflowContext(run_id=uuid4(), project_id=uuid4(), mode="live", brand=BrandContext(name="Aamod")),
                                   request=request, region_name="Tamil Nadu", language_name="Tamil", script="Taml", brand=brand)
     prompt = flow.image_prompt(inp, has_reference=False)
-    assert "written by the campaign owner: Brass lamps" in prompt and "Festive Tin" in prompt and "Teal #0E4D58" in prompt
-    assert "logo" in prompt and "headline" in prompt and "Do not draw a logo" in prompt and "attached image" not in prompt
+    assert "written by the campaign owner: Brass lamps" in prompt and "Festive Tin" in prompt and "brand's: Teal." in prompt
+    # colours by name only (hex codes were drawn as swatches), and a full-bleed photograph (a "calm band" was drawn as a blank strip)
+    assert "#0E4D58" not in prompt and "Never show colour swatches" in prompt and "no borders, bands" in prompt
+    assert "top-left corner" in prompt and "upper third" in prompt and "Do not draw a logo" in prompt and "attached image" not in prompt
+    assert "headline" not in prompt  # named, the model lettered words of the prompt into that space (seen live)
     assert "attached image" in flow.image_prompt(inp, has_reference=True)
 
 

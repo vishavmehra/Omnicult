@@ -53,6 +53,9 @@ class VisualObservation(ApiModel):
     kind: Literal["object", "text_in_image", "symbol", "person", "color_or_layout", "other"]
     description: str
     location: str | None = Field(description="Approximate position such as top-left; null when not reported.")
+    bbox: list[float] | None = Field(
+        default=None, description="[x, y, w, h], each 0-1: where the vision model located it in the image; null when not reported."
+    )
 
 
 class VisionStatus(ApiModel):

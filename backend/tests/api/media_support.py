@@ -171,7 +171,7 @@ class FakeTranscribe:
 
 
 def scripted_llm(responder: Any, *, seen: list[dict] | None = None) -> LLMGateway:
-    """The real gateway (schema validation, repair, traces) over a provider that answers xray-scenes-v1 from `responder(context)`."""
+    """The real gateway (schema validation, repair, traces) over a provider that answers the X-Ray prompt from `responder(context)`."""
     from tests.unit.workflows.scenario import offline_settings  # noqa: PLC0415
 
     def respond(context: Any) -> dict:
@@ -179,7 +179,9 @@ def scripted_llm(responder: Any, *, seen: list[dict] | None = None) -> LLMGatewa
             seen.append(dict(context))
         return responder(context)
 
-    return LLMGateway(offline_settings(), provider=FixtureLLMProvider({"xray-scenes-v1": respond}))
+    from app.agents.xray import PROMPT_VERSION
+
+    return LLMGateway(offline_settings(), provider=FixtureLLMProvider({PROMPT_VERSION: respond}))
 
 
 class ScriptedProvider:

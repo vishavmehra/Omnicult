@@ -4,8 +4,10 @@ import { AudioLines, Boxes, Captions, Clapperboard, Heading, Image as ImageIcon,
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { ApiImage } from "@/components/creative/api-image";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ProvenanceTag } from "@/features/xray/parts";
 import { formatRelative } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -55,6 +57,9 @@ function Wording({ element, className }: { element: CreativeElement; className?:
   const text = elementText(element.value);
   const textual = isTextKind(element.kind);
   if (!text) return <p className="text-[13px] text-ink-muted">Empty.</p>;
+  // A scene that holds a stored picture ("asset:<id>": an X-Ray keyframe or a Remake: Visuals scene) shows the picture, not its id.
+  const asset = element.kind === "scene" && typeof element.value === "string" ? /^asset:([0-9a-f-]{36})$/.exec(element.value)?.[1] : undefined;
+  if (asset) return <ApiImage path={`/api/v1/assets/${asset}/content`} alt={`The picture of scene ${element.id}`} fit="contain" className="h-40 w-auto max-w-full rounded-lg border border-border" />;
   return textual ? (
     <p lang={element.language ?? undefined} className={cn("text-[15px] leading-relaxed whitespace-pre-line text-ink", className)}>
       {text}
@@ -166,6 +171,12 @@ function ElementRow({
           <span className="font-mono text-[11.5px] font-normal text-ink-muted">{pair.id}</span>
         </h3>
         <LockState locked={locked} />
+        {current?.bbox_source === "model_detected" && (
+          <span className="type-meta inline-flex items-center gap-1.5">
+            Position
+            <ProvenanceTag kind="observed" title="Creative X-Ray's vision model located this element in a keyframe. Check the box before you rely on it." />
+          </span>
+        )}
         <div className="ml-auto flex flex-wrap items-center gap-1.5">
           {current && textual && hasValue && (
             <>

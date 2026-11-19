@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { RunStatusPanel } from "@/components/workflow/run-status";
 import { useCampaign } from "@/features/workspaces/campaign-context";
 import { CampaignFacts, SectionTitle } from "@/features/workspaces/parts";
+import { UseXRayLayoutButton } from "@/features/studio/start-version";
 import { useRun } from "@/lib/api/runs";
 
 import { AnalysisPanel } from "./analysis";
@@ -17,11 +18,16 @@ import { isActive, useCreative, useCreatives, useScenes, useStartXRay, useUpload
 import { CreativePicker } from "./creative-picker";
 import { FrameStage, type StageBox } from "./frame-stage";
 import { plural } from "./media-file";
-import { clock } from "./parts";
+import { clock, ProvenanceTag } from "./parts";
 import { Player } from "./player";
 import { SceneDetail, SceneStrip } from "./scenes";
 import { TextPreviewTool } from "./text-preview";
 import { RunForm, UploadForm, KIND_LABEL } from "./upload-panel";
+
+const ROLE_LABEL: Record<string, string> = {
+  headline: "Headline", body: "Body", cta: "Call to action", tagline: "Tagline", caption: "Caption", logo: "Logo", product: "Product", packshot: "Pack",
+};
+const KEPT_ROLES = new Set(["logo", "product", "packshot", "tagline"]); // the never-change kinds Remake keeps as they are
 
 function Panel({ title, description, onClose, children }: { title: string; description?: string; onClose?: () => void; children: React.ReactNode }) {
   return (
@@ -67,6 +73,7 @@ function TranscriptNotice({ creative, onSidecar }: { creative: Creative; onSidec
 /** One creative: its run, scene timeline, the selected scene, evidence and the Indic text preview. */
 function Workbench({ creativeId, onSidecar }: { creativeId: string; onSidecar: () => void }) {
   const { campaign } = useCampaign();
+  const router = useRouter();
   const creative = useCreative(creativeId);
   const c = creative.data;
   const run = useRun(c?.latest_run_id);
@@ -83,7 +90,13 @@ function Workbench({ creativeId, onSidecar }: { creativeId: string; onSidecar: (
   const running = isActive(c.status);
   const again = () => rerun.mutate({ assetId: c.asset_id, label: c.label, language: c.language, regionCode: c.region_code });
   const aspect = c.asset.width && c.asset.height ? c.asset.width / c.asset.height : null;
-  const boxes: StageBox[] = scene?.anchor.bbox ? [{ id: "anchor", bbox: scene.anchor.bbox, label: "Anchor", tone: "anchor" }] : [];
+  // The layout's boxes belong to one keyframe of the scene (not always the first): show that frame under them.
+  const layout = scene?.layout ?? [];
+  const layoutFrame = layout.length ? c.analysis?.frames.find((f) => f.timestamp_ms === layout[0].frame_ms) : undefined;
+  const boxes: StageBox[] = layout.length
+    ? layout.map((l, i) => ({ id: `${l.role}-${i}`, bbox: l.bbox, label: ROLE_LABEL[l.role], tone: KEPT_ROLES.has(l.role) ? "locked" : "text" }))
+    : scene?.anchor.bbox ? [{ id: "anchor", bbox: scene.anchor.bbox, label: "Anchor", tone: "anchor" }] : [];
+  const hasLayout = list.some((x) => x.layout.length > 0);
 
   return (
     <div className="space-y-6">
@@ -97,10 +110,15 @@ function Workbench({ creativeId, onSidecar }: { creativeId: string; onSidecar: (
             {c.language && <> · spoken {c.language}</>}
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={again} disabled={running || rerun.isPending}>
-          <Play aria-hidden />
-          {running ? "Running…" : "Run again"}
-        </Button>
+        <div className="flex flex-wrap items-start gap-2">
+          {hasLayout && !running && (
+            <UseXRayLayoutButton campaignId={campaign.id} size="sm" variant="outline" onCreated={(id) => router.push(`/app/c/${campaign.id}/studio?tab=elements&v=${id}`)} />
+          )}
+          <Button variant="outline" size="sm" onClick={again} disabled={running || rerun.isPending}>
+            <Play aria-hidden />
+            {running ? "Running…" : "Run again"}
+          </Button>
+        </div>
       </div>
       {rerun.error && <ErrorState error={rerun.error} onRetry={again} />}
 
@@ -124,16 +142,23 @@ function Workbench({ creativeId, onSidecar }: { creativeId: string; onSidecar: (
             {c.kind === "image" ? "The image" : "Scene timeline"}
           </SectionTitle>
           {(c.kind !== "image" || list.length > 1) && <SceneStrip scenes={list} selectedId={scene.id} onSelect={setPicked} />}
-          <div className="grid items-start gap-5 pt-1 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)]">
+          <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-5 pt-1 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)]">
             <div className="min-w-0 space-y-3">
               <FrameStage
-                path={scene.keyframe_url}
+                path={layoutFrame?.url ?? scene.keyframe_url}
                 aspect={aspect}
                 boxes={boxes}
                 alt={`Keyframe of scene ${index + 1} of ${c.label}`}
                 empty={c.kind === "audio" ? "Audio has no picture. Its scenes are time spans." : undefined}
               />
-              {boxes.length > 0 && <p className="type-meta text-center">The box marks where this scene&apos;s anchor points.</p>}
+              {layout.length > 0 ? (
+                <p className="type-meta flex flex-wrap items-center justify-center gap-1.5 text-center">
+                  Where the vision model located the text, logo and pack{layoutFrame ? ` (keyframe at ${clock(layoutFrame.timestamp_ms)})` : ""}
+                  <ProvenanceTag kind="model_generated" title="The boxes come from the vision model's reading of this keyframe; which part each plays is a model's reading. Code checked the cited ids." />
+                </p>
+              ) : (
+                boxes.length > 0 && <p className="type-meta text-center">The box marks where this scene&apos;s anchor points.</p>
+              )}
               {c.kind !== "image" && <Player creative={c} startMs={scene.start_ms} />}
             </div>
             <SceneDetail scene={scene} index={index} total={list.length} creative={c} />

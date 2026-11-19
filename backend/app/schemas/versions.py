@@ -50,6 +50,9 @@ class CreativeElement(ApiModel):
         default=None, min_length=4, max_length=4, description="[x, y, w, h], each normalised to 0-1."
     )
     scene_id: str | None = None
+    bbox_source: Literal["model_detected"] | None = Field(
+        default=None, description="model_detected: a vision model located `bbox` in a keyframe (Creative X-Ray). Null: set by a person or unknown."
+    )
     locked: bool = Field(default=False, description="Whether the element was locked when this version was created.")
 
     @field_validator("value")
@@ -101,10 +104,12 @@ class VersionPage(Page[VersionSummary]):
 
 
 class VersionCreate(ApiModel):
-    """Import an original as a root version. Without `elements` the root is made from the campaign's current copy."""
+    """Import an original as a root version. Without `elements` the root is made from the campaign's current copy, or with
+    `from_xray` from the Creative X-Ray layout of the campaign's creatives (elements with the positions X-Ray located)."""
 
     label: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=80)] = "Original"
     elements: list[CreativeElement] | None = Field(default=None, min_length=1, max_length=200)
+    from_xray: bool = Field(default=False, description="Build the elements from the newest X-Ray of every creative of the campaign.")
     region_code: RegionCode | None = None
     language: LanguageCode | None = None
     tone: Tone | None = None
@@ -114,6 +119,8 @@ class VersionCreate(ApiModel):
         ids = [e.id for e in self.elements or []]
         if len(ids) != len(set(ids)):
             raise ValueError("Element ids must be unique.")
+        if self.from_xray and self.elements:
+            raise ValueError("Send elements or from_xray, not both.")
         return self
 
 

@@ -39,7 +39,7 @@ from app.workflows.xray import XRayInput, XRayOutcome
 PENDING = "The X-Ray run has not finished, or it failed before producing a result."
 PAYLOAD_FIELDS = {
     "frame_ms", "on_screen_text", "transcript", "people", "gestures", "setting", "objects", "colours", "music_mood", "claims",
-    "cultural_observations", "cultural_interpretations", "provenance", "limitations",
+    "cultural_observations", "cultural_interpretations", "layout", "provenance", "limitations",
 }
 
 

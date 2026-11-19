@@ -174,6 +174,41 @@ async def _content_version(
     return version
 
 
+COPY_LIMITS = {"headline": 300, "body": 5000, "call_to_action": 200}  # CampaignContent's bounds
+
+
+def studio_copy(elements: list[dict[str, Any]]) -> dict[str, str]:
+    """A Creative Studio version's copy as campaign content, read from ONE scene so the panel sees a whole creative: the scene
+    with a call to action and the most text (a key visual or an end card). A headline set as two lines is joined again."""
+    texts = [e for e in elements if e.get("kind") in ("headline", "body", "caption", "cta")
+             and isinstance(e.get("value"), str) and e["value"].strip()]
+    scenes: dict[Any, list[dict[str, Any]]] = defaultdict(list)
+    for e in texts:
+        scenes[e.get("scene_id")].append(e)
+    best = max(scenes.values(), key=lambda items: (any(e["kind"] == "cta" for e in items), sum(len(e["value"]) for e in items)), default=[])
+
+    def joined(kind: str) -> str:
+        return " ".join(e["value"].strip() for e in best if e["kind"] == kind)
+
+    copy = {"headline": joined("headline"), "body": joined("body") or joined("caption"), "call_to_action": joined("cta")}
+    return {k: v[:COPY_LIMITS[k]] for k, v in copy.items() if v}
+
+
+async def _creative_for(s: AsyncSession, campaign: m.Campaign, version: m.CampaignVersion, content_version_id: UUID | None,
+                        version_ref: str | None) -> dict[str, Any]:
+    """The copy a panel reacts to: the stored content version, or, when no content version is chosen and `version_ref` names a
+    Creative Studio version of this campaign, that version's own copy, so a transcreated Tamil version is read in Tamil."""
+    if content_version_id is None and version_ref:
+        try:
+            node = await s.get(m.VersionNode, UUID(version_ref))
+        except ValueError:
+            node = None
+        copy = studio_copy(list(node.elements)) if node is not None and node.campaign_id == campaign.id else {}
+        if copy:
+            return {**version.content, "headline": None, "body": None, "call_to_action": None, **copy}
+    return version.content
+
+
 async def claims_snapshot(
     user_id: UUID, project: m.Project, region_codes: Sequence[str]
 ) -> tuple[list[v.GroundingClaim], dict[str, str]]:
@@ -315,13 +350,14 @@ async def start_quick_read(user_id: UUID, campaign_id: UUID, body: v.QuickReadCr
     async with read_session() as s:
         campaign, project = await _campaign_for_run(s, user_id, campaign_id)
         version = await _content_version(s, user_id, campaign, body.content_version_id)
+        creative = await _creative_for(s, campaign, version, body.content_version_id, body.version_ref)
         brand = await _brand_of(s, project.id)
     claims, strength = await claims_snapshot(user_id, project, [body.region_code])
     people = sample_panel(size=body.size, states=dims["states"], languages=dims["languages"], city_tiers=dims["city_tiers"],
                           age_bands=dims["age_bands"], seed=body.seed, weights=dims["weights"])
     run_id = uuid4()
     inputs = {
-        "region": {"code": body.region_code, "name": REGION_NAME[body.region_code]}, "creative": version.content,
+        "region": {"code": body.region_code, "name": REGION_NAME[body.region_code]}, "creative": creative,
         "intended_message": body.intended_message, "claims": [c.model_dump(mode="json") for c in claims],
         "evidence_strength": strength, "brand": _brand_snapshot(brand), "panel": _panel_inputs(body.size, dims, people, body.seed),
     }
@@ -344,13 +380,14 @@ async def start_audience_study(user_id: UUID, campaign_id: UUID, body: v.Audienc
     async with read_session() as s:
         campaign, project = await _campaign_for_run(s, user_id, campaign_id)
         version = await _content_version(s, user_id, campaign, body.content_version_id)
+        creative = await _creative_for(s, campaign, version, body.content_version_id, body.version_ref)
         brand = await _brand_of(s, project.id)
     claims, strength = await claims_snapshot(user_id, project, states)
     people = sample_panel(size=body.size, states=dims["states"], languages=dims["languages"], city_tiers=dims["city_tiers"],
                           age_bands=dims["age_bands"], seed=body.seed, weights=dims["weights"])
     run_id = uuid4()
     inputs = {
-        "regions": [{"code": c, "name": REGION_NAME[c]} for c in states], "creative": version.content,
+        "regions": [{"code": c, "name": REGION_NAME[c]} for c in states], "creative": creative,
         "intended_message": body.intended_message, "claims": [c.model_dump(mode="json") for c in claims],
         "evidence_strength": strength, "brand": _brand_snapshot(brand), "depth": body.interview_depth,
         "panel": _panel_inputs(body.size, dims, people, body.seed),

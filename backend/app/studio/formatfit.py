@@ -176,7 +176,9 @@ def _measure(box: Box, source: tuple[int, int], layout: Layout, spec: FormatSpec
         lines = (box.text or "").count("\n") + 1
         text_px = (out[3] - out[1]) * spec.height / lines
         min_px = (MIN_CAPTION_PX if box.kind == "caption" else MIN_TEXT_PX) * min(spec.width, spec.height) / 1080
-    return Placed(box, (max(0.0, out[0]), max(0.0, out[1]), min(1.0, out[2]) - max(0.0, out[0]), min(1.0, out[3]) - max(0.0, out[1])),
+    inside = (max(0.0, out[0]), max(0.0, out[1]), min(1.0, out[2]) - max(0.0, out[0]), min(1.0, out[3]) - max(0.0, out[1]))
+    # an element wholly outside the frame has no box in it (clipping alone left a negative width or height)
+    return Placed(box, inside if inside[2] > 0 and inside[3] > 0 else None,
                   visible, placement, not overflow and placement == "kept", overflow, text_px, min_px)
 
 

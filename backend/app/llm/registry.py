@@ -229,10 +229,12 @@ def thinking_level_for(model_id: str, tier: Tier | None) -> str | None:
 
 
 def capability_model(settings: Settings, capability: Capability) -> str | None:
-    """Configured model id for a non-text capability. Vision, transcription and grounded research use the default text model."""
+    """Configured model id for a non-text capability. Vision uses the fast text model (gemini-3.5-flash-lite read the Aamod
+    keyframes, Devanagari and boxes included, in about 3 s each; gemini-3.8-flash took 10 to 60 s and timed out on some);
+    transcription and grounded research use the default text model."""
     return {
         "chat": settings.gemini_model_default,
-        "vision": settings.gemini_model_default,
+        "vision": settings.gemini_model_fast,
         "transcribe": settings.gemini_model_default,
         "grounded_research": settings.gemini_model_default,
         "image_generation": settings.gemini_model_image,

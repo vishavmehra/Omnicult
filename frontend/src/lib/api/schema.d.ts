@@ -8160,6 +8160,11 @@ export interface components {
              * @description [x, y, w, h], each normalised to 0-1.
              */
             bbox?: number[] | null;
+            /**
+             * Bbox Source
+             * @description model_detected: a vision model located `bbox` in a keyframe (Creative X-Ray). Null: set by a person or unknown.
+             */
+            bbox_source?: "model_detected" | null;
             /** Id */
             id: string;
             /**
@@ -8195,6 +8200,11 @@ export interface components {
              * @description [x, y, w, h], each normalised to 0-1.
              */
             bbox: number[] | null;
+            /**
+             * Bbox Source
+             * @description model_detected: a vision model located `bbox` in a keyframe (Creative X-Ray). Null: set by a person or unknown.
+             */
+            bbox_source: "model_detected" | null;
             /** Id */
             id: string;
             /**
@@ -12621,6 +12631,38 @@ export interface components {
             language_name: string;
             /** Script */
             script: string;
+        };
+        /**
+         * LayoutItem
+         * @description One part of a scene's layout: an on-screen text, logo or pack, with the box a vision model located it in.
+         */
+        LayoutItem: {
+            /**
+             * Bbox
+             * @description [x, y, w, h], each 0-1 of the keyframe.
+             */
+            bbox: number[];
+            /**
+             * Frame Ms
+             * @description The keyframe the box belongs to.
+             */
+            frame_ms: number;
+            /**
+             * Observation Id
+             * @description The vision observation (vis-N) of that keyframe the box comes from.
+             */
+            observation_id: string;
+            /**
+             * Role
+             * @description The part it plays, as a model read it.
+             * @enum {string}
+             */
+            role: "headline" | "body" | "cta" | "tagline" | "caption" | "logo" | "product" | "packshot";
+            /**
+             * Text
+             * @description Text roles: the text as the vision model reported it. Null for a logo or pack.
+             */
+            text: string | null;
         };
         /** LensAtlas */
         LensAtlas: {
@@ -19433,6 +19475,12 @@ export interface components {
              * @description Authenticated API path of the scene's keyframe image.
              */
             keyframe_url: string | null;
+            /**
+             * Layout
+             * @description Where the scene's text, logo and pack sit, located by a vision model.
+             * @default []
+             */
+            layout: components["schemas"]["LayoutItem"][];
             /** Limitations */
             limitations: string[];
             /**
@@ -21715,11 +21763,18 @@ export interface components {
         };
         /**
          * VersionCreate
-         * @description Import an original as a root version. Without `elements` the root is made from the campaign's current copy.
+         * @description Import an original as a root version. Without `elements` the root is made from the campaign's current copy, or with
+         *     `from_xray` from the Creative X-Ray layout of the campaign's creatives (elements with the positions X-Ray located).
          */
         VersionCreate: {
             /** Elements */
             elements?: components["schemas"]["CreativeElement-Input"][] | null;
+            /**
+             * From Xray
+             * @description Build the elements from the newest X-Ray of every creative of the campaign.
+             * @default false
+             */
+            from_xray: boolean;
             /**
              * Label
              * @default Original
@@ -22079,6 +22134,11 @@ export interface components {
              * Format: uuid
              */
             asset_id: string;
+            /**
+             * Bbox
+             * @description [x, y, w, h], each 0-1: where the vision model located it in the image; null when not reported.
+             */
+            bbox: number[] | null;
             /** Description */
             description: string;
             /** Id */

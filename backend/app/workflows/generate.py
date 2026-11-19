@@ -40,7 +40,7 @@ IMAGE, VOICE, JINGLE = "generate_image", "generate_voice", "generate_jingle"
 I1, I2, I3, I4 = STAGES[IMAGE]
 V1, V2, V3, V4 = STAGES[VOICE]
 J1, J2, J3, J4 = STAGES[JINGLE]
-IMAGE_PROMPT_VERSION = "generate-image-v2"
+IMAGE_PROMPT_VERSION = "generate-image-v3"  # v3: brand colours by name, never as swatches
 VOICE_PROMPT_VERSION = "generate-voice-v1"
 JINGLE_PROMPT_VERSION = "generate-jingle-v1"
 REFERENCE_DROPPED_NOTE = ("The Brand Kit product image was not sent to the model as a reference: the real product is placed in code, and a "
@@ -207,24 +207,31 @@ def image_prompt(inp: GenerateImageInput, *, has_reference: bool) -> str:
     if brand.festival_hook:
         parts.append(f"Festival hook from the brief: {brand.festival_hook}")
     if r.use_brand_colours and brand.colours:
-        parts.append("Brand palette to lean on: " + ", ".join(f"{name} {hexa}" for name, hexa in brand.colours[:6]) + ".")
+        # Names only: given hex codes, the image model drew the palette as a strip of swatches along the bottom (seen live).
+        parts.append("Let the colours of the scene itself (clothing, props, light) lean towards the brand's: "
+                     + ", ".join(name for name, _ in brand.colours[:6])
+                     + ". Never show colour swatches, colour bars or a palette.")
     if brand.tone:
         parts.append("Brand tone: " + ", ".join(brand.tone[:6]) + ".")
+    # Areas only, never what goes there: asked for "a calm band ... for a headline" the model drew a blank strip, and asked to
+    # keep "the upper part of the scene for a headline" it lettered words of the prompt into it (both seen live).
     space = []
     if r.include_logo:
-        space.append("the top-left corner for a logo")
+        space.append("the top-left corner")
     if r.headline:
-        space.append("a calm band near the top for a headline")
+        space.append("the upper third")
     if r.include_product:
-        space.append("the bottom-right for the product pack")
+        space.append("the bottom-right corner")
     if space:
         avoid = ["a logo", "any lettering", *(["any tin, jar, box, bottle or packaging of any kind"] if r.include_product else [])]
-        parts.append("Keep " + ", ".join(space) + f" calm and uncluttered: those are added afterwards. Do not draw {', '.join(avoid[:-1])} or {avoid[-1]}.")
+        parts.append("Keep " + ", ".join(space) + " of the photograph plain and quiet (a wall, sky, tabletop or soft focus) with no "
+                     f"objects there. Do not draw {', '.join(avoid[:-1])} or {avoid[-1]}.")
     if has_reference:
         parts.append("The attached image is a reference for look, colour and styling only. Do not copy it into the scene.")
     if inp.claims:
         notes = "; ".join(c.statement[:160] for c in inp.claims[:5])
         parts.append(f"Sourced regional notes (use one only where it fits naturally; never invent customs beyond them): {notes}")
+    parts.append("The photograph fills the whole frame edge to edge: no borders, bands, frames or blocks of flat colour.")
     parts.append("Photographic and realistic, natural light.")
     return " ".join(parts)
 

@@ -24,9 +24,10 @@ from app.fixtures.demo_studio_t3 import RESPONDERS as STUDIO_T3_RESPONDERS  # no
 
 RESPONDERS |= STUDIO_T3_RESPONDERS
 
+from app.agents.xray import PROMPT_VERSION as XRAY_PROMPT_VERSION  # noqa: E402
 from app.fixtures import demo_aamod  # noqa: E402
 
-RESPONDERS |= {"xray-scenes-v1": demo_aamod.xray_scenes}  # the Aamod film only; any other creative gets "no demo fixture"
+RESPONDERS |= {XRAY_PROMPT_VERSION: demo_aamod.xray_scenes}  # the Aamod film only; any other creative gets "no demo fixture"
 
 from app.fixtures.demo_voice import RESPONDERS as VOICE_RESPONDERS  # noqa: E402
 

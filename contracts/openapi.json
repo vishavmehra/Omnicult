@@ -11507,6 +11507,19 @@
             "description": "[x, y, w, h], each normalised to 0-1.",
             "title": "Bbox"
           },
+          "bbox_source": {
+            "anyOf": [
+              {
+                "const": "model_detected",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "model_detected: a vision model located `bbox` in a keyframe (Creative X-Ray). Null: set by a person or unknown.",
+            "title": "Bbox Source"
+          },
           "id": {
             "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
             "title": "Id",
@@ -11606,6 +11619,19 @@
             "description": "[x, y, w, h], each normalised to 0-1.",
             "title": "Bbox"
           },
+          "bbox_source": {
+            "anyOf": [
+              {
+                "const": "model_detected",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "model_detected: a vision model located `bbox` in a keyframe (Creative X-Ray). Null: set by a person or unknown.",
+            "title": "Bbox Source"
+          },
           "id": {
             "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
             "title": "Id",
@@ -11683,6 +11709,7 @@
           "script",
           "bbox",
           "scene_id",
+          "bbox_source",
           "locked"
         ],
         "title": "CreativeElement",
@@ -23538,6 +23565,68 @@
           "code_mixed_comments"
         ],
         "title": "LanguageCount",
+        "type": "object"
+      },
+      "LayoutItem": {
+        "additionalProperties": false,
+        "description": "One part of a scene's layout: an on-screen text, logo or pack, with the box a vision model located it in.",
+        "properties": {
+          "bbox": {
+            "description": "[x, y, w, h], each 0-1 of the keyframe.",
+            "items": {
+              "type": "number"
+            },
+            "maxItems": 4,
+            "minItems": 4,
+            "title": "Bbox",
+            "type": "array"
+          },
+          "frame_ms": {
+            "description": "The keyframe the box belongs to.",
+            "title": "Frame Ms",
+            "type": "integer"
+          },
+          "observation_id": {
+            "description": "The vision observation (vis-N) of that keyframe the box comes from.",
+            "title": "Observation Id",
+            "type": "string"
+          },
+          "role": {
+            "description": "The part it plays, as a model read it.",
+            "enum": [
+              "headline",
+              "body",
+              "cta",
+              "tagline",
+              "caption",
+              "logo",
+              "product",
+              "packshot"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Text roles: the text as the vision model reported it. Null for a logo or pack.",
+            "title": "Text"
+          }
+        },
+        "required": [
+          "role",
+          "text",
+          "frame_ms",
+          "observation_id",
+          "bbox"
+        ],
+        "title": "LayoutItem",
         "type": "object"
       },
       "LensAtlas": {
@@ -40823,6 +40912,15 @@
             "description": "Authenticated API path of the scene's keyframe image.",
             "title": "Keyframe Url"
           },
+          "layout": {
+            "default": [],
+            "description": "Where the scene's text, logo and pack sit, located by a vision model.",
+            "items": {
+              "$ref": "#/components/schemas/LayoutItem"
+            },
+            "title": "Layout",
+            "type": "array"
+          },
           "limitations": {
             "items": {
               "type": "string"
@@ -40932,6 +41030,7 @@
           "claims",
           "cultural_observations",
           "cultural_interpretations",
+          "layout",
           "provenance",
           "limitations",
           "anchor",
@@ -46799,7 +46898,7 @@
       },
       "VersionCreate": {
         "additionalProperties": false,
-        "description": "Import an original as a root version. Without `elements` the root is made from the campaign's current copy.",
+        "description": "Import an original as a root version. Without `elements` the root is made from the campaign's current copy, or with\n`from_xray` from the Creative X-Ray layout of the campaign's creatives (elements with the positions X-Ray located).",
         "properties": {
           "elements": {
             "anyOf": [
@@ -46816,6 +46915,12 @@
               }
             ],
             "title": "Elements"
+          },
+          "from_xray": {
+            "default": false,
+            "description": "Build the elements from the newest X-Ray of every creative of the campaign.",
+            "title": "From Xray",
+            "type": "boolean"
           },
           "label": {
             "default": "Original",
@@ -47891,6 +47996,21 @@
             "title": "Asset Id",
             "type": "string"
           },
+          "bbox": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "[x, y, w, h], each 0-1: where the vision model located it in the image; null when not reported.",
+            "title": "Bbox"
+          },
           "description": {
             "title": "Description",
             "type": "string"
@@ -47929,7 +48049,8 @@
           "asset_id",
           "kind",
           "description",
-          "location"
+          "location",
+          "bbox"
         ],
         "title": "VisualObservation",
         "type": "object"

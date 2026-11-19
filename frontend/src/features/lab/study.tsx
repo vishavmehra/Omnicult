@@ -6,6 +6,7 @@ import { Tag } from "@/components/evidence/badges";
 import { LimitationList } from "@/components/evidence/limitation-list";
 import { ErrorState, LoadingState } from "@/components/states";
 import { Textarea } from "@/components/ui/textarea";
+import { useVersions } from "@/features/studio/api";
 import { useCampaign } from "@/features/workspaces/campaign-context";
 import { MessageSquareText } from "lucide-react";
 
@@ -34,6 +35,11 @@ function StudyForm({ options, onStarted }: { options: SamplingOptions; onStarted
     return [named?.code ?? "IN-TN"];
   });
   const [versionId, setVersionId] = useState(campaign.current_version.id);
+  // A Creative Studio version: the panel is interviewed about that version's own copy (version_ref), as in Quick Read.
+  const studio = useVersions(campaign.id);
+  const studioVersions = [...(studio.data?.items ?? [])].reverse();
+  const [studioChoice, setStudioChoice] = useState<string | null>(null);
+  const studioId = studioChoice ?? studioVersions.find((v) => v.region_code === states[0])?.id ?? "";
   const [message, setMessage] = useState("");
   const [size, setSize] = useState(Math.min(30, max));
   const [depth, setDepth] = useState<"brief" | "standard">("standard");
@@ -49,7 +55,8 @@ function StudyForm({ options, onStarted }: { options: SamplingOptions; onStarted
     if (sizeError || stateError || seedError) return;
     const body: AudienceStudyCreate = {
       sampling: toPlan(dims, states),
-      content_version_id: versionId === campaign.current_version.id ? null : versionId,
+      content_version_id: studioId || versionId === campaign.current_version.id ? null : versionId,
+      version_ref: studioId || null,
       intended_message: message.trim() || null,
       size,
       interview_depth: depth,
@@ -83,7 +90,20 @@ function StudyForm({ options, onStarted }: { options: SamplingOptions; onStarted
         </FieldBlock>
       </div>
 
-      {campaign.versions.length > 1 && (
+      {studioVersions.length > 0 && (
+        <FieldBlock label="Creative Studio version" htmlFor="st-studio" hint="The panel is interviewed about this version's own headline, body and call to action.">
+          <NativeSelect id="st-studio" value={studioId} onChange={(e) => setStudioChoice(e.target.value)} aria-describedby="st-studio-hint">
+            <option value="">None: the campaign copy below</option>
+            {studioVersions.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.label} · {v.region_code ?? "no region"} · {v.language ?? "no language"}
+              </option>
+            ))}
+          </NativeSelect>
+        </FieldBlock>
+      )}
+
+      {campaign.versions.length > 1 && !studioId && (
         <FieldBlock label="Creative version" htmlFor="st-version" hint="The copy the panel is interviewed about.">
           <NativeSelect id="st-version" value={versionId} onChange={(e) => setVersionId(e.target.value)} aria-describedby="st-version-hint">
             {campaign.versions.map((v) => (

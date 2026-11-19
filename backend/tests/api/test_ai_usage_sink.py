@@ -171,7 +171,7 @@ async def test_capability_calls_are_recorded_and_a_provider_failure_is_still_an_
     where = UsageContext(workspace_id=await workspace_of("alice"), project_id=UUID(project["id"]),
                          campaign_id=UUID(campaign["id"]), user_id=dev_user_id("alice"))
     speech = "00:00.0 [mr] hello"
-    seen = json.dumps({"observations": [{"kind": "object", "description": "a lamp", "location": None}]})
+    seen = json.dumps({"observations": [{"kind": "object", "description": "a lamp", "location": None, "box_2d": [100, 100, 400, 300]}]})
     grounded = types.GroundingMetadata(
         web_search_queries=["pongal"], grounding_chunks=[types.GroundingChunk(web=types.GroundingChunkWeb(uri="https://a.example/x", title="a"))])
     fake = FakeClient(

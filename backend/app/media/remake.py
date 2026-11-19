@@ -24,6 +24,7 @@ BOLD_KINDS = frozenset({"headline", "cta"})
 MAX_BOX_TEXT = 400
 WHITE, INK = "#ffffff", "#111111"
 SHADOW = TextShadow(dx=2, dy=2, blur=3, color="#000000b0")
+HALO = TextShadow(dx=0, dy=0, blur=4, color="#ffffffc0")  # dark text on a busy light scene was hard to read without it
 MIN_BOX_PX = 18  # shortest text box drawn; shorter boxes are grown (a Tamil line is taller than a Latin one)
 LARGE_TEXT_PX = 24  # at this size or above the contrast threshold is 3.0, below it 4.5 (WCAG large and normal text)
 
@@ -150,7 +151,7 @@ def plan_box(spec: dict[str, Any], base: Image.Image, target_script: str, target
     box = TextBox(
         text=text, script=script, language=spec.get("language") if spec.get("language") and len(spec["language"]) <= 3 else None,
         bbox=bbox, align="center" if center else "left", valign="middle", color=colour, bold=spec["kind"] in BOLD_KINDS,
-        min_size_px=9, max_size_px=max_size, shadow=SHADOW if colour == WHITE else None,
+        min_size_px=9, max_size_px=max_size, shadow=SHADOW if colour == WHITE else HALO,
     )
     meta["problems"] = problems
     return box, meta

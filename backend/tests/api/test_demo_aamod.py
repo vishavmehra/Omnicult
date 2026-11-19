@@ -79,7 +79,7 @@ def test_the_responders_answer_only_for_the_aamod_copy():
     assert fx.risk_findings({"elements": [{"handle": "E1", "text": "Shop now"}]}) is None
     assert fx.xray_scenes({"creative": {"kind": "video"}, "transcript": [{"id": "t1", "start_ms": 0, "end_ms": 900, "text": "hello"}]}) is None
     assert fx.xray_scenes({"creative": {"kind": "image"}, "transcript": []}) is None
-    for prompt in ("xray-scenes-v1", "transcreate-lines-v1", "tweak-chips-v1", "quick-read-v1", "risk-check-v1"):
+    for prompt in ("xray-scenes-v2", "transcreate-lines-v1", "tweak-chips-v1", "quick-read-v1", "risk-check-v1"):
         assert prompt in RESPONDERS or prompt in AUDIENCE_RESPONDERS
 
 

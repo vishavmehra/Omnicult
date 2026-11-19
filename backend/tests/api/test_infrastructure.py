@@ -40,7 +40,8 @@ async def test_unverified_capability_model_is_not_reported_configured(
 ) -> None:
     from app.core.config import get_settings
 
-    for name, value in {"GEMINI_MODEL_DEFAULT": "unverified/model", "GOOGLE_CLOUD_PROJECT": "p"}.items():
+    unverified = {"GEMINI_MODEL_DEFAULT": "unverified/model", "GEMINI_MODEL_FAST": "unverified/model"}  # vision uses the fast model
+    for name, value in {**unverified, "GOOGLE_CLOUD_PROJECT": "p"}.items():
         monkeypatch.setenv(name, value)
     get_settings.cache_clear()
     capabilities = (await client.get("/ready")).json()["capabilities"]
