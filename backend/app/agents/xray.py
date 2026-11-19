@@ -90,6 +90,6 @@ async def structure_scenes(
     if tags:
         parts.append(untrusted("container_metadata", tags))
     return await llm.generate_structured(
-        task="extraction", stage=stage, agent="cultural_xray", system=SYSTEM, user="\n\n".join(parts),
-        schema=XRayScenesOut, prompt_version=PROMPT_VERSION, temperature=0.2, max_tokens=8000, fixture_context=payload,
+        task="research_synthesis", stage=stage, agent="cultural_xray", system=SYSTEM, user="\n\n".join(parts),
+        schema=XRayScenesOut, prompt_version=PROMPT_VERSION, temperature=0.2, max_tokens=16000, fixture_context=payload,
     )
