@@ -13,7 +13,8 @@
   GOOGLE_CLOUD_LOCATION=global, BIGQUERY_PROJECT, WIKIMEDIA_USER_AGENT, SCHEDULER_SERVICE_ACCOUNT and SCHEDULER_AUDIENCE (the Cloud Scheduler
   OIDC caller and the audience the internal endpoints expect: the API URL). FRONTEND_ORIGINS lists the web URL and the
   Firebase Hosting origins. Secrets from Secret Manager: DATABASE_URL (omnicult-database-url) and YOUTUBE_API_KEY
-  (omnicult-youtube-api-key; create it with secrets.ps1 first).
+  (omnicult-youtube-api-key; create it with secrets.ps1 first). DATA_GOV_IN_API_KEY (omnicult-data-gov-in-api-key) is mounted
+  when that secret exists (secrets.ps1 creates it from the env file when the key is there); without it State facts report "not set up".
   Vertex AI and Cloud Storage use the runtime service account (Application Default Credentials); no key exists.
   Run migrate.ps1 first when a migration was added. -Public with AUTH_MODE=dev is refused here.
 #>
@@ -48,6 +49,12 @@ $envFile = New-EnvFile @{
     SCHEDULER_AUDIENCE    = $script:ApiUrlDefault
     BIGQUERY_PROJECT      = $script:Project
 }
+$secrets = "DATABASE_URL=omnicult-database-url:latest,YOUTUBE_API_KEY=$($script:YoutubeSecret):latest"
+if (Get-GcloudValue secrets describe $script:DataGovSecret --project $script:Project --format 'value(name)') {
+    $secrets += ",DATA_GOV_IN_API_KEY=$($script:DataGovSecret):latest"
+} else {
+    Write-Warning "$($script:DataGovSecret) does not exist: DATA_GOV_IN_API_KEY is not mounted. Run secrets.ps1 with the key in the env file."
+}
 # Search pulse reads Google's public Trends dataset in BigQuery: the runtime account only needs to run query jobs in this
 # project (the dataset is public). Idempotent; the API is enabled once with `gcloud services enable bigquery.googleapis.com`.
 Invoke-Gcloud projects add-iam-policy-binding $script:Project `
@@ -59,7 +66,7 @@ try {
         --image "$($script:ApiImage):$Tag" `
         --service-account $script:ApiSa `
         --add-cloudsql-instances $script:SqlInstance `
-        --set-secrets "DATABASE_URL=omnicult-database-url:latest,YOUTUBE_API_KEY=$($script:YoutubeSecret):latest" `
+        --set-secrets $secrets `
         --env-vars-file $envFile `
         --port 8080 --cpu 1 --memory 1Gi --no-cpu-throttling --cpu-boost `
         --min-instances 0 --max-instances 1 --concurrency 40 --timeout 900 `

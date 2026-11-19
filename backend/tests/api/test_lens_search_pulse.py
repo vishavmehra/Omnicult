@@ -200,14 +200,14 @@ async def test_the_scheduler_endpoint_refreshes_once_per_partition(
     bq.error = None
     first = await client.post(refresh, headers=bearer("good"))
     assert first.status_code == 200, first.text
-    body = first.json()
+    body = first.json()["search_pulse"]
     assert body["skipped"] is False and body["refresh_date"] == "2026-11-18" and body["states"] == 3 and body["rows"] == 3 * 12 * 6
     assert body["bytes_processed"] == 700_000_000 and body["job_id"] == "job-1"
-    second = (await client.post(refresh, headers=bearer("good"))).json()
+    second = (await client.post(refresh, headers=bearer("good"))).json()["search_pulse"]
     assert second["skipped"] is True and second["rows"] == 0 and len(bq.runs) == 1
 
     bq.partitions[date(2026, 11, 19)] = dataset_rows(date(2026, 11, 19))
-    third = (await client.post(refresh, headers=bearer("good"))).json()
+    third = (await client.post(refresh, headers=bearer("good"))).json()["search_pulse"]
     assert third["skipped"] is False and third["refresh_date"] == "2026-11-19" and len(bq.runs) == 2
 
 

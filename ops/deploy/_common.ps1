@@ -14,6 +14,7 @@ $script:SqlInstance   = "$($script:Project):$($script:Region):omnicult-db"
 $script:Bucket        = 'omnicult-app-assets'
 $script:SchedulerSa   = "omnicult-scheduler@$($script:Project).iam.gserviceaccount.com"
 $script:YoutubeSecret = 'omnicult-youtube-api-key'
+$script:DataGovSecret = 'omnicult-data-gov-in-api-key'
 # Firebase Hosting fronts omnicult-web: the browser origins the API and the bucket must accept besides the run.app URL.
 $script:HostingUrls   = @("https://$($script:Project).web.app", "https://$($script:Project).firebaseapp.com")
 $script:RepoRoot      = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path

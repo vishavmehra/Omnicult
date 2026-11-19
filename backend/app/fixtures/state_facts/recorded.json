@@ -1,0 +1,266 @@
+{
+ "recorded_on": "2026-11-19",
+ "regions": [
+  "IN",
+  "IN-KL",
+  "IN-MH",
+  "IN-TN",
+  "IN-WB"
+ ],
+ "resources": {
+  "nfhs5": {
+   "resource_id": "7c568619-b9b4-40bb-b563-68c28c27a6c1",
+   "title": "All India and State/UT-wise Factsheets of NFHS-5, 2019-2021",
+   "total": 37,
+   "updated_date": "2026-02-10T07:49:27+00:00",
+   "records": [
+    {
+     "states_uts": "India",
+     "population_living_in_households_with_electricity____": 96.8,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "54",
+     "women__age_15_49___who_have_ever_used_the_internet____": "33.3",
+     "men__age_15_49___who_have_ever_used_the_internet____": "57.1"
+    },
+    {
+     "states_uts": "Kerala",
+     "population_living_in_households_with_electricity____": 99.6,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "86.6",
+     "women__age_15_49___who_have_ever_used_the_internet____": "61.1",
+     "men__age_15_49___who_have_ever_used_the_internet____": "76.1"
+    },
+    {
+     "states_uts": "Maharastra",
+     "population_living_in_households_with_electricity____": 97.8,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "54.8",
+     "women__age_15_49___who_have_ever_used_the_internet____": "38",
+     "men__age_15_49___who_have_ever_used_the_internet____": "61.5"
+    },
+    {
+     "states_uts": "Tamil Nadu",
+     "population_living_in_households_with_electricity____": 99.3,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "74.6",
+     "women__age_15_49___who_have_ever_used_the_internet____": "46.9",
+     "men__age_15_49___who_have_ever_used_the_internet____": "70.2"
+    },
+    {
+     "states_uts": "West Bengal",
+     "population_living_in_households_with_electricity____": 97.5,
+     "women__age_15_49_years__having_a_mobile_phone_that_they_themselves_use____": "50.1",
+     "women__age_15_49___who_have_ever_used_the_internet____": "25.5",
+     "men__age_15_49___who_have_ever_used_the_internet____": "46.7"
+    }
+   ]
+  },
+  "teledensity": {
+   "resource_id": "64da9332-95e7-4ba9-8919-0f47911f4c78",
+   "title": "State/UT-wise Total Tele Density as on 30-06-2024",
+   "total": 37,
+   "updated_date": "2025-05-22T07:40:16+00:00",
+   "records": [
+    {
+     "state_ut": "Kerala",
+     "total_teledensity__in___": 120.93
+    },
+    {
+     "state_ut": "Maharashtra",
+     "total_teledensity__in___": 102.14
+    },
+    {
+     "state_ut": "Tamil Nadu",
+     "total_teledensity__in___": 104.29
+    },
+    {
+     "state_ut": "West Bengal",
+     "total_teledensity__in___": 81.84
+    },
+    {
+     "state_ut": "Total",
+     "total_teledensity__in___": 85.95
+    }
+   ]
+  },
+  "internet": {
+   "resource_id": "d441cbd3-2143-4c4d-927d-f168ad8a1eb7",
+   "title": "State/UT-wise Internet Penetration as on 31st March 2024",
+   "total": 37,
+   "updated_date": "2024-09-10T13:50:22+00:00",
+   "records": [
+    {
+     "state_ut": "Kerala",
+     "teledensity_______total": 93.74,
+     "teledensity_______rural": 196.98,
+     "teledensity_______urban": 63.89
+    },
+    {
+     "state_ut": "Maharashtra",
+     "teledensity_______total": 86.12,
+     "teledensity_______rural": 51.77,
+     "teledensity_______urban": 122.13
+    },
+    {
+     "state_ut": "Tamil Nadu",
+     "teledensity_______total": 79.41,
+     "teledensity_______rural": 48.74,
+     "teledensity_______urban": 105.35
+    },
+    {
+     "state_ut": "West Bengal",
+     "teledensity_______total": 63.44,
+     "teledensity_______rural": 40.23,
+     "teledensity_______urban": 102.54
+    },
+    {
+     "state_ut": "Total",
+     "teledensity_______total": 68.19,
+     "teledensity_______rural": 44.16,
+     "teledensity_______urban": 111.75
+    }
+   ]
+  },
+  "nsdp": {
+   "resource_id": "c9bfd3c0-b9de-4a5b-8752-f72a4f2932ad",
+   "title": "State/UT-wise Per Capita NSDP at Current Prices, 2019-20 to 2022-23",
+   "total": 33,
+   "updated_date": "2025-03-27T19:43:14+00:00",
+   "records": [
+    {
+     "state_ut": "Kerala",
+     "_2019_20": 208879,
+     "_2020_21": 194432,
+     "_2021_22": 233855,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Maharashtra",
+     "_2019_20": 189889,
+     "_2020_21": 183704,
+     "_2021_22": 215233,
+     "_2022_23": "NA"
+    },
+    {
+     "state_ut": "Tamil Nadu",
+     "_2019_20": 206165,
+     "_2020_21": 209628,
+     "_2021_22": 242253,
+     "_2022_23": 275583
+    },
+    {
+     "state_ut": "West Bengal",
+     "_2019_20": 110313,
+     "_2020_21": 106510,
+     "_2021_22": 124798,
+     "_2022_23": 141373
+    }
+   ]
+  },
+  "mpce": {
+   "resource_id": "29d2831a-0ded-45f8-8919-0d1849f1a375",
+   "title": "State/UT-wise Average MPCE, 2022-23 and 2023-24",
+   "total": 37,
+   "updated_date": "2025-08-07T19:26:11+00:00",
+   "records": [
+    {
+     "state_ut": "Kerala",
+     "_2022_23___average_mpce__in_rs_____rural": 5924,
+     "_2022_23___average_mpce__in_rs_____urban": 7078,
+     "_2023_24___average_mpce__in_rs_____rural": 6611,
+     "_2023_24___average_mpce__in_rs_____urban": 7783
+    },
+    {
+     "state_ut": "Maharashtra",
+     "_2022_23___average_mpce__in_rs_____rural": 4010,
+     "_2022_23___average_mpce__in_rs_____urban": 6657,
+     "_2023_24___average_mpce__in_rs_____rural": 4145,
+     "_2023_24___average_mpce__in_rs_____urban": 7363
+    },
+    {
+     "state_ut": "Tamil Nadu",
+     "_2022_23___average_mpce__in_rs_____rural": 5310,
+     "_2022_23___average_mpce__in_rs_____urban": 7630,
+     "_2023_24___average_mpce__in_rs_____rural": 5701,
+     "_2023_24___average_mpce__in_rs_____urban": 8165
+    },
+    {
+     "state_ut": "West Bengal",
+     "_2022_23___average_mpce__in_rs_____rural": 3239,
+     "_2022_23___average_mpce__in_rs_____urban": 5267,
+     "_2023_24___average_mpce__in_rs_____rural": 3620,
+     "_2023_24___average_mpce__in_rs_____urban": 5775
+    },
+    {
+     "state_ut": "All-India",
+     "_2022_23___average_mpce__in_rs_____rural": 3773,
+     "_2022_23___average_mpce__in_rs_____urban": 6459,
+     "_2023_24___average_mpce__in_rs_____rural": 4122,
+     "_2023_24___average_mpce__in_rs_____urban": 6996
+    }
+   ]
+  },
+  "literacy": {
+   "resource_id": "5b9c2422-d8e4-4f57-9585-2831aaf18a1a",
+   "title": "State/UTs-wise Literacy Rates, Census 2001 and 2011",
+   "total": 36,
+   "updated_date": "2023-11-19T18:51:41+00:00",
+   "records": [
+    {
+     "india_states_uts": "India",
+     "census_2001": 64.84,
+     "census_2011": 72.98
+    },
+    {
+     "india_states_uts": "Kerala",
+     "census_2001": 90.86,
+     "census_2011": 94
+    },
+    {
+     "india_states_uts": "Maharashtra",
+     "census_2001": 76.88,
+     "census_2011": 82.34
+    },
+    {
+     "india_states_uts": "Tamil Nadu",
+     "census_2001": 73.45,
+     "census_2011": 80.09
+    },
+    {
+     "india_states_uts": "West Bengal",
+     "census_2001": 68.64,
+     "census_2011": 76.26
+    }
+   ]
+  },
+  "urban": {
+   "resource_id": "8cf7eeb8-cefa-4416-b84c-4f7c9c369424",
+   "title": "State/UT-wise Percentage of Urban Population, Census 2001 and 2011",
+   "total": 36,
+   "updated_date": "2021-01-24T16:47:01+00:00",
+   "records": [
+    {
+     "state_union_territory": "India",
+     "__of_urban_population_to_total_population___2001": 27.8,
+     "__of_urban_population_to_total_population___2011": 31.1
+    },
+    {
+     "state_union_territory": "Kerala",
+     "__of_urban_population_to_total_population___2001": 26,
+     "__of_urban_population_to_total_population___2011": 47.7
+    },
+    {
+     "state_union_territory": "Maharastra",
+     "__of_urban_population_to_total_population___2001": 42.4,
+     "__of_urban_population_to_total_population___2011": 45.2
+    },
+    {
+     "state_union_territory": "Tamil Nadu",
+     "__of_urban_population_to_total_population___2001": 44,
+     "__of_urban_population_to_total_population___2011": 48.4
+    },
+    {
+     "state_union_territory": "West Bengal",
+     "__of_urban_population_to_total_population___2001": 28,
+     "__of_urban_population_to_total_population___2011": 31.9
+    }
+   ]
+  }
+ }
+}
