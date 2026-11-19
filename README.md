@@ -127,6 +127,7 @@ Omnicult has 55 features across seven workspaces and a platform layer. On top of
 | Market Compare | States side by side on the same evidence |
 | Trend Radar | Public-interest trends by region from open data, shown as attention, not demand |
 | Search Pulse | A state's top and rising Google searches of the latest week, with each term's weekly score, in the State Profile and the Trend Radar |
+| State Facts | Official statistics for the state beside the all-India figure: literacy, urban share, phone and internet use, income per person and household spending, each with its period |
 | Category Shelf | How the product category shows up regionally |
 | Evidence Meter | Sources, supported claims, freshness, coverage, open conflicts and stale claims, rated weak, partial or solid by named thresholds |
 
@@ -275,8 +276,9 @@ Measured on Vertex AI: one Tamil Nadu key visual with Tamil text shaped correctl
 | **Cloud Run** | `omnicult-api`, `omnicult-web`, and the `omnicult-migrate` and `omnicult-seed` jobs, in `asia-south1` |
 | **Cloud SQL for PostgreSQL** | The primary database (`omnicult-db`) |
 | **Cloud Storage** | Uploaded creatives, derived keyframes, generated media and report exports, served through short-lived signed URLs |
-| **Secret Manager** | The database URL and the YouTube API key |
-| **Cloud Scheduler** | Daily alert evaluation and the weekly digest, calling OIDC-protected internal endpoints |
+| **Secret Manager** | The database URL, the YouTube API key and the data.gov.in API key |
+| **Cloud Scheduler** | Daily alert evaluation, the weekly digest and the daily refresh of Search Pulse and State Facts, calling OIDC-protected internal endpoints |
+| **BigQuery** | Search Pulse reads Google's public Trends dataset with one capped query a day, inside the free tier |
 | **Cloud Build and Artifact Registry** | Container builds and images for the API and the web app |
 | **YouTube Data API** | Real comments for Comment Pulse |
 
@@ -319,6 +321,7 @@ Open sources become cited **claims**. Code then decides confidence, finds confli
 | Wikidata | Entity resolution, region and language facts | CC0 |
 | Wikipedia text | Short cited excerpts as supporting evidence | CC BY-SA 4.0; page URL and title kept as attribution |
 | Google Trends public dataset (BigQuery) | Search Pulse: the top and rising search terms and weekly scores for every state, as the dataset reports them | Google dataset `bigquery-public-data.google_trends`, read through the BigQuery free tier |
+| data.gov.in (Open Government Data Platform India) | State Facts: NFHS-5, TRAI teledensity and internet subscriptions, net state domestic product per person, household consumption expenditure 2023-24, and Census 2011 literacy and urban share | Government Open Data License - India; the resource id and the source's update date are kept with every figure |
 | Wikipedia pageviews | Attention trends in the regional and English editions | Wikimedia analytics data; aggregate counts, attributed |
 | Census of India 2011, table C-16 | Mother-tongue counts and shares | Published by the Registrar General; only counts are stored, cited to the source |
 | python-holidays | Public holidays by state | MIT |
@@ -327,6 +330,10 @@ Open sources become cited **claims**. Code then decides confidence, finds confli
 | Noto Sans fonts | Rendering Indic text in code | SIL Open Font License 1.1 |
 
 **Search Pulse data.** `international_top_terms` and `international_top_rising_terms` hold, per refresh date, the current top 25 terms and their rank, a 0 to 100 `score` per state and week (empty where Google reports none) and, for rising terms, `percent_gain`. Within one refresh the term list and ranks are the same for every state; the score is what differs by state and week. Omnicult stores the newest 12 weeks per state and shows ranks, scores and gains unchanged; "scored in N of 12 weeks" counts the weeks with a score. One query a day (about 0.74 GB, capped at 2 GB) serves every state; the dataset has no Ladakh or merged Dadra and Nagar Haveli and Daman and Diu, and uses `IN-CT`, `IN-OR` and `IN-TG` for Chhattisgarh, Odisha and Telangana. Demo mode reads a recorded snapshot of the four demo states and never queries BigQuery.
+
+**State Facts data.** Seven data.gov.in resources are pulled with filters and field selection and stored per state with the source's own update date. A check costs one small request per resource and downloads only what changed; a stored copy counts as current for 7 days (TRAI, income, spending) or 30 days (NFHS-5, Census). Census 2011 figures are not given to states whose territory has changed since (Andhra Pradesh, Telangana, Jammu and Kashmir, Ladakh, and Dadra and Nagar Haveli and Daman and Diu). No published resource gives TV, newspaper or radio reach by state, so the panel does not show media reach. Demo mode reads records captured from the live API on 19 Nov 2026.
+
+**Keeping the public data current.** One Cloud Scheduler job calls an OIDC-protected endpoint at 05:30 IST every day. It refreshes Search Pulse and State Facts; both refreshes are idempotent, and a failure makes the call fail so the scheduler retries. Screens read the stored copy, so a slow or failing upstream never blocks a page.
 
 Source coverage is uneven by design and reported as such: the curated references cover the four demo states, Wikidata is rate-limited and sparse for some regions, and a region with little evidence is shown as weak. Measured: a live Market Lens build of Tamil Nadu took 10 s.
 
@@ -339,10 +346,11 @@ The screens do not label data as demo, sample or synthetic, so this section is w
 - recorded Wikidata entity searches and Wikipedia pageview recordings;
 - a generated trend series, which is not real pageviews;
 - a sample Live Pulse dataset and sample comments;
+- recorded snapshots of Search Pulse (Google Trends in BigQuery) and State Facts (data.gov.in) for the four demo states;
 - synthetic audience panels: AI personas, not people;
 - pre-made fixture outputs for the AI steps, so the demo calls no model.
 
-**Live projects** read live sources (Vertex AI, Wikidata, Wikipedia and the YouTube Data API) and record provenance on every claim and run: source, retrieval time, model, prompt version and cost where known.
+**Live projects** read live sources (Vertex AI, Wikidata, Wikipedia, the YouTube Data API, Google Trends in BigQuery and data.gov.in) and record provenance on every claim and run: source, retrieval time, model, prompt version and cost where known.
 
 **Proof Vault keeps that provenance.** Each claim's evidence record, each run's stage trace and the Data Health view carry the data mode (`mode`, `retrieval_mode`), so a result can always be traced back to what produced it.
 
@@ -441,6 +449,8 @@ Full lists are in `backend/.env.example` and `frontend/.env.example`. All settin
 | `LLM_REQUEST_TIMEOUT_SECONDS`, `LLM_MAX_RETRIES` | Gateway bounds |
 | `ASSET_STORAGE_BACKEND`, `GCS_BUCKET` | `database` (local and tests), `local` or `gcs` with its bucket |
 | `YOUTUBE_API_KEY` | Comment Pulse |
+| `DATA_GOV_IN_API_KEY` | State Facts (data.gov.in); without it live State Facts answer 503 |
+| `BIGQUERY_PROJECT` | Project that runs the Search Pulse query jobs; falls back to `GOOGLE_CLOUD_PROJECT` |
 | `SCHEDULER_SERVICE_ACCOUNT`, `SCHEDULER_AUDIENCE` | Who may call the internal endpoints |
 | `WIKIMEDIA_USER_AGENT` | Contact string Wikimedia asks API clients to send |
 | `MAX_MEDIA_BYTES`, `MAX_MEDIA_SECONDS`, `FFMPEG_PATH`, `FFPROBE_PATH` | Upload limits (50 MB, 60 s) and media tools |
@@ -486,7 +496,7 @@ Deployment scripts for Google Cloud are in `ops/deploy/` (PowerShell). The regio
 .\ops\deploy\deploy-api.ps1 -Public    # 3  Cloud Run, AUTH_MODE=firebase, APP_ENV=production
 .\ops\deploy\deploy-web.ps1            # 4  Cloud Run, Firebase config inlined at build time
 .\ops\deploy\deploy-hosting.ps1        # 5  Firebase Hosting in front of the web service
-.\ops\deploy\scheduler.ps1             # 6  daily alerts and weekly digest jobs
+.\ops\deploy\scheduler.ps1             # 6  alerts, weekly digest and daily data refresh jobs
 .\ops\deploy\smoke.ps1                 # 7  live checks of the API, web app and sign-in flow
 ```
 
@@ -521,7 +531,7 @@ The suites cover confidence and conflict rules, scoring, readiness and risk rule
 
 ![Runs, scheduler and testing](diagrams/svg/12-runs-scheduler-testing.svg)
 
-*Editable source: [`diagrams/src/12-runs-scheduler-testing.drawio`](diagrams/src/12-runs-scheduler-testing.drawio). Runs are resumable and idempotent; the two Cloud Scheduler jobs authenticate with OIDC.*
+*Editable source: [`diagrams/src/12-runs-scheduler-testing.drawio`](diagrams/src/12-runs-scheduler-testing.drawio). Runs are resumable and idempotent; the Cloud Scheduler jobs authenticate with OIDC.*
 
 ## Repository layout
 
@@ -539,6 +549,6 @@ scripts/     export-diagrams.ps1
 
 ## Acknowledgments and licence
 
-Cultural data comes from the open sources listed in [Evidence and open data](#evidence-and-open-data): Wikidata, Wikipedia and Wikimedia pageviews, the Census of India, python-holidays and the ASCI Code. Indic text is set in Noto Sans (SIL Open Font License 1.1); the interface uses Eczar, Archivo and JetBrains Mono. The AI runs on Google Cloud: Vertex AI (Gemini, Lyria, Veo), Firebase, Cloud Run, Cloud SQL, Cloud Storage, Secret Manager, Cloud Scheduler and the YouTube Data API.
+Cultural data comes from the open sources listed in [Evidence and open data](#evidence-and-open-data): Wikidata, Wikipedia and Wikimedia pageviews, the Census of India, data.gov.in (Government Open Data License - India), Google's public Trends dataset, python-holidays and the ASCI Code. Indic text is set in Noto Sans (SIL Open Font License 1.1); the interface uses Eczar, Archivo and JetBrains Mono. The AI runs on Google Cloud: Vertex AI (Gemini, Lyria, Veo), Firebase, Cloud Run, Cloud SQL, Cloud Storage, Secret Manager, Cloud Scheduler, BigQuery and the YouTube Data API.
 
 Released under the MIT licence. See [LICENSE](LICENSE).
