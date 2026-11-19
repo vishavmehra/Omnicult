@@ -29,7 +29,6 @@ IN_WEEK_FESTIVAL = comment(3, text=FESTIVAL, likes=1, published="2026-11-11T20:1
 BEFORE = comment(4, text="Posted the week before", likes=9, published="2026-11-04T09:30:00Z")
 AFTER = comment(5, text="Posted after the week ended", likes=7, published="2026-11-15T19:00:00Z")  # Mon 00:30 IST, 16 November
 PAGES = [[IN_WEEK_EARLY, IN_WEEK_LATE, IN_WEEK_FESTIVAL, BEFORE, AFTER]]
-COMMENT_SOURCE_START = "Source: sample comments"
 
 
 async def live_with_youtube(client: httpx.AsyncClient, fake: FakeYoutube, pages: list[list[dict[str, Any]]] = PAGES, **kw: Any) -> tuple[str, str]:
@@ -95,7 +94,7 @@ async def test_a_campaign_with_only_sample_comments_keeps_the_sample_and_its_pul
 ) -> None:
     cid = await prepared(client, demo=False, read=False)
     section = (await generate(client, cid))["digest"]["content"]["comments"]
-    assert section["source_kind"] == "sample" and section["video_titles"] == [] and section["source"].startswith(COMMENT_SOURCE_START)
+    assert section["source_kind"] == "sample" and section["video_titles"] == [] and section["source"] == ""  # no source wording on screen
     assert section["comments_total"] == 88 and (section["window_from"], section["window_to"]) == ("2026-11-08", "2026-11-14")
     assert youtube.requests == [], "no YouTube request was made"
 

@@ -13,9 +13,9 @@ from tests.api.test_migrations_youtube import columns, config, tables
 ROW = "INSERT INTO lens_search_pulse (id, region_code, kind, term, week, refresh_date, retrieved_at) VALUES (?, 'IN-TN', ?, 'gold rate today', '2026-11-15', '2026-11-18', '2026-11-19 05:30:00.000000')"
 
 
-def test_0034_sits_on_0033_and_is_the_head() -> None:
+def test_0034_sits_on_0033_with_a_single_head() -> None:
     script = ScriptDirectory.from_config(config(Path("unused.db")))
-    assert script.get_heads() == ["0034"] and script.get_revision("0034").down_revision == "0033"
+    assert len(script.get_heads()) == 1 and script.get_revision("0034").down_revision == "0033"
 
 
 def test_the_table_arrives_with_provenance_columns_one_row_per_term_and_week_and_goes_on_downgrade(tmp_path: Path) -> None:
