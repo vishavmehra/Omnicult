@@ -4,7 +4,7 @@ import { ShieldCheck } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { ContextPanel } from "@/components/shell/workspace-shell";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useCapabilities } from "@/features/launch/api";
 import { AssetPackTab } from "@/features/launch/asset-pack";
 import { CompareTab } from "@/features/launch/compare";
@@ -63,14 +63,7 @@ export function LaunchWorkspace() {
         <CampaignFacts />
       </WorkspaceHeader>
 
-      <Tabs value={tab} onValueChange={(v) => go(v as DeliveryTab)} className="gap-6">
-        <TabsList aria-label="Launch Room" className="h-9 max-w-full self-start overflow-x-auto">
-          <TabsTrigger value="readiness" className="px-3">Readiness Board</TabsTrigger>
-          <TabsTrigger value="compare" className="px-3">Compare and Score</TabsTrigger>
-          <TabsTrigger value="region-plan" className="px-3">Region Plan</TabsTrigger>
-          <TabsTrigger value="review-links" className="px-3">Review Links</TabsTrigger>
-          <TabsTrigger value="asset-pack" className="px-3">Asset Pack</TabsTrigger>
-        </TabsList>
+      <Tabs value={tab} className="gap-6">
         <TabsContent value="readiness" keepMounted>
           <ReadinessTab />
         </TabsContent>

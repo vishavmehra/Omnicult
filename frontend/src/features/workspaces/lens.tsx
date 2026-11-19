@@ -17,7 +17,10 @@ export function LensWorkspace() {
       <WorkspaceHeader workspace="lens">
         <CampaignFacts />
       </WorkspaceHeader>
-      <LensApp campaignId={campaign.id} />
+      {/* The header's "In this workspace" row is the only row of views; LensApp's own tab list would repeat it, so it is not shown. */}
+      <div className="[&_[data-slot=tabs-list]]:hidden">
+        <LensApp campaignId={campaign.id} />
+      </div>
       <ContextPanel title="Region context">
         <FeatureScope workspace="lens" />
       </ContextPanel>

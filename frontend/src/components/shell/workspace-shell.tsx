@@ -1,10 +1,11 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronRight, Coins, LayoutList, LogOut, Menu, PanelRightClose, PanelRightOpen, Settings } from "lucide-react";
+import { ChevronRight, Coins, LayoutList, LogOut, Menu, Moon, PanelRightClose, PanelRightOpen, Settings, Sun } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useTheme } from "next-themes";
 import { createPortal } from "react-dom";
 
 import { roleColor } from "@/components/creative/motion";
@@ -13,6 +14,7 @@ import { EvidenceInspectorProvider } from "@/components/evidence/evidence-inspec
 import { arrivingFromOutside } from "@/components/field/transition";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { CommandBarButton } from "@/features/desk/command-bar";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import type { DataMode } from "@/lib/api/types";
 import { signOut, useAccount } from "@/lib/auth/session";
@@ -24,7 +26,7 @@ import { FeatureRow, useActiveFeatureIds } from "./feature-links";
 import { arrivedAt, latestFeatureNav } from "./feature-nav";
 import { ThemeToggle } from "./theme-toggle";
 import { Wordmark } from "./wordmark";
-import { STAGES, WORKSPACES, workspaceHref, type WorkspaceKey } from "./workspaces";
+import { STAGES, WORKSPACES, navFeatures, workspaceHref, type WorkspaceKey } from "./workspaces";
 
 // ---------- context panel slot ----------
 
@@ -55,6 +57,8 @@ function AccountMenu() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const account = useAccount();
+  const { resolvedTheme, setTheme } = useTheme();
+  const light = resolvedTheme === "light";
   const initial = account.status === "user" ? account.label[0]?.toUpperCase() : account.status === "anonymous" ? "A" : account.status === "dev" ? "D" : "·";
   return (
     <DropdownMenu>
@@ -78,6 +82,11 @@ function AccountMenu() {
           <DropdownMenuItem onClick={() => router.push("/app/usage")}>
             <Coins aria-hidden />
             Usage
+          </DropdownMenuItem>
+          {/* The header's theme toggle makes way for the Command Bar on a phone; the same switch lives here. */}
+          <DropdownMenuItem className="sm:hidden" onClick={() => setTheme(light ? "dark" : "light")}>
+            {light ? <Moon aria-hidden /> : <Sun aria-hidden />}
+            {light ? "Switch to the dark theme" : "Switch to the light theme"}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         {env.authMode === "firebase" && account.status !== "signed-out" && (
@@ -224,7 +233,7 @@ function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; 
                       )}
                       {campaignId && (
                         <ul id={`spine-${key}`} aria-label={`${ws.label} features`} hidden={!open} className={cn(featureList, "ml-[30px]")}>
-                          {ws.features.filter((f) => f.status === "built").map((f) => (
+                          {navFeatures(key).map((f) => (
                             <FeatureRow key={f.id} feature={f} campaignId={campaignId} active={activeIds.has(f.id)} onNavigate={onNavigate} />
                           ))}
                         </ul>
@@ -355,7 +364,8 @@ export function WorkspaceShell({
                       <span className="sr-only sm:hidden">Context panel</span>
                     </button>
                   )}
-                  <ThemeToggle />
+                  <CommandBarButton />
+                  <ThemeToggle className="max-sm:hidden" />
                   <AccountMenu />
                 </div>
               </div>

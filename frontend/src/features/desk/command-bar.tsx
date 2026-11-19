@@ -57,18 +57,13 @@ export function CommandBarProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/** Opens the Command Bar from elsewhere (the spine's Command Bar entry). Null outside /app. */
-export function useOpenCommandBar() {
-  return useContext(CommandBarContext)?.setOpen ?? null;
-}
-
 /** Every built feature with a deep link, from the catalogue in components/shell/workspaces.ts, with the place it lives in. */
 const FEATURE_ENTRIES: { feature: Feature; place: string; Icon: typeof Layers; key: WorkspaceKey | null }[] = [
   ...WORKSPACE_ORDER.flatMap((key) => WORKSPACES[key].features.map((feature) => ({ feature, place: WORKSPACES[key].label, Icon: WORKSPACES[key].Icon, key }))),
   ...PLATFORM_FEATURES.map((feature) => ({ feature, place: "Platform", Icon: Layers, key: null })),
 ].filter(({ feature }) => feature.status === "built" && feature.href);
 
-/** A visible way in for pointer and touch users: the keyboard shortcut is named on the button. */
+/** The Command Bar's one visible way in, in the shell's top bar: the keyboard shortcut is named on it, and on a phone it shrinks to its icon. */
 export function CommandBarButton() {
   const ctx = useContext(CommandBarContext);
   const label = useShortcutLabel();
@@ -77,12 +72,13 @@ export function CommandBarButton() {
     <button
       type="button"
       onClick={() => ctx.setOpen(true)}
+      aria-label="Command Bar"
       aria-keyshortcuts="Control+K Meta+K"
-      className="clay group inline-flex h-8 items-center gap-2 rounded-lg border border-border px-2.5 text-[13px] text-ink-secondary transition-[color,translate] duration-200 hover:-translate-y-px hover:text-ink"
+      className="clay group inline-flex size-9 items-center justify-center gap-2 rounded-lg border border-border text-[13px] text-ink-secondary transition-[color,translate] duration-200 hover:-translate-y-px hover:text-ink md:w-auto md:px-2.5"
     >
       <Search aria-hidden className="size-4 text-pop transition-[rotate] duration-300 group-hover:-rotate-12" />
-      Command Bar
-      <kbd className="rounded-sm border border-border bg-surface-muted px-1.5 py-0.5 font-mono text-[10.5px] text-ink-muted">{label}</kbd>
+      <span className="hidden md:inline">Command Bar</span>
+      <kbd className="hidden rounded-sm border border-border bg-surface-muted px-1.5 py-0.5 font-mono text-[10.5px] text-ink-muted md:inline">{label}</kbd>
     </button>
   );
 }

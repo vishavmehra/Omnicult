@@ -3,7 +3,7 @@
 import { ContextPanel } from "@/components/shell/workspace-shell";
 import { ErrorState, LoadingState } from "@/components/states";
 import { CommentPulse } from "@/features/digest/comment-pulse";
-import { PulseTabs, usePulseView } from "@/features/digest/tabs";
+import { usePulseView } from "@/features/digest/tabs";
 import { WeeklyDigest } from "@/features/digest/weekly-digest";
 import { Dashboard } from "@/features/pulse/dashboard";
 import { useDatasetStatus } from "@/features/pulse/api";
@@ -18,8 +18,8 @@ import { useCampaign } from "./campaign-context";
 import { CampaignFacts, FeatureScope, WorkspaceHeader } from "./parts";
 
 /**
- * Live Pulse on the sample dataset (one quiet source line per view). One row of tabs, driven by `?view=`: the regional
- * dashboard, Predicted vs Actual, Alerts, Fatigue Watch, Comment Pulse and the Weekly Digest.
+ * Live Pulse on the sample dataset (one quiet source line per view). The view is read from `?view=` and chosen in the
+ * header's "In this workspace" row: the regional dashboard, Predicted vs Actual, Alerts, Fatigue Watch, Comment Pulse and the Weekly Digest.
  */
 export function PulseWorkspace() {
   const { campaign } = useCampaign();
@@ -32,7 +32,6 @@ export function PulseWorkspace() {
       <WorkspaceHeader workspace="pulse">
         <CampaignFacts />
       </WorkspaceHeader>
-      <PulseTabs view={view} />
       {view === "comments" ? (
         <CommentPulse campaignId={campaign.id} />
       ) : view === "digest" ? (

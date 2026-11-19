@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 
 import { RoleMark } from "@/components/creative/role-mark";
 import { WorkspaceFeatureChips } from "@/components/shell/feature-links";
-import { WORKSPACES, type WorkspaceKey } from "@/components/shell/workspaces";
+import { WORKSPACES, navFeatures, type WorkspaceKey } from "@/components/shell/workspaces";
 import { api } from "@/lib/api/client";
 import { unwrap } from "@/lib/api/errors";
 import type { Campaign, CampaignContent, ContentVersion, RunType } from "@/lib/api/types";
@@ -14,22 +14,24 @@ import { cn } from "@/lib/utils";
 
 import { useCampaign } from "./campaign-context";
 
-/** Workspace title block: the workspace name in the display face, its job in one line, then campaign facts. No eyebrow. */
+/** Workspace title block: the workspace name in the display face, its job in one line, then campaign facts, then the one row of views. No eyebrow. */
 export function WorkspaceHeader({ workspace, children, actions }: { workspace: WorkspaceKey; children?: ReactNode; actions?: ReactNode }) {
   const ws = WORKSPACES[workspace];
   return (
-    <header className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b border-border pb-5">
-      <div className="min-w-0 space-y-1.5">
-        <div className="flex items-center gap-3">
-          {/* The workspace's clay mark in its colour role: the same hue as its ambient ground and spine station. */}
-          <RoleMark workspace={workspace} size="md" />
-          <h1 className="type-title text-[30px] text-ink sm:text-[34px]">{ws.label}</h1>
+    <header className="mb-6 border-b border-border pb-5">
+      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+        <div className="min-w-0 space-y-1.5">
+          <div className="flex items-center gap-3">
+            {/* The workspace's clay mark in its colour role: the same hue as its ambient ground and spine station. */}
+            <RoleMark workspace={workspace} size="md" />
+            <h1 className="type-title text-[30px] text-ink sm:text-[34px]">{ws.label}</h1>
+          </div>
+          <p className="max-w-[68ch] text-[14.5px] text-ink-secondary">{ws.purpose}</p>
+          {children}
         </div>
-        <p className="max-w-[68ch] text-[14.5px] text-ink-secondary">{ws.purpose}</p>
-        {children}
-        <WorkspaceFeatureChips workspace={workspace} />
+        {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
       </div>
-      {actions &&<div className="flex flex-wrap gap-2">{actions}</div>}
+      <WorkspaceFeatureChips workspace={workspace} />
     </header>
   );
 }
@@ -121,13 +123,14 @@ export function useCampaignRuns(types?: RunType[], limit = 30) {
 /** The workspace's built features (only what exists is shown). */
 export function FeatureScope({ workspace }: { workspace: WorkspaceKey }) {
   const ws = WORKSPACES[workspace];
-  const built = ws.features.filter((f) => f.status === "built");
+  const built = navFeatures(workspace);
   return (
     <section aria-label={`${ws.label} features`} className="space-y-2">
       <h3 className="text-[13px] font-semibold text-ink">What {ws.label} covers</h3>
-      <ul className="flex flex-wrap gap-1.5">
+      {/* Plain text, not pills: these are not links, the header's "In this workspace" row is. */}
+      <ul className="grid grid-cols-2 gap-x-3 gap-y-1 text-[12.5px] text-ink-secondary">
         {built.map((f) => (
-          <li key={f.id} title={f.note} className="rounded-stamp border border-border px-1.5 py-0.5 text-[12px] text-ink-secondary">
+          <li key={f.id} title={f.note}>
             {f.name}
           </li>
         ))}

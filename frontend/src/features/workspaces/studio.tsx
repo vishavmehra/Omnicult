@@ -1,6 +1,6 @@
 "use client";
 
-import { BookMarked, Bot, Crop, GitCompareArrows, History, Languages, Layers, ScanSearch, ShieldAlert, Sparkles, SpellCheck, User, Wand2 } from "lucide-react";
+import { Bot, History, ScanSearch, User } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { ContextPanel } from "@/components/shell/workspace-shell";
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { DirectPanel } from "@/features/direct/direct-panel";
 import { useCreateVersion, useLocks, useOperations, useRegions, useRestoreVersion, useVersion, useVersions } from "@/features/studio/api";
@@ -34,22 +34,21 @@ type TabKey = "elements" | "transcreate" | "direct" | "compare" | "glossary" | "
 const TABS: readonly TabKey[] = ["elements", "transcreate", "direct", "compare", "glossary", "format", "claims", "script"];
 const asTab = (value: string | null): TabKey => (TABS as readonly string[]).includes(value ?? "") ? (value as TabKey) : "elements";
 
+// The open tab and the selected version live in the address (?tab=...&v=...), so a refresh, a shared link and the header's "In this
+// workspace" chips, which are the only tab row, all agree. Next.js only follows the address when no history state is passed.
+function writeAddress(patch: Record<string, string>) {
+  const q = new URLSearchParams(window.location.search);
+  for (const [key, value] of Object.entries(patch)) q.set(key, value);
+  window.history.replaceState(null, "", `${window.location.pathname}?${q}`);
+}
+const setTab = (next: TabKey) => writeAddress({ tab: next });
+
 /** One link into Creative X-Ray, the other half of the Studio (another stream builds that page). */
 function XRayLink({ campaignId, className }: { campaignId: string; className?: string }) {
   return (
     <Link href={`/app/c/${campaignId}/studio/xray`} className={cn(buttonVariants({ variant: "outline" }), className)}>
       <ScanSearch aria-hidden />
       Creative X-Ray
-    </Link>
-  );
-}
-
-/** One link into Generate, where new images, voice-overs and jingles are made from the brief and Brand Kit. */
-function GenerateLink({ campaignId, className }: { campaignId: string; className?: string }) {
-  return (
-    <Link href={`/app/c/${campaignId}/studio/generate`} className={cn(buttonVariants({ variant: "outline" }), className)}>
-      <Sparkles aria-hidden />
-      Generate
     </Link>
   );
 }
@@ -173,10 +172,9 @@ export function StudioWorkspace() {
   const locksQ = useLocks(campaignId);
   const regionsQ = useRegions();
   const create = useCreateVersion(campaignId);
-  // The tab and the selected version are kept in the address (?tab=…&v=…), so a refresh or a shared link lands on the same view.
   const params = useSearchParams();
   const [selectedId, setSelectedId] = useState<string | null>(() => params.get("v"));
-  const [tab, setTab] = useState<TabKey>(() => asTab(params.get("tab")));
+  const tab = asTab(params.get("tab"));
   // Lives here, not in the Transcreate tab, so a run in progress survives switching tabs or versions.
   const [runId, setRunId] = useState<string | null>(null);
 
@@ -203,7 +201,7 @@ export function StudioWorkspace() {
   );
 
   // The Command Bar's "Direct this version" asks an already open Studio for a tab with an event; from any other page it
-  // arrives as ?tab=direct and the state above reads it on mount.
+  // arrives as ?tab=direct.
   useEffect(() => {
     const onTab = (e: Event) => setTab(asTab((e as CustomEvent<string>).detail));
     window.addEventListener("omnicult:studio-tab", onTab);
@@ -211,12 +209,7 @@ export function StudioWorkspace() {
   }, []);
 
   const currentId = current?.id ?? null;
-  useEffect(() => {
-    const q = new URLSearchParams(window.location.search);
-    q.set("tab", tab);
-    if (currentId) q.set("v", currentId);
-    window.history.replaceState(window.history.state, "", `${window.location.pathname}?${q}`);
-  }, [tab, currentId]);
+  useEffect(() => writeAddress(currentId ? { tab, v: currentId } : { tab }), [tab, currentId]);
 
   function open(id: string) {
     setSelectedId(id);
@@ -240,7 +233,7 @@ export function StudioWorkspace() {
 
   return (
     <StudioProvider value={ctx}>
-      <WorkspaceHeader workspace="studio" actions={<><XRayLink campaignId={campaignId} /><GenerateLink campaignId={campaignId} /></>}>
+      <WorkspaceHeader workspace="studio">
         <p className="type-ledger flex flex-wrap gap-x-4 gap-y-1 pt-1 text-[12.5px] text-ink-muted">
           <span>
             <span className="text-ink-body">{campaign.name}</span> · {project.brand.name}
@@ -265,45 +258,8 @@ export function StudioWorkspace() {
       )}
       {docked && <ContextPanel title="Version tree">{tree}</ContextPanel>}
 
-      <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
-        <div className="flex flex-wrap items-center gap-x-4 border-b border-border">
-          <TabsList variant="line" className="h-auto max-w-full flex-wrap justify-start gap-y-1 group-data-horizontal/tabs:h-auto">
-            <TabsTrigger value="elements" className="h-9 flex-none px-3">
-              <Layers aria-hidden />
-              Elements
-            </TabsTrigger>
-            <TabsTrigger value="transcreate" className="h-9 flex-none px-3">
-              <Languages aria-hidden />
-              Transcreate
-            </TabsTrigger>
-            <TabsTrigger value="direct" className="h-9 flex-none px-3">
-              <Wand2 aria-hidden />
-              Direct
-            </TabsTrigger>
-            <TabsTrigger value="compare" className="h-9 flex-none px-3">
-              <GitCompareArrows aria-hidden />
-              Compare versions
-            </TabsTrigger>
-            <TabsTrigger value="glossary" className="h-9 flex-none px-3">
-              <BookMarked aria-hidden />
-              Brand Glossary
-            </TabsTrigger>
-            <TabsTrigger value="format" className="h-9 flex-none px-3">
-              <Crop aria-hidden />
-              Format Fit
-            </TabsTrigger>
-            <TabsTrigger value="claims" className="h-9 flex-none px-3">
-              <ShieldAlert aria-hidden />
-              Claim Guard
-            </TabsTrigger>
-            <TabsTrigger value="script" className="h-9 flex-none px-3">
-              <SpellCheck aria-hidden />
-              Script Check
-            </TabsTrigger>
-          </TabsList>
-        </div>
-
-        <div className="pt-5">
+      <Tabs value={tab}>
+        <div>
           {tab !== "glossary" && versionsQ.isError && <ErrorState error={versionsQ.error} onRetry={() => void versionsQ.refetch()} />}
           {tab !== "glossary" && versionsQ.isPending && <LoadingState label="Loading the version tree…" />}
           {tab !== "glossary" && versionsQ.data && versions.length === 0 && (

@@ -24,6 +24,9 @@ export type Feature = {
 
 export type Stage = { key: string; label: string; summary: string; workspaces: WorkspaceKey[] };
 
+/** A tab or view of a workspace page that no catalogue feature names (Original creative, Compare versions). It still gets its own chip. */
+export type ExtraView = { name: string; href: (campaignId: string) => string; note: string; after: number };
+
 export type Workspace = {
   key: WorkspaceKey;
   /** Position on the workflow line; carries information (the order work moves in), so it is shown. */
@@ -32,6 +35,10 @@ export type Workspace = {
   Icon: LucideIcon;
   purpose: string;
   features: Feature[];
+  /** Views with no feature of their own; each chip is placed after the chip of feature `after`. */
+  extraViews?: ExtraView[];
+  /** Query values that belong to the open page, not to one tab, and survive a jump to another tab (the selected state, the open report). */
+  keepParams?: string[];
 };
 
 /** The workflow stages, in order. Navigation and the landing page group workspaces under these headings (SCOPE_PLAN rules). */
@@ -41,14 +48,14 @@ export const STAGES: Stage[] = [
   { key: "test", label: "Test", summary: "Rehearse with an audience panel before spending on media.", workspaces: ["lab"] },
   { key: "decide", label: "Decide and ship", summary: "Fixed, visible rules turn scores into Go, Fix or Rethink.", workspaces: ["launch"] },
   { key: "track", label: "Track", summary: "What really happened, region by region, with its freshness stated.", workspaces: ["pulse"] },
-  { key: "prove", label: "Prove", summary: "Answer â€œwhy did we make this decision?â€ from the record.", workspaces: ["proof"] },
+  { key: "prove", label: "Prove", summary: "Answer “why did we make this decision?” from the record.", workspaces: ["proof"] },
 ];
 
 // Deep-link builders. `at` appends the query the workspace reads (desk and studio and lab `?tab=`, lens and proof `?view=`).
 const at = (key: WorkspaceKey, query = "") => (campaignId: string) => `${workspaceHref(campaignId, key)}${query}`;
 const TODAY = () => "/app";
 const XRAY = (campaignId: string) => `${workspaceHref(campaignId, "studio")}/xray`;
-const REMAKE = (campaignId: string) => `${workspaceHref(campaignId, "studio")}/remake`;
+const REMAKE = (view?: "sound" | "video") => (campaignId: string) => `${workspaceHref(campaignId, "studio")}/remake${view ? `?view=${view}` : ""}`;
 const GENERATE = (campaignId: string) => `${workspaceHref(campaignId, "studio")}/generate`;
 const SETTINGS = () => "/app/settings";
 const USAGE = () => "/app/usage";
@@ -60,6 +67,7 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
     label: "Campaign Desk",
     Icon: NotebookPen,
     purpose: "The campaign brief and Brand Kit every other workspace reads from.",
+    extraViews: [{ name: "Original creative", href: at("desk", "?tab=creative"), note: "The original copy and the scoring weights.", after: 3 }],
     features: [
       { id: 1, name: "Today View", tier: 1, status: "built", href: TODAY, note: "What is running, what finished, what failed and which campaigns need attention, across every brand." },
       { id: 2, name: "Campaign Brief", tier: 1, status: "built", href: at("desk"), note: "Product, objective, regions, languages, channels, budget, dates and success metric, entered once and read everywhere." },
@@ -75,6 +83,7 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
     label: "Market Lens",
     Icon: ScanSearch,
     purpose: "Regional cultural intelligence where every fact is traceable to its source.",
+    keepParams: ["region", "compare"],
     features: [
       { id: 7, name: "Culture Atlas", tier: 1, status: "built", href: at("lens"), note: "Cultural signals for a region, each traceable to the source it came from." },
       { id: 8, name: "State Profile", tier: 1, status: "built", href: at("lens", "?view=profile"), note: "Languages, scripts, festivals, food, colours, symbols, humour, customs and sensitivities for an Indian state, every fact tagged." },
@@ -93,17 +102,18 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
     label: "Creative Studio",
     Icon: Clapperboard,
     purpose: "Inspect the original creative, adapt it per region, and compare every version with the original.",
+    extraViews: [{ name: "Compare versions", href: at("studio", "?tab=compare"), note: "Any two versions side by side, with every difference marked.", after: 19 }],
     features: [
       { id: 16, name: "Creative X-Ray", tier: 1, status: "built", href: XRAY, note: "The creative decomposed into scenes, keyframes, text, transcript, claims and visual observations." },
       { id: 17, name: "Transcreate", tier: 1, status: "built", href: at("studio", "?tab=transcreate"), note: "Regional copy with an English back-translation beside every line." },
       { id: 18, name: "Tone Dials", tier: 2, status: "built", href: at("studio", "?tab=transcreate"), note: "Formality, warmth and humour per region, inside the brand voice." },
       { id: 19, name: "Tweak Chips", tier: 1, status: "built", href: at("studio", "?tab=elements"), note: "Small suggested changes, each with its reason, evidence and cost, inspected before you apply them." },
       { id: 20, name: "Lock and Edit", tier: 1, status: "built", href: at("studio", "?tab=elements"), note: "Lock logos, product areas and taglines; every operation respects the locks." },
-      { id: 21, name: "Remake: Visuals", tier: 2, status: "built", href: REMAKE, note: "A regional key visual from an image model, with Indic text set in code, never drawn by the model." },
-      { id: 22, name: "Remake: Sound", tier: 2, status: "built", href: REMAKE, note: "A regional voice-over generated with text-to-speech, confirmed before it runs." },
-      { id: 23, name: "Remake: Video", tier: 2, status: "built", href: REMAKE, note: "A short regional clip from the remade key visual with Veo, cost confirmed before it runs." },
+      { id: 21, name: "Remake: Visuals", tier: 2, status: "built", href: REMAKE(), note: "A regional key visual from an image model, with Indic text set in code, never drawn by the model." },
+      { id: 22, name: "Remake: Sound", tier: 2, status: "built", href: REMAKE("sound"), note: "A regional voice-over generated with text-to-speech, confirmed before it runs." },
+      { id: 23, name: "Remake: Video", tier: 2, status: "built", href: REMAKE("video"), note: "A short regional clip from the remade key visual with Veo, cost confirmed before it runs." },
       { id: 24, name: "Format Fit", tier: 3, status: "built", href: at("studio", "?tab=format"), note: "Resize for every placement." },
-      { id: 25, name: "Version Tree", tier: 1, status: "built", href: at("studio"), note: "Every operation creates a version; the original is never overwritten." },
+      { id: 25, name: "Version Tree", tier: 1, status: "built", href: at("studio", "?tab=elements"), note: "Every operation creates a version; the original is never overwritten." },
       { id: 26, name: "Voice Director", tier: 2, status: "built", href: at("studio", "?tab=direct"), note: "Direct the edit by speaking." },
       { id: 27, name: "Claim Guard", tier: 3, status: "built", href: at("studio", "?tab=claims"), note: "Checks product claims against what the brand can substantiate." },
       { id: 28, name: "Script Check", tier: 3, status: "built", href: at("studio", "?tab=script"), note: "Checks rendered Indic script for shaping errors." },
@@ -163,6 +173,7 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
     label: "Proof Vault",
     Icon: Vault,
     purpose: "The report, evidence map, search and run history behind every decision.",
+    keepParams: ["report"],
     features: [
       { id: 49, name: "Proof Report", tier: 1, status: "built", href: at("proof"), note: "Findings, sources, conflicts, creative changes, audience results, risks, readiness, limitations and run metadata in one report." },
       { id: 50, name: "Evidence Map", tier: 2, status: "built", href: at("proof", "?view=map"), note: "Sources, claims, scenes, risk flags, versions and approvals as one connected map." },
@@ -196,8 +207,52 @@ export function featureHref(feature: Feature, campaignId: string | null): string
   return href.startsWith("/app/c/") ? null : href;
 }
 
-/** Features a person can click: built ones, and roadmap ones that point at the roadmap page. */
-export const isOpenable = (feature: Feature) => feature.status === "built" && Boolean(feature.href || feature.action);
+/** Features a person can click: built ones that go somewhere. */
+export const isOpenable = (feature: Feature) => feature.status === "built" && Boolean(feature.href);
+
+/** The built features of a workspace that navigation lists. Action-only features (Command Bar, Demo Mode) stay in the catalogue but are never listed. */
+export const navFeatures = (key: WorkspaceKey) => WORKSPACES[key].features.filter(isOpenable);
+
+/** One chip of the "In this workspace" row: a distinct place, named after every feature that opens it. */
+export type WorkspaceView = { name: string; title: string; href: (campaignId: string) => string };
+
+/** The workspace a feature opens: the campaign page it links into, else the workspace that lists it (Today View is Campaign Desk's). */
+function opensIn(feature: Feature, listedIn: WorkspaceKey | null): WorkspaceKey | null {
+  const segment = /^\/app\/c\/[^/]*\/([^/?]+)/.exec(feature.href?.("") ?? "")?.[1];
+  return isWorkspaceKey(segment) ? segment : listedIn;
+}
+
+/**
+ * The chips for a workspace: every place its features open, one chip per place. Features that open the same place share a chip
+ * (Transcreate and Tone Dials), so the row never highlights two chips for one view; views with no feature of their own are added.
+ */
+export function workspaceViews(key: WorkspaceKey): WorkspaceView[] {
+  const candidates = [
+    ...WORKSPACE_ORDER.flatMap((k) => WORKSPACES[k].features.map((feature) => ({ feature, listedIn: k as WorkspaceKey | null }))),
+    ...PLATFORM_FEATURES.map((feature) => ({ feature, listedIn: null })),
+  ].filter(({ feature, listedIn }) => isOpenable(feature) && opensIn(feature, listedIn) === key);
+  // The workspace's own features come first, in catalogue order; features listed elsewhere that open here (Brand Glossary) follow.
+  candidates.sort((a, b) => Number(b.listedIn === key) - Number(a.listedIn === key));
+  const groups = new Map<string, { ids: number[]; features: Feature[] }>();
+  for (const { feature } of candidates) {
+    const place = feature.href!("");
+    const group = groups.get(place) ?? { ids: [], features: [] };
+    group.ids.push(feature.id);
+    group.features.push(feature);
+    groups.set(place, group);
+  }
+  const views = [...groups.values()].map((g) => ({
+    ids: g.ids,
+    name: g.features.map((f) => f.name).join(" · "),
+    title: g.features.map((f) => (g.features.length > 1 ? `${f.name}: ${f.note}` : f.note)).join("\n"),
+    href: g.features[0].href!,
+  }));
+  for (const extra of WORKSPACES[key].extraViews ?? []) {
+    const index = views.findIndex((v) => v.ids.includes(extra.after));
+    views.splice(index < 0 ? views.length : index + 1, 0, { ids: [], name: extra.name, title: extra.note, href: extra.href });
+  }
+  return views.map(({ name, title, href }) => ({ name, title, href }));
+}
 
 export function isWorkspaceKey(value: string | null | undefined): value is WorkspaceKey {
   return Boolean(value && (WORKSPACE_ORDER as string[]).includes(value));
