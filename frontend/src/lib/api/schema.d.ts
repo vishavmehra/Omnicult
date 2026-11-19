@@ -8604,10 +8604,25 @@ export interface components {
             reason: string | null;
             /** @description Model labels of the comments in the window. Null without a reading. */
             sentiment: components["schemas"]["SentimentCounts"] | null;
-            /** Source */
+            /**
+             * Source
+             * @description One quiet line naming the comments the section used, the same line Comment Pulse shows.
+             */
             source: string;
+            /**
+             * Source Kind
+             * @description Which comments the section read: the labelled sample, or the public YouTube comments of the attached videos.
+             * @default sample
+             * @enum {string}
+             */
+            source_kind: "sample" | "youtube";
             /** Themes */
             themes: components["schemas"]["DigestThemeLine"][];
+            /**
+             * Video Titles
+             * @description The videos the YouTube comments come from. Empty for the sample.
+             */
+            video_titles: string[];
             /** Window From */
             window_from: string | null;
             /** Window To */

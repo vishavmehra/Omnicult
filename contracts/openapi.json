@@ -12994,7 +12994,18 @@
             "description": "Model labels of the comments in the window. Null without a reading."
           },
           "source": {
+            "description": "One quiet line naming the comments the section used, the same line Comment Pulse shows.",
             "title": "Source",
+            "type": "string"
+          },
+          "source_kind": {
+            "default": "sample",
+            "description": "Which comments the section read: the labelled sample, or the public YouTube comments of the attached videos.",
+            "enum": [
+              "sample",
+              "youtube"
+            ],
+            "title": "Source Kind",
             "type": "string"
           },
           "themes": {
@@ -13002,6 +13013,14 @@
               "$ref": "#/components/schemas/DigestThemeLine"
             },
             "title": "Themes",
+            "type": "array"
+          },
+          "video_titles": {
+            "description": "The videos the YouTube comments come from. Empty for the sample.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Video Titles",
             "type": "array"
           },
           "window_from": {
@@ -13033,6 +13052,8 @@
           "available",
           "reason",
           "source",
+          "source_kind",
+          "video_titles",
           "window_from",
           "window_to",
           "comments_total",
