@@ -2795,26 +2795,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/internal/trends/refresh": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Refresh Search Pulse For Scheduler
-         * @description Called by Cloud Scheduler once a day. Idempotent: a partition already stored is not queried again.
-         */
-        post: operations["refresh_search_pulse_for_scheduler"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/invites/accept": {
         parameters: {
             query?: never;
@@ -19837,24 +19817,6 @@ export interface components {
             snippet: string;
             /** Title */
             title: string;
-        };
-        /**
-         * SearchPulseRefresh
-         * @description What one refresh did. `skipped`: the newest partition was already stored, so no query ran and no bytes were read.
-         */
-        SearchPulseRefresh: {
-            /** Bytes Processed */
-            bytes_processed: number | null;
-            /** Job Id */
-            job_id: string | null;
-            /** Refresh Date */
-            refresh_date: string | null;
-            /** Rows */
-            rows: number;
-            /** Skipped */
-            skipped: boolean;
-            /** States */
-            states: number;
         };
         /** SearchPulseTerm */
         SearchPulseTerm: {
@@ -43060,127 +43022,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AlertScheduleSummary"];
-                };
-            };
-            /** @description UNAUTHENTICATED */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description FORBIDDEN */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description NOT_FOUND */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description CONFLICT */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description VALIDATION_ERROR */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description RATE_LIMITED */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description INTERNAL_ERROR */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description UNSUPPORTED_CAPABILITY */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description PROVIDER_ERROR */
-            502: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description PROVIDER_NOT_CONFIGURED */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description PROVIDER_TIMEOUT */
-            504: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    refresh_search_pulse_for_scheduler: {
-        parameters: {
-            query?: never;
-            header?: {
-                authorization?: string | null;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SearchPulseRefresh"];
                 };
             };
             /** @description UNAUTHENTICATED */

@@ -192,7 +192,7 @@ async def test_a_failing_refresh_still_serves_what_is_stored(client: httpx.Async
 
 async def test_the_scheduler_endpoint_refreshes_once_per_partition(
         client: httpx.AsyncClient, seeded: Any, bq: FakeBigQuery, scheduler: dict[str, Any]) -> None:
-    refresh = f"{API}/internal/trends/refresh"
+    refresh = f"{API}/internal/signals/refresh"
     assert (await client.post(refresh)).status_code == 401
     assert (await client.post(refresh, headers=bearer("forged"))).status_code == 401
     bq.error = trends.TrendsPermission("no jobUser")
@@ -212,5 +212,5 @@ async def test_the_scheduler_endpoint_refreshes_once_per_partition(
 
 
 async def test_the_scheduler_endpoint_is_closed_without_scheduler_settings(client: httpx.AsyncClient, seeded: Any, bq: FakeBigQuery) -> None:
-    assert (await client.post(f"{API}/internal/trends/refresh", headers=bearer("good"))).status_code == 403
+    assert (await client.post(f"{API}/internal/signals/refresh", headers=bearer("good"))).status_code == 403
     assert bq.dry_runs == []

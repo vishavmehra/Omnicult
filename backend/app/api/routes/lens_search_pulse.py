@@ -33,7 +33,8 @@ async def refresh_search_pulse(campaign_id: UUID, code: RegionPath, user: Curren
     return await lens_search_pulse.refresh_pulse(user.id, campaign_id, code)
 
 
-@router.post("/internal/trends/refresh", response_model=v.SearchPulseRefresh, tags=["internal"])
+@router.post("/internal/signals/refresh", response_model=v.SearchPulseRefresh, include_in_schema=False)
 async def refresh_search_pulse_for_scheduler(_caller: Annotated[str, Depends(require_scheduler)]) -> v.SearchPulseRefresh:
-    """Called by Cloud Scheduler once a day. Idempotent: a partition already stored is not queried again."""
+    """Called by Cloud Scheduler once a day to refresh the stored public-data signals. Idempotent: a partition already stored
+    is not queried again."""
     return await lens_search_pulse.refresh_scheduled()
