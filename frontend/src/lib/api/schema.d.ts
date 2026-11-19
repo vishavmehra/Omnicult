@@ -1106,6 +1106,49 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/campaigns/{campaign_id}/lens/regions/{code}/search-pulse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Search Pulse
+         * @description The state's top and rising search terms of the latest week, with the weeks kept for each, as the dataset gives them.
+         *     Live reads serve the stored snapshot and query BigQuery only when none is newer than 24 hours (failures: 429 quota, 502
+         *     permission, 503 not configured, each with a `reason` detail). Demo campaigns read the recording.
+         */
+        get: operations["get_search_pulse"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/campaigns/{campaign_id}/lens/regions/{code}/search-pulse/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh Search Pulse
+         * @description Look for a newer dataset partition now and store it for every state. Owner or editor role. A partition that is already
+         *     stored is not queried again, so repeating this costs nothing.
+         */
+        post: operations["refresh_search_pulse"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/campaigns/{campaign_id}/lens/regions/{region_code}/builds/{build_id}": {
         parameters: {
             query?: never;
@@ -2746,6 +2789,26 @@ export interface paths {
          * @description Evaluate every campaign's enabled alert rules, once per period. Idempotent: a second call in the same period changes nothing.
          */
         post: operations["evaluate_alerts_for_scheduler"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/internal/trends/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh Search Pulse For Scheduler
+         * @description Called by Cloud Scheduler once a day. Idempotent: a partition already stored is not queried again.
+         */
+        post: operations["refresh_search_pulse_for_scheduler"];
         delete?: never;
         options?: never;
         head?: never;
@@ -13195,6 +13258,53 @@ export interface components {
             /** Title */
             title: string;
         };
+        /** LensSearchPulse */
+        LensSearchPulse: {
+            /**
+             * Campaign Id
+             * Format: uuid
+             */
+            campaign_id: string;
+            /** Can Refresh */
+            can_refresh: boolean;
+            /** Gaps */
+            gaps: string[];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "live" | "demo";
+            /**
+             * Refresh Date
+             * @description The dataset partition the rows were read from.
+             */
+            refresh_date: string | null;
+            /** Region Code */
+            region_code: string;
+            /** Region Name */
+            region_name: string;
+            /** Retrieved At */
+            retrieved_at: string | null;
+            /** Rising */
+            rising: components["schemas"]["SearchPulseTerm"][];
+            /**
+             * Supported
+             * @description False for a state the dataset has no region for (Ladakh, Dadra and Nagar Haveli and Daman and Diu).
+             */
+            supported: boolean;
+            /** Top */
+            top: components["schemas"]["SearchPulseTerm"][];
+            /**
+             * Week
+             * @description The latest week.
+             */
+            week: string | null;
+            /**
+             * Weeks
+             * @description The weeks kept, oldest first.
+             */
+            weeks: string[];
+        };
         /** LensShare */
         LensShare: {
             /** @description The calculated share claim, with its sources. */
@@ -19712,6 +19822,81 @@ export interface components {
             snippet: string;
             /** Title */
             title: string;
+        };
+        /**
+         * SearchPulseRefresh
+         * @description What one refresh did. `skipped`: the newest partition was already stored, so no query ran and no bytes were read.
+         */
+        SearchPulseRefresh: {
+            /** Bytes Processed */
+            bytes_processed: number | null;
+            /** Job Id */
+            job_id: string | null;
+            /** Refresh Date */
+            refresh_date: string | null;
+            /** Rows */
+            rows: number;
+            /** Skipped */
+            skipped: boolean;
+            /** States */
+            states: number;
+        };
+        /** SearchPulseTerm */
+        SearchPulseTerm: {
+            /**
+             * History
+             * @description Oldest first, one entry per kept week the dataset has a row for.
+             */
+            history: components["schemas"]["SearchPulseWeek"][];
+            /**
+             * Percent Gain
+             * @description Rising terms: the gain the dataset reports.
+             */
+            percent_gain: number | null;
+            /**
+             * Rank
+             * @description Rank in the dataset's list for the latest week.
+             */
+            rank: number | null;
+            /**
+             * Score
+             * @description Score in the latest week, as the dataset gives it.
+             */
+            score: number | null;
+            /** Term */
+            term: string;
+            /**
+             * Week
+             * Format: date
+             * @description The latest week in the dataset.
+             */
+            week: string;
+            /**
+             * Weeks Seen
+             * @description Weeks, among the ones kept, in which the term has a score.
+             */
+            weeks_seen: number;
+        };
+        /** SearchPulseWeek */
+        SearchPulseWeek: {
+            /**
+             * Percent Gain
+             * @description Rising terms only.
+             */
+            percent_gain: number | null;
+            /** Rank */
+            rank: number | null;
+            /**
+             * Score
+             * @description Relative interest 0 to 100 in the state that week, as the dataset gives it; null where it gives none.
+             */
+            score: number | null;
+            /**
+             * Week
+             * Format: date
+             * @description The Sunday that starts the week.
+             */
+            week: string;
         };
         /** SearchResults */
         SearchResults: {
@@ -30624,6 +30809,252 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LensLanguageMap"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_search_pulse: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                /** @description ISO 3166-2:IN code, for example IN-TN. */
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensSearchPulse"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    refresh_search_pulse: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                campaign_id: string;
+                /** @description ISO 3166-2:IN code, for example IN-TN. */
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LensSearchPulse"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -42598,6 +43029,127 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AlertScheduleSummary"];
+                };
+            };
+            /** @description UNAUTHENTICATED */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description FORBIDDEN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description INTERNAL_ERROR */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description UNSUPPORTED_CAPABILITY */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_ERROR */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_NOT_CONFIGURED */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description PROVIDER_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    refresh_search_pulse_for_scheduler: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchPulseRefresh"];
                 };
             };
             /** @description UNAUTHENTICATED */
