@@ -106,12 +106,12 @@ class LensSourceSummary(ApiModel):
 
 # --- state data: published figures, shown as data (never claims, never in the Evidence Meter) --------------------------
 
-FigureUnit = Literal["percent", "per100", "inr", "million"]
+FigureUnit = Literal["percent", "per100", "inr", "million", "whole", "decimal"]
 DataFamily = Literal["state_facts", "search_pulse", "census_2011", "public_holidays", "google_calendar", "knowledge_graph", "reference"]
 
 
 class LensFigure(ApiModel):
-    """A published state figure (data.gov.in), with the all-India figure of the same period where the dataset has one."""
+    """A published state figure (data.gov.in or Google Data Commons), with the all-India figure of the same period where the dataset has one."""
 
     key: str
     label: str

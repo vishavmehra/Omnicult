@@ -26,6 +26,7 @@ DUMMY_SECRETS = {
     "GEMINI_API_KEY": "AIza-qa-DUMMY-gemini-7f3a9c1e5b2d4f60",
     "YOUTUBE_API_KEY": "yt-qa-DUMMY-9e1c3a5b7d0f2468",
     "DATA_GOV_IN_API_KEY": "gov-qa-DUMMY-secret-4c6e8a0b2d1f3e57",
+    "DATA_COMMONS_API_KEY": "dc-qa-DUMMY-secret-8b2d4f6a0c1e3957",
 }
 SECRET_NAMES = tuple(DUMMY_SECRETS)
 PROVIDER_ECHO = "qa simulated provider detail"

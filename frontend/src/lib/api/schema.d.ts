@@ -13339,7 +13339,7 @@ export interface components {
              * Unit
              * @enum {string}
              */
-            unit: "percent" | "per100" | "inr" | "million";
+            unit: "percent" | "per100" | "inr" | "million" | "whole" | "decimal";
         };
         /**
          * LensDataSource
@@ -13416,7 +13416,7 @@ export interface components {
         };
         /**
          * LensFigure
-         * @description A published state figure (data.gov.in), with the all-India figure of the same period where the dataset has one.
+         * @description A published state figure (data.gov.in or Google Data Commons), with the all-India figure of the same period where the dataset has one.
          */
         LensFigure: {
             /** Key */
@@ -13431,7 +13431,7 @@ export interface components {
              * Unit
              * @enum {string}
              */
-            unit: "percent" | "per100" | "inr" | "million";
+            unit: "percent" | "per100" | "inr" | "million" | "whole" | "decimal";
             /** Value */
             value: number;
         };
@@ -20645,7 +20645,7 @@ export interface components {
              * Unit
              * @enum {string}
              */
-            unit: "percent" | "per100" | "inr" | "million";
+            unit: "percent" | "per100" | "inr" | "million" | "whole" | "decimal";
             /** Value */
             value: number | null;
         };
@@ -20657,7 +20657,7 @@ export interface components {
              * Key
              * @enum {string}
              */
-            key: "connectivity" | "economy" | "homes" | "people" | "visitors";
+            key: "connectivity" | "economy" | "health" | "homes" | "people" | "population" | "visitors";
             /** Title */
             title: string;
         };

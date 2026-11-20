@@ -12,6 +12,10 @@ test("figures keep the precision the source gives", () => {
   assert.equal(formatFact("million", 306.842), "306.8 million");
   assert.equal(formatFact("million", 0.738), "0.74 million");
   assert.equal(versusIndia("million", 306.8, 2948.2), null); // a state's visits beside the country's total say nothing
+  assert.equal(formatFact("whole", 1033), "1,033");
+  assert.equal(formatFact("whole", 11320.4), "11,320");
+  assert.equal(formatFact("decimal", 3.8946), "3.9");
+  assert.equal(formatFact("million", 77.609), "77.6 million");
 });
 
 test("a bar for a percentage is out of 100 and any other bar is a little taller than its tallest value", () => {
@@ -30,6 +34,10 @@ test("the comparison with India says which way and by how much, or says nothing 
   assert.deepEqual(versusIndia("percent", 20, 25), { direction: "below", text: "5.0 pts below India" });
   assert.equal(versusIndia("inr", 100, 100)?.text, "Level with India");
   assert.match(versusIndia("inr", 8165, 6000)?.text ?? "", /above India$/);
+  assert.deepEqual(versusIndia("whole", 546.69, 427.2), { direction: "above", text: "119 above India" });
+  assert.deepEqual(versusIndia("whole", 1208, 1691.7), { direction: "below", text: "484 below India" });
+  assert.equal(versusIndia("whole", 71.2, 71)?.text, "Level with India"); // 0.2 of a point is not a whole unit
+  assert.deepEqual(versusIndia("inr", 20707.75, 21036.19), { direction: "below", text: "₹328 below India" });
   assert.equal(versusIndia("percent", 20, null), null);
   assert.equal(versusIndia("percent", 20, undefined), null);
 });

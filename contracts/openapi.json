@@ -25239,7 +25239,9 @@
               "percent",
               "per100",
               "inr",
-              "million"
+              "million",
+              "whole",
+              "decimal"
             ],
             "title": "Unit",
             "type": "string"
@@ -25440,7 +25442,7 @@
       },
       "LensFigure": {
         "additionalProperties": false,
-        "description": "A published state figure (data.gov.in), with the all-India figure of the same period where the dataset has one.",
+        "description": "A published state figure (data.gov.in or Google Data Commons), with the all-India figure of the same period where the dataset has one.",
         "properties": {
           "key": {
             "title": "Key",
@@ -25470,7 +25472,9 @@
               "percent",
               "per100",
               "inr",
-              "million"
+              "million",
+              "whole",
+              "decimal"
             ],
             "title": "Unit",
             "type": "string"
@@ -44120,7 +44124,9 @@
               "percent",
               "per100",
               "inr",
-              "million"
+              "million",
+              "whole",
+              "decimal"
             ],
             "title": "Unit",
             "type": "string"
@@ -44164,8 +44170,10 @@
             "enum": [
               "connectivity",
               "economy",
+              "health",
               "homes",
               "people",
+              "population",
               "visitors"
             ],
             "title": "Key",

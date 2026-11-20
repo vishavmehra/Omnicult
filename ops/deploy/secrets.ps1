@@ -1,10 +1,12 @@
 <#
 .SYNOPSIS
   Creates the Secret Manager secrets omnicult-youtube-api-key (from YOUTUBE_API_KEY), omnicult-data-gov-in-api-key (from
-  DATA_GOV_IN_API_KEY) and omnicult-google-public-api-key (from GOOGLE_PUBLIC_API_KEY: an API key restricted to the Calendar and
-  Knowledge Graph Search APIs) out of a local env file, and lets the API's service account read them. deploy-api.ps1 mounts them
-  as YOUTUBE_API_KEY, DATA_GOV_IN_API_KEY and GOOGLE_PUBLIC_API_KEY. Idempotent: an existing secret that already has a version is
-  left alone unless -Rotate is given. The YouTube key is required; the other two are created only when the env file has them. A
+  DATA_GOV_IN_API_KEY), omnicult-data-commons-api-key (from DATA_COMMONS_API_KEY: a Google Data Commons key) and
+  omnicult-google-public-api-key (from GOOGLE_PUBLIC_API_KEY: an API key restricted to the Calendar and Knowledge Graph Search
+  APIs) out of a local env file, and lets the API's service account read them. deploy-api.ps1 mounts them as YOUTUBE_API_KEY,
+  DATA_GOV_IN_API_KEY (only with -DataGovKey), DATA_COMMONS_API_KEY and GOOGLE_PUBLIC_API_KEY. Idempotent: an existing secret that
+  already has a version is left alone unless -Rotate is given. The YouTube key is required; the others are created only when the
+  env file has them. A
   value is never printed and never written anywhere but the secret (a temporary file holds it for the gcloud call and is
   deleted at once).
 .EXAMPLE
@@ -53,4 +55,5 @@ function Set-ApiSecret {
 
 Set-ApiSecret -Name $script:YoutubeSecret -Variable 'YOUTUBE_API_KEY'
 Set-ApiSecret -Name $script:DataGovSecret -Variable 'DATA_GOV_IN_API_KEY' -Optional
+Set-ApiSecret -Name $script:DataCommonsSecret -Variable 'DATA_COMMONS_API_KEY' -Optional
 Set-ApiSecret -Name $script:GooglePublicSecret -Variable 'GOOGLE_PUBLIC_API_KEY' -Optional

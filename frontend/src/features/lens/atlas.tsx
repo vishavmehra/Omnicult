@@ -31,8 +31,11 @@ const METRICS: Metric[] = [
   { key: "internet_per100", label: "Internet", title: "Internet subscribers per 100 people" },
   { key: "home_no_internet", label: "Homes offline", title: "Households without internet at home" },
   { key: "nsdp", label: "Income", title: "Income per person, per year" },
+  { key: "wage_monthly", label: "Wages", title: "Average monthly wage of a worker" },
   { key: "literacy", label: "Literacy", title: "People who can read and write" },
   { key: "tourist_visits_domestic", label: "Visitors", title: "Domestic tourist visits in a year" },
+  { key: "population", label: "Population", title: "People living here (projected)" },
+  { key: "sex_ratio", label: "Sex ratio", title: "Women for every 1,000 men" },
   { key: "holidays", label: "Holidays", title: "Public holidays this year" },
 ];
 

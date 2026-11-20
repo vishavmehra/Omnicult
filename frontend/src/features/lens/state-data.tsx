@@ -20,17 +20,18 @@ export function figureOf(data: LensStateData, key: string): LensFigure | undefin
   return data.figures.find((f) => f.key === key);
 }
 
-/** A short form for a map tile: 79%, 94.6, ₹2.8L, 306.8M. */
+/** A short form for a map tile: 79%, 94.6, ₹2.8L, 306.8M, 1,033. */
 export function shortFigure(unit: FactUnit | "count", value: number): string {
   if (unit === "percent") return `${Math.round(value)}%`;
   if (unit === "inr") return `₹${compact.format(value)}`;
   if (unit === "million") return `${compact.format(value)}M`;
-  if (unit === "count") return nfIN.format(value);
+  if (unit === "count" || unit === "whole") return nfIN.format(Math.round(value));
+  if (unit === "decimal") return value.toFixed(1);
   return compact.format(value);
 }
 
 /** The figures a state card leads with, in this order, where the state has them. */
-const HEADLINE = ["internet_per100", "home_no_internet", "nsdp", "literacy", "women_bank", "tourist_visits_domestic"];
+const HEADLINE = ["population", "internet_per100", "home_no_internet", "nsdp", "literacy", "women_bank", "tourist_visits_domestic"];
 
 function Figure({ fig }: { fig: LensFigure }) {
   const unit = fig.unit as FactUnit;

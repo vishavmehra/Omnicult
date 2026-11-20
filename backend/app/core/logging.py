@@ -46,7 +46,7 @@ class JsonFormatter(logging.Formatter):
 
 
 def _secret_values(settings: Settings) -> list[str]:
-    fields = (settings.gemini_api_key, settings.youtube_api_key, settings.data_gov_in_api_key)
+    fields = (settings.gemini_api_key, settings.youtube_api_key, settings.data_gov_in_api_key, settings.data_commons_api_key)
     values = [field.get_secret_value() for field in fields if field is not None]
     if "@" in settings.database_url and "://" in settings.database_url:
         # The password segment of a database URL: scheme://user:password@host/...

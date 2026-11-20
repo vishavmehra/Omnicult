@@ -1,7 +1,7 @@
-"""State facts: official state-wise statistics (data.gov.in) for a state, with the all-India figure beside it.
+"""State facts: official state-wise statistics (data.gov.in and Google Data Commons) for a state, with the all-India figure beside it.
 
 Campaign-scoped like the rest of Market Lens: the campaign's brand decides demo (a recorded snapshot, no network call) or live
-(the stored snapshot, pulled when missing or older than the dataset's cadence). The internal route is Cloud Scheduler's
+(the stored snapshot, pulled when missing or older than the source's cadence). The internal route is Cloud Scheduler's
 daily refresh of every stored public-data signal."""
 
 from typing import Annotated, Any
@@ -41,8 +41,8 @@ async def refresh_state_facts(campaign_id: UUID, region_code: RegionPath, user: 
 async def refresh_signals_for_scheduler(response: Response, _caller: Annotated[str, Depends(require_scheduler)]) -> dict[str, Any]:
     """Called once a day by Cloud Scheduler with a Google OIDC ID token for the configured service account and audience
     (anything else is refused). Refreshes each configured public-data signal: Search pulse (Google Trends in BigQuery) and
-    State facts (data.gov.in). Both are idempotent, so a retry repeats only what is missing or changed. A failed source makes
-    the call fail (Search pulse with its typed error, State facts with 500) so the scheduler retries; one source failing never
+    State facts (Google Data Commons live; data.gov.in when its key is mounted). Both are idempotent, so a retry repeats only
+    what is missing or changed. A failed source makes the call fail (Search pulse with its typed error, State facts with 500) so the scheduler retries; one source failing never
     stops the other."""
     pulse, pulse_error = None, None
     try:
@@ -51,7 +51,7 @@ async def refresh_signals_for_scheduler(response: Response, _caller: Annotated[s
         pass  # no BigQuery project on this server: nothing to refresh
     except AppError as error:
         pulse_error = error
-    facts = await state_facts.refresh_scheduled() if get_settings().data_gov_in_api_key else None
+    facts = await state_facts.refresh_scheduled()  # None when no State facts source has a key on this server
     calendar, calendar_failed = None, False
     if get_settings().google_public_api_key:  # Moment Calendar: Google's Holidays in India, this year and the next
         try:

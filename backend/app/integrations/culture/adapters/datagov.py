@@ -174,6 +174,7 @@ class Snapshot:
     period: str
     value: float
     unit: str
+    provenance: dict[str, Any] | None = None  # Google Data Commons names a facet per figure (adapters/datacommons.py)
 
 
 @dataclass(frozen=True)

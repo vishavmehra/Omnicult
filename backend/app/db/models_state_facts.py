@@ -27,6 +27,9 @@ class StateFactSnapshot(Base):
     unit: Mapped[str]
     source_updated_at: Mapped[datetime | None]
     retrieved_at: Mapped[datetime] = mapped_column(default=utcnow)
+    # Where one figure came from, for sources that name it per observation (Google Data Commons: the facet, its import, method and
+    # publisher page). Null for data.gov.in rows, whose resource id already says it. Migration 0037.
+    provenance: Mapped[dict | None] = mapped_column(default=None)
 
     __table_args__ = (
         UniqueConstraint("resource_id", "region_code", "metric", "period"),

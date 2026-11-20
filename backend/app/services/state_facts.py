@@ -1,4 +1,4 @@
-"""State facts: official state-wise statistics (data.gov.in) shown beside a state's profile in Market Lens.
+"""State facts: official state-wise statistics (data.gov.in and Google Data Commons) shown beside a state's profile in Market Lens.
 
 Why not Lens claims: claims are cultural evidence that feeds the Evidence Meter, confidence and conflicts; these are plain
 published statistics with a year, compared with the all-India figure, so they are their own typed panel and the meter is
@@ -8,6 +8,11 @@ Reads never wait for a schedule: the read path serves the latest snapshot and pu
 the stored copy is older than that resource's cadence (the scheduler normally keeps them fresh). A resource whose own
 `updated_date` has not changed is not downloaded again. Demo campaigns read the recorded fixture and never touch the network
 or the table.
+
+Two sources share the one table. data.gov.in is a recorded source on the deployed service (it refuses Google Cloud addresses, so
+the seed job loads its recording). Google Data Commons is fetched live: one source (`datacommons`) whose rows carry resource ids
+`datacommons:<variable>` and a provenance per figure; two requests fetch every state. When it fails the stored copy is served
+beside the data.gov.in figures. A metric belongs to exactly one source, so the read path merges them without overwriting.
 """
 
 import asyncio
@@ -48,6 +53,9 @@ from app.integrations.culture.adapters.datagov import (
     Snapshot,
     parse_records,
 )
+from app.integrations.culture.adapters.datacommons import CADENCE_DAYS as DC_CADENCE_DAYS
+from app.integrations.culture.adapters.datacommons import RESOURCE_PREFIX as DC_PREFIX
+from app.integrations.culture.adapters.datacommons import DataCommonsClient, DcPull, parse_responses
 from app.integrations.culture.base import CultureSourceError
 from app.schemas import state_facts as v
 from app.services.lens import LensContext, lens_context, region_names
@@ -57,6 +65,8 @@ logger = logging.getLogger(__name__)
 
 # Every state, as the API sent it: demo campaigns read it, and the seed job loads it into the deployed database.
 ALL_STATES_FILE = RECORDED_FILE = Path(__file__).resolve().parent.parent / "fixtures" / "state_facts" / "all_states.json"
+DATACOMMONS_FILE = ALL_STATES_FILE.with_name("datacommons_states.json")  # Google Data Commons as `scripts/record_datacommons.py` saved it
+DATACOMMONS = "datacommons"  # the key of that source in refresh summaries and `only=`
 MANUAL_REFRESH_GAP = timedelta(seconds=60)  # an editor's refresh is refused when every resource was checked this recently
 FAILURE_BACKOFF_SECONDS = 300.0  # after a failed pull the read path leaves that resource alone for this long
 _LOCK = asyncio.Lock()  # one pull at a time per process: the reads and the scheduler never both download the same resource
@@ -77,8 +87,8 @@ class FactDef:
 
 
 GROUPS: tuple[tuple[v.FactGroupKey, str], ...] = (
-    ("connectivity", "Phones and internet"), ("economy", "Income and spending"), ("homes", "Homes"), ("people", "People and learning"),
-    ("visitors", "Visitors"))
+    ("population", "Population"), ("connectivity", "Phones and internet"), ("economy", "Income and spending"), ("homes", "Homes"),
+    ("people", "People and learning"), ("health", "Health"), ("visitors", "Visitors"))
 FACTS: tuple[FactDef, ...] = (
     FactDef("women_mobile", "connectivity", "Women with a phone of their own", "percent", "women_mobile"),
     FactDef("women_internet", "connectivity", "Women who have used the internet", "percent", "women_internet"),
@@ -101,6 +111,16 @@ FACTS: tuple[FactDef, ...] = (
     FactDef("under15", "people", "People under 15", "percent", "under15"),
     FactDef("schooling", "people", "Adults (15 to 49) with ten or more years of school", "percent", "",
             (("Women", "women_school10"), ("Men", "men_school10"))),
+    FactDef("population", "population", "People living here (projected)", "million", "population"),
+    FactDef("sex_ratio", "population", "Women for every 1,000 men", "whole", "sex_ratio"),
+    FactDef("density", "population", "People per square kilometre", "whole", "density"),
+    FactDef("household_size", "population", "People per household", "decimal", "household_size"),
+    FactDef("fertility", "population", "Children per woman", "decimal", "fertility"),
+    FactDef("wage_monthly", "economy", "Average monthly wage of a worker", "inr", "wage_monthly"),
+    FactDef("electricity_use", "economy", "Electricity available per person, per year (kWh)", "whole", "electricity_use"),
+    FactDef("sdg_score", "people", "Sustainable development score, out of 100", "whole", "sdg_score"),
+    FactDef("anaemia_women", "health", "Women (15 to 49, not pregnant) with anaemia", "percent", "anaemia_women"),
+    FactDef("stunting", "health", "Children under 5 who are stunted", "percent", "stunting"),
     FactDef("tourist_visits_domestic", "visitors", "Domestic tourist visits in a year", "million", "tourist_visits_domestic"),
     FactDef("tourist_visits_foreign", "visitors", "Foreign tourist visits in a year", "million", "tourist_visits_foreign"),
 )
@@ -144,16 +164,26 @@ def recorded() -> dict[str, Any]:
     return json.loads(RECORDED_FILE.read_text(encoding="utf-8"))
 
 
+@lru_cache(maxsize=1)
+def recorded_datacommons() -> dict[str, Any]:
+    return json.loads(DATACOMMONS_FILE.read_text(encoding="utf-8"))
+
+
 def recorded_rows() -> list[Snapshot]:
-    """The recorded API records, parsed by the same code a live pull uses."""
+    """The recorded API records of both sources, parsed by the same code a live pull uses."""
     rows: list[Snapshot] = []
     for key, saved in recorded()["resources"].items():
         rows.extend(parse_records(BY_KEY[key], saved["records"])[0])
-    return rows
+    dc = recorded_datacommons()
+    return rows + parse_responses(dc["latest"], dc["series"])[0]
+
+
+def _day(recorded_on: str) -> datetime:
+    return datetime.combine(date.fromisoformat(recorded_on), datetime.min.time(), tzinfo=UTC)
 
 
 def recorded_at() -> datetime:
-    return datetime.combine(date.fromisoformat(recorded()["recorded_on"]), datetime.min.time(), tzinfo=UTC)
+    return max(_day(recorded()["recorded_on"]), _day(recorded_datacommons()["recorded_on"]))
 
 
 class RecordedClient:
@@ -177,12 +207,29 @@ class RecordedClient:
         return Pull(resource.resource_id, self._updated(resource), int(saved["total"]), rows, unmapped)
 
 
-async def load_recording(s: AsyncSession, path: Path = ALL_STATES_FILE) -> v.StateFactsRefreshSummary:
-    """Store the all-states recording as snapshots (retrieved at its recording date). Idempotent: a resource whose recorded
-    `updated_date` is already stored is skipped. The caller commits."""
+class RecordedDcClient:
+    """Google Data Commons as `scripts/record_datacommons.py` saved it: answers `pull` from the file, so loading it runs the same
+    parsing and upsert code as a live refresh."""
+
+    def __init__(self, payload: dict[str, Any]) -> None:
+        self.payload = payload
+
+    async def pull(self) -> DcPull:
+        raw = {"latest": self.payload["latest"], "series": self.payload["series"]}
+        rows, empty = parse_responses(raw["latest"], raw["series"])
+        return DcPull(rows, raw, empty)
+
+
+async def load_recording(s: AsyncSession, path: Path = ALL_STATES_FILE, dc_path: Path = DATACOMMONS_FILE) -> v.StateFactsRefreshSummary:
+    """Store both all-states recordings as snapshots (retrieved at their recording dates). Idempotent: a resource whose recorded
+    `updated_date` is already stored, and Data Commons figures that have not changed, are skipped. The caller commits."""
     payload = json.loads(path.read_text(encoding="utf-8"))
-    when = datetime.combine(date.fromisoformat(payload["recorded_on"]), datetime.min.time(), tzinfo=UTC)
-    return await refresh_state_facts(s, client=RecordedClient(payload["resources"]), now=when)  # type: ignore[arg-type]
+    gov = await refresh_state_facts(s, client=RecordedClient(payload["resources"]), now=_day(payload["recorded_on"]),  # type: ignore[arg-type]
+                                    only=[r.key for r in RESOURCES])
+    dc_payload = json.loads(dc_path.read_text(encoding="utf-8"))
+    dc = await refresh_state_facts(s, dc_client=RecordedDcClient(dc_payload), now=_day(dc_payload["recorded_on"]), only=[DATACOMMONS])  # type: ignore[arg-type]
+    return v.StateFactsRefreshSummary(resources=gov.resources + dc.resources, updated=gov.updated + dc.updated,
+                                      unchanged=gov.unchanged + dc.unchanged, failed=gov.failed + dc.failed)
 
 
 # --- pulling ------------------------------------------------------------------------------------------------------------
@@ -228,16 +275,53 @@ async def _refresh_one(s: AsyncSession, client: DataGovClient, resource: Resourc
     return v.StateFactsResourceResult(resource=resource.key, status="updated", rows=len(pull.rows))
 
 
+async def _refresh_datacommons(s: AsyncSession, client: DataCommonsClient, now: datetime) -> v.StateFactsResourceResult:
+    """Fetch every Data Commons figure (two requests) and upsert it with its provenance. The source has no update date, so the
+    figures are compared and an unchanged pull only moves `retrieved_at`. A variable that came back empty keeps what is stored (a
+    changed facet must not wipe a figure); a variable that returned figures loses the rows the source no longer publishes."""
+    pull = await client.pull()
+    if pull.empty:
+        logger.warning("state facts: datacommons returned no figure for %s", ", ".join(pull.empty))
+    existing = {(r.resource_id, r.region_code, r.metric, r.period): r for r in (await s.execute(
+        select(m.StateFactSnapshot).where(m.StateFactSnapshot.resource_id.startswith(DC_PREFIX)))).scalars()}
+    changed = 0
+    for snap in pull.rows:
+        row = existing.pop((snap.resource_id, snap.region_code, snap.metric, snap.period), None)
+        if row is None:
+            s.add(m.StateFactSnapshot(resource_id=snap.resource_id, region_code=snap.region_code, metric=snap.metric, period=snap.period,
+                                      value=snap.value, unit=snap.unit, source_updated_at=None, retrieved_at=now, provenance=snap.provenance))
+            changed += 1
+        else:
+            changed += (row.value, row.unit, row.provenance) != (snap.value, snap.unit, snap.provenance)
+            row.value, row.unit, row.provenance, row.retrieved_at = snap.value, snap.unit, snap.provenance, now
+    fresh = {snap.resource_id for snap in pull.rows}
+    for gone in existing.values():
+        if gone.resource_id in fresh:
+            await s.delete(gone)
+            changed += 1
+    return v.StateFactsResourceResult(resource=DATACOMMONS, status="updated" if changed else "unchanged", rows=len(pull.rows))
+
+
 async def refresh_state_facts(
     s: AsyncSession, *, only: Iterable[str] | None = None, client: DataGovClient | None = None, now: datetime | None = None,
+    dc_client: DataCommonsClient | None = None,
 ) -> v.StateFactsRefreshSummary:
     """Re-pull every configured resource and upsert its snapshots; a resource whose source `updated_date` is unchanged is
     skipped (one one-record request) and only marked as checked. A failing resource is reported and the others still run. The
-    caller commits."""
-    client = client or DataGovClient(get_settings().data_gov_in_api_key)
+    Data Commons source (key `datacommons`) runs only when it has a key or a client is given: without one it is left out, not
+    reported as failed. The caller commits."""
+    settings = get_settings()
+    client = client or DataGovClient(settings.data_gov_in_api_key)
+    dc_client = dc_client or (DataCommonsClient(settings.data_commons_api_key) if settings.data_commons_api_key else None)
     now = now or utcnow()
     wanted = set(only) if only is not None else None
     results: list[v.StateFactsResourceResult] = []
+    if dc_client is not None and (wanted is None or DATACOMMONS in wanted):
+        try:
+            results.append(await _refresh_datacommons(s, dc_client, now))
+        except CultureSourceError as exc:
+            logger.warning("state facts: %s failed (%s)", DATACOMMONS, exc.kind)
+            results.append(v.StateFactsResourceResult(resource=DATACOMMONS, status="failed", rows=0, error_kind=exc.kind, error=str(exc)))
     for resource in RESOURCES:
         if wanted is not None and resource.key not in wanted:
             continue
@@ -250,10 +334,19 @@ async def refresh_state_facts(
     return v.StateFactsRefreshSummary(resources=results, updated=count("updated"), unchanged=count("unchanged"), failed=count("failed"))
 
 
-async def refresh_scheduled() -> v.StateFactsRefreshSummary:
-    """The scheduler's entry point: refresh everything in its own transaction."""
+def configured_keys() -> list[str]:
+    """The sources that have a key on this server: every data.gov.in resource, and `datacommons`."""
+    settings = get_settings()
+    return ([r.key for r in RESOURCES] if settings.data_gov_in_api_key else []) + ([DATACOMMONS] if settings.data_commons_api_key else [])
+
+
+async def refresh_scheduled() -> v.StateFactsRefreshSummary | None:
+    """The scheduler's entry point: refresh every source that has a key, in its own transaction. None when none has."""
+    keys = configured_keys()
+    if not keys:
+        return None
     async with _LOCK, session() as s, s.begin():
-        return await refresh_state_facts(s)
+        return await refresh_state_facts(s, only=keys)
 
 
 # --- reading ------------------------------------------------------------------------------------------------------------
@@ -267,20 +360,35 @@ async def _stored(region_code: str) -> tuple[list[Any], dict[str, datetime]]:
     return rows, checked
 
 
-def _stale(checked: dict[str, datetime], now: datetime) -> list[str]:
+def _stale(checked: dict[str, datetime], now: datetime, *, gov: bool = True, dc: bool = True) -> list[str]:
+    """The sources whose stored copy is missing or older than its cadence and that may be pulled now (`gov`, `dc`: the source
+    is allowed, normally because it has a key). Data Commons is one source: stale when nothing of it is stored or its oldest
+    figure is past the cadence."""
     mono = time.monotonic()
-    return [r.key for r in RESOURCES
-            if (r.resource_id not in checked or now - checked[r.resource_id] > timedelta(days=r.cadence_days))
-            and _BACKOFF.get(r.key, 0.0) <= mono]
+    stale = [r.key for r in RESOURCES
+             if gov and (r.resource_id not in checked or now - checked[r.resource_id] > timedelta(days=r.cadence_days))
+             and _BACKOFF.get(r.key, 0.0) <= mono]
+    stored = [at for rid, at in checked.items() if rid.startswith(DC_PREFIX)]
+    if dc and (not stored or now - min(stored) > timedelta(days=DC_CADENCE_DAYS)) and _BACKOFF.get(DATACOMMONS, 0.0) <= mono:
+        stale.append(DATACOMMONS)
+    return stale
 
 
 async def _live_rows(region_code: str) -> tuple[list[Any], dict[str, datetime]]:
+    settings = get_settings()
+
+    def due(checked: dict[str, datetime]) -> list[str]:
+        # A source without a key is pulled only when nothing is stored at all (so the read can say what is missing); otherwise it
+        # is left alone and its stored copy (the recording) is served.
+        return _stale(checked, utcnow(), gov=bool(settings.data_gov_in_api_key) or not checked,
+                      dc=bool(settings.data_commons_api_key) or not checked)
+
     rows, checked = await _stored(region_code)
-    stale = _stale(checked, utcnow())
-    if stale and (get_settings().data_gov_in_api_key or not checked):
+    stale = due(checked)
+    if stale:
         async with _LOCK:
             rows, checked = await _stored(region_code)  # another request may have pulled while this one waited
-            stale = _stale(checked, utcnow())
+            stale = due(checked)
             summary = None
             if stale:
                 async with session() as s, s.begin():
@@ -321,10 +429,15 @@ async def refresh_for_user(user_id: UUID, campaign_id: UUID, region_code: str) -
     ctx = await lens_context(user_id, campaign_id, writable=True)
     if ctx.mode == "live":
         _, checked = await _stored(region_code)
-        if checked and len(checked) == len(RESOURCES) and utcnow() - min(checked.values()) < MANUAL_REFRESH_GAP:
+        keys = configured_keys() or None  # nothing configured: try everything, so the error says what is missing
+        wanted = set(keys) if keys is not None else {r.key for r in RESOURCES}
+        times = [checked[r.resource_id] for r in RESOURCES if r.key in wanted and r.resource_id in checked]
+        dc_times = [at for rid, at in checked.items() if rid.startswith(DC_PREFIX)]
+        times += [min(dc_times)] if DATACOMMONS in wanted and dc_times else []
+        if checked and len(times) == len(wanted) and utcnow() - min(times) < MANUAL_REFRESH_GAP:
             raise RateLimited("State statistics were checked a moment ago; try again in a minute.")
         async with _LOCK, session() as s, s.begin():
-            summary = await refresh_state_facts(s)
+            summary = await refresh_state_facts(s, only=keys)
         failed = [r for r in summary.resources if r.status == "failed"]
         if failed and len(failed) == len(summary.resources):
             raise _error_for(failed[0].error_kind, failed[0].error)

@@ -45,6 +45,7 @@ def test_settings_error_does_not_echo_secrets() -> None:
             gemini_api_key=DUMMY,
             youtube_api_key=DUMMY,
             data_gov_in_api_key=DUMMY,
+            data_commons_api_key=DUMMY,
         )
     if DUMMY in str(caught.value) or DUMMY in repr(caught.value.errors()):
         pytest.fail("the settings ValidationError echoes a configured secret", pytrace=False)

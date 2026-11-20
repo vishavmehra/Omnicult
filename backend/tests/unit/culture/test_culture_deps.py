@@ -11,8 +11,8 @@ def settings(**kw) -> Settings:
 
 
 def test_culture_settings_defaults_and_blank_keys_mean_unset():
-    s = settings(data_gov_in_api_key="  ", youtube_api_key="")
-    assert s.culture_http_timeout_seconds == 15 and s.data_gov_in_api_key is None and s.youtube_api_key is None
+    s = settings(data_gov_in_api_key="  ", data_commons_api_key=" ", youtube_api_key="")
+    assert s.culture_http_timeout_seconds == 15 and s.data_gov_in_api_key is None and s.data_commons_api_key is None and s.youtube_api_key is None
     assert s.wikimedia_user_agent.startswith("CultureDataClient/") and "@" not in s.wikimedia_user_agent  # names no person
     keyed = settings(youtube_api_key="zq-test-key-7731")
     assert keyed.youtube_api_key.get_secret_value() == "zq-test-key-7731"

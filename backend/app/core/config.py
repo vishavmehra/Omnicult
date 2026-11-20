@@ -74,6 +74,9 @@ class Settings(BaseSettings):
     wikimedia_user_agent: str = "CultureDataClient/0.1 (cultural research client; operator contact not configured)"
     # Both optional: the adapters that need them are reported as not configured, never faked.
     data_gov_in_api_key: SecretStr | None = None
+    # Google Data Commons (api.datacommons.org v2), sent as the X-API-Key header. Optional: without it State facts serve the
+    # stored copy (the recording the seed job loads) and the daily refresh skips this source.
+    data_commons_api_key: SecretStr | None = None
     youtube_api_key: SecretStr | None = None
     # Moment Calendar: Google Calendar API (the public "Holidays in India" calendar) with an API key restricted to the Calendar
     # and Knowledge Graph Search APIs. Optional: without it live campaigns serve the stored events and say when they were read.
@@ -91,6 +94,7 @@ class Settings(BaseSettings):
         "gcs_bucket",
         "firebase_project_id",
         "data_gov_in_api_key",
+        "data_commons_api_key",
         "youtube_api_key",
         "google_public_api_key",
         mode="before",

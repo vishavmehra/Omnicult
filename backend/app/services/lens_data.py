@@ -1,7 +1,7 @@
 """Market Lens state data: what public datasets say about every state, shown as data beside the claims.
 
 Claims feed the Evidence Meter; this does not. Every state, built or not, gets the figures the datasets publish for it:
-State facts (data.gov.in), Search pulse (Google Trends in BigQuery), Census 2011 mother tongues, its public-holiday list
+State facts (data.gov.in and Google Data Commons), Search pulse (Google Trends in BigQuery), Census 2011 mother tongues, its public-holiday list
 (python-holidays) and its official languages (reference data). Every number is copied from its dataset; the code only picks
 the newest period, orders, counts and finds the highest value in a row. Reads never call a source: live campaigns read the
 stored snapshots (State facts loads its all-states recording first when the table is empty, as the seed job does), demo
@@ -200,8 +200,11 @@ def data_sources(bundle: Bundle, families: set[str]) -> list[v.LensDataSource]:
     census = load_census()
     rows = [
         v.LensDataSource(
-            key="state_facts", label="State facts", publisher="data.gov.in, Open Government Data Platform India", url="https://data.gov.in",
-            detail="NFHS-5, TRAI, the Ministry of Tourism, MoSPI surveys, Rajya Sabha replies and Census 2011, by state with the all-India figure.",
+            key="state_facts", label="State facts", publisher="data.gov.in, Open Government Data Platform India, and Google Data Commons",
+            url="https://data.gov.in",
+            detail="NFHS-5, TRAI, the Ministry of Tourism, MoSPI surveys, Rajya Sabha replies and Census 2011 from data.gov.in; population "
+                   "projections, sex ratio, density, wages, electricity use and NFHS-4 health figures from Google Data Commons. By state, "
+                   "with the all-India figure where the source has one.",
             period=f"{SOURCE_PERIODS[0]} to {SOURCE_PERIODS[-1]}", retrieved_at=bundle.facts_at),
         v.LensDataSource(
             key="search_pulse", label="Searches", publisher="Google Trends public dataset (BigQuery)",

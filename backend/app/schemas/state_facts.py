@@ -1,4 +1,4 @@
-"""State facts: official state-wise statistics (data.gov.in) for one state, with the all-India value where a dataset has one.
+"""State facts: official state-wise statistics (data.gov.in and Google Data Commons) for one state, with the all-India value where a dataset has one.
 
 Every number is a published figure, passed through unchanged apart from units. A fact a dataset does not hold for the state is
 absent. `mode` is the campaign's: demo campaigns read a recorded snapshot, live campaigns the stored pull.
@@ -11,8 +11,9 @@ from uuid import UUID
 from app.schemas.common import ApiModel, DataMode
 from app.schemas.lens import RegionCodeStr
 
-FactUnit = Literal["percent", "per100", "inr", "million"]
-FactGroupKey = Literal["connectivity", "economy", "homes", "people", "visitors"]
+# whole: a whole number (a ratio per 1,000, a density, kilowatt-hours, a 0 to 100 score); decimal: a plain number with one decimal
+FactUnit = Literal["percent", "per100", "inr", "million", "whole", "decimal"]
+FactGroupKey = Literal["connectivity", "economy", "health", "homes", "people", "population", "visitors"]
 
 
 class StateFactPoint(ApiModel):

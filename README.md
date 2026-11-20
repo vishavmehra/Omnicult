@@ -141,7 +141,7 @@ Omnicult has 55 features across seven workspaces and a platform layer. On top of
 
 | Feature | What it does |
 |---|---|
-| Culture Atlas | All 36 states and union territories on one map, coloured by Evidence Meter strength or by a published figure (internet subscribers, homes without internet, income, literacy, tourist visits, public holidays); every state's card shows its figures, mother tongues, top searches and next public holidays, built or not |
+| Culture Atlas | All 36 states and union territories on one map, coloured by Evidence Meter strength or by a published figure (internet subscribers, homes without internet, income, wages, literacy, tourist visits, population, sex ratio, public holidays); every state's card shows its figures, mother tongues, top searches and next public holidays, built or not |
 | State Profile | Languages, scripts, festivals, food, colours, symbols, humour, family roles, customs and sensitivities for a state, every fact tagged, beside the state's published data |
 | Auto-build | A live campaign's states (origin and targets) are built in the background when the brief names them and whenever Lens opens with one missing, one state at a time, with "Building Kerala…" shown in Lens; Trend Radar is then read for the new states |
 | Language Map | Language and script mix by state, from the India reference data and Census 2011 mother-tongue counts for 31 states and union territories |
@@ -149,7 +149,7 @@ Omnicult has 55 features across seven workspaces and a platform layer. On top of
 | Market Compare | States side by side: published figures with their periods, then the same evidence dimensions |
 | Trend Radar | Public-interest trends by region from open data, shown as attention, not demand |
 | Search Pulse | A state's top and rising Google searches of the latest week, with each term's weekly score, in the State Profile and the Trend Radar |
-| State Facts | Official statistics for the state beside the all-India figure: literacy, urban share, schooling, phone and internet use, homes without internet (2025), bank accounts, health insurance, clean cooking fuel, income per person, household spending and tourist visits, each with its period |
+| State Facts | Official statistics for the state beside the all-India figure where the source has one: projected population since 2011, sex ratio, density, household size, fertility, literacy, urban share, schooling, phone and internet use, homes without internet (2025), bank accounts, health insurance, clean cooking fuel, income per person, average monthly wage, household spending, electricity use, a sustainable-development score, women's anaemia, child stunting and tourist visits, each with its period |
 | Category Shelf | How the product category shows up regionally |
 | Evidence Meter | Sources, supported claims, freshness, coverage, open conflicts and stale claims, rated weak, partial or solid by named thresholds |
 
@@ -298,11 +298,12 @@ Measured on Vertex AI: one Tamil Nadu key visual with Tamil text shaped correctl
 | **Cloud Run** | `omnicult-api`, `omnicult-web`, and the `omnicult-migrate` and `omnicult-seed` jobs, in `asia-south1` |
 | **Cloud SQL for PostgreSQL** | The primary database (`omnicult-db`) |
 | **Cloud Storage** | Uploaded creatives, derived keyframes, generated media and report exports, served through short-lived signed URLs |
-| **Secret Manager** | The database URL, the YouTube API key and the data.gov.in API key |
+| **Secret Manager** | The database URL and the YouTube, Data Commons, data.gov.in and Google public API keys |
 | **Cloud Scheduler** | Daily alert evaluation, the weekly digest and the daily refresh of Search Pulse and State Facts, calling OIDC-protected internal endpoints |
 | **BigQuery** | Search Pulse reads Google's public Trends dataset with one capped query a day, inside the free tier |
 | **Cloud Build and Artifact Registry** | Container builds and images for the API and the web app |
 | **YouTube Data API** | Real comments for Comment Pulse |
+| **Google Data Commons API** | State Facts: population projections, sex ratio, density, household size, wages, electricity use and health figures for every state, fetched live from Cloud Run by the daily refresh and by reads that find the stored copy a week old |
 
 ## AI and the model gateway
 
@@ -344,6 +345,7 @@ Open sources become cited **claims**. Code then decides confidence, finds confli
 | Wikipedia text | Short cited excerpts as supporting evidence | CC BY-SA 4.0; page URL and title kept as attribution |
 | Google Trends public dataset (BigQuery) | Search Pulse: the top and rising search terms and weekly scores for every state, as the dataset reports them | Google dataset `bigquery-public-data.google_trends`, read through the BigQuery free tier |
 | data.gov.in (Open Government Data Platform India) | State Facts and every state's figures in Lens: NFHS-5 (2019-21: phones, internet, bank accounts, clean cooking fuel, sanitation, health insurance, schooling, under-15 share), households without internet at home (2025, Rajya Sabha), TRAI teledensity and internet subscriptions, net state domestic product per person, household consumption expenditure 2023-24, domestic and foreign tourist visits 2023 and 2024 (Ministry of Tourism), ICT skills of people aged 15 to 29 (2020-21), and Census 2011 literacy and urban share | Government Open Data License - India; the resource id and the source's update date are kept with every figure |
+| Google Data Commons (v2 observation API) | State Facts: projected population 2011 to 2026 (NITI Aayog projection), sex ratio, density (OECD), household size (Census 2011), average monthly wage (MoSPI PLFS), electricity use (RBI), sustainable-development score, fertility, women's anaemia and child stunting (NFHS-4), for the states each variable covers | Data Commons terms of service, and the terms of each publisher it relays; the facet (import, measurement method, publisher page), the date and the variable are kept with every stored figure |
 | Google Calendar API, public "Holidays in India" calendar | Moment Calendar: national public holidays and observances, with Google's tentative flag for lunar dates | Google APIs Terms of Service; read with an API key restricted to the Calendar and Knowledge Graph Search APIs, free quota |
 | Google Knowledge Graph Search API | Moment Calendar: what a moment is, in a short description; a result is kept only when it names the moment itself and ties it to India | Google APIs Terms of Service; the descriptions are Wikipedia text under CC BY-SA, shown with the page link and that attribution |
 | Wikipedia pageviews | Attention trends in the regional and English editions | Wikimedia analytics data; aggregate counts, attributed |
@@ -357,9 +359,11 @@ Open sources become cited **claims**. Code then decides confidence, finds confli
 
 **State Facts data.** Ten data.gov.in resources are pulled with filters and field selection and stored per state with the source's own update date. A check costs one small request per resource and downloads only what changed (a field newly added to the catalogue triggers one full pull); a stored copy counts as current for 7 days (TRAI, income, spending, tourism) or 30 days (NFHS-5, Census, home internet, ICT skills). The tourism table names its all-India row "Overall" and adds regional "Total" subtotals; only the "Overall" row is taken as India. data.gov.in answers 403 to every request from Google Cloud addresses (checked from Cloud Run on 19 Nov 2026), so the deployed service does not pull it: `python -m scripts.record_state_facts`, run from an Indian connection, records every state, and the seed job (`scripts/seed_state_facts.py`) loads that recording with the same parsing and upsert code as a live pull. Local runs with `DATA_GOV_IN_API_KEY` pull live. Census 2011 figures are not given to states whose territory has changed since (Andhra Pradesh, Telangana, Jammu and Kashmir, Ladakh, and Dadra and Nagar Haveli and Daman and Diu). No published resource gives TV, newspaper or radio reach by state, so the panel does not show media reach. Demo mode reads the same all-states recording (captured from the live API on 19 Nov 2026).
 
-**Sources checked and not used.** Wikidata SPARQL festivals by state: a query on 19 Nov 2026 found festivals linked to only one state (Jammu and Kashmir, two festivals), too thin to show. data.gov.in religion and caste tables: sensitive traits, never shown. data.gov.in household assets (Census 2011 houselisting), digital payments, e-commerce and holiday lists by state: no state-wise API resource exists (only national series, the 2001 census or scheme funding tables). Registered motor vehicles by state: a share of the national total, which grows with state size and does not measure ownership.
+**State Facts from Google Data Commons.** A second source sits beside data.gov.in in the same table (`state_fact_snapshots`, resource ids `datacommons:<variable>`, migration 0037 adds the per-figure `provenance`). Two requests to the v2 observation API fetch ten variables for all 36 places and India: one asks for the latest figure, one for every year of the population series. Each state's Data Commons place (`wikidataId/Q...`) was resolved with the `/v2/node` API and matched on name and ISO code. Coverage was measured, not assumed, on 20 Nov 2026: population 35 of 36 states (Chandigarh has no projection), sex ratio, fertility, women's anaemia and child stunting 33, density 33, household size 31, electricity use 34, sustainable-development score 35, average monthly wage 36; the wage, density, electricity and score figures also exist for India. Data Commons keeps several facets per variable; a figure takes its first ranked facet, except population, which is pinned to the NITI Aayog projection because it is the only facet with every year on today's boundaries. The date and facet of every figure are stored. A value outside a plausible range is dropped (the NFHS facet holds a negative vaccination share), the NFHS-4 figures dated 2015 are withheld from Jammu and Kashmir, Ladakh and Dadra and Nagar Haveli and Daman and Diu (the facet files later survey rounds for the new territories under the same date), and Census 2011 ratios are withheld from the five states that changed since. A stored copy counts as current for 7 days; a failed fetch is not retried for five minutes and the stored copy is served beside the data.gov.in figures. Unlike data.gov.in, Data Commons answers requests from Cloud Run, so the deployed service refreshes it live. `python -m scripts.record_datacommons` records the responses (pruned to the facets in use) into `backend/app/fixtures/state_facts/datacommons_states.json`; demo campaigns parse that file offline, and the seed job loads it so a new database has its figures before the first live fetch (recorded 20 Nov 2026).
 
-**Keeping the public data current.** One Cloud Scheduler job calls an OIDC-protected endpoint at 05:30 IST every day. It refreshes Search Pulse, State Facts wherever a data.gov.in key is configured, and the Moment Calendar's Google events for this year and the next (one Calendar API request a year); every refresh is idempotent, and a failure makes the call fail so the scheduler retries. In the deployed service State Facts are updated by re-recording (the sources publish yearly or quarterly). Screens read the stored copy, so a slow or failing upstream never blocks a page.
+**Sources checked and not used.** Wikidata SPARQL festivals by state: a query on 19 Nov 2026 found festivals linked to only one state (Jammu and Kashmir, two festivals), too thin to show. data.gov.in religion and caste tables: sensitive traits, never shown. data.gov.in household assets (Census 2011 houselisting), digital payments, e-commerce and holiday lists by state: no state-wise API resource exists (only national series, the 2001 census or scheme funding tables). Registered motor vehicles by state: a share of the national total, which grows with state size and does not measure ownership. Google Data Commons gross and per-person state domestic product (named nominal, but the facet says constant 2011-12 prices), a poverty share whose values match a multidimensional index under a poverty-line name, and the NFHS-4 literacy, internet, fuel and electricity-access series (data.gov.in already gives the newer NFHS-5): not used. Data Commons has no state-level median age, unemployment, enrolment or crime variable.
+
+**Keeping the public data current.** One Cloud Scheduler job calls an OIDC-protected endpoint at 05:30 IST every day. It refreshes Search Pulse, State Facts from every source that has a key (Google Data Commons live; data.gov.in only where its key is configured), and the Moment Calendar's Google events for this year and the next (one Calendar API request a year); every refresh is idempotent, and a failure makes the call fail so the scheduler retries. In the deployed service the data.gov.in figures are updated by re-recording (the source publishes yearly or quarterly), while the Data Commons figures refresh live. Screens read the stored copy, so a slow or failing upstream never blocks a page.
 
 **State data for every state.** Claims feed the Evidence Meter; published figures do not. Every state and union territory, built or not, shows its State Facts figures with their periods and the all-India figure, its Census 2011 mother tongues (31 states and union territories; none for Andhra Pradesh, Telangana, Jammu and Kashmir, Ladakh, and Dadra and Nagar Haveli and Daman and Diu, whose territory changed after 2011), its top and rising searches of the newest week, its public holidays and its official languages, in the Culture Atlas, the State Profile and Market Compare. Each number is copied from its dataset; code only orders, counts and finds the highest value in a row. The Evidence Meter's strength is still computed from claims alone.
 
@@ -378,11 +382,11 @@ The screens do not label data as demo, sample or synthetic, so this section is w
 - recorded Wikidata entity searches and Wikipedia pageview recordings;
 - a generated trend series, which is not real pageviews;
 - a sample Live Pulse dataset and sample comments;
-- recorded snapshots of Search Pulse (Google Trends in BigQuery, refresh date 18 Nov 2026) and State Facts (data.gov.in, recorded 19 Nov 2026) for every state, and of Google Calendar's Holidays in India for 2026 to 2028 (recorded 19 Nov 2026);
+- recorded snapshots of Search Pulse (Google Trends in BigQuery, refresh date 18 Nov 2026) and State Facts (data.gov.in recorded 19 Nov 2026 and Google Data Commons recorded 20 Nov 2026) for every state, and of Google Calendar's Holidays in India for 2026 to 2028 (recorded 19 Nov 2026);
 - synthetic audience panels: AI personas, not people;
 - pre-made fixture outputs for the AI steps, so the demo calls no model.
 
-**Live projects** read live sources (Vertex AI, Wikidata, Wikipedia, the YouTube Data API, Google Trends in BigQuery and data.gov.in) and record provenance on every claim and run: source, retrieval time, model, prompt version and cost where known.
+**Live projects** read live sources (Vertex AI, Wikidata, Wikipedia, the YouTube Data API, Google Trends in BigQuery, Google Data Commons and data.gov.in) and record provenance on every claim and run: source, retrieval time, model, prompt version and cost where known.
 
 **Proof Vault keeps that provenance.** Each claim's evidence record, each run's stage trace and the Data Health view carry the data mode (`mode`, `retrieval_mode`), so a result can always be traced back to what produced it.
 
@@ -481,7 +485,8 @@ Full lists are in `backend/.env.example` and `frontend/.env.example`. All settin
 | `LLM_REQUEST_TIMEOUT_SECONDS`, `LLM_MAX_RETRIES` | Gateway bounds |
 | `ASSET_STORAGE_BACKEND`, `GCS_BUCKET` | `database` (local and tests), `local` or `gcs` with its bucket |
 | `YOUTUBE_API_KEY` | Comment Pulse |
-| `DATA_GOV_IN_API_KEY` | State Facts (data.gov.in); without it live State Facts answer 503 |
+| `DATA_GOV_IN_API_KEY` | State Facts (data.gov.in); not mounted on Cloud Run, which data.gov.in refuses, so the deployed service serves its recording |
+| `DATA_COMMONS_API_KEY` | State Facts (Google Data Commons, sent as the `X-API-Key` header); without it the stored copy is served and the daily refresh skips it. With neither State Facts key and nothing stored, live State Facts answer 503 |
 | `GOOGLE_PUBLIC_API_KEY` | Moment Calendar: Google Calendar's Holidays in India (an API key restricted to the Calendar and Knowledge Graph Search APIs); without it the stored events are served |
 | `LENS_AUTO_BUILD_MAX_REGIONS`, `LENS_AUTO_BUILD_PAUSE_SECONDS` | Auto-build bounds: states per campaign (default 8) and the pause between two builds (default 2 s) |
 | `BIGQUERY_PROJECT` | Project that runs the Search Pulse query jobs; falls back to `GOOGLE_CLOUD_PROJECT` |
@@ -500,7 +505,7 @@ Full lists are in `backend/.env.example` and `frontend/.env.example`. All settin
 
 ## Database migrations
 
-Schema changes are additive Alembic migrations in `backend/migrations/versions/` (currently 0001 to 0036).
+Schema changes are additive Alembic migrations in `backend/migrations/versions/` (currently 0001 to 0037).
 
 ```bash
 cd backend
@@ -534,7 +539,7 @@ Deployment scripts for Google Cloud are in `ops/deploy/` (PowerShell). The regio
 .\ops\deploy\smoke.ps1                 # 7  live checks of the API, web app and sign-in flow
 ```
 
-`ops/deploy/secrets.ps1` creates the YouTube API key secret once, before step 3, and the data.gov.in and Google public API key secrets when the env file holds them; `deploy-api.ps1` mounts the Google key as `GOOGLE_PUBLIC_API_KEY` when its secret exists.
+`ops/deploy/secrets.ps1` creates the YouTube API key secret once, before step 3, and the Data Commons, data.gov.in and Google public API key secrets when the env file holds them; `deploy-api.ps1` mounts the Data Commons key as `DATA_COMMONS_API_KEY` and the Google key as `GOOGLE_PUBLIC_API_KEY` when their secrets exist.
 
 - `omnicult-api` runs with one instance and CPU always allocated, because runs execute in the process. It connects to Cloud SQL through the Cloud Run attachment, and the database URL comes from Secret Manager.
 - The web app's `NEXT_PUBLIC_*` values are build-time, so a changed API URL needs a web rebuild (`build.ps1 -Target web`).
