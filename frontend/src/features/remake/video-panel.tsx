@@ -50,7 +50,9 @@ export function VideoPanel({
   const [viewId, setViewId] = useState<string | null>(null);
   const typed = useDebounced(direction.trim());
 
-  const version = versions.find((v) => v.id === versionId) ?? versions[versions.length - 1] ?? null;
+  // Open on the newest version that already has a finished result here (in the demo that is the Tamil Nadu remake), else the newest version.
+  const ready = [...versions].reverse().find((v) => clips.some((o) => o.source_version_id === v.id));
+  const version = versions.find((v) => v.id === versionId) ?? ready ?? versions[versions.length - 1] ?? null;
   const hasTarget = Boolean(version?.region_code && version?.language);
   const images = useProjectImages(projectId);
   const request =

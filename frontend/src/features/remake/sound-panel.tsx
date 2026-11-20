@@ -40,7 +40,9 @@ export function SoundPanel({
   const [runId, setRunId] = useState<string | null>(null);
   const [viewId, setViewId] = useState<string | null>(null);
 
-  const version = versions.find((v) => v.id === versionId) ?? versions[versions.length - 1] ?? null;
+  // Open on the newest version that already has a finished result here (in the demo that is the Tamil Nadu remake), else the newest version.
+  const ready = [...versions].reverse().find((v) => sounds.some((o) => o.source_version_id === v.id));
+  const version = versions.find((v) => v.id === versionId) ?? ready ?? versions[versions.length - 1] ?? null;
   const detail = useVersion(campaignId, version?.id ?? null);
   const start = useStartSound(campaignId);
   const run = useRemakeRun(campaignId, runId);
