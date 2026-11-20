@@ -26,8 +26,8 @@
       ],
       "asset": {
         "path": "creative/mh_original/video.mp4",
-        "bytes": 6377333,
-        "sha256": "9efaeac53b7d3d401e882c185c4190f7f41082c5348e6f377f4c433dd82f6810",
+        "bytes": 6378287,
+        "sha256": "fae2ba07c485dcd5cf1f39051e96923d0bf2b17bc4f603bcdaa5d25df702bb57",
         "mime_type": "video/mp4",
         "width": 1080,
         "height": 1920,
@@ -802,7 +802,7 @@
     "voiceover": {
       "path": "creative/mh_original/voiceover_mr.wav",
       "bytes": 1411892,
-      "sha256": "df1073ded7647c2fa6d30a10b0c20d4428a9456bb8a32ea1dcadbdf44e216e22",
+      "sha256": "4e1aa12ae88fab9a9062608e86d309c72d8e0451d5b82ac6603c55eb07140031",
       "mime_type": "audio/wav"
     },
     "music": {
