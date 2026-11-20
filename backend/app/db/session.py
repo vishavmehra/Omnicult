@@ -19,9 +19,10 @@ _read_sessionmaker: async_sessionmaker[AsyncSession] | None = None
 
 
 def make_engine(url: str) -> AsyncEngine:
-    # No pre-ping: each one costs a full round trip (hundreds of ms to a remote database outside its region), and asyncpg
-    # reports a dead connection anyway. Recycling keeps pooled connections fresh.
-    engine = create_async_engine(url, pool_recycle=1800)
+    # pre_ping: a connection Cloud SQL closed while the service sat idle is replaced instead of failing the request (seen as
+    # 500 "connection is closed" after a quiet night). The database is in the same region, so the ping costs about a
+    # millisecond. Recycling keeps pooled connections well inside the server's idle limits.
+    engine = create_async_engine(url, pool_pre_ping=True, pool_recycle=600)
     if engine.dialect.name == "sqlite":
 
         @event.listens_for(engine.sync_engine, "connect")
