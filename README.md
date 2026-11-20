@@ -40,11 +40,32 @@ Omnicult takes a campaign made for one Indian state and helps a team bring it to
 | Web app | https://omnicult-app.web.app (Firebase Hosting in front of Cloud Run) |
 | API | https://omnicult-api-671429087856.asia-south1.run.app ([`/health`](https://omnicult-api-671429087856.asia-south1.run.app/health)) |
 | Reviewer account | email `omnicult-judge@example.com`, password `Omnicult-Judge-2026` |
+| Walkthrough video | [Watch or download (50 min, 1080p, captions)](https://github.com/vishavmehra/Omnicult/releases/download/v1.0.0/omnicult-walkthrough.mp4) · [release page](https://github.com/vishavmehra/Omnicult/releases/tag/v1.0.0) |
 
 The reviewer account is a shared email-and-password account created for people evaluating the app. Google sign-in and **Try the demo** also work from the sign-in page. Try the demo uses Firebase anonymous sign-in and opens a fully seeded fictional brand, Aamod Diwali 2027, with no account needed. The credentials above are public on purpose, so do not enter real personal or brand data into the shared account.
 
+## Walkthrough video
+
+[**Watch the walkthrough**](https://github.com/vishavmehra/Omnicult/releases/download/v1.0.0/omnicult-walkthrough.mp4) (50 min 29 s, 1080p, captions burned in; [release page](https://github.com/vishavmehra/Omnicult/releases/tag/v1.0.0) with `captions.srt` and a per-feature `chapters.txt`).
+
+It is one live session on the deployed app with the reviewer account. It starts at sign-in, creates a new campaign, and uses all 56 features, with every AI step running live on Vertex AI. The voice-over explains each feature, the Google service behind it, and how every number on screen is produced. Waiting time is sped up, and the corner shows the real elapsed time and playback speed.
+
+| Time | Chapter |
+|---|---|
+| 0:00 | Sign in with Firebase Authentication, then a new brand and campaign |
+| 1:56 | **Campaign Desk:** Today View, Command Bar, Campaign Brief, Brand Kit, Brand Glossary |
+| 5:30 | **Market Lens:** Culture Atlas, State Profile, Search Pulse, State Facts, grounded research, Language Map, Moment Calendar, Market Compare, Trend Radar, Category Shelf, Evidence Meter |
+| 11:27 | **Creative Studio:** Creative X-Ray, the X-Ray layout, Transcreate, Tone Dials, Lock and Edit, Tweak Chips, Format Fit, Claim Guard, Script Check, Voice Director, Version Tree |
+| 20:42 | **Creative generation:** Remake: Visuals (Nano Banana 2), Remake: Sound (Gemini TTS and Lyria), Remake: Video (Veo), Generate |
+| 25:23 | **Audience Lab:** Quick Read, Audience Study, Ask the Panel, Live Focus Group, Buzz Simulator, Risk Check, Message Check |
+| 32:03 | **Launch Room:** Compare and Score, Readiness Board, Review Links, Region Plan, Asset Pack |
+| 39:03 | **Live Pulse:** Regional Dashboard, Predicted vs Actual, Alerts, Comment Pulse, Fatigue Watch, Weekly Digest |
+| 43:39 | **Proof Vault:** Proof Report, Evidence Map, Search, Run History, Data Health |
+| 46:30 | **Platform:** Resumable Runs, Model Gateway, Teams and Roles, Country Packs: India, Usage and Credits, Demo Mode |
+
 ## Contents
 
+- [Walkthrough video](#walkthrough-video)
 - [The problem](#the-problem)
 - [How a campaign flows](#how-a-campaign-flows)
 - [Features by workspace](#features-by-workspace)
@@ -538,7 +559,7 @@ cd ../e2e
 npm ci && npx playwright test                      # set E2E_BASE_URL (default http://localhost:3001) to a running web app
 ```
 
-Measured on 19 Nov 2026: **backend 1823 passed, 3 skipped, 0 failed**; frontend typecheck, lint and production build pass.
+Measured on 20 Nov 2026: **backend 1951 passed, 3 skipped, 0 failed**; frontend typecheck, lint and production build pass.
 
 The suites cover confidence and conflict rules, scoring, readiness and risk rules, the operation engine and locks, culture adapters on recorded responses, media and Indic text rendering, proof assembly, authorization and tenancy, prompt-injection and secret hygiene, upload limits, and Alembic migrations on PostgreSQL. GitHub Actions runs the backend suite, a PostgreSQL 17 job, the frontend checks and a secret scan. Live Vertex AI checks are opt-in (`scripts/verify_google_models.py --run`).
 
