@@ -40,11 +40,14 @@ Omnicult takes a campaign made for one Indian state and helps a team bring it to
 | Web app | https://omnicult-app.web.app (Firebase Hosting in front of Cloud Run) |
 | API | https://omnicult-api-671429087856.asia-south1.run.app ([`/health`](https://omnicult-api-671429087856.asia-south1.run.app/health)) |
 | Reviewer account | email `omnicult-judge@example.com`, password `Omnicult-Judge-2026` |
+| 3-minute film | [Watch the film (3 min, 1080p)](https://github.com/vishavmehra/Omnicult/releases/download/v1.0.0/omnicult-film.mp4) |
 | Walkthrough video | [Watch or download (50 min, 1080p, captions)](https://github.com/vishavmehra/Omnicult/releases/download/v1.0.0/omnicult-walkthrough.mp4) · [release page](https://github.com/vishavmehra/Omnicult/releases/tag/v1.0.0) |
 
 The reviewer account is a shared email-and-password account created for people evaluating the app. Google sign-in and **Try the demo** also work from the sign-in page. Try the demo uses Firebase anonymous sign-in and opens a fully seeded fictional brand, Aamod Diwali 2027, with no account needed. The credentials above are public on purpose, so do not enter real personal or brand data into the shared account.
 
 ## Walkthrough video
+
+[**Watch the 3-minute film**](https://github.com/vishavmehra/Omnicult/releases/download/v1.0.0/omnicult-film.mp4): why we built Omnicult, what it does and what makes it different.
 
 [**Watch the walkthrough**](https://github.com/vishavmehra/Omnicult/releases/download/v1.0.0/omnicult-walkthrough.mp4) (50 min 29 s, 1080p, captions burned in; [release page](https://github.com/vishavmehra/Omnicult/releases/tag/v1.0.0) with `captions.srt` and a per-feature `chapters.txt`).
 
