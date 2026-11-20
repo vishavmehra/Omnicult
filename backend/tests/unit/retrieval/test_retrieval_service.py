@@ -40,7 +40,7 @@ class FakeEmbedder:
 def doc(source_id: str, text: str, kind: str = "evidence", title: str = "Item") -> SearchDocument:
     return SearchDocument(kind=kind, source_id=source_id, title=title, text=text,  # type: ignore[arg-type]
                           ref=GraphRef(resource=kind, id=source_id, url=f"/api/v1/{kind}/{source_id}"),
-                          evidence_type="qloo_source", claim_type="observed", retrieval_mode="live")
+                          evidence_type="source_record", claim_type="observed", retrieval_mode="live")
 
 
 def service(embedder: FakeEmbedder | None = None) -> tuple[RetrievalService, InMemoryRetrievalStore, FakeEmbedder]:
@@ -78,7 +78,7 @@ async def test_search_ranks_one_hit_per_source_with_provenance() -> None:
     assert ids[:2] == ["ev-1", "ev-3"] and len(ids) == len(set(ids))  # cosine 0.866 vs 0.816
     top, long_hit = results.hits[0], results.hits[1]
     assert (top.kind, top.ref.url, top.evidence_type, top.claim_type, top.retrieval_mode) == (
-        "evidence", "/api/v1/evidence/ev-1", "qloo_source", "observed", "live")
+        "evidence", "/api/v1/evidence/ev-1", "source_record", "observed", "live")
     assert top.similarity == pytest.approx(0.866, abs=1e-3)
     assert len(long_hit.snippet) == 240 and long_hit.snippet.endswith("…")
 

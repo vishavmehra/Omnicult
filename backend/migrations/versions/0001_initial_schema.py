@@ -1,7 +1,7 @@
 """Initial schema (docs/06_DATABASE_SCHEMA.md).
 
 Projects, brand kits, campaigns and content versions, studies, runs, evidence, synthetic
-responses, adaptations, evaluations, reports, and the Qloo cache.
+responses, adaptations, evaluations, reports, and the source cache.
 
 Revision ID: 0001
 Revises:
@@ -43,7 +43,7 @@ def upgrade() -> None:
     )
     op.create_index('ix_projects_owner_id_last_activity_at', 'projects', ['owner_id', 'last_activity_at'], unique=False)
 
-    op.create_table('qloo_cache',
+    op.create_table('source_cache',
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('cache_key', sa.String(), nullable=False),
     sa.Column('workflow_name', sa.String(), nullable=False),
@@ -54,11 +54,11 @@ def upgrade() -> None:
     sa.Column('retrieved_at', UTCDateTime(), nullable=False),
     sa.Column('expires_at', UTCDateTime(), nullable=True),
     sa.Column('created_at', UTCDateTime(), nullable=False),
-    sa.CheckConstraint("retrieval_mode = 'live'", name=op.f('ck_qloo_cache_retrieval_mode')),
-    sa.PrimaryKeyConstraint('id', name=op.f('pk_qloo_cache')),
-    sa.UniqueConstraint('cache_key', name=op.f('uq_qloo_cache_cache_key'))
+    sa.CheckConstraint("retrieval_mode = 'live'", name=op.f('ck_source_cache_retrieval_mode')),
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_source_cache')),
+    sa.UniqueConstraint('cache_key', name=op.f('uq_source_cache_cache_key'))
     )
-    op.create_index('ix_qloo_cache_expires_at', 'qloo_cache', ['expires_at'], unique=False)
+    op.create_index('ix_source_cache_expires_at', 'source_cache', ['expires_at'], unique=False)
 
     op.create_table('brand_kits',
     sa.Column('id', sa.Uuid(), nullable=False),
@@ -291,5 +291,5 @@ def downgrade() -> None:
     op.drop_table('campaign_versions')
     op.drop_table('campaigns')
     op.drop_table('brand_kits')
-    op.drop_table('qloo_cache')
+    op.drop_table('source_cache')
     op.drop_table('projects')

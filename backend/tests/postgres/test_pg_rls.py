@@ -15,7 +15,7 @@ from tests.postgres._pg import ADMIN_URL, alembic, plain
 
 pytestmark = [pytest.mark.postgres, pytest.mark.skipif(not ADMIN_URL, reason="set TEST_POSTGRES_URL (disposable server)")]
 SEEDED = ("projects", "brand_kits", "campaigns", "agent_runs", "evidence_records")
-BACKEND_ONLY = {"qloo_cache", "embeddings"}  # RLS on, no policy: nobody but the owner reads them
+BACKEND_ONLY = {"source_cache", "embeddings"}  # RLS on, no policy: nobody but the owner reads them
 
 
 async def user_owned_tables(connection: asyncpg.Connection) -> list[str]:
@@ -44,7 +44,7 @@ async def seed_user(connection: asyncpg.Connection, owner: uuid.UUID) -> uuid.UU
     await connection.execute(
         "INSERT INTO evidence_records (id, project_id, source_run_id, evidence_type, claim_type, title, summary, "
         "source_provider, attributes, method, retrieval_mode, is_live_data, limitations, created_at) VALUES "
-        "($1, $2, $3, 'qloo_source', 'observed', 'T', 'S', 'fixture', '[]', 'provider_result', 'fixture', false, "
+        "($1, $2, $3, 'source_record', 'observed', 'T', 'S', 'fixture', '[]', 'provider_result', 'fixture', false, "
         "'[]', $4)", uuid.uuid4(), project, run, now)
     return project
 

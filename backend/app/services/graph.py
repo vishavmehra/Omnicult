@@ -39,7 +39,7 @@ def _evidence_kind(e: m.EvidenceRecord) -> str:
         return "synthetic_result"
     if e.claim_type == "hypothesis":
         return "hypothesis"
-    return {"qloo_source": "source_signal", "model_interpretation": "interpretation"}.get(e.evidence_type, "evidence")
+    return {"source_record": "source_signal", "model_interpretation": "interpretation"}.get(e.evidence_type, "evidence")
 
 
 class _Builder:

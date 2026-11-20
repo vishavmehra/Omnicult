@@ -7,7 +7,7 @@ from pydantic import Field
 from app.schemas.common import ApiModel, Page
 
 EvidenceType = Literal[
-    "qloo_source",
+    "source_record",
     "provider_result",
     "model_interpretation",
     "deterministic_calculation",
@@ -50,7 +50,7 @@ class EvidenceRecord(ApiModel):
     claim_type: ClaimType
     title: str
     summary: str
-    source_provider: str = Field(description="google, omnicult, fixture, a model provider id, or user (earlier records may show qloo).")
+    source_provider: str = Field(description="google, omnicult, fixture, a model provider id, or user.")
     source_workflow: str | None = Field(description="Name of the workflow that produced the record, when known.")
     source_reference: str | None
     subject: EntityRef | None

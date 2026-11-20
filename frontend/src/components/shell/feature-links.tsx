@@ -81,6 +81,41 @@ export function FeatureRow({ feature, campaignId, active, onNavigate }: { featur
   );
 }
 
+/** A workspace's places as spine rows: the same list, names and order as its "In this workspace" chips, so the two never differ. */
+export function WorkspaceViewRows({ workspace, campaignId, onNavigate }: { workspace: WorkspaceKey; campaignId: string; onNavigate?: () => void }) {
+  const pathname = usePathname();
+  const search = useSearchParams();
+  const views = workspaceViews(workspace);
+  const hrefs = views.map((v) => v.href(campaignId));
+  const active = bestMatches(hrefs, pathname, search);
+  const keep = WORKSPACES[workspace].keepParams ?? [];
+  return views.map((v, i) => {
+    const href = withKept(hrefs[i], pathname, search, keep);
+    const isOpen = active.has(i);
+    return (
+      <li key={hrefs[i]} className="relative">
+        <Link
+          href={href}
+          title={v.title}
+          aria-current={isOpen ? "page" : undefined}
+          className={cn(
+            "flex h-8 w-full items-center gap-2 rounded-lg px-2.5 text-[13px] transition-colors duration-150 max-lg:h-10",
+            isOpen
+              ? "bg-surface-muted/80 font-medium text-ink before:absolute before:top-1.5 before:bottom-1.5 before:-left-[6.5px] before:w-0.5 before:rounded-full before:bg-pop"
+              : "text-ink-secondary hover:bg-surface-muted/70 hover:text-ink",
+          )}
+          onClick={(e) => {
+            onNavigate?.();
+            if (!e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) markFeatureNav(href);
+          }}
+        >
+          <span className="min-w-0 truncate">{v.name}</span>
+        </Link>
+      </li>
+    );
+  });
+}
+
 /** The active feature ids for the address in the bar, shared by the spine and the header chips. */
 export function useActiveFeatureIds(campaignId: string | null) {
   const pathname = usePathname();

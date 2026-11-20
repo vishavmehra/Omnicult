@@ -9876,7 +9876,7 @@ export interface components {
              * Evidence Type
              * @enum {string}
              */
-            evidence_type: "qloo_source" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input";
+            evidence_type: "source_record" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input";
             /**
              * Id
              * Format: uuid
@@ -9907,7 +9907,7 @@ export interface components {
             retrieved_at: string | null;
             /**
              * Source Provider
-             * @description google, omnicult, fixture, a model provider id, or user (earlier records may show qloo).
+             * @description google, omnicult, fixture, a model provider id, or user.
              */
             source_provider: string;
             /** Source Reference */
@@ -11771,7 +11771,7 @@ export interface components {
             /** Created At */
             created_at: string | null;
             /** Evidence Type */
-            evidence_type: ("qloo_source" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input") | null;
+            evidence_type: ("source_record" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input") | null;
             /** Id */
             id: string;
             /** Is Demo */
@@ -20242,7 +20242,7 @@ export interface components {
             /** Created At */
             created_at: string | null;
             /** Evidence Type */
-            evidence_type: ("qloo_source" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input") | null;
+            evidence_type: ("source_record" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input") | null;
             /**
              * Explanation
              * @description Why this hit was returned, in plain words.
@@ -20724,7 +20724,7 @@ export interface components {
             prompt_version: string | null;
             /**
              * Provider
-             * @description google, fixture, or omnicult (earlier runs may also show qloo, nebius or openrouter).
+             * @description google, fixture, or omnicult.
              */
             provider: string | null;
             /**
@@ -46375,7 +46375,7 @@ export interface operations {
                 /** @description Number of records skipped. */
                 offset?: number;
                 run_id?: string | null;
-                evidence_type?: ("qloo_source" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input") | null;
+                evidence_type?: ("source_record" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input") | null;
             };
             header?: never;
             path: {
@@ -46500,7 +46500,7 @@ export interface operations {
             query?: {
                 campaign_id?: string | null;
                 region?: string | null;
-                evidence_type?: ("qloo_source" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input") | null;
+                evidence_type?: ("source_record" | "provider_result" | "model_interpretation" | "deterministic_calculation" | "synthetic_response" | "observed_outcome" | "user_input") | null;
                 population_study_id?: string | null;
                 /** @description Draw this region's claims, sources and conflicts. */
                 region_code?: string | null;

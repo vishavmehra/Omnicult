@@ -59,7 +59,7 @@ async def seed(url: str) -> dict[str, list[dict[str, Any]]]:
          "VALUES ($1, $2, $3, 'market_discovery', 'completed', 'live', '{}', '[]', $4)", (run, project, campaign, now)),
         ("INSERT INTO evidence_records (id, project_id, source_run_id, evidence_type, claim_type, title, summary, "
          "source_provider, attributes, method, retrieval_mode, is_live_data, limitations, created_at) VALUES "
-         "($1, $2, $3, 'qloo_source', 'observed', 'Resolved tag', 'Seeded.', 'qloo', '[]', 'provider_result', 'live', "
+         "($1, $2, $3, 'source_record', 'observed', 'Resolved tag', 'Seeded.', 'wikidata', '[]', 'provider_result', 'live', "
          "true, '[]', $4)", (evidence, project, run, now)),
     ]
     connection = await asyncpg.connect(plain(url))

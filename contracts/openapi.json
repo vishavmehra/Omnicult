@@ -15970,7 +15970,7 @@
           },
           "evidence_type": {
             "enum": [
-              "qloo_source",
+              "source_record",
               "provider_result",
               "model_interpretation",
               "deterministic_calculation",
@@ -16051,7 +16051,7 @@
             "title": "Retrieved At"
           },
           "source_provider": {
-            "description": "google, omnicult, fixture, a model provider id, or user (earlier records may show qloo).",
+            "description": "google, omnicult, fixture, a model provider id, or user.",
             "title": "Source Provider",
             "type": "string"
           },
@@ -20942,7 +20942,7 @@
             "anyOf": [
               {
                 "enum": [
-                  "qloo_source",
+                  "source_record",
                   "provider_result",
                   "model_interpretation",
                   "deterministic_calculation",
@@ -42983,7 +42983,7 @@
             "anyOf": [
               {
                 "enum": [
-                  "qloo_source",
+                  "source_record",
                   "provider_result",
                   "model_interpretation",
                   "deterministic_calculation",
@@ -44366,7 +44366,7 @@
                 "type": "null"
               }
             ],
-            "description": "google, fixture, or omnicult (earlier runs may also show qloo, nebius or openrouter).",
+            "description": "google, fixture, or omnicult.",
             "title": "Provider"
           },
           "retries": {
@@ -81678,7 +81678,7 @@
               "anyOf": [
                 {
                   "enum": [
-                    "qloo_source",
+                    "source_record",
                     "provider_result",
                     "model_interpretation",
                     "deterministic_calculation",
@@ -81885,7 +81885,7 @@
               "anyOf": [
                 {
                   "enum": [
-                    "qloo_source",
+                    "source_record",
                     "provider_result",
                     "model_interpretation",
                     "deterministic_calculation",

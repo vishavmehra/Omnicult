@@ -22,11 +22,11 @@ import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
 
 import { CampaignSelector } from "./campaign-selector";
-import { FeatureRow, useActiveFeatureIds } from "./feature-links";
+import { WorkspaceViewRows } from "./feature-links";
 import { arrivedAt, latestFeatureNav } from "./feature-nav";
 import { ThemeToggle } from "./theme-toggle";
 import { Wordmark } from "./wordmark";
-import { STAGES, WORKSPACES, navFeatures, workspaceHref, type WorkspaceKey } from "./workspaces";
+import { STAGES, WORKSPACES, workspaceHref, type WorkspaceKey } from "./workspaces";
 
 // ---------- context panel slot ----------
 
@@ -157,7 +157,6 @@ function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; 
   const on = "bg-surface-raised font-medium text-ink shadow-clay";
   const off = "text-ink-secondary hover:bg-surface-muted/70 hover:text-ink";
   const nudge = "transition-[translate] duration-200 ease-out group-hover/item:translate-x-0.5";
-  const activeIds = useActiveFeatureIds(campaignId);
   // The open workspace starts expanded and the others collapsed; a person's own choice wins until they leave.
   const [chosen, setChosen] = useState<Record<string, boolean>>({});
   const isOpen = (key: string, fallback: boolean) => chosen[key] ?? fallback;
@@ -233,9 +232,7 @@ function Spine({ campaignId, active, onNavigate }: { campaignId: string | null; 
                       )}
                       {campaignId && (
                         <ul id={`spine-${key}`} aria-label={`${ws.label} features`} hidden={!open} className={cn(featureList, "ml-[30px]")}>
-                          {navFeatures(key).map((f) => (
-                            <FeatureRow key={f.id} feature={f} campaignId={campaignId} active={activeIds.has(f.id)} onNavigate={onNavigate} />
-                          ))}
+                          <WorkspaceViewRows workspace={key} campaignId={campaignId} onNavigate={onNavigate} />
                         </ul>
                       )}
                     </li>

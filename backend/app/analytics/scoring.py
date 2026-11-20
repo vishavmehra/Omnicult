@@ -187,7 +187,7 @@ def comparability(market: Market, source_version_id: UUID, candidates: Sequence[
 
 
 def is_source_observed(record: EvidenceRecord) -> bool:
-    return record.evidence_type == "qloo_source" and record.claim_type == "observed"
+    return record.evidence_type == "source_record" and record.claim_type == "observed"
 
 
 def brief_confidence(claim_type: str, evidence: Sequence[EvidenceRecord]) -> ConfidenceLabel:

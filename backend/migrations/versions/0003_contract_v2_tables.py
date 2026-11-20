@@ -241,7 +241,7 @@ def _drop_tables() -> None:
 
 V1_RUN_TYPES = "'market_discovery', 'campaign_rehearsal', 'campaign_adaptation', 'campaign_evaluation'"
 V2_RUN_TYPES = V1_RUN_TYPES + ", 'cultural_profile', 'campaign_arena', 'risk_scan', 'market_comparison'"
-# Project-scoped v2 tables users may read through PostgREST; embeddings stay backend-only like qloo_cache.
+# Project-scoped v2 tables users may read through PostgREST; embeddings stay backend-only like source_cache.
 READABLE = (
     "cultural_profiles", "market_comparisons", "snapshots", "trend_comparisons", "arenas", "risk_scans",
     "risk_findings", "assets", "transcripts",

@@ -341,10 +341,10 @@ class Report(Base):
     )
 
 
-class QlooCacheEntry(Base):
-    """Live Qloo results only; fixture results never enter this table (docs/06 section 15)."""
+class SourceCacheEntry(Base):
+    """Cached live source results only; fixture results never enter this table."""
 
-    __tablename__ = "qloo_cache"
+    __tablename__ = "source_cache"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     cache_key: Mapped[str] = mapped_column(unique=True)
@@ -359,7 +359,7 @@ class QlooCacheEntry(Base):
 
     __table_args__ = (
         CheckConstraint("retrieval_mode = 'live'", name="retrieval_mode"),
-        Index("ix_qloo_cache_expires_at", "expires_at"),
+        Index("ix_source_cache_expires_at", "expires_at"),
     )
 
 

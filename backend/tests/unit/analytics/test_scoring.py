@@ -40,7 +40,7 @@ def candidate(key: str, s: DimensionScores, *, kind="adaptation", violations=(),
     )
 
 
-def evidence(kind="qloo_source", claim="observed") -> EvidenceRecord:
+def evidence(kind="source_record", claim="observed") -> EvidenceRecord:
     return EvidenceRecord.model_validate(json.loads((FIXTURES / "EvidenceRecord.json").read_text())).model_copy(
         update={"evidence_type": kind, "claim_type": claim}
     )
@@ -132,14 +132,14 @@ def test_constraint_checks_are_case_insensitive_and_source_relative():
 
 
 def test_confidence_labels_follow_contract_rules():
-    qloo, interp = evidence(), evidence("model_interpretation", "interpreted")
-    assert brief_confidence("observed", [qloo]) == "moderate"
-    assert brief_confidence("interpreted", [qloo, interp]) == "limited"  # interpreted is capped
+    source, interp = evidence(), evidence("model_interpretation", "interpreted")
+    assert brief_confidence("observed", [source]) == "moderate"
+    assert brief_confidence("interpreted", [source, interp]) == "limited"  # interpreted is capped
     assert brief_confidence("observed", [interp]) == "limited"
     assert brief_confidence("hypothesis", []) == "insufficient"
-    assert finding_confidence("synthetic", 3, 6, [qloo]) == "moderate"
-    assert finding_confidence("synthetic", 2, 6, [qloo]) == "limited"  # under 50% support
-    assert finding_confidence("hypothesis", 6, 6, [qloo]) == "limited"  # hypothesis is capped
+    assert finding_confidence("synthetic", 3, 6, [source]) == "moderate"
+    assert finding_confidence("synthetic", 2, 6, [source]) == "limited"  # under 50% support
+    assert finding_confidence("hypothesis", 6, 6, [source]) == "limited"  # hypothesis is capped
     assert finding_confidence("synthetic", 2, 6, []) == "limited"
     assert finding_confidence("hypothesis", 1, 6, []) == "insufficient"
     assert finding_confidence("synthetic", 0, 6, [interp]) == "insufficient"

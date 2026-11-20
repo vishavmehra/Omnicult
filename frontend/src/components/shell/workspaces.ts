@@ -72,7 +72,6 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
       { id: 1, name: "Today View", tier: 1, status: "built", href: TODAY, note: "What is running, what finished, what failed and which campaigns need attention, across every brand." },
       { id: 2, name: "Campaign Brief", tier: 1, status: "built", href: at("desk"), note: "Product, objective, regions, languages, channels, budget, dates and success metric, entered once and read everywhere." },
       { id: 3, name: "Brand Kit", tier: 1, status: "built", href: at("desk", "?tab=brand-kit"), note: "Tone, protected terms and the elements that must never change." },
-      { id: 4, name: "Brand Glossary", tier: 2, status: "built", href: at("studio", "?tab=glossary"), note: "Brand spellings by script, preferred translations, pronunciation and do-not-translate terms." },
       { id: 5, name: "Command Bar", tier: 2, status: "built", action: "command-bar", note: "Type what you want done; it runs the same tools the workspaces use." },
       { id: 6, name: "Demo Mode", tier: 1, status: "built", action: "demo", note: "A complete example campaign, kept apart from your own records." },
     ],
@@ -106,6 +105,7 @@ export const WORKSPACES: Record<WorkspaceKey, Workspace> = {
     features: [
       { id: 16, name: "Creative X-Ray", tier: 1, status: "built", href: XRAY, note: "The creative decomposed into scenes, keyframes, text, transcript, claims and visual observations." },
       { id: 17, name: "Transcreate", tier: 1, status: "built", href: at("studio", "?tab=transcreate"), note: "Regional copy with an English back-translation beside every line." },
+      { id: 4, name: "Brand Glossary", tier: 2, status: "built", href: at("studio", "?tab=glossary"), note: "Brand spellings by script, preferred translations, pronunciation and do-not-translate terms." },
       { id: 18, name: "Tone Dials", tier: 2, status: "built", href: at("studio", "?tab=transcreate"), note: "Formality, warmth and humour per region, inside the brand voice." },
       { id: 19, name: "Tweak Chips", tier: 1, status: "built", href: at("studio", "?tab=elements"), note: "Small suggested changes, each with its reason, evidence and cost, inspected before you apply them." },
       { id: 20, name: "Lock and Edit", tier: 1, status: "built", href: at("studio", "?tab=elements"), note: "Lock logos, product areas and taglines; every operation respects the locks." },

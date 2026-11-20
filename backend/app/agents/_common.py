@@ -30,7 +30,7 @@ def clipped(limit: int) -> BeforeValidator:
 
 AFFINITY_NOTE = "Aggregate affinity; not evidence of demand, purchase intent, or individual preference."
 DROPPED_NOTE = "Some references in the model output did not match the supplied items and were removed."
-SOURCE_EVIDENCE_TYPES = frozenset({"qloo_source", "provider_result", "user_input"})
+SOURCE_EVIDENCE_TYPES = frozenset({"source_record", "provider_result", "user_input"})
 
 EVIDENCE_RULES = (
     "Rules: use only the supplied evidence for factual claims and cite it by handle (for example E1). Never invent "
@@ -78,7 +78,7 @@ def evidence_digest(
     interpretations, so generators are grounded in signals rather than in earlier model output."""
     usable = [
         e for e in records
-        if (e.evidence_type != "qloo_source" or e.subject or e.related_entity)
+        if (e.evidence_type != "source_record" or e.subject or e.related_entity)
         and (not sources_only or e.evidence_type in SOURCE_EVIDENCE_TYPES)
     ]
     chosen = sorted(usable, key=lambda e: e.evidence_type not in SOURCE_EVIDENCE_TYPES)[:limit]

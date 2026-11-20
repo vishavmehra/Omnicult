@@ -15,7 +15,7 @@ export function evidenceLabel(e: { evidence_type: EvidenceType; claim_type: Clai
   if (e.evidence_type === "deterministic_calculation") return "Calculated";
   if (e.claim_type === "hypothesis") return "Unverified";
   if (e.evidence_type === "model_interpretation") return "Model interpretation";
-  // Remaining evidence types: qloo_source, provider_result, user_input.
+  // Remaining evidence types: source_record, provider_result, user_input.
   return "Source data";
 }
 
@@ -43,7 +43,7 @@ export const LABEL_MEANING: Record<EvidenceUiLabel, string> = {
 export const CONFIDENCE_RULE: Record<ConfidenceLabel, { label: string; rule: string }> = {
   moderate: {
     label: "Moderate support",
-    rule: "Backed by at least one Qloo evidence record with claim type “observed”. Rehearsal findings must also be supported by at least 50% of the reactions.",
+    rule: "Backed by at least one source record with claim type “observed”. Rehearsal findings must also be supported by at least 50% of the reactions.",
   },
   limited: {
     label: "Limited support",
