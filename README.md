@@ -134,7 +134,7 @@ Omnicult has 55 features across seven workspaces and a platform layer. On top of
 | Campaign Brief | Product, objective, regions, languages, channels, budget, dates and success metric, entered once and read by every workspace |
 | Brand Kit | Logo, colours, fonts, product images, tone, protected terms and never-change zones |
 | Brand Glossary | Brand spellings by script, preferred translations, pronunciation and do-not-translate terms, checked in code after every adaptation |
-| Command Bar | Type what you want done; it runs the same tools the workspaces use |
+| Command Bar | Search workspaces, features, campaigns and actions by name and jump there: open a feature, start a campaign or a Quick Read, open the latest report. It matches names and calls no model |
 | Demo Mode | The Aamod campaign on recorded and offline datasets, kept apart from live records |
 
 ### Market Lens
@@ -172,7 +172,7 @@ Omnicult has 55 features across seven workspaces and a platform layer. On top of
 | Remake: Video | A short regional cut with Veo, confirmed and budget-checked before it runs |
 | Voice Director | Speak or type a direction; it is transcribed, turned into a typed plan on the same operations as the UI, and applied only after you confirm; proven live |
 | Format Fit | Resize and recompose a version for each placement |
-| Claim Guard | Checks product claims against what the brand can substantiate, with a human review step |
+| Claim Guard | Checks product claims with fixed wording rules (no model, no cost) against the Brand Kit's claims policy and the campaign's evidence, with a human review step; an optional Gemini pass, run only on request, can propose implied claims, each verified against the wording it quotes and labelled a model interpretation |
 | Script Check | Checks regional text for the right script and shaping problems |
 
 ### Audience Lab
@@ -315,8 +315,8 @@ All model calls go through one gateway (`backend/app/llm/gateway.py`). Model ids
 
 | Work | Default model |
 |---|---|
-| Fast text: X-Ray scene structuring, panel interviews | `gemini-3.5-flash-lite` |
-| Default text: Transcreate, Tweak Chips, Quick Read, analysis, vision, grounding, transcription | `gemini-3.8-flash` |
+| Fast text: panel interviews and social reactions, Voice Director directions, comment sentiment | `gemini-3.5-flash-lite` |
+| Default text: X-Ray scene structuring (up to 16,000 output tokens), Transcreate, Tweak Chips, Quick Read, analysis, vision, grounding, transcription | `gemini-3.8-flash` |
 | Reasoning: Risk Check (falls back to the default tier if it fails) | `gemini-4-argon` |
 | Embeddings, 768 dimensions | `gemini-embedding-2` |
 | Image generation (location `global`) | `gemini-3.1-flash-image` |
@@ -564,7 +564,7 @@ cd ../e2e
 npm ci && npx playwright test                      # set E2E_BASE_URL (default http://localhost:3001) to a running web app
 ```
 
-Measured on 20 Nov 2026: **backend 1951 passed, 3 skipped, 0 failed**; frontend typecheck, lint and production build pass.
+Measured on 20 Nov 2026: **backend 1993 passed, 3 skipped, 0 failed**; frontend typecheck, lint and production build pass.
 
 The suites cover confidence and conflict rules, scoring, readiness and risk rules, the operation engine and locks, culture adapters on recorded responses, media and Indic text rendering, proof assembly, authorization and tenancy, prompt-injection and secret hygiene, upload limits, and Alembic migrations on PostgreSQL. GitHub Actions runs the backend suite, a PostgreSQL 17 job, the frontend checks and a secret scan. Live Vertex AI checks are opt-in (`scripts/verify_google_models.py --run`).
 

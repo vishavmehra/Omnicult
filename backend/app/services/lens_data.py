@@ -200,11 +200,10 @@ def data_sources(bundle: Bundle, families: set[str]) -> list[v.LensDataSource]:
     census = load_census()
     rows = [
         v.LensDataSource(
-            key="state_facts", label="State facts", publisher="data.gov.in, Open Government Data Platform India, and Google Data Commons",
-            url="https://data.gov.in",
-            detail="NFHS-5, TRAI, the Ministry of Tourism, MoSPI surveys, Rajya Sabha replies and Census 2011 from data.gov.in; population "
-                   "projections, sex ratio, density, wages, electricity use and NFHS-4 health figures from Google Data Commons. By state, "
-                   "with the all-India figure where the source has one.",
+            key="state_facts", label="State facts", publisher="State-wise statistics", url=None,
+            detail="NFHS-5 2019-21, NFHS-4 2015, Census 2011, tele-density and internet subscriptions 2024, tourist visits 2023 and 2024, "
+                   "income per person 2022-23, household spending 2023-24, homes without internet 2025, population projected to 2026, "
+                   "average monthly wage, electricity use and a development score. By state, with the all-India figure where there is one.",
             period=f"{SOURCE_PERIODS[0]} to {SOURCE_PERIODS[-1]}", retrieved_at=bundle.facts_at),
         v.LensDataSource(
             key="search_pulse", label="Searches", publisher="Google Trends public dataset (BigQuery)",

@@ -462,3 +462,17 @@ async def test_a_variable_that_comes_back_empty_keeps_its_stored_figures_while_t
     assert (again["updated"], again["failed"]) == (1, 0)
     assert len([r for r in await dc_rows() if r.metric == "stunting"]) == len(stored)
     assert next(r for r in await dc_rows() if (r.region_code, r.metric) == ("IN-KL", "sdg_score")).value == 80.0
+
+
+def test_the_state_facts_dataset_row_names_datasets_and_periods_but_no_provider_or_link() -> None:
+    from datetime import date  # noqa: PLC0415
+
+    from app.services import lens_data  # noqa: PLC0415
+
+    bundle = lens_data.Bundle(mode="demo", today=date(2026, 11, 20), facts_at=state_facts.recorded_at())
+    (row,) = lens_data.data_sources(bundle, {"state_facts"})
+    text = " ".join([row.label, row.publisher, row.detail, row.url or ""]).casefold()
+    assert row.url is None and row.retrieved_at is not None and row.period
+    for provider in ("data.gov", "data commons", "datacommons", "google", "trai", "mospi", "rajya sabha", "ministry", "niti", "oecd", "rbi"):
+        assert provider not in text, provider
+    assert "nfhs-5 2019-21" in text and "census 2011" in text and "population projected to 2026" in text
